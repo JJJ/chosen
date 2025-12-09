@@ -532,6 +532,7 @@ class @Chosen extends AbstractChosen
   single_set_selected_text: (text = @default_text) ->
     if text is @default_text
       @selected_item.addClassName("chosen-default")
+      text = this.escape_html(text)
     else
       this.single_deselect_control_build()
       @selected_item.removeClassName("chosen-default")
@@ -570,6 +571,9 @@ class @Chosen extends AbstractChosen
 
   escape_html: (text) ->
     text.escapeHTML()
+
+  unescape_html: (text) ->
+    text.unescapeHTML()
 
   winnow_results_set_highlight: ->
     if not @is_multiple

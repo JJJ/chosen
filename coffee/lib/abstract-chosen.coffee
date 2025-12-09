@@ -53,7 +53,8 @@ class AbstractChosen
     else
       @default_text = @options.placeholder_text_single || @options.placeholder_text || AbstractChosen.default_single_text
 
-    @default_text = this.escape_html(@default_text)
+    # Unescape any HTML entities that might have been incorrectly included
+    @default_text = this.unescape_html(@default_text)
 
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
     @create_option_text = @form_field.getAttribute("data-create_option_text") || @options.create_option_text || AbstractChosen.default_create_option_text
@@ -457,7 +458,7 @@ class AbstractChosen
   get_single_html: ->
     """
       <a class="chosen-single chosen-default" role="button">
-        <span>#{@default_text}</span>
+        <span>#{this.escape_html(@default_text)}</span>
         <div aria-label="Show options">
           <b aria-hidden="true"></b>
         </div>
@@ -496,7 +497,7 @@ class AbstractChosen
             role="combobox"
             style="width:25px;"
             type="text"
-            value="#{@default_text}"
+            value="#{this.escape_html(@default_text)}"
           />
         </li>
       </ul>

@@ -166,7 +166,8 @@
         } else {
           this.default_text = this.options.placeholder_text_single || this.options.placeholder_text || AbstractChosen.default_single_text;
         }
-        this.default_text = this.escape_html(this.default_text);
+        // Unescape any HTML entities that might have been incorrectly included
+        this.default_text = this.unescape_html(this.default_text);
         this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || AbstractChosen.default_no_result_text;
         return this.create_option_text = this.form_field.getAttribute("data-create_option_text") || this.options.create_option_text || AbstractChosen.default_create_option_text;
       }
@@ -894,7 +895,7 @@
 
       get_single_html() {
         return `<a class="chosen-single chosen-default" role="button">
-  <span>${this.default_text}</span>
+  <span>${this.escape_html(this.default_text)}</span>
   <div aria-label="Show options">
     <b aria-hidden="true"></b>
   </div>
@@ -932,7 +933,7 @@
       role="combobox"
       style="width:25px;"
       type="text"
-      value="${this.default_text}"
+      value="${this.escape_html(this.default_text)}"
     />
   </li>
 </ul>
@@ -1634,6 +1635,7 @@
       single_set_selected_text(text = this.default_text) {
         if (text === this.default_text) {
           this.selected_item.addClassName("chosen-default");
+          text = this.escape_html(text);
         } else {
           this.single_deselect_control_build();
           this.selected_item.removeClassName("chosen-default");
@@ -1682,6 +1684,10 @@
 
       escape_html(text) {
         return text.escapeHTML();
+      }
+
+      unescape_html(text) {
+        return text.unescapeHTML();
       }
 
       winnow_results_set_highlight() {
