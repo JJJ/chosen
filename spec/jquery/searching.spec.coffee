@@ -383,7 +383,7 @@ describe "Searching", ->
 
     # Create an extremely long search string (much longer than the max_search_length default of 1000)
     search_field = div.find(".chosen-search-input").first()
-    very_long_string = new Array(2000).join("pain from your ears ")
+    very_long_string = new Array(2000).join("x")
     
     # This should not throw a "Regular expression too large" SyntaxError
     expect(() ->
