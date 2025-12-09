@@ -894,9 +894,9 @@
       }
 
       get_single_html() {
-        return `<a class="chosen-single chosen-default">
+        return `<a class="chosen-single chosen-default" role="button">
   <span>${this.default_text}</span>
-  <div><b></b></div>
+  <div aria-label="Show options"><b aria-hidden="true"></b></div>
 </a>
 <div class="chosen-drop">
   <div class="chosen-search">
@@ -1184,7 +1184,10 @@
 
     container_mousedown(evt) {
       var ref;
-      if (!this.is_disabled && (evt && this.mousedown_checker(evt) === 'left')) {
+      if (this.is_disabled) {
+        return;
+      }
+      if (evt && this.mousedown_checker(evt) === 'left') {
         if (evt && evt.type === "mousedown" && !this.results_showing) {
           evt.preventDefault();
         }
@@ -1345,6 +1348,7 @@
         this.container.addClass("chosen-dropup");
       }
       this.container.addClass("chosen-with-drop");
+      this.container.find(".chosen-single div").attr("aria-label", "Hide options");
       this.results_showing = true;
       this.search_field.attr("aria-expanded", true);
       this.search_field.trigger("focus");
@@ -1371,6 +1375,7 @@
         this.result_clear_highlight();
         this.container.removeClass("chosen-with-drop");
         this.container.removeClass("chosen-dropup");
+        this.container.find(".chosen-single div").attr("aria-label", "Show options");
         this.form_field_jq.trigger("chosen:hiding_dropdown", {
           chosen: this
         });

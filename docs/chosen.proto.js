@@ -894,9 +894,9 @@
       }
 
       get_single_html() {
-        return `<a class="chosen-single chosen-default">
+        return `<a class="chosen-single chosen-default" role="button">
   <span>${this.default_text}</span>
-  <div><b></b></div>
+  <div aria-label="Show options"><b aria-hidden="true"></b></div>
 </a>
 <div class="chosen-drop">
   <div class="chosen-search">
@@ -968,7 +968,7 @@
       set_default_values() {
         super.set_default_values();
         // HTML Templates
-        this.single_temp = new Template('<a class="chosen-single chosen-default"><span>#{default}</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" /></div><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>');
+        this.single_temp = new Template('<a class="chosen-single chosen-default" role="button"><span>#{default}</span><div aria-label="Show options"><b aria-hidden="true"></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" /></div><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>');
         this.multi_temp = new Template('<ul class="chosen-choices"><li class="search-field"><input type="text" value="#{default}" class="default" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>');
         return this.no_results_temp = new Template('<li class="no-results">' + this.results_none_found + ' "<span>#{terms}</span>"</li>');
       }
@@ -1192,7 +1192,10 @@
 
       container_mousedown(evt) {
         var ref;
-        if (!this.is_disabled && (evt && this.mousedown_checker(evt) === 'left')) {
+        if (this.is_disabled) {
+          return;
+        }
+        if (evt && this.mousedown_checker(evt) === 'left') {
           if (evt && ((ref = evt.type) === 'mousedown' || ref === 'touchstart') && !this.results_showing) {
             evt.stop();
           }
@@ -1351,6 +1354,7 @@
           this.container.addClassName("chosen-dropup");
         }
         this.container.addClassName("chosen-with-drop");
+        this.container.find(".chosen-single div").attr("aria-label", "Hide options");
         this.results_showing = true;
         this.search_field.writeAttribute("aria-expanded", "true");
         this.search_field.focus();
@@ -1377,6 +1381,7 @@
           this.result_clear_highlight();
           this.container.removeClassName("chosen-with-drop");
           this.container.removeClassName("chosen-dropup");
+          this.container.find(".chosen-single div").attr("aria-label", "Show options");
           this.form_field.fire("chosen:hiding_dropdown", {
             chosen: this
           });
