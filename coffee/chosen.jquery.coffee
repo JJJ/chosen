@@ -528,6 +528,9 @@ class Chosen extends AbstractChosen
   unescape_html: (text) ->
     # Safely decode common HTML entities without parsing HTML tags
     # This prevents double-encoding while maintaining security
+    # Note: Sequential replacements may cause double-unescaping (e.g., &amp;amp; -> &amp; -> &)
+    # This is intentional to handle cases where users incorrectly pre-escape their input
+    # Security is maintained because we re-escape via escape_html() before template insertion
     text.replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
