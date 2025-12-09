@@ -152,6 +152,9 @@
         this.max_shown_results = this.options.max_shown_results || Number.POSITIVE_INFINITY;
         this.case_sensitive_search = this.options.case_sensitive_search || false;
         this.hide_results_on_select = this.options.hide_results_on_select != null ? this.options.hide_results_on_select : true;
+        this.normalize_search_text = this.options.normalize_search_text || function(search_text) {
+          return search_text;
+        };
         this.create_option = this.options.create_option || false;
         this.persistent_create_option = this.options.persistent_create_option || false;
         this.skip_no_results = this.options.skip_no_results || false;
@@ -367,7 +370,7 @@
       }
 
       winnow_results(options) {
-        var escaped_query, exact_regex, exact_result, fix, highlight_regex, j, len, match_value, option, prefix, query, ref, regex, results, results_group, search_match, startpos, suffix, text;
+        var endpos, escaped_query, exact_regex, exact_result, fix, highlight_regex, i, j, k, l, last_normalized_text, len, match_value, normalized_query, normalized_text, offset, option, prefix, query, ref, ref1, ref2, regex, results, results_group, search_match, startpos, substr_normalized_text, suffix, text;
         this.no_results_clear();
         results = 0;
         exact_result = false;
@@ -377,7 +380,8 @@
           // Truncate query to prevent "Regular expression too large" errors
           query = query.substring(0, this.max_search_length);
         }
-        escaped_query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+        normalized_query = this.normalize_search_text(query);
+        escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         regex = this.get_search_regex(escaped_query);
         exact_regex = new RegExp(`^${escaped_query}$`);
         highlight_regex = this.get_highlight_regex(escaped_query);
@@ -402,7 +406,8 @@
             }
             text = option.group ? option.label : option.text;
             if (!(option.group && !this.group_search)) {
-              search_match = this.search_string_match(text, regex);
+              normalized_text = this.normalize_search_text(text);
+              search_match = this.search_string_match(normalized_text, regex);
               option.search_match = search_match != null;
               if (!option.search_match && this.search_in_values) {
                 option.search_match = this.search_string_match(option.value, regex);
@@ -415,9 +420,36 @@
               if (option.search_match) {
                 if (query.length && !match_value) {
                   startpos = search_match.index;
+                  endpos = query.length;
+                  // If any normalization changed the search_text, perform a better
+                  // logic to highlight results
+                  if (normalized_text !== text) {
+                    // Search from the beginning where it stops to match
+                    last_normalized_text = normalized_text;
+                    offset = 0;
+                    for (i = k = 0, ref1 = text.length - 1; k <= ref1; i = k += 1) {
+                      substr_normalized_text = this.normalize_search_text(text.substr(i));
+                      if (last_normalized_text === substr_normalized_text) {
+                        offset++;
+                      }
+                      last_normalized_text = substr_normalized_text;
+                      if (regex.test(substr_normalized_text) === false) {
+                        startpos = i - offset;
+                        break;
+                      }
+                    }
+// Search from the end where it starts to match
+                    for (i = l = 1, ref2 = text.length - startpos; l <= ref2; i = l += 1) {
+                      substr_normalized_text = this.normalize_search_text(text.substr(startpos, i));
+                      if (regex.test(substr_normalized_text) !== false) {
+                        endpos = i;
+                        break;
+                      }
+                    }
+                  }
                   prefix = text.slice(0, startpos);
-                  fix = text.slice(startpos, startpos + query.length);
-                  suffix = text.slice(startpos + query.length);
+                  fix = text.slice(startpos, startpos + endpos);
+                  suffix = text.slice(startpos + endpos);
                   option.highlighted_html = `${this.escape_html(prefix)}<em>${this.escape_html(fix)}</em>${this.escape_html(suffix)}`;
                 }
                 if (results_group != null) {

@@ -347,3 +347,71 @@ describe "Searching", ->
 
     # Should show no results
     expect(div.select(".active-result").length).toBe(0)
+
+  it "should support normalize_search_text callback for searching with accented characters", ->
+    # Simple normalize function that removes accents
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = new Element("div")
+    document.body.insert(div)
+    div.update("""
+      <select>
+        <option value="cafe">Café</option>
+        <option value="mexico">México</option>
+        <option value="peru">Perú</option>
+        <option value="brasil">Brasil</option>
+      </select>
+    """)
+
+    select = div.down("select")
+    chosen = new Chosen(select, {normalize_search_text: removeAccents})
+
+    container = div.down(".chosen-container")
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen.container_mousedown(mockEvt)
+
+    expect(div.select(".active-result").length).toBe(4)
+
+    # Search for "cafe" should match "Café"
+    search_field = div.down(".chosen-search-input")
+    search_field.value = "cafe"
+    mockKeyEvt = { which: 1 }
+    chosen.keyup_checker(mockKeyEvt)
+
+    expect(div.select(".active-result").length).toBe(1)
+    # The highlighted result should still show the original text with accents
+    expect(div.down(".active-result").innerHTML).toContain("Café")
+
+  it "should properly highlight normalized matches", ->
+    # Simple normalize function that removes accents
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = new Element("div")
+    document.body.insert(div)
+    div.update("""
+      <select>
+        <option value="cafe">Café</option>
+        <option value="test">Testé</option>
+      </select>
+    """)
+
+    select = div.down("select")
+    chosen = new Chosen(select, {normalize_search_text: removeAccents})
+
+    container = div.down(".chosen-container")
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen.container_mousedown(mockEvt)
+
+    # Search for "test" should match "Testé" and highlight properly
+    search_field = div.down(".chosen-search-input")
+    search_field.value = "test"
+    mockKeyEvt = { which: 1 }
+    chosen.keyup_checker(mockKeyEvt)
+
+    expect(div.select(".active-result").length).toBe(1)
+    # The highlighted result should show "Testé" with proper highlighting
+    result_html = div.down(".active-result").innerHTML
+    expect(result_html).toContain("<em>")
+    expect(result_html).toContain("Testé")
