@@ -153,7 +153,9 @@ class Chosen extends AbstractChosen
       @selected_item.on 'focus.chosen', this.activate_field
 
   container_mousedown: (evt) ->
-    if not @is_disabled and (evt and this.mousedown_checker(evt) == 'left')
+    return if @is_disabled
+
+    if evt and this.mousedown_checker(evt) == 'left'
       if evt and evt.type is "mousedown" and not @results_showing
         evt.preventDefault()
 
@@ -292,6 +294,7 @@ class Chosen extends AbstractChosen
       @container.addClass "chosen-dropup"
 
     @container.addClass "chosen-with-drop"
+    @container.find(".chosen-single div").attr("aria-label", "Hide options")
     @results_showing = true
 
     @search_field.attr("aria-expanded", true)
@@ -313,6 +316,7 @@ class Chosen extends AbstractChosen
 
       @container.removeClass "chosen-with-drop"
       @container.removeClass "chosen-dropup"
+      @container.find(".chosen-single div").attr("aria-label", "Show options")
       @form_field_jq.trigger("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.attr("aria-expanded", false)
