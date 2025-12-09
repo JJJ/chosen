@@ -9,6 +9,7 @@ describe "Events", ->
       </select>
     "
     div = $("<div>").html(tmpl)
+    $('body').append(div)
     select = div.find("select")
     expect(select.length).toBe(1)
     select.chosen()
@@ -25,6 +26,7 @@ describe "Events", ->
     container.trigger("mousedown") # open the drop
     expect(container.hasClass("chosen-container-active")).toBe true
     #select an item
-    container.find(".active-result").last().trigger("mouseup")
+    container.find(".active-result").last().trigger $.Event("mouseup", which: 1)
 
     expect(event_sequence).toEqual ['input', 'change']
+    div.remove()

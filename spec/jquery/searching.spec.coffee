@@ -313,7 +313,7 @@ describe "Searching", ->
 
     expect(first_result.prop("class")).toContain("highlighted")
 
-    mouseup_with_meta = $.Event("mouseup")
+    mouseup_with_meta = $.Event("mouseup", which: 1)
     mouseup_with_meta.metaKey = true
     second_result.mouseover().trigger(mouseup_with_meta)
 
@@ -323,7 +323,7 @@ describe "Searching", ->
 
     third_result = results.find("li:nth-of-type(3)")
 
-    mouseup_with_ctrl = $.Event("mouseup")
+    mouseup_with_ctrl = $.Event("mouseup", which: 1)
     mouseup_with_ctrl.ctrlKey = true
     third_result.mouseover().trigger(mouseup_with_ctrl)
 
@@ -364,7 +364,7 @@ describe "Searching", ->
 
     expect(first_result.prop("class")).toContain("highlighted")
 
-    second_result.mouseover().mouseup()
+    second_result.mouseover().trigger $.Event("mouseup", which: 1)
 
     expect(div.find(".search-choice").length).toBe(1)
     expect(search_field.val()).toBe("")

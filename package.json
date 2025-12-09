@@ -22,26 +22,29 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.8",
+    "autoprefixer": "^10.4.22",
     "coffee-script": ">= 1.6",
     "grunt": "^1.2.1",
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^5.0.0",
-    "grunt-contrib-jasmine": "^2.2.0",
+    "grunt-contrib-jasmine": "^4.0.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-uglify-es": "https://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-dom-munger": "^4.0.0",
     "grunt-gh-pages": "^4.0.0",
-    "grunt-postcss": "^0.9.0",
     "grunt-sass": "^4.0.1",
-    "grunt-zip": "~0.17.1",
+    "grunt-zip": "^1.0.0",
     "load-grunt-tasks": "^5.1.0",
-    "node-sass": "^6.0",
+    "postcss": "^8.4.31",
+    "puppeteer": "^23.11.1",
     "sass": "^1.95.0",
     "simulant": "^0.2.2"
+  },
+  "overrides": {
+    "tar-fs": "^3.0.4",
+    "ws": "^8.17.1"
   },
   "contributors": [
     {

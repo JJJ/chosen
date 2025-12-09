@@ -27,7 +27,7 @@ describe "Basic setup", ->
     container.trigger("mousedown") # open the drop
     expect(container.hasClass("chosen-container-active")).toBe true
     #select an item
-    container.find(".active-result").last().trigger("mouseup")
+    container.find(".active-result").last().trigger $.Event("mouseup", which: 1)
 
     expect(select.val()).toBe "Afghanistan"
 
