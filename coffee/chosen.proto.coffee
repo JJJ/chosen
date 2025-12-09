@@ -8,9 +8,61 @@ class @Chosen extends AbstractChosen
     super()
 
     # HTML Templates
-    @single_temp = new Template('<a class="chosen-single chosen-default" role="button"><span>#{default}</span><div aria-label="Show options"><b aria-hidden="true"></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" /></div><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
-    @multi_temp = new Template('<ul class="chosen-choices"><li class="search-field"><input type="text" value="#{default}" class="default" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
-    @no_results_temp = new Template('<li class="no-results">' + @results_none_found + ' "<span>#{terms}</span>"</li>')
+    @single_temp = new Template(
+      '<a class="chosen-single chosen-default" role="button">
+        <span>#{default}</span>
+        <div aria-label="Show options">
+          <b aria-hidden="true"></b>
+        </div>
+      </a>
+      <div class="chosen-drop">
+        <div class="chosen-search">
+          <input
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="chosen-search-input"
+            role="combobox"
+            type="text"
+          />
+        </div>
+        <ul
+          aria-busy="true"
+          class="chosen-results"
+          role="listbox"
+        >
+        </ul>
+      </div>'
+    )
+    @multi_temp = new Template(
+      '<ul class="chosen-choices">
+        <li class="search-field">
+          <input
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="chosen-search-input"
+            role="combobox"
+            style="width:25px;"
+            type="text"
+            value="#{default}"
+          />
+        </li>
+      </ul>
+      <div class="chosen-drop">
+        <ul
+          aria-busy="true"
+          class="chosen-results"
+          role="listbox"
+        >
+        </ul>
+      </div>'
+    )
+    @no_results_temp = new Template(
+      '<li class="no-results">' + @results_none_found + ' "<span>#{terms}</span>"</li>'
+    )
 
   set_up_html: ->
     container_classes = ["chosen-container"]

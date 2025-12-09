@@ -458,13 +458,28 @@ class AbstractChosen
     """
       <a class="chosen-single chosen-default" role="button">
         <span>#{@default_text}</span>
-        <div aria-label="Show options"><b aria-hidden="true"></b></div>
+        <div aria-label="Show options">
+          <b aria-hidden="true"></b>
+        </div>
       </a>
       <div class="chosen-drop">
         <div class="chosen-search">
-          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" autocomplete="off" />
+          <input
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="chosen-search-input"
+            type="text"
+            role="combobox"
+          />
         </div>
-        <ul class="chosen-results" role="listbox"></ul>
+        <ul
+          aria-busy="true"
+          class="chosen-results"
+          role="listbox"
+        >
+        </ul>
       </div>
     """
 
@@ -472,11 +487,26 @@ class AbstractChosen
     """
       <ul class="chosen-choices">
         <li class="search-field">
-          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" placeholder="#{@default_text}" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" />
+          <input
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            autocomplete="off"
+            class="chosen-search-input"
+            role="combobox"
+            style="width:25px;"
+            type="text"
+            value="#{@default_text}"
+          />
         </li>
       </ul>
       <div class="chosen-drop">
-        <ul class="chosen-results" role="listbox"></ul>
+        <ul
+          aria-busy="true"
+          class="chosen-results"
+          role="listbox"
+        >
+        </ul>
       </div>
     """
 
