@@ -369,3 +369,27 @@ describe "Searching", ->
     expect(div.find(".search-choice").length).toBe(1)
     expect(search_field.val()).toBe("")
     expect(results.find("li:nth-of-type(1)").prop("class")).toContain("highlighted")
+
+  it "should not raise SyntaxError when search text is extremely long", ->
+    div = $("<div>").html("""
+      <select>
+        <option value="Item 1">Item 1</option>
+        <option value="Item 2">Item 2</option>
+      </select>
+    """)
+
+    div.find("select").chosen()
+    div.find(".chosen-container").trigger("mousedown") # open the drop
+
+    # Create an extremely long search string (much longer than the max_search_length default of 1000)
+    search_field = div.find(".chosen-search-input").first()
+    very_long_string = new Array(2000).join("x")
+    
+    # This should not throw a "Regular expression too large" SyntaxError
+    expect(() ->
+      search_field.val(very_long_string)
+      search_field.trigger("keyup")
+    ).not.toThrow()
+
+    # Should show no results
+    expect(div.find(".active-result").length).toBe(0)

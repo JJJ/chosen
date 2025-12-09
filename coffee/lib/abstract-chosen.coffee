@@ -43,6 +43,7 @@ class AbstractChosen
     @create_option = @options.create_option || false
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
+    @max_search_length = @options.max_search_length || 1000
 
   set_default_text: ->
     if @form_field.getAttribute("data-placeholder")
@@ -183,6 +184,8 @@ class AbstractChosen
     match_value = false
 
     query = this.get_search_text()
+    # Truncate query to prevent "Regular expression too large" errors
+    query = query.substring(0, @max_search_length) if query.length > @max_search_length
     escaped_query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
     regex = this.get_search_regex(escaped_query)
     exact_regex = new RegExp("^#{escaped_query}$")
@@ -459,7 +462,7 @@ class AbstractChosen
       </a>
       <div class="chosen-drop">
         <div class="chosen-search">
-          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-haspopup="true" aria-autocomplete="list" autocomplete="off" />
+          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" autocomplete="off" />
         </div>
         <ul class="chosen-results" role="listbox"></ul>
       </div>
@@ -469,7 +472,7 @@ class AbstractChosen
     """
       <ul class="chosen-choices">
         <li class="search-field">
-          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" placeholder="#{@default_text}" aria-expanded="false" aria-haspopup="true" aria-autocomplete="list" />
+          <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" placeholder="#{@default_text}" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" />
         </li>
       </ul>
       <div class="chosen-drop">
@@ -512,3 +515,4 @@ class AbstractChosen
   @default_single_text: "Select an Option"
   @default_no_result_text: "No results for:"
   @default_create_option_text: "Add Option:"
+  @default_remove_item_text: "Remove selection"
