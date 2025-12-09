@@ -900,7 +900,7 @@
 </a>
 <div class="chosen-drop">
   <div class="chosen-search">
-    <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-haspopup="true" aria-autocomplete="list" autocomplete="off" />
+    <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" autocomplete="off" />
   </div>
   <ul class="chosen-results" role="listbox"></ul>
 </div>`;
@@ -909,7 +909,7 @@
       get_multi_html() {
         return `<ul class="chosen-choices">
   <li class="search-field">
-    <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" placeholder="${this.default_text}" aria-expanded="false" aria-haspopup="true" aria-autocomplete="list" />
+    <input class="chosen-search-input" type="text" autocomplete="off" role="combobox" placeholder="${this.default_text}" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" />
   </li>
 </ul>
 <div class="chosen-drop">
