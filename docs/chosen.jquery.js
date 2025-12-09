@@ -1152,9 +1152,9 @@
       var i, j, label, labelledbyList, len, ref;
       this.search_field.attr("aria-owns", this.search_results.attr("id"));
       if (this.form_field.attributes["aria-label"]) {
-        this.search_field.attr("aria-label", this.form_field.attributes["aria-label"]);
+        this.search_field.attr("aria-label", this.form_field_jq.attr("aria-label"));
         if (this.form_field.attributes["aria-labelledby"]) {
-          return this.search_field.attr("aria-labelledby", this.form_field.attributes["aria-labelledby"]);
+          return this.search_field.attr("aria-labelledby", this.form_field_jq.attr("aria-labelledby"));
         }
       } else if (Object.prototype.hasOwnProperty.call(this.form_field, 'labels') && this.form_field.labels.length) {
         labelledbyList = "";
