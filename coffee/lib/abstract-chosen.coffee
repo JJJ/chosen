@@ -512,3 +512,4 @@ class AbstractChosen
   @default_single_text: "Select an Option"
   @default_no_result_text: "No results for:"
   @default_create_option_text: "Add Option:"
+  @default_remove_item_text: "Remove selection"

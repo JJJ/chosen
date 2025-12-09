@@ -376,7 +376,7 @@ class @Chosen extends AbstractChosen
     if item.disabled
       choice.addClassName 'search-choice-disabled'
     else
-      close_link = new Element('button', { type: 'button', tabindex: -1, class: 'search-choice-close', rel: item.data['data-option-array-index'] })
+      close_link = new Element('button', { type: 'button', tabindex: -1, class: 'search-choice-close', rel: item.data['data-option-array-index'] }).update('<span class="visually-hidden focusable">' + AbstractChosen.default_remove_item_text + '</span>')
       close_link.observe "click", (evt) => this.choice_destroy_link_click(evt)
       choice.insert close_link
     if @inherit_option_classes && item.classes
