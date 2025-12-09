@@ -526,7 +526,14 @@ class Chosen extends AbstractChosen
     $('<div/>').text(text).html()
 
   unescape_html: (text) ->
-    $('<div/>').html(text).text()
+    # Safely decode common HTML entities without parsing HTML tags
+    # This prevents double-encoding while maintaining security
+    text.replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&#x27;/g, "'")
 
   winnow_results_set_highlight: ->
     selected_results = if not @is_multiple then @search_results.find(".result-selected.active-result") else []
