@@ -1,6 +1,5 @@
 module.exports = (grunt) ->
   require('load-grunt-tasks')(grunt)
-  grunt.loadNpmTasks('grunt1.0-dom-munger') # the naming convention of the package does not allow auto-discovery.
 
   `const sass = require('sass')`
 
