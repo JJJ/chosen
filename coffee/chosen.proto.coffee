@@ -8,8 +8,8 @@ class @Chosen extends AbstractChosen
     super()
 
     # HTML Templates
-    @single_temp = new Template('<a class="chosen-single chosen-default"><span>#{default}</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" aria-expanded="false" aria-haspopup="listbox" role="combobox" aria-autocomplete="list" /></div><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
-    @multi_temp = new Template('<ul class="chosen-choices"><li class="search-field"><input type="text" value="#{default}" class="default" autocomplete="off" aria-expanded="false" aria-haspopup="listbox" role="combobox" aria-autocomplete="list" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
+    @single_temp = new Template('<a class="chosen-single chosen-default" role="button"><span>#{default}</span><div aria-label="Show options"><b aria-hidden="true"></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" /></div><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
+    @multi_temp = new Template('<ul class="chosen-choices"><li class="search-field"><input type="text" value="#{default}" class="default" autocomplete="off" aria-expanded="false" aria-haspopup="true" role="combobox" aria-autocomplete="list" style="width:25px;" /></li></ul><div class="chosen-drop"><ul class="chosen-results" role="listbox" aria-busy="true"></ul></div>')
     @no_results_temp = new Template('<li class="no-results">' + @results_none_found + ' "<span>#{terms}</span>"</li>')
 
   set_up_html: ->
@@ -160,7 +160,9 @@ class @Chosen extends AbstractChosen
       @selected_item.observe 'focus', this.activate_field
 
   container_mousedown: (evt) ->
-    if not @is_disabled and (evt and this.mousedown_checker(evt) == 'left')
+    return if @is_disabled
+
+    if evt and this.mousedown_checker(evt) == 'left'
       if evt and evt.type in ['mousedown', 'touchstart'] and not @results_showing
         evt.stop()
 
@@ -296,6 +298,7 @@ class @Chosen extends AbstractChosen
       @container.addClassName "chosen-dropup"
 
     @container.addClassName "chosen-with-drop"
+    @container.find(".chosen-single div").attr("aria-label", "Hide options")
     @results_showing = true
 
     @search_field.writeAttribute("aria-expanded", "true")
@@ -317,6 +320,7 @@ class @Chosen extends AbstractChosen
 
       @container.removeClassName "chosen-with-drop"
       @container.removeClassName "chosen-dropup"
+      @container.find(".chosen-single div").attr("aria-label", "Show options")
       @form_field.fire("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.writeAttribute("aria-expanded", "false")
@@ -372,7 +376,7 @@ class @Chosen extends AbstractChosen
     if item.disabled
       choice.addClassName 'search-choice-disabled'
     else
-      close_link = new Element('button', { type: 'button', tabindex: -1, class: 'search-choice-close', rel: item.data['data-option-array-index'] })
+      close_link = new Element('button', { type: 'button', tabindex: -1, class: 'search-choice-close', rel: item.data['data-option-array-index'] }).update('<span class="visually-hidden focusable">' + AbstractChosen.default_remove_item_text + '</span>')
       close_link.observe "click", (evt) => this.choice_destroy_link_click(evt)
       choice.insert close_link
     if @inherit_option_classes && item.classes
