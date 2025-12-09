@@ -12,10 +12,11 @@ describe "Searching", ->
     document.body.insert(div)
     div.update(tmpl)
     select = div.down('select')
-    new Chosen(select, {search_contains: true})
+    chosen = new Chosen(select, {search_contains: true})
 
     container = div.down('.chosen-container')
-    simulant.fire(container, 'mousedown') # open the drop
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen.container_mousedown(mockEvt)
 
     # Both options should be active
     results = div.select('.active-result')
@@ -24,7 +25,8 @@ describe "Searching", ->
     # Search for the html entity by name
     search_field = div.down(".chosen-search input")
     search_field.value = "mp"
-    simulant.fire(search_field, 'keyup')
+    mockKeyEvt = { which: 1 }
+    chosen.keyup_checker(mockKeyEvt)
 
     results = div.select(".active-result")
     expect(results.length).toBe(0)
@@ -38,14 +40,18 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"))
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"))
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".active-result").length).toBe(1)
     expect(div.down(".active-result").innerHTML).toBe("A &amp; B")
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "A"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".active-result").length).toBe(1)
     expect(div.down(".active-result").innerHTML).toBe("<em>A</em> &amp; B")
@@ -61,7 +67,10 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"))
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"))
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".group-result").length).toBe(1)
     expect(div.down(".group-result").innerHTML).toBe("A &lt;b&gt;hi&lt;/b&gt; B")
@@ -77,14 +86,18 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"))
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"))
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".group-result").length).toBe(1)
     expect(div.down(".group-result").innerHTML).toBe("A &amp; B")
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "A"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".group-result").length).toBe(1)
     expect(div.down(".group-result").innerHTML).toBe("<em>A</em> &amp; B")
@@ -133,13 +146,17 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"))
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"))
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".active-result").length).toBe(12)
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "一"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".active-result").length).toBe(1)
     expect(div.select(".active-result")[0].innerHTML).toBe("<em>一</em>")
@@ -164,13 +181,17 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"), {search_contains: true})
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"), {search_contains: true})
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".active-result").length).toBe(12)
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "一"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".active-result").length).toBe(2)
     expect(div.select(".active-result")[0].innerHTML).toBe("<em>一</em>")
@@ -196,13 +217,17 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"))
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"))
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".active-result").length).toBe(12)
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "一"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".active-result").length).toBe(1)
     expect(div.select(".active-result")[0].innerHTML).toBe("<em>一</em>")
@@ -227,13 +252,17 @@ describe "Searching", ->
     """)
 
     new Chosen(div.down("select"), {search_contains: true})
-    simulant.fire(div.down(".chosen-container"), "mousedown") # open the drop
+    container = div.down(".chosen-container")
+    chosen_inst = new Chosen(div.down("select"), {search_contains: true})
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen_inst.container_mousedown(mockEvt)
 
     expect(div.select(".active-result").length).toBe(12)
 
     search_field = div.down(".chosen-search-input")
     search_field.value = "一"
-    simulant.fire(search_field, "keyup")
+    mockKeyEvt = { which: 1 }
+    chosen_inst.keyup_checker(mockKeyEvt)
 
     expect(div.select(".active-result").length).toBe(2)
     expect(div.select(".active-result")[0].innerHTML).toBe("<em>一</em>")

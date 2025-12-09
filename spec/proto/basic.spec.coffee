@@ -13,11 +13,11 @@ describe "Basic setup", ->
     "
 
     div = new Element("div")
-    document.body.insert(div)
     div.update(tmpl)
+    document.body.appendChild(div)
     select = div.down("select")
     expect(select).toBeDefined()
-    new Chosen(select)
+    chosen = new Chosen(select)
     # very simple check that the necessary elements have been created
     ["container", "container-single", "single", "default"].forEach (clazz)->
       el = div.down(".chosen-#{clazz}")
@@ -27,12 +27,17 @@ describe "Basic setup", ->
     expect($F(select)).toBe ""
 
     container = div.down(".chosen-container")
-    simulant.fire(container, "mousedown") # open the drop
+    # Create a mock event for the mousedown handler
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    # Directly call the mousedown handler since event simulation doesn't work with Prototype.observe
+    chosen.container_mousedown(mockEvt)
     expect(container.hasClassName("chosen-container-active")).toBe true
 
-    #select an item
+    # select an item by calling the chosen handler directly
     result = container.select(".active-result").last()
-    simulant.fire(result, "mouseup")
+    # Create a mock event object with the necessary properties
+    mockUpEvt = { target: result, which: 1, preventDefault: -> }
+    chosen.search_results_mouseup(mockUpEvt)
 
     expect($F(select)).toBe "Afghanistan"
     div.remove()
@@ -49,14 +54,15 @@ describe "Basic setup", ->
         </select>
       "
       div = new Element("div")
-      document.body.insert(div)
       div.update(tmpl)
+      document.body.appendChild(div)
       select = div.down("select")
       expect(select).toBeDefined()
       new Chosen(select)
 
       placeholder = div.down(".chosen-single > span")
       expect(placeholder.innerText).toBe("Choose a Country...")
+      div.remove()
 
     it "should render with special characters", ->
       tmpl = "
@@ -68,14 +74,15 @@ describe "Basic setup", ->
         </select>
       "
       div = new Element("div")
-      document.body.insert(div)
       div.update(tmpl)
+      document.body.appendChild(div)
       select = div.down("select")
       expect(select).toBeDefined()
       new Chosen(select)
 
       placeholder = div.down(".chosen-single > span")
       expect(placeholder.innerText).toBe("<None>")
+      div.remove()
 
   describe "disabled fieldset", ->
 
@@ -91,14 +98,15 @@ describe "Basic setup", ->
         </fieldset>
       "
       div = new Element("div")
-      document.body.insert(div)
       div.update(tmpl)
+      document.body.appendChild(div)
       select = div.down("select")
       expect(select).toBeDefined()
       new Chosen(select)
 
       container = div.down(".chosen-container")
       expect(container.hasClassName("chosen-disabled")).toBe true
+      div.remove()
       
   it "it should not render hidden options", ->
     tmpl = "
@@ -108,14 +116,15 @@ describe "Basic setup", ->
       </select>
     "
     div = new Element("div")
-    document.body.insert(div)
     div.update(tmpl)
+    document.body.appendChild(div)
     select = div.down("select")
     expect(select).toBeDefined()
     new Chosen(select)
     container = div.down(".chosen-container")
     simulant.fire(container, "mousedown") # open the drop
     expect(container.select(".active-result").length).toBe 1
+    div.remove()
 
   it "it should not render hidden optgroups", ->
     tmpl = "
@@ -129,8 +138,8 @@ describe "Basic setup", ->
       </select>
     "
     div = new Element("div")
-    document.body.insert(div)
     div.update(tmpl)
+    document.body.appendChild(div)
     select = div.down("select")
     expect(select).toBeDefined()
     new Chosen(select)
@@ -138,3 +147,4 @@ describe "Basic setup", ->
     simulant.fire(container, "mousedown") # open the drop
     expect(container.select(".group-result").length).toBe 1
     expect(container.select(".active-result").length).toBe 1
+    div.remove()

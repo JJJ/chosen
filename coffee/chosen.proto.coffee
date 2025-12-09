@@ -3,6 +3,15 @@ class @Chosen extends AbstractChosen
   setup: ->
     @current_selectedIndex = @form_field.selectedIndex
     @is_rtl = @form_field.hasClassName "chosen-rtl"
+    # For Prototype compatibility with AbstractChosen which uses form_field_jq
+    @form_field_jq = @form_field
+
+  results_search: (evt) ->
+    if @results_showing
+      this.winnow_results()
+    else
+      this.results_show()
+    @form_field.fire("chosen:search", { chosen: this })
 
   set_default_values: ->
     super()
@@ -350,7 +359,8 @@ class @Chosen extends AbstractChosen
       @container.addClassName "chosen-dropup"
 
     @container.addClassName "chosen-with-drop"
-    @container.find(".chosen-single div").attr("aria-label", "Hide options")
+    single_div = @container.down(".chosen-single div")
+    single_div.writeAttribute("aria-label", "Hide options") if single_div
     @results_showing = true
 
     @search_field.writeAttribute("aria-expanded", "true")
@@ -372,7 +382,8 @@ class @Chosen extends AbstractChosen
 
       @container.removeClassName "chosen-with-drop"
       @container.removeClassName "chosen-dropup"
-      @container.find(".chosen-single div").attr("aria-label", "Show options")
+      single_div = @container.down(".chosen-single div")
+      single_div.writeAttribute("aria-label", "Show options") if single_div
       @form_field.fire("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.writeAttribute("aria-expanded", "false")

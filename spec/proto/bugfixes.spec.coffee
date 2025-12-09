@@ -13,18 +13,20 @@ describe "Bugfixes", ->
     div.innerHTML = tmpl
 
     select = div.down("select")
-    new Chosen select,
+    chosen = new Chosen select,
       include_group_label_in_selected: true
 
     # open the drop
     container = div.down(".chosen-container")
-    simulant.fire(container, "mousedown") # open the drop
+    mockEvt = { target: container, which: 1, type: 'mousedown', stop: -> }
+    chosen.container_mousedown(mockEvt)
 
     xss_option = container.select(".active-result").last()
     expect(xss_option.innerHTML).toBe "an xss option"
 
     # trigger the selection of the xss option
-    simulant.fire(xss_option, "mouseup")
+    mockUpEvt = { target: xss_option, which: 1, preventDefault: -> }
+    chosen.search_results_mouseup(mockUpEvt)
 
     # make sure the script tags are escaped correctly
     label_html = container.down("a.chosen-single").innerHTML

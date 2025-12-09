@@ -993,7 +993,20 @@
     class Chosen extends AbstractChosen {
       setup() {
         this.current_selectedIndex = this.form_field.selectedIndex;
-        return this.is_rtl = this.form_field.hasClassName("chosen-rtl");
+        this.is_rtl = this.form_field.hasClassName("chosen-rtl");
+        // For Prototype compatibility with AbstractChosen which uses form_field_jq
+        return this.form_field_jq = this.form_field;
+      }
+
+      results_search(evt) {
+        if (this.results_showing) {
+          this.winnow_results();
+        } else {
+          this.results_show();
+        }
+        return this.form_field.fire("chosen:search", {
+          chosen: this
+        });
       }
 
       set_default_values() {
@@ -1375,6 +1388,7 @@
       }
 
       results_show() {
+        var single_div;
         if (this.is_multiple && this.max_selected_options <= this.choices_count()) {
           this.form_field.fire("chosen:maxselected", {
             chosen: this
@@ -1385,7 +1399,10 @@
           this.container.addClassName("chosen-dropup");
         }
         this.container.addClassName("chosen-with-drop");
-        this.container.find(".chosen-single div").attr("aria-label", "Hide options");
+        single_div = this.container.down(".chosen-single div");
+        if (single_div) {
+          single_div.writeAttribute("aria-label", "Hide options");
+        }
         this.results_showing = true;
         this.search_field.writeAttribute("aria-expanded", "true");
         this.search_field.focus();
@@ -1408,11 +1425,15 @@
       }
 
       results_hide() {
+        var single_div;
         if (this.results_showing) {
           this.result_clear_highlight();
           this.container.removeClassName("chosen-with-drop");
           this.container.removeClassName("chosen-dropup");
-          this.container.find(".chosen-single div").attr("aria-label", "Show options");
+          single_div = this.container.down(".chosen-single div");
+          if (single_div) {
+            single_div.writeAttribute("aria-label", "Show options");
+          }
           this.form_field.fire("chosen:hiding_dropdown", {
             chosen: this
           });
