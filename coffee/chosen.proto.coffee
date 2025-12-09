@@ -5,7 +5,7 @@ class @Chosen extends AbstractChosen
     @is_rtl = @form_field.hasClassName "chosen-rtl"
     # For Prototype compatibility with AbstractChosen which uses form_field_jq
     @form_field_jq = @form_field
-    @scroll_handler = (evt) => this.update_dropup_position(evt)
+    @scroll_handler = () => this.update_dropup_position()
 
   results_search: (evt) ->
     if @results_showing

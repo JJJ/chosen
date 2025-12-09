@@ -24,7 +24,7 @@ class Chosen extends AbstractChosen
   setup: ->
     @form_field_jq = $ @form_field
     @current_selectedIndex = @form_field.selectedIndex
-    @scroll_handler = (evt) => this.update_dropup_position(evt)
+    @scroll_handler = () => this.update_dropup_position()
 
   set_up_html: ->
     container_classes = ["chosen-container"]
