@@ -5,6 +5,7 @@ class @Chosen extends AbstractChosen
     @is_rtl = @form_field.hasClassName "chosen-rtl"
     # For Prototype compatibility with AbstractChosen which uses form_field_jq
     @form_field_jq = @form_field
+    @scroll_handler = (evt) => this.update_dropup_position(evt)
 
   results_search: (evt) ->
     if @results_showing
@@ -281,6 +282,14 @@ class @Chosen extends AbstractChosen
     else
       false
 
+  update_dropup_position: ->
+    return unless @results_showing
+
+    if this.should_dropup()
+      @container.addClassName "chosen-dropup"
+    else
+      @container.removeClassName "chosen-dropup"
+
   activate_field: ->
     return if @is_disabled
 
@@ -370,6 +379,9 @@ class @Chosen extends AbstractChosen
     this.winnow_results()
     @form_field.fire("chosen:showing_dropdown", { chosen: this })
 
+    # Register scroll handler to dynamically adjust dropdown position
+    Event.observe window, 'scroll', @scroll_handler
+
   update_results_content: (content) ->
     @search_results.update content
 
@@ -388,6 +400,9 @@ class @Chosen extends AbstractChosen
 
     @search_field.writeAttribute("aria-expanded", "false")
     @results_showing = false
+
+    # Unregister scroll handler
+    Event.stopObserving window, 'scroll', @scroll_handler
 
 
   set_tab_index: (el) ->
