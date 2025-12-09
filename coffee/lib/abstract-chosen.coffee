@@ -229,13 +229,15 @@ class AbstractChosen
           if option.search_match
             if query.length and not match_value
               startpos = search_match.index
-              endpos = query.length
+              match_length = query.length
 
-              # If any normalization changed the search_text, perform a better
-              # logic to highlight results
+              # If normalization changed the text, we need to find the correct
+              # highlighting boundaries in the original (non-normalized) text.
+              # Note: This algorithm has O(n) complexity where n is the text length.
+              # For most use cases with short option text, performance impact is minimal.
               if normalized_text != text
 
-                # Search from the beginning where it stops to match
+                # Find where the match starts in the original text
                 last_normalized_text = normalized_text
                 offset = 0
                 for i in [0..text.length - 1] by 1
@@ -247,16 +249,16 @@ class AbstractChosen
                     startpos = i - offset
                     break
 
-                # Search from the end where it starts to match
+                # Find the length of the match in the original text
                 for i in [1..text.length - startpos] by 1
                   substr_normalized_text = this.normalize_search_text(text.substr(startpos, i))
                   if regex.test(substr_normalized_text) isnt false
-                    endpos = i
+                    match_length = i
                     break
 
               prefix = text.slice(0, startpos)
-              fix    = text.slice(startpos, startpos + endpos)
-              suffix = text.slice(startpos + endpos)
+              fix    = text.slice(startpos, startpos + match_length)
+              suffix = text.slice(startpos + match_length)
               option.highlighted_html = "#{this.escape_html(prefix)}<em>#{this.escape_html(fix)}</em>#{this.escape_html(suffix)}"
 
             results_group.group_match = true if results_group?
