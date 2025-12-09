@@ -153,7 +153,9 @@ class Chosen extends AbstractChosen
       @selected_item.on 'focus.chosen', this.activate_field
 
   container_mousedown: (evt) ->
-    if not @is_disabled and (evt and this.mousedown_checker(evt) == 'left')
+    return if @is_disabled
+
+    if evt and this.mousedown_checker(evt) == 'left'
       if evt and evt.type is "mousedown" and not @results_showing
         evt.preventDefault()
 
