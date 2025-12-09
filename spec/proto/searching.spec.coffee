@@ -291,3 +291,30 @@ describe "Searching", ->
         simulant.fire(search_field, "keyup")
         expect(div.select(".active-result").length).toBe(1)
         expect(div.select(".active-result")[0].innerText.slice(1)).toBe(boundary_thing)
+
+  it "should not raise SyntaxError when search text is extremely long", ->
+    div = new Element("div")
+    div.innerHTML = """
+      <select>
+        <option value="Item 1">Item 1</option>
+        <option value="Item 2">Item 2</option>
+      </select>
+    """
+
+    select = div.down("select")
+    new Chosen(select)
+    container = div.down(".chosen-container")
+    simulant.fire(container, "mousedown") # open the drop
+
+    # Create an extremely long search string (much longer than the max_search_length default of 1000)
+    search_field = div.down(".chosen-search-input")
+    very_long_string = new Array(2000).join("pain from your ears ")
+    
+    # This should not throw a "Regular expression too large" SyntaxError
+    expect(() ->
+      search_field.value = very_long_string
+      simulant.fire(search_field, "keyup")
+    ).not.toThrow()
+
+    # Should show no results
+    expect(div.select(".active-result").length).toBe(0)

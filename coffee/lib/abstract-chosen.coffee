@@ -43,6 +43,7 @@ class AbstractChosen
     @create_option = @options.create_option || false
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
+    @max_search_length = @options.max_search_length || 1000
 
   set_default_text: ->
     if @form_field.getAttribute("data-placeholder")
@@ -183,6 +184,8 @@ class AbstractChosen
     match_value = false
 
     query = this.get_search_text()
+    # Truncate query to prevent "Regular expression too large" errors
+    query = query.substring(0, @max_search_length) if query.length > @max_search_length
     escaped_query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
     regex = this.get_search_regex(escaped_query)
     exact_regex = new RegExp("^#{escaped_query}$")
