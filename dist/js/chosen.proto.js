@@ -371,7 +371,7 @@
       }
 
       winnow_results(options) {
-        var escaped_query, exact_regex, exact_result, fix, highlight_regex, i, j, k, l, last_normalized_text, len, match_length, match_value, normalized_query, normalized_text, offset, option, prefix, query, ref, ref1, ref2, regex, results, results_group, search_match, startpos, substr_normalized_text, suffix, text;
+        var escaped_query, exact_regex, exact_result, fix, highlight_regex, i, j, k, l, len, match_end_in_normalized, match_length, match_value, normalized_query, normalized_text, option, prefix, prefix_normalized, query, ref, ref1, ref2, ref3, regex, results, results_group, search_match, startpos, substr_normalized, suffix, text;
         this.no_results_clear();
         results = 0;
         exact_result = false;
@@ -424,28 +424,28 @@
                   match_length = query.length;
                   // If normalization changed the text, we need to find the correct
                   // highlighting boundaries in the original (non-normalized) text.
-                  // Note: This algorithm has O(n) complexity where n is the text length.
-                  // For most use cases with short option text, performance impact is minimal.
+                  // Note: This algorithm has O(n²) complexity due to repeated normalization.
+                  // For most use cases with short option text (typically <100 chars), 
+                  // performance impact is minimal and negligible compared to DOM operations.
                   if (normalized_text !== text) {
-                    // Find where the match starts in the original text
-                    last_normalized_text = normalized_text;
-                    offset = 0;
-                    for (i = k = 0, ref1 = text.length - 1; k <= ref1; i = k += 1) {
-                      substr_normalized_text = this.normalize_search_text(text.substr(i));
-                      if (last_normalized_text === substr_normalized_text) {
-                        offset++;
-                      }
-                      last_normalized_text = substr_normalized_text;
-                      if (regex.test(substr_normalized_text) === false) {
-                        startpos = i - offset;
+                    // Find where the match starts in the original text by comparing
+                    // normalized prefixes of the original text
+                    startpos = 0;
+                    for (i = k = 0, ref1 = text.length; k < ref1; i = k += 1) {
+                      prefix_normalized = this.normalize_search_text(text.substring(0, i));
+                      if (prefix_normalized.length >= search_match.index) {
+                        startpos = i;
                         break;
                       }
                     }
-// Find the length of the match in the original text
-                    for (i = l = 1, ref2 = text.length - startpos; l <= ref2; i = l += 1) {
-                      substr_normalized_text = this.normalize_search_text(text.substr(startpos, i));
-                      if (regex.test(substr_normalized_text) !== false) {
-                        match_length = i;
+                    // Find the length of the match in the original text
+                    // by finding where the normalized text reaches the match end
+                    match_end_in_normalized = search_match.index + normalized_query.length;
+                    match_length = 0;
+                    for (i = l = ref2 = startpos, ref3 = text.length + 1; l < ref3; i = l += 1) {
+                      substr_normalized = this.normalize_search_text(text.substring(0, i));
+                      if (substr_normalized.length >= match_end_in_normalized) {
+                        match_length = i - startpos;
                         break;
                       }
                     }

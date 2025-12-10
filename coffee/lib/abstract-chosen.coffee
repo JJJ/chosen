@@ -234,27 +234,28 @@ class AbstractChosen
 
               # If normalization changed the text, we need to find the correct
               # highlighting boundaries in the original (non-normalized) text.
-              # Note: This algorithm has O(n) complexity where n is the text length.
-              # For most use cases with short option text, performance impact is minimal.
+              # Note: This algorithm has O(n²) complexity due to repeated normalization.
+              # For most use cases with short option text (typically <100 chars), 
+              # performance impact is minimal and negligible compared to DOM operations.
               if normalized_text != text
 
-                # Find where the match starts in the original text
-                last_normalized_text = normalized_text
-                offset = 0
-                for i in [0..text.length - 1] by 1
-                  substr_normalized_text = this.normalize_search_text(text.substr(i))
-                  if last_normalized_text == substr_normalized_text
-                    offset++
-                  last_normalized_text = substr_normalized_text
-                  if regex.test(substr_normalized_text) is false
-                    startpos = i - offset
+                # Find where the match starts in the original text by comparing
+                # normalized prefixes of the original text
+                startpos = 0
+                for i in [0...text.length] by 1
+                  prefix_normalized = this.normalize_search_text(text.substring(0, i))
+                  if prefix_normalized.length >= search_match.index
+                    startpos = i
                     break
 
                 # Find the length of the match in the original text
-                for i in [1..text.length - startpos] by 1
-                  substr_normalized_text = this.normalize_search_text(text.substr(startpos, i))
-                  if regex.test(substr_normalized_text) isnt false
-                    match_length = i
+                # by finding where the normalized text reaches the match end
+                match_end_in_normalized = search_match.index + normalized_query.length
+                match_length = 0
+                for i in [startpos...text.length + 1] by 1
+                  substr_normalized = this.normalize_search_text(text.substring(0, i))
+                  if substr_normalized.length >= match_end_in_normalized
+                    match_length = i - startpos
                     break
 
               prefix = text.slice(0, startpos)
