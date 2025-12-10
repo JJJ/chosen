@@ -165,6 +165,27 @@ $chosen-selected-color: #e0e0e0;
 		}
 	}
 
+	.chosen-single-button {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		opacity: 0;
+		font-size: 0;
+
+		&:focus {
+			outline: 2px solid $chosen-active-color;
+			outline-offset: 1px;
+			opacity: 0;
+		}
+	}
+
 	.chosen-search {
 		position: relative;
 		z-index: 1011;
