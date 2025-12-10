@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
+## [Unreleased]
+
+### Added
+- Mobile device support - Chosen now initializes on mobile devices (iPhone, iPad, Android, Windows Phone, BlackBerry)
+- Touch event handling is fully functional on mobile browsers
+- Test coverage for mobile device user agents and touch interactions
+
+### Changed
+- Removed mobile device detection that prevented initialization on mobile browsers
+- Chosen now works on all modern browsers including mobile devices
+
+### Fixed
+- Fixed issue where dynamic results (via AJAX, etc.) could not be retrieved on mobile browsers
+
 ## [2.2.1] - 2025-12-09
 
 ### Differences from Original chosen-js (harvesthq/chosen v1.8.7)
