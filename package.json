@@ -1,15 +1,19 @@
 {
   "author": "jjj",
-  "name": "chosen",
+  "name": "chosen-jjj",
   "version": "2.2.1",
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
+  "main": "docs/chosen.jquery.js",
   "keywords": [
     "select",
     "multiselect",
     "dropdown",
     "form",
     "input",
-    "ui"
+    "ui",
+    "chosen",
+    "jquery",
+    "prototype"
   ],
   "repository": {
     "type": "git",
@@ -19,8 +23,23 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "build": "grunt build",
+    "prepublishOnly": "npm run build"
   },
+  "files": [
+    "docs/chosen.jquery.js",
+    "docs/chosen.jquery.min.js",
+    "docs/chosen.proto.js",
+    "docs/chosen.proto.min.js",
+    "docs/chosen.css",
+    "docs/chosen.min.css",
+    "docs/chosen.css.map",
+    "docs/docsupport/chosen.png",
+    "LICENSE.md",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "devDependencies": {
     "autoprefixer": "^10.4.22",
     "coffee-script": ">= 1.6",
