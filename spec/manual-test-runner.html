@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chosen Width Tests - Manual Runner</title>
+    <link rel="stylesheet" href="../docs/chosen.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-case {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .test-case h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .measurement {
+            font-family: monospace;
+            background: #fff;
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chosen Width Tests - Manual Verification</h1>
+    <p>These tests verify that the min-width CSS fix works correctly for short values.</p>
+
+    <div id="test-container"></div>
+
+    <script src="../docs/docsupport/jquery-3.5.1.min.js"></script>
+    <script src="../docs/chosen.jquery.js"></script>
+    <script>
+        $(document).ready(function() {
+            var testContainer = $('#test-container');
+            var testResults = [];
+
+            function runTest(name, testFunc) {
+                try {
+                    var result = testFunc();
+                    var html = '<div class="test-case">' +
+                               '<h3>' + name + '</h3>' +
+                               '<div class="test-result ' + (result.pass ? 'pass' : 'fail') + '">' +
+                               (result.pass ? '✓ PASS' : '✗ FAIL') + ': ' + result.message +
+                               '</div>' +
+                               (result.details || '') +
+                               '</div>';
+                    testContainer.append(html);
+                    testResults.push({name: name, pass: result.pass});
+                } catch(e) {
+                    var html = '<div class="test-case">' +
+                               '<h3>' + name + '</h3>' +
+                               '<div class="test-result fail">✗ ERROR: ' + e.message + '</div>' +
+                               '</div>';
+                    testContainer.append(html);
+                    testResults.push({name: name, pass: false});
+                }
+            }
+
+            // Test 1: Min-width is applied
+            runTest("Should apply min-width to single select containers", function() {
+                var tmpl = '<select data-placeholder="Select a year...">' +
+                           '<option value=""></option>' +
+                           '<option value="2020">2020</option>' +
+                           '<option value="2021">2021</option>' +
+                           '<option value="2022">2022</option>' +
+                           '</select>';
+                var div = $('<div>').html(tmpl).appendTo('body');
+                var select = div.find('select');
+                select.chosen();
+                
+                var container = div.find('.chosen-container-single');
+                var containerWidth = container.outerWidth();
+                
+                var pass = containerWidth >= 80;
+                var details = '<div class="measurement">Measured container width: ' + containerWidth + 'px (expected: ≥80px)</div>';
+                
+                div.remove();
+                
+                return {
+                    pass: pass,
+                    message: pass ? 'Container width is correctly ' + containerWidth + 'px' : 
+                                   'Container width is only ' + containerWidth + 'px, expected ≥80px',
+                    details: details
+                };
+            });
+
+            // Test 2: Short values display without truncation
+            runTest("Should display short values without truncation", function() {
+                var tmpl = '<select data-placeholder="Select...">' +
+                           '<option value=""></option>' +
+                           '<option value="A">A</option>' +
+                           '<option value="B">B</option>' +
+                           '</select>';
+                var div = $('<div>').html(tmpl).appendTo('body');
+                var select = div.find('select');
+                select.chosen();
+                
+                var container = div.find('.chosen-container');
+                container.trigger('mousedown');
+                container.find('.active-result').first().trigger($.Event('mouseup', {which: 1}));
+                
+                var span = div.find('.chosen-single span');
+                var containerWidth = container.outerWidth();
+                
+                var pass = span.text() === 'A' && containerWidth >= 80;
+                var details = '<div class="measurement">' +
+                             'Selected text: "' + span.text() + '"<br>' +
+                             'Container width: ' + containerWidth + 'px (expected: ≥80px)' +
+                             '</div>';
+                
+                div.remove();
+                
+                return {
+                    pass: pass,
+                    message: pass ? 'Short value displays correctly' : 
+                                   'Short value may be truncated or container too narrow',
+                    details: details
+                };
+            });
+
+            // Test 3: 4-digit years display correctly
+            runTest("Should display 4-digit years without truncation", function() {
+                var tmpl = '<select>' +
+                           '<option value=""></option>' +
+                           '<option value="2013">2013</option>' +
+                           '<option value="2014">2014</option>' +
+                           '</select>';
+                var div = $('<div>').html(tmpl).appendTo('body');
+                var select = div.find('select');
+                select.chosen();
+                
+                var container = div.find('.chosen-container');
+                container.trigger('mousedown');
+                container.find('.active-result').first().trigger($.Event('mouseup', {which: 1}));
+                
+                var span = div.find('.chosen-single span');
+                var spanElement = span[0];
+                var containerWidth = container.outerWidth();
+                var isTruncated = spanElement.scrollWidth > spanElement.clientWidth + 1;
+                
+                var pass = span.text() === '2013' && containerWidth >= 80 && !isTruncated;
+                var details = '<div class="measurement">' +
+                             'Selected text: "' + span.text() + '"<br>' +
+                             'Container width: ' + containerWidth + 'px<br>' +
+                             'Span scrollWidth: ' + spanElement.scrollWidth + 'px<br>' +
+                             'Span clientWidth: ' + spanElement.clientWidth + 'px<br>' +
+                             'Is truncated: ' + (isTruncated ? 'YES ✗' : 'NO ✓') +
+                             '</div>';
+                
+                div.remove();
+                
+                return {
+                    pass: pass,
+                    message: pass ? 'Year displays correctly without truncation' : 
+                                   'Year may be truncated or container too narrow',
+                    details: details
+                };
+            });
+
+            // Test 4: Wider content expands naturally
+            runTest("Should allow wider content to expand naturally", function() {
+                var tmpl = '<select data-placeholder="Select a country...">' +
+                           '<option value=""></option>' +
+                           '<option value="US">United States of America</option>' +
+                           '</select>';
+                var div = $('<div>').html(tmpl).appendTo('body');
+                var select = div.find('select');
+                select.chosen();
+                
+                var container = div.find('.chosen-container');
+                container.trigger('mousedown');
+                container.find('.active-result').first().trigger($.Event('mouseup', {which: 1}));
+                
+                var containerWidth = container.outerWidth();
+                
+                var pass = containerWidth > 80;
+                var details = '<div class="measurement">' +
+                             'Container width: ' + containerWidth + 'px (expected: >80px for long content)' +
+                             '</div>';
+                
+                div.remove();
+                
+                return {
+                    pass: pass,
+                    message: pass ? 'Container expands naturally to ' + containerWidth + 'px' : 
+                                   'Container is not expanding for long content',
+                    details: details
+                };
+            });
+
+            // Summary
+            var passed = testResults.filter(function(r) { return r.pass; }).length;
+            var total = testResults.length;
+            var summary = '<div style="margin-top: 30px; padding: 20px; background: ' + 
+                         (passed === total ? '#d4edda' : '#fff3cd') + 
+                         '; border-radius: 5px; font-size: 18px; font-weight: bold;">' +
+                         'Test Results: ' + passed + ' / ' + total + ' passed' +
+                         '</div>';
+            testContainer.append(summary);
+        });
+    </script>
+</body>
+</html>
