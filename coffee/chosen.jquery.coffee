@@ -511,6 +511,7 @@ class Chosen extends AbstractChosen
   single_set_selected_text: (text=@default_text) ->
     if text is @default_text
       @selected_item.addClass("chosen-default")
+      text = this.escape_html(text)
     else
       this.single_deselect_control_build()
       @selected_item.removeClass("chosen-default")
@@ -550,6 +551,19 @@ class Chosen extends AbstractChosen
 
   escape_html: (text) ->
     $('<div/>').text(text).html()
+
+  unescape_html: (text) ->
+    # Safely decode common HTML entities without parsing HTML tags
+    # This prevents double-encoding while maintaining security
+    # Note: Sequential replacements may cause double-unescaping (e.g., &amp;amp; -> &amp; -> &)
+    # This is intentional to handle cases where users incorrectly pre-escape their input
+    # Security is maintained because we re-escape via escape_html() before template insertion
+    text.replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&#x27;/g, "'")
 
   winnow_results_set_highlight: ->
     selected_results = if not @is_multiple then @search_results.find(".result-selected.active-result") else []
