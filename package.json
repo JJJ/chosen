@@ -1,6 +1,6 @@
 {
   "author": "jjj",
-  "name": "chosen",
+  "name": "chosen-jjj",
   "version": "2.2.1",
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
   "keywords": [
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jjj/chosen.git"
+    "url": "git+https://github.com/jjj/chosen.git"
   },
   "engines": {
     "node": ">=4"
@@ -71,6 +71,9 @@
   "license": "MIT",
   "homepage": "https://jjj.github.io/chosen/",
   "bugs": "https://github.com/jjj/chosen/issues",
+  "files": [
+    "dist"
+  ],
   "_extra": {
     "title": "Chosen",
     "license": {
@@ -82,16 +85,8 @@
       "docs": "https://jjj.github.io/chosen/"
     },
     "main": [
-      "chosen.jquery.js",
-      "chosen.css"
-    ],
-    "files": [
-      "chosen.jquery.js",
-      "chosen.jquery.min.js",
-      "chosen.proto.js",
-      "chosen.proto.min.js",
-      "chosen.css",
-      "chosen.min.css"
+      "dist/chosen.jquery.js",
+      "dist/chosen.css"
     ]
   }
 }
