@@ -11,3 +11,4 @@ spec/public
 
 # Test files
 test_*.html
+*.tgz
