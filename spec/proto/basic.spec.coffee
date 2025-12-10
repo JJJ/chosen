@@ -84,6 +84,66 @@ describe "Basic setup", ->
       expect(placeholder.innerText).toBe("<None>")
       div.remove()
 
+    it "should render with ampersand", ->
+      tmpl = "
+        <select data-placeholder='Choose from A &amp; B'>
+          <option value=''></option>
+          <option value='United States'>United States</option>
+          <option value='United Kingdom'>United Kingdom</option>
+          <option value='Afghanistan'>Afghanistan</option>
+        </select>
+      "
+      div = new Element("div")
+      div.update(tmpl)
+      document.body.appendChild(div)
+      select = div.down("select")
+      expect(select).toBeDefined()
+      new Chosen(select)
+
+      placeholder = div.down(".chosen-single > span")
+      expect(placeholder.innerText).toBe("Choose from A & B")
+      div.remove()
+
+    it "should handle ampersand in options", ->
+      tmpl = "
+        <select>
+          <option value=''></option>
+          <option value='1'>Option 1</option>
+        </select>
+      "
+      div = new Element("div")
+      div.update(tmpl)
+      document.body.appendChild(div)
+      select = div.down("select")
+      expect(select).toBeDefined()
+      new Chosen(select, {
+        placeholder_text_single: 'Choose from A & B'
+      })
+
+      placeholder = div.down(".chosen-single > span")
+      expect(placeholder.innerText).toBe("Choose from A & B")
+      div.remove()
+
+    it "should handle already-escaped entities in options", ->
+      tmpl = "
+        <select>
+          <option value=''></option>
+          <option value='1'>Option 1</option>
+        </select>
+      "
+      div = new Element("div")
+      div.update(tmpl)
+      document.body.appendChild(div)
+      select = div.down("select")
+      expect(select).toBeDefined()
+      new Chosen(select, {
+        placeholder_text_single: 'Choose from A &amp; B'
+      })
+
+      placeholder = div.down(".chosen-single > span")
+      expect(placeholder.innerText).toBe("Choose from A & B")
+      div.remove()
+
   describe "disabled fieldset", ->
 
     it "should render as disabled", ->
