@@ -151,6 +151,10 @@ describe "Scroll Position Adjustment", ->
   # Note: This test is async (uses done callback) because the scroll handler
   # is throttled with a 16ms setTimeout, so we need to wait for it to execute
   it "should properly register and unregister scroll handler", (done) ->
+    # The scroll handler uses a 16ms throttle delay (see chosen.jquery.coffee:32)
+    # We use a longer delay here to ensure the throttle timeout completes reliably
+    THROTTLE_WAIT = 50
+    
     tmpl = "
       <select data-placeholder='Choose a Country...'>
         <option value=''></option>
@@ -200,8 +204,8 @@ describe "Scroll Position Adjustment", ->
         
         div.remove()
         done()
-      , 50
-    , 50
+      , THROTTLE_WAIT
+    , THROTTLE_WAIT
 
   it "should clean up scroll handler when widget is destroyed", ->
     tmpl = "
