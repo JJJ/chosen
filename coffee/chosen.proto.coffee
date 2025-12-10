@@ -5,7 +5,13 @@ class @Chosen extends AbstractChosen
     @is_rtl = @form_field.hasClassName "chosen-rtl"
     # For Prototype compatibility with AbstractChosen which uses form_field_jq
     @form_field_jq = @form_field
-    @scroll_handler = () => this.update_dropup_position()
+    @scroll_throttle_timeout = null
+    @scroll_handler = () =>
+      return if @scroll_throttle_timeout
+      @scroll_throttle_timeout = setTimeout(() =>
+        @scroll_throttle_timeout = null
+        this.update_dropup_position()
+      , 16) # ~60fps
 
   results_search: (evt) ->
     if @results_showing
@@ -169,6 +175,9 @@ class @Chosen extends AbstractChosen
 
     for event in ['chosen:updated', 'chosen:activate', 'chosen:open', 'chosen:close']
       @form_field.stopObserving(event)
+
+    # Clean up scroll handler if dropdown is open
+    Event.stopObserving window, 'scroll', @scroll_handler if @results_showing
 
     @container.stopObserving()
     @search_results.stopObserving()

@@ -24,7 +24,13 @@ class Chosen extends AbstractChosen
   setup: ->
     @form_field_jq = $ @form_field
     @current_selectedIndex = @form_field.selectedIndex
-    @scroll_handler = () => this.update_dropup_position()
+    @scroll_throttle_timeout = null
+    @scroll_handler = () =>
+      return if @scroll_throttle_timeout
+      @scroll_throttle_timeout = setTimeout(() =>
+        @scroll_throttle_timeout = null
+        this.update_dropup_position()
+      , 16) # ~60fps
 
   set_up_html: ->
     container_classes = ["chosen-container"]
@@ -117,6 +123,9 @@ class Chosen extends AbstractChosen
   destroy: ->
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
     @form_field_label.off 'click.chosen' if @form_field_label.length > 0
+
+    # Clean up scroll handler if dropdown is open
+    $(window).off 'scroll.chosen', @scroll_handler if @results_showing
 
     if @search_field[0].tabIndex
       @form_field_jq[0].tabIndex = @search_field[0].tabIndex
