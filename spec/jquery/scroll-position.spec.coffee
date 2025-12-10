@@ -45,14 +45,18 @@ describe "Scroll Position Adjustment", ->
     expect(container.hasClass("chosen-dropup")).toBe shouldBeDropup
     initialDropup = container.hasClass("chosen-dropup")
     
-    # Scroll up to create more space below
-    window.scrollTo(0, Math.max(0, scrollToMakeDropup - 300))
+    # Scroll down (increase scroll position) to move element up and create more space below
+    window.scrollTo(0, scrollToMakeDropup + 300)
     
     # Manually trigger scroll handler
     chosen.update_dropup_position()
     
     # Verify dropup state changed to account for new space
-    expect(container.hasClass("chosen-dropup")).not.toBe initialDropup
+    # After scrolling down, element moves up on screen, creating more space below
+    newDropdownTop = container.offset().top + container.outerHeight() - $(window).scrollTop()
+    newTotalHeight = dropdownHeight + newDropdownTop
+    newShouldBeDropup = newTotalHeight > windowHeight
+    expect(container.hasClass("chosen-dropup")).toBe newShouldBeDropup
     
     div.remove()
     window.scrollTo(0, 0)

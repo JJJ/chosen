@@ -230,14 +230,19 @@ class AbstractChosen
           if option.search_match
             if query.length and not match_value
               startpos = search_match.index
-              match_length = query.length
-
+              
               # If normalization changed the text, we need to find the correct
               # highlighting boundaries in the original (non-normalized) text.
               # Note: This algorithm has O(n²) complexity due to repeated normalization.
               # For most use cases with short option text (typically <100 chars), 
               # performance impact is minimal and negligible compared to DOM operations.
               if normalized_text != text
+                # When using normalization, highlight the full matched portion
+                # Get the actual matched length, accounting for boundary character in capture group
+                # search_match[1] contains the boundary character (space) if it was matched
+                # search_match[0] contains the full match including the boundary
+                matched_length_in_normalized = search_match[0].length
+                matched_length_in_normalized -= 1 if search_match[1] # subtract boundary char if present
 
                 # Find where the match starts in the original text by comparing
                 # normalized prefixes of the original text
@@ -249,14 +254,17 @@ class AbstractChosen
                     break
 
                 # Find the length of the match in the original text
-                # by finding where the normalized text reaches the match end
-                match_end_in_normalized = search_match.index + normalized_query.length
+                # by finding where the normalized substring from startpos reaches the matched length
                 match_length = 0
                 for i in [startpos...text.length + 1] by 1
-                  substr_normalized = this.normalize_search_text(text.substring(0, i))
-                  if substr_normalized.length >= match_end_in_normalized
+                  substr_normalized = this.normalize_search_text(text.substring(startpos, i))
+                  if substr_normalized.length >= matched_length_in_normalized
                     match_length = i - startpos
                     break
+              else
+                # When text doesn't change after normalization, use the query length
+                # This highlights only what the user typed, not the entire matched word
+                match_length = query.length
 
               prefix = text.slice(0, startpos)
               fix    = text.slice(startpos, startpos + match_length)
