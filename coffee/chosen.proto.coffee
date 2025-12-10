@@ -10,7 +10,7 @@ class @Chosen extends AbstractChosen
       return if @scroll_throttle_timeout
       @scroll_throttle_timeout = setTimeout(() =>
         @scroll_throttle_timeout = null
-        this.update_dropup_position()
+        @update_dropup_position()
       , 16) # ~60fps
 
   results_search: (evt) ->
