@@ -167,7 +167,7 @@ describe "Basic setup", ->
       container = div.down(".chosen-container")
       expect(container.hasClassName("chosen-disabled")).toBe true
       div.remove()
-      
+
   it "it should not render hidden options", ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>
