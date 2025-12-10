@@ -13,7 +13,7 @@ https://github.com/jjj/chosen/releases/
 
 ### Compiled Assets
 
-The compiled JavaScript and CSS files are located in the `/build` directory. This directory contains:
+The compiled JavaScript and CSS files are located in the `/dist` directory. This directory contains:
 
 - `chosen.jquery.js` / `chosen.jquery.min.js` - jQuery version
 - `chosen.proto.js` / `chosen.proto.min.js` - Prototype version

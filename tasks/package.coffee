@@ -16,9 +16,9 @@ module.exports = (grunt) ->
       src: ['docs/**/*']
       dest: 'chosen_<%= version_tag %>.zip'
     build:
-      cwd: 'build/'
-      src: ['build/**/*']
-      dest: 'chosen_<%= version_tag %>_build.zip'
+      cwd: 'dist/'
+      src: ['dist/**/*']
+      dest: 'chosen_<%= version_tag %>_dist.zip'
 
   grunt.config 'gh-pages',
     options:
