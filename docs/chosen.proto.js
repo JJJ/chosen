@@ -1030,7 +1030,17 @@
         this.current_selectedIndex = this.form_field.selectedIndex;
         this.is_rtl = this.form_field.hasClassName("chosen-rtl");
         // For Prototype compatibility with AbstractChosen which uses form_field_jq
-        return this.form_field_jq = this.form_field;
+        this.form_field_jq = this.form_field;
+        this.scroll_throttle_timeout = null;
+        return this.scroll_handler = () => {
+          if (this.scroll_throttle_timeout) {
+            return;
+          }
+          return this.scroll_throttle_timeout = setTimeout(() => {
+            this.scroll_throttle_timeout = null;
+            return this.update_dropup_position();
+          }, 16); // ~60fps
+        };
       }
 
       results_search(evt) {
@@ -1207,6 +1217,13 @@
           event = ref[j];
           this.form_field.stopObserving(event);
         }
+        // Clean up scroll handler and pending timeout if dropdown is open
+        if (this.results_showing) {
+          Event.stopObserving(window, 'scroll', this.scroll_handler);
+          if (this.scroll_throttle_timeout) {
+            clearTimeout(this.scroll_throttle_timeout);
+          }
+        }
         this.container.stopObserving();
         this.search_results.stopObserving();
         this.search_field.stopObserving();
@@ -1350,6 +1367,17 @@
         }
       }
 
+      update_dropup_position() {
+        if (!this.results_showing) {
+          return;
+        }
+        if (this.should_dropup()) {
+          return this.container.addClassName("chosen-dropup");
+        } else {
+          return this.container.removeClassName("chosen-dropup");
+        }
+      }
+
       activate_field() {
         if (this.is_disabled) {
           return;
@@ -1443,9 +1471,11 @@
         this.search_field.focus();
         this.search_field.value = this.get_search_field_value();
         this.winnow_results();
-        return this.form_field.fire("chosen:showing_dropdown", {
+        this.form_field.fire("chosen:showing_dropdown", {
           chosen: this
         });
+        // Register scroll handler to dynamically adjust dropdown position
+        return Event.observe(window, 'scroll', this.scroll_handler);
       }
 
       update_results_content(content) {
@@ -1474,7 +1504,12 @@
           });
         }
         this.search_field.writeAttribute("aria-expanded", "false");
-        return this.results_showing = false;
+        this.results_showing = false;
+        // Unregister scroll handler and clear any pending timeout
+        Event.stopObserving(window, 'scroll', this.scroll_handler);
+        if (this.scroll_throttle_timeout) {
+          return clearTimeout(this.scroll_throttle_timeout);
+        }
       }
 
       set_tab_index(el) {
