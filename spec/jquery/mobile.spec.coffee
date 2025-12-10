@@ -84,9 +84,9 @@ describe "Mobile support", ->
       results = container.find(".chosen-results")
       activeResult = results.find(".active-result").first()
       
-      # Simulate touch selection
+      # Simulate touch selection - touchstart sets up touch state, mouseup performs selection
       activeResult.trigger("touchstart")
-      activeResult.trigger("touchend")
+      activeResult.trigger($.Event("mouseup", which: 1))
       
       # Check that an option was selected
       expect(select.val()).toBe "United States"
