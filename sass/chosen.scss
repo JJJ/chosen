@@ -174,10 +174,9 @@ $chosen-selected-color: #e0e0e0;
 		padding: 0;
 		margin: 0;
 		border: none;
-		background: transparent;
+		background: 0 0;
 		cursor: pointer;
 		opacity: 0;
-		font-size: 0;
 
 		&:focus {
 			outline: 2px solid $chosen-active-color;
