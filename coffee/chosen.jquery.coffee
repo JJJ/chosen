@@ -124,8 +124,10 @@ class Chosen extends AbstractChosen
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
     @form_field_label.off 'click.chosen' if @form_field_label.length > 0
 
-    # Clean up scroll handler if dropdown is open
-    $(window).off 'scroll.chosen', @scroll_handler if @results_showing
+    # Clean up scroll handler and pending timeout if dropdown is open
+    if @results_showing
+      $(window).off 'scroll.chosen', @scroll_handler
+      clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
     if @search_field[0].tabIndex
       @form_field_jq[0].tabIndex = @search_field[0].tabIndex
@@ -343,8 +345,9 @@ class Chosen extends AbstractChosen
     @search_field.attr("aria-expanded", false)
     @results_showing = false
 
-    # Unregister scroll handler
+    # Unregister scroll handler and clear any pending timeout
     $(window).off 'scroll.chosen', @scroll_handler
+    clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
 
   set_tab_index: (el) ->

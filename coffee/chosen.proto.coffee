@@ -176,8 +176,10 @@ class @Chosen extends AbstractChosen
     for event in ['chosen:updated', 'chosen:activate', 'chosen:open', 'chosen:close']
       @form_field.stopObserving(event)
 
-    # Clean up scroll handler if dropdown is open
-    Event.stopObserving window, 'scroll', @scroll_handler if @results_showing
+    # Clean up scroll handler and pending timeout if dropdown is open
+    if @results_showing
+      Event.stopObserving window, 'scroll', @scroll_handler
+      clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
     @container.stopObserving()
     @search_results.stopObserving()
@@ -410,8 +412,9 @@ class @Chosen extends AbstractChosen
     @search_field.writeAttribute("aria-expanded", "false")
     @results_showing = false
 
-    # Unregister scroll handler
+    # Unregister scroll handler and clear any pending timeout
     Event.stopObserving window, 'scroll', @scroll_handler
+    clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
 
   set_tab_index: (el) ->
