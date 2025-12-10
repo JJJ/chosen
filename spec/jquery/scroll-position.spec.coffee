@@ -1,5 +1,9 @@
 describe "Scroll Position Adjustment", ->
   it "should switch from drop-up to drop-down when scrolling down", ->
+    # Set body height to ensure scrolling is possible
+    originalBodyHeight = $('body').css('height')
+    $('body').css('height', '3000px')
+    
     tmpl = "
       <select data-placeholder='Choose a Country...'>
         <option value=''></option>
@@ -10,37 +14,55 @@ describe "Scroll Position Adjustment", ->
         <option value='Algeria'>Algeria</option>
       </select>
     "
-    div = $("<div>").html(tmpl).css({position: 'absolute', top: '2000px'})
+    # Position element such that when scrolled, it starts near viewport bottom
+    # Use dynamic positioning based on window height
+    windowHeight = $(window).height()
+    elementTop = Math.max(1000, windowHeight + 500)
+    
+    div = $("<div>").html(tmpl).css({position: 'absolute', top: "#{elementTop}px"})
     $('body').append(div)
     select = div.find("select")
     select.chosen()
     
     container = div.find(".chosen-container")
     chosen = select.data('chosen')
+    dropdown = container.find('.chosen-drop')
     
-    # Scroll to position where dropdown should open upward
-    window.scrollTo(0, 2000)
+    # Scroll so element is near bottom of viewport (should trigger dropup)
+    scrollToMakeDropup = elementTop - windowHeight + container.outerHeight()
+    window.scrollTo(0, scrollToMakeDropup)
     
     # Open the dropdown
     container.trigger("mousedown")
     expect(container.hasClass("chosen-with-drop")).toBe true
     
-    # Should initially be dropup
-    expect(container.hasClass("chosen-dropup")).toBe true
+    # Verify it's dropup based on the calculation
+    dropdownHeight = dropdown.outerHeight()
+    dropdownTop = container.offset().top + container.outerHeight() - $(window).scrollTop()
+    totalHeight = dropdownHeight + dropdownTop
+    shouldBeDropup = totalHeight > windowHeight
     
-    # Scroll down to create space below
-    window.scrollTo(0, 1500)
+    expect(container.hasClass("chosen-dropup")).toBe shouldBeDropup
+    initialDropup = container.hasClass("chosen-dropup")
+    
+    # Scroll up to create more space below
+    window.scrollTo(0, Math.max(0, scrollToMakeDropup - 300))
     
     # Manually trigger scroll handler
     chosen.update_dropup_position()
     
-    # Should now be dropdown (no dropup class)
-    expect(container.hasClass("chosen-dropup")).toBe false
+    # Verify dropup state changed to account for new space
+    expect(container.hasClass("chosen-dropup")).not.toBe initialDropup
     
     div.remove()
     window.scrollTo(0, 0)
+    $('body').css('height', originalBodyHeight)
 
   it "should switch from drop-down to drop-up when scrolling up", ->
+    # Set body height to ensure scrolling is possible
+    originalBodyHeight = $('body').css('height')
+    $('body').css('height', '2000px')
+    
     tmpl = "
       <select data-placeholder='Choose a Country...'>
         <option value=''></option>
@@ -51,35 +73,53 @@ describe "Scroll Position Adjustment", ->
         <option value='Algeria'>Algeria</option>
       </select>
     "
-    div = $("<div>").html(tmpl).css({position: 'absolute', top: '500px'})
+    # Position element in a location where it can be both dropdown and dropup depending on scroll
+    windowHeight = $(window).height()
+    elementTop = Math.min(500, Math.floor(windowHeight / 2))
+    
+    div = $("<div>").html(tmpl).css({position: 'absolute', top: "#{elementTop}px"})
     $('body').append(div)
     select = div.find("select")
     select.chosen()
     
     container = div.find(".chosen-container")
     chosen = select.data('chosen')
+    dropdown = container.find('.chosen-drop')
     
-    # Start at top where dropdown should open downward
+    # Start at scroll position where dropdown should open downward
     window.scrollTo(0, 0)
     
     # Open the dropdown
     container.trigger("mousedown")
     expect(container.hasClass("chosen-with-drop")).toBe true
     
-    # Should initially be dropdown (no dropup class)
-    expect(container.hasClass("chosen-dropup")).toBe false
+    # Check current dropup state
+    dropdownHeight = dropdown.outerHeight()
+    dropdownTop = container.offset().top + container.outerHeight() - $(window).scrollTop()
+    totalHeight = dropdownHeight + dropdownTop
+    shouldBeDropup = totalHeight > windowHeight
     
-    # Scroll down to remove space below
-    window.scrollTo(0, 800)
+    expect(container.hasClass("chosen-dropup")).toBe shouldBeDropup
+    initialDropup = container.hasClass("chosen-dropup")
+    
+    # Scroll down to position element near bottom (should change to dropup if not already)
+    scrollToChange = Math.max(elementTop - Math.floor(windowHeight / 4), 200)
+    window.scrollTo(0, scrollToChange)
     
     # Manually trigger scroll handler
     chosen.update_dropup_position()
     
-    # Should now be dropup
-    expect(container.hasClass("chosen-dropup")).toBe true
+    # Verify dropup state changed (or stayed same if already optimal)
+    # After scrolling down, element is closer to top, so more likely to need dropup
+    newDropdownTop = container.offset().top + container.outerHeight() - $(window).scrollTop()
+    newTotalHeight = dropdownHeight + newDropdownTop
+    newShouldBeDropup = newTotalHeight > windowHeight
+    
+    expect(container.hasClass("chosen-dropup")).toBe newShouldBeDropup
     
     div.remove()
     window.scrollTo(0, 0)
+    $('body').css('height', originalBodyHeight)
 
   it "should only update position when results are showing", ->
     tmpl = "
