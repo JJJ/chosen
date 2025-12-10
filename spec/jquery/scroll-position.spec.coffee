@@ -108,7 +108,7 @@ describe "Scroll Position Adjustment", ->
     
     div.remove()
 
-  it "should properly register and unregister scroll handler", ->
+  it "should properly register and unregister scroll handler", (done) ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>
         <option value=''></option>
@@ -137,23 +137,29 @@ describe "Scroll Position Adjustment", ->
     # Trigger scroll event
     $(window).trigger('scroll')
     
-    # Handler should have been called
-    expect(scroll_count).toBeGreaterThan 0
-    
-    initial_count = scroll_count
-    
-    # Close dropdown
-    select.trigger('chosen:close')
-    expect(chosen.results_showing).toBe false
-    
-    # Trigger scroll event again
-    $(window).trigger('scroll')
-    
-    # Handler should not be called anymore (count should not increase)
-    # Note: Due to throttling, we need to wait a bit
-    expect(scroll_count).toBe initial_count
-    
-    div.remove()
+    # Wait for throttle timeout to complete
+    setTimeout ->
+      # Handler should have been called
+      expect(scroll_count).toBeGreaterThan 0
+      
+      initial_count = scroll_count
+      
+      # Close dropdown
+      select.trigger('chosen:close')
+      expect(chosen.results_showing).toBe false
+      
+      # Trigger scroll event again
+      $(window).trigger('scroll')
+      
+      # Wait for potential throttle timeout
+      setTimeout ->
+        # Handler should not be called anymore (count should not increase)
+        expect(scroll_count).toBe initial_count
+        
+        div.remove()
+        done()
+      , 50
+    , 50
 
   it "should clean up scroll handler when widget is destroyed", ->
     tmpl = "
