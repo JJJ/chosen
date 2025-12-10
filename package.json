@@ -104,8 +104,8 @@
       "docs": "https://jjj.github.io/chosen/"
     },
     "main": [
-      "dist/chosen.jquery.js",
-      "dist/chosen.css"
+      "dist/js/chosen.jquery.js",
+      "dist/css/chosen.css"
     ]
   }
 }
