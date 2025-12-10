@@ -11,6 +11,17 @@ https://jjj.github.io/chosen/
 For **downloads**, see:
 https://github.com/jjj/chosen/releases/
 
+### Compiled Assets
+
+The compiled JavaScript and CSS files are located in the `/dist` directory. This directory contains:
+
+- `chosen.jquery.js` / `chosen.jquery.min.js` - jQuery version
+- `chosen.proto.js` / `chosen.proto.min.js` - Prototype version
+- `chosen.css` / `chosen.min.css` - Styles
+- `chosen.css.map` - CSS source map
+
+The `/docs` directory also contains copies of these files for use with GitHub Pages.
+
 ### Package managers
 
 To install with npm:

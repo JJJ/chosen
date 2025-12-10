@@ -15,6 +15,10 @@ module.exports = (grunt) ->
       cwd: 'docs/'
       src: ['docs/**/*']
       dest: 'chosen_<%= version_tag %>.zip'
+    build:
+      cwd: 'dist/'
+      src: ['dist/**/*']
+      dest: 'chosen_<%= version_tag %>_dist.zip'
 
   grunt.config 'gh-pages',
     options:
@@ -42,5 +46,5 @@ module.exports = (grunt) ->
 
     grunt.file.write('docs/package.json', JSON.stringify(json, null, 2) + "\n")
 
-  grunt.registerTask 'prep-release', ['build', 'dom_munger:latest_version', 'zip:chosen', 'package-npm']
+  grunt.registerTask 'prep-release', ['build', 'dom_munger:latest_version', 'zip:chosen', 'zip:build', 'package-npm']
   grunt.registerTask 'publish-release', ['gh-pages']
