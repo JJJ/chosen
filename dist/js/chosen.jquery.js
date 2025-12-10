@@ -1000,9 +1000,6 @@
         if ("Microsoft Internet Explorer" === window.navigator.appName) {
           return document.documentMode >= 8;
         }
-        if (/iP(od|hone)/i.test(window.navigator.userAgent) || /IEMobile/i.test(window.navigator.userAgent) || /Windows Phone/i.test(window.navigator.userAgent) || /BlackBerry/i.test(window.navigator.userAgent) || /BB10/i.test(window.navigator.userAgent) || /Android.*Mobile/i.test(window.navigator.userAgent)) {
-          return false;
-        }
         return true;
       }
 
