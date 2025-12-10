@@ -148,6 +148,8 @@ describe "Scroll Position Adjustment", ->
     
     div.remove()
 
+  # Note: This test is async (uses done callback) because the scroll handler
+  # is throttled with a 16ms setTimeout, so we need to wait for it to execute
   it "should properly register and unregister scroll handler", (done) ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>

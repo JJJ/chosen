@@ -234,8 +234,9 @@ class AbstractChosen
 
               # If normalization changed the text, we need to find the correct
               # highlighting boundaries in the original (non-normalized) text.
-              # Note: This algorithm has O(n) complexity where n is the text length.
-              # For most use cases with short option text, performance impact is minimal.
+              # Note: This algorithm has O(n²) complexity due to repeated normalization.
+              # For most use cases with short option text (typically <100 chars), 
+              # performance impact is minimal and negligible compared to DOM operations.
               if normalized_text != text
 
                 # Find where the match starts in the original text by comparing
