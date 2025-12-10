@@ -104,6 +104,8 @@ $chosen-selected-color: #e0e0e0;
 
 /* @group Single Chosen */
 .chosen-container-single {
+	min-width: 80px;
+
 	.chosen-single {
 		position: relative;
 		display: block;
