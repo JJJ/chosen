@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/jjj).
+This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
 ## [2.2.1] - 2025-12-09
 
@@ -38,7 +38,7 @@ This fork represents a major version upgrade from the original chosen-js library
 - **Active Maintenance**: Unlike the original repository, this fork receives regular updates
 - **Modern Standards**: Code follows current JavaScript best practices
 - **Security Focus**: Regular dependency updates to address vulnerabilities
-- **Community Driven**: Maintained by [JJJ](https://github.com/jjj) with community contributions
+- **Community Driven**: Maintained by [JJJ](https://github.com/JJJ) with community contributions
 
 ### Migration from chosen-js (v1.8.7)
 
@@ -72,4 +72,4 @@ composer require jjj/chosen
 
 For detailed feature documentation, visit: https://jjj.github.io/chosen/
 
-For issues and contributions, visit: https://github.com/jjj/chosen
+For issues and contributions, visit: https://github.com/JJJ/chosen
