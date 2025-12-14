@@ -27,7 +27,7 @@ class @Chosen extends AbstractChosen
     @single_temp = new Template(
       '<a class="chosen-single chosen-default" role="button">
         <span>#{default}</span>
-        <div>
+        <div aria-label="Show options">
           <b aria-hidden="true">
             <button type="button" class="chosen-single-button" aria-label="Show options" tabindex="-1"></button>
           </b>
