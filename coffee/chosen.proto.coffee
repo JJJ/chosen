@@ -28,7 +28,9 @@ class @Chosen extends AbstractChosen
       '<a class="chosen-single chosen-default" role="button">
         <span>#{default}</span>
         <div aria-label="Show options">
-          <b aria-hidden="true"></b>
+          <b aria-hidden="true">
+            <button type="button" class="chosen-single-button" aria-label="Show options" tabindex="-1"></button>
+          </b>
         </div>
       </a>
       <div class="chosen-drop">
@@ -379,8 +381,8 @@ class @Chosen extends AbstractChosen
       @container.addClassName "chosen-dropup"
 
     @container.addClassName "chosen-with-drop"
-    single_div = @container.down(".chosen-single div")
-    single_div.writeAttribute("aria-label", "Hide options") if single_div
+    single_button = @container.down(".chosen-single-button")
+    single_button.writeAttribute("aria-label", "Hide options") if single_button
     @results_showing = true
 
     @search_field.writeAttribute("aria-expanded", "true")
@@ -405,8 +407,8 @@ class @Chosen extends AbstractChosen
 
       @container.removeClassName "chosen-with-drop"
       @container.removeClassName "chosen-dropup"
-      single_div = @container.down(".chosen-single div")
-      single_div.writeAttribute("aria-label", "Show options") if single_div
+      single_button = @container.down(".chosen-single-button")
+      single_button.writeAttribute("aria-label", "Show options") if single_button
       @form_field.fire("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.writeAttribute("aria-expanded", "false")

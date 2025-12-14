@@ -314,7 +314,7 @@ class Chosen extends AbstractChosen
       @container.addClass "chosen-dropup"
 
     @container.addClass "chosen-with-drop"
-    @container.find(".chosen-single div").attr("aria-label", "Hide options")
+    @container.find(".chosen-single-button").attr("aria-label", "Hide options")
     @results_showing = true
 
     @search_field.attr("aria-expanded", true)
@@ -339,7 +339,7 @@ class Chosen extends AbstractChosen
 
       @container.removeClass "chosen-with-drop"
       @container.removeClass "chosen-dropup"
-      @container.find(".chosen-single div").attr("aria-label", "Show options")
+      @container.find(".chosen-single-button").attr("aria-label", "Show options")
       @form_field_jq.trigger("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.attr("aria-expanded", false)
