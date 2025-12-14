@@ -8,3 +8,7 @@ chosen*.zip
 .grunt
 _SpecRunner.html
 spec/public
+
+# Test files
+test_*.html
+*.tgz

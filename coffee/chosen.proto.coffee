@@ -5,6 +5,13 @@ class @Chosen extends AbstractChosen
     @is_rtl = @form_field.hasClassName "chosen-rtl"
     # For Prototype compatibility with AbstractChosen which uses form_field_jq
     @form_field_jq = @form_field
+    @scroll_throttle_timeout = null
+    @scroll_handler = () =>
+      return if @scroll_throttle_timeout
+      @scroll_throttle_timeout = setTimeout(() =>
+        @scroll_throttle_timeout = null
+        @update_dropup_position()
+      , 16) # ~60fps
 
   results_search: (evt) ->
     if @results_showing
@@ -171,6 +178,11 @@ class @Chosen extends AbstractChosen
     for event in ['chosen:updated', 'chosen:activate', 'chosen:open', 'chosen:close']
       @form_field.stopObserving(event)
 
+    # Clean up scroll handler and pending timeout if dropdown is open
+    if @results_showing
+      Event.stopObserving window, 'scroll', @scroll_handler
+      clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
+
     @container.stopObserving()
     @search_results.stopObserving()
     @search_field.stopObserving()
@@ -283,6 +295,14 @@ class @Chosen extends AbstractChosen
     else
       false
 
+  update_dropup_position: ->
+    return unless @results_showing
+
+    if this.should_dropup()
+      @container.addClassName "chosen-dropup"
+    else
+      @container.removeClassName "chosen-dropup"
+
   activate_field: ->
     return if @is_disabled
 
@@ -372,6 +392,9 @@ class @Chosen extends AbstractChosen
     this.winnow_results()
     @form_field.fire("chosen:showing_dropdown", { chosen: this })
 
+    # Register scroll handler to dynamically adjust dropdown position
+    Event.observe window, 'scroll', @scroll_handler
+
   update_results_content: (content) ->
     @search_results.update content
 
@@ -390,6 +413,10 @@ class @Chosen extends AbstractChosen
 
     @search_field.writeAttribute("aria-expanded", "false")
     @results_showing = false
+
+    # Unregister scroll handler and clear any pending timeout
+    Event.stopObserving window, 'scroll', @scroll_handler
+    clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
 
   set_tab_index: (el) ->
@@ -534,6 +561,7 @@ class @Chosen extends AbstractChosen
   single_set_selected_text: (text = @default_text) ->
     if text is @default_text
       @selected_item.addClassName("chosen-default")
+      text = this.escape_html(text)
     else
       this.single_deselect_control_build()
       @selected_item.removeClassName("chosen-default")
@@ -572,6 +600,19 @@ class @Chosen extends AbstractChosen
 
   escape_html: (text) ->
     text.escapeHTML()
+
+  unescape_html: (text) ->
+    # Safely decode common HTML entities without parsing HTML tags
+    # This prevents double-encoding while maintaining security
+    # Note: Sequential replacements may cause double-unescaping (e.g., &amp;amp; -> &amp; -> &)
+    # This is intentional to handle cases where users incorrectly pre-escape their input
+    # Security is maintained because we re-escape via escape_html() before template insertion
+    text.replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&#x27;/g, "'")
 
   winnow_results_set_highlight: ->
     if not @is_multiple

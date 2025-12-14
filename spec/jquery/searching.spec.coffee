@@ -384,7 +384,7 @@ describe "Searching", ->
     # Create an extremely long search string (much longer than the max_search_length default of 1000)
     search_field = div.find(".chosen-search-input").first()
     very_long_string = new Array(2000).join("x")
-    
+
     # This should not throw a "Regular expression too large" SyntaxError
     expect(() ->
       search_field.val(very_long_string)
@@ -393,3 +393,81 @@ describe "Searching", ->
 
     # Should show no results
     expect(div.find(".active-result").length).toBe(0)
+
+  it "should support normalize_search_text callback for searching with accented characters", ->
+    # Simple normalize function that removes accents
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = $("<div>").html("""
+      <select>
+        <option value="cafe">Café</option>
+        <option value="mexico">México</option>
+        <option value="peru">Perú</option>
+        <option value="brasil">Brasil</option>
+      </select>
+    """)
+
+    div.find("select").chosen({normalize_search_text: removeAccents})
+    div.find(".chosen-container").trigger("mousedown") # open the drop
+
+    expect(div.find(".active-result").length).toBe(4)
+
+    # Search for "cafe" should match "Café"
+    search_field = div.find(".chosen-search-input").first()
+    search_field.val("cafe")
+    search_field.trigger("keyup")
+
+    expect(div.find(".active-result").length).toBe(1)
+    # The highlighted result should still show the original text with accents
+    expect(div.find(".active-result").first().html()).toContain("Café")
+
+  it "should properly highlight normalized matches", ->
+    # Simple normalize function that removes accents
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = $("<div>").html("""
+      <select>
+        <option value="cafe">Café</option>
+        <option value="test">Testé</option>
+      </select>
+    """)
+
+    div.find("select").chosen({normalize_search_text: removeAccents})
+    div.find(".chosen-container").trigger("mousedown") # open the drop
+
+    # Search for "test" should match "Testé" and highlight properly
+    search_field = div.find(".chosen-search-input").first()
+    search_field.val("test")
+    search_field.trigger("keyup")
+
+    expect(div.find(".active-result").length).toBe(1)
+    # The highlighted result should show "Testé" with proper highlighting
+    result_html = div.find(".active-result").first().html()
+    expect(result_html).toContain("<em>")
+    expect(result_html).toContain("Testé")
+
+  it "should work with normalize_search_text and search_contains", ->
+    # Simple normalize function that removes accents
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = $("<div>").html("""
+      <select>
+        <option value="paris">Île-de-France</option>
+        <option value="oslo">Østlandet</option>
+        <option value="zurich">Zürich</option>
+      </select>
+    """)
+
+    div.find("select").chosen({normalize_search_text: removeAccents, search_contains: true})
+    div.find(".chosen-container").trigger("mousedown") # open the drop
+
+    # Search for "ile" should match "Île-de-France"
+    search_field = div.find(".chosen-search-input").first()
+    search_field.val("ile")
+    search_field.trigger("keyup")
+
+    expect(div.find(".active-result").length).toBe(1)
+    expect(div.find(".active-result").first().html()).toContain("Île")

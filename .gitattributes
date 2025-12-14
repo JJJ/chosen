@@ -1,0 +1,24 @@
+# Development files
+/coffee export-ignore
+/spec export-ignore
+/tasks export-ignore
+/sass export-ignore
+/docs export-ignore
+.github export-ignore
+
+# Config and build files
+Gruntfile.coffee export-ignore
+.travis.yml export-ignore
+.browserslistrc export-ignore
+
+# Package management (use dist/ files instead)
+package.json export-ignore
+package-lock.json export-ignore
+composer.json export-ignore
+
+# Documentation
+contributing.md export-ignore
+
+# Git-specific
+.gitignore export-ignore
+.gitattributes export-ignore

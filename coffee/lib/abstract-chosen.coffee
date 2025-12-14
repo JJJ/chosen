@@ -40,6 +40,7 @@ class AbstractChosen
     @max_shown_results = @options.max_shown_results || Number.POSITIVE_INFINITY
     @case_sensitive_search = @options.case_sensitive_search || false
     @hide_results_on_select = if @options.hide_results_on_select? then @options.hide_results_on_select else true
+    @normalize_search_text = @options.normalize_search_text || (search_text) -> search_text
     @create_option = @options.create_option || false
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
@@ -53,7 +54,8 @@ class AbstractChosen
     else
       @default_text = @options.placeholder_text_single || @options.placeholder_text || AbstractChosen.default_single_text
 
-    @default_text = this.escape_html(@default_text)
+    # Unescape any HTML entities that might have been incorrectly included
+    @default_text = this.unescape_html(@default_text)
 
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
     @create_option_text = @form_field.getAttribute("data-create_option_text") || @options.create_option_text || AbstractChosen.default_create_option_text
@@ -186,7 +188,8 @@ class AbstractChosen
     query = this.get_search_text()
     # Truncate query to prevent "Regular expression too large" errors
     query = query.substring(0, @max_search_length) if query.length > @max_search_length
-    escaped_query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+    normalized_query = this.normalize_search_text(query)
+    escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
     regex = this.get_search_regex(escaped_query)
     exact_regex = new RegExp("^#{escaped_query}$")
     highlight_regex = this.get_highlight_regex(escaped_query)
@@ -212,7 +215,8 @@ class AbstractChosen
         text = if option.group then option.label else option.text
 
         unless option.group and not @group_search
-          search_match = this.search_string_match(text, regex)
+          normalized_text = this.normalize_search_text(text)
+          search_match = this.search_string_match(normalized_text, regex)
           option.search_match = search_match?
 
           if not option.search_match and @search_in_values
@@ -226,9 +230,45 @@ class AbstractChosen
           if option.search_match
             if query.length and not match_value
               startpos = search_match.index
+              
+              # If normalization changed the text, we need to find the correct
+              # highlighting boundaries in the original (non-normalized) text.
+              # Note: This algorithm has O(n²) complexity due to repeated normalization.
+              # For most use cases with short option text (typically <100 chars), 
+              # performance impact is minimal and negligible compared to DOM operations.
+              if normalized_text != text
+                # When using normalization, highlight the full matched portion
+                # Get the actual matched length, accounting for boundary character in capture group
+                # search_match[1] contains the boundary character (space) if it was matched
+                # search_match[0] contains the full match including the boundary
+                matched_length_in_normalized = search_match[0].length
+                matched_length_in_normalized -= 1 if search_match[1] # subtract boundary char if present
+
+                # Find where the match starts in the original text by comparing
+                # normalized prefixes of the original text
+                startpos = 0
+                for i in [0...text.length] by 1
+                  prefix_normalized = this.normalize_search_text(text.substring(0, i))
+                  if prefix_normalized.length >= search_match.index
+                    startpos = i
+                    break
+
+                # Find the length of the match in the original text
+                # by finding where the normalized substring from startpos reaches the matched length
+                match_length = 0
+                for i in [startpos...text.length + 1] by 1
+                  substr_normalized = this.normalize_search_text(text.substring(startpos, i))
+                  if substr_normalized.length >= matched_length_in_normalized
+                    match_length = i - startpos
+                    break
+              else
+                # When text doesn't change after normalization, use the query length
+                # This highlights only what the user typed, not the entire matched word
+                match_length = query.length
+
               prefix = text.slice(0, startpos)
-              fix    = text.slice(startpos, startpos + query.length)
-              suffix = text.slice(startpos + query.length)
+              fix    = text.slice(startpos, startpos + match_length)
+              suffix = text.slice(startpos + match_length)
               option.highlighted_html = "#{this.escape_html(prefix)}<em>#{this.escape_html(fix)}</em>#{this.escape_html(suffix)}"
 
             results_group.group_match = true if results_group?
@@ -457,8 +497,8 @@ class AbstractChosen
   get_single_html: ->
     """
       <a class="chosen-single chosen-default" role="button">
-        <span>#{@default_text}</span>
-        <div>
+        <span>#{this.escape_html(@default_text)}</span>
+        <div aria-label="Show options">
           <b aria-hidden="true">
             <button type="button" class="chosen-single-button" aria-label="Show options" tabindex="-1"></button>
           </b>
@@ -498,7 +538,7 @@ class AbstractChosen
             role="combobox"
             style="width:25px;"
             type="text"
-            value="#{@default_text}"
+            value="#{this.escape_html(@default_text)}"
           />
         </li>
       </ul>
@@ -534,13 +574,6 @@ class AbstractChosen
   @browser_is_supported: ->
     if "Microsoft Internet Explorer" is window.navigator.appName
       return document.documentMode >= 8
-    if /iP(od|hone)/i.test(window.navigator.userAgent) or
-       /IEMobile/i.test(window.navigator.userAgent) or
-       /Windows Phone/i.test(window.navigator.userAgent) or
-       /BlackBerry/i.test(window.navigator.userAgent) or
-       /BB10/i.test(window.navigator.userAgent) or
-       /Android.*Mobile/i.test(window.navigator.userAgent)
-      return false
     return true
 
   @default_multiple_text: "Select Some Options"

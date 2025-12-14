@@ -15,6 +15,10 @@ module.exports = (grunt) ->
       cwd: 'docs/'
       src: ['docs/**/*']
       dest: 'chosen_<%= version_tag %>.zip'
+    build:
+      cwd: 'dist/'
+      src: ['dist/**/*']
+      dest: 'chosen_<%= version_tag %>_dist.zip'
 
   grunt.config 'gh-pages',
     options:
@@ -24,7 +28,6 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'package-npm', 'Generate npm manifest', () ->
     pkg = grunt.config.get('pkg')
-    extra = pkg._extra
 
     json =
       name: "#{pkg.name}-js"
@@ -36,11 +39,11 @@ module.exports = (grunt) ->
       license: pkg.license
       contributors: pkg.contributors
       dependencies: pkg.dependencies
-      files: extra.files
-      main: extra.main[0]
+      files: pkg.files
+      main: "dist/chosen.jquery.js"
       repository: pkg.repository
 
     grunt.file.write('docs/package.json', JSON.stringify(json, null, 2) + "\n")
 
-  grunt.registerTask 'prep-release', ['build', 'dom_munger:latest_version', 'zip:chosen', 'package-npm']
+  grunt.registerTask 'prep-release', ['build', 'dom_munger:latest_version', 'zip:chosen', 'zip:build', 'package-npm']
   grunt.registerTask 'publish-release', ['gh-pages']

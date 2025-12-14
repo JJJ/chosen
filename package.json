@@ -1,25 +1,31 @@
 {
   "author": "jjj",
-  "name": "chosen",
-  "version": "2.2.1",
+  "name": "chosen-jjj",
+  "version": "3.0.0",
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
+  "main": "docs/chosen.jquery.js",
   "keywords": [
     "select",
     "multiselect",
     "dropdown",
     "form",
     "input",
-    "ui"
+    "ui",
+    "chosen",
+    "jquery",
+    "prototype"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jjj/chosen.git"
+    "url": "git+https://github.com/jjj/chosen.git"
   },
   "engines": {
     "node": ">=4"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "build": "grunt build",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.22",
@@ -49,7 +55,7 @@
   "contributors": [
     {
       "name": "John James Jacoby",
-      "url": "https://github.com/jjj"
+      "url": "https://github.com/JJJ"
     },
     {
       "name": "Patrick Filler",
@@ -75,23 +81,15 @@
     "title": "Chosen",
     "license": {
       "type": "MIT",
-      "url": "https://github.com/jjj/chosen/blob/master/LICENSE.md"
+      "url": "https://github.com/JJJ/chosen/blob/master/LICENSE.md"
     },
     "links": {
-      "download": "https://github.com/jjj/chosen/releases",
+      "download": "https://github.com/JJJ/chosen/releases",
       "docs": "https://jjj.github.io/chosen/"
     },
     "main": [
-      "chosen.jquery.js",
-      "chosen.css"
-    ],
-    "files": [
-      "chosen.jquery.js",
-      "chosen.jquery.min.js",
-      "chosen.proto.js",
-      "chosen.proto.min.js",
-      "chosen.css",
-      "chosen.min.css"
+      "dist/js/chosen.jquery.js",
+      "dist/css/chosen.css"
     ]
   }
 }
