@@ -4,6 +4,59 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
+## [3.0.0] - 2025-12-30
+
+### Major Version Release
+
+This release represents a comprehensive modernization and enhancement of the Chosen library with numerous bug fixes, new features, and improved infrastructure.
+
+### Added
+- **Accented Character Support**: Added `normalize_search_text` callback support for searching with accented characters (#65)
+- **Dynamic Dropdown Positioning**: Dropdown position now adjusts automatically on scroll to stay in viewport (#66, #67)
+- **Accessibility Improvements**:
+  - Added visually-hidden CSS class for screen reader text (#70)
+  - Fixed ARIA label references (#44, #50)
+- **SCSS Distribution**: SCSS source files now included in npm package for better theming support (#73)
+- **Build Artifacts**: Compiled assets now available in `/dist` directory (renamed from `/build`) (#71)
+
+### Fixed
+- **Test Suite**: Fixed multiple Jasmine test failures (#75, #77, #79)
+  - Scroll position tests now work with variable viewport sizes
+  - Fixed width tests and scroll handler tests
+  - Improved test maintainability with named constants
+  - Added throttle delay handling
+- **Rendering Issues**:
+  - Fixed double-encoding of HTML entities in placeholder text (#63)
+  - Fixed narrow width issue for short select values with min-width CSS (#67)
+  - Fixed remove button "x" visibility with proper CSS class (#70)
+- **Search & Highlighting**: Improved normalized text highlighting algorithm
+- **Security**: Improved HTML entity decoder for better security (#65)
+- **Scroll Handling**: Added scroll throttling and proper cleanup in destroy method (#66)
+
+### Changed
+- **CI/CD**: Migrated from Travis CI to GitHub Actions with Puppeteer configuration
+- **Build Process**:
+  - Reorganized dist directory structure (js, css, scss subdirectories) - later consolidated
+  - Fixed source map paths to be relative
+  - Restored license headers in dist files
+  - Added `.gitattributes` for dist file handling
+- **Package Distribution**:
+  - Updated npm package name to `chosen-jjj`
+  - Configured for proper npm publishing with `prepublishOnly` script
+  - Excluded composer.json from distribution
+  - Package now includes only `/dist` directory
+- **Code Quality**:
+  - Improved variable naming and added performance comments
+  - Better code organization and documentation
+  - CoffeeScript @ notation for consistency
+  - Added comprehensive test coverage
+
+### Infrastructure
+- All dependencies updated to latest versions
+- Fixed GitHub Actions CI failures with proper Puppeteer sandbox configuration
+- Updated testing framework compatibility (Jasmine 4 + Puppeteer)
+- Improved build reliability and maintainability
+
 ## [2.2.1] - 2025-12-09
 
 ### Differences from Original chosen-js (harvesthq/chosen v1.8.7)
