@@ -20,7 +20,7 @@
     "url": "git+https://github.com/jjj/chosen.git"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=20.20.0"
   },
   "scripts": {
     "test": "grunt test",
