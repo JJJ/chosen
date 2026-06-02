@@ -107,6 +107,27 @@ describe "Searching", ->
     expect(div.find(".no-results").length).toBe(1)
     expect(div.find(".no-results").first().html().trim()).toBe("No results for: <span>&amp;amp;</span>")
 
+  it "safely trims search text without relying on jQuery.trim", ->
+    div = $("<div>").html("""
+      <select>
+        <option value="Item">Item</option>
+      </select>
+    """)
+
+    select = div.find("select")
+    select.chosen()
+
+    chosen = select.data("chosen")
+    spyOn(chosen, "get_search_field_value").and.returnValue(null)
+
+    expect(chosen.get_search_text()).toBe("")
+
+    chosen.get_search_field_value.and.returnValue(123)
+    expect(chosen.get_search_text()).toBe("123")
+
+    chosen.get_search_field_value.and.returnValue("  Item  ")
+    expect(chosen.get_search_text()).toBe("Item")
+
   it "matches in non-ascii languages like Chinese when selecting a single item", ->
     div = $("<div>").html("""
       <select>
