@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
+## [Unreleased]
+
+### Added
+- **Accessibility Enhancement**: Added accessible button element inside dropdown arrow for screen reader support
+  - Button element with dynamic ARIA labels ("Show options" / "Hide options")
+  - Keyboard navigation support with visible focus outline
+  - Maintains backwards compatibility with existing `.chosen-single div b` CSS selectors
+
 ## [3.0.0] - 2025-12-30
 
 ### Major Version Release

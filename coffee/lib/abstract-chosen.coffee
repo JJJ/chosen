@@ -498,8 +498,10 @@ class AbstractChosen
     """
       <a class="chosen-single chosen-default" role="button">
         <span>#{this.escape_html(@default_text)}</span>
-        <div aria-label="Show options">
-          <b aria-hidden="true"></b>
+        <div>
+          <b aria-hidden="true">
+            <button type="button" class="chosen-single-button" aria-label="Show options" tabindex="-1"></button>
+          </b>
         </div>
       </a>
       <div class="chosen-drop">
