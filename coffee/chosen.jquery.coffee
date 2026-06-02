@@ -547,7 +547,12 @@ class Chosen extends AbstractChosen
     @search_field.val()
 
   get_search_text: ->
-    $.trim this.get_search_field_value()
+    text = this.get_search_field_value()
+
+    if text?
+      String(text).trim()
+    else
+      ""
 
   escape_html: (text) ->
     $('<div/>').text(text).html()
