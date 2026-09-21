@@ -1,4 +1,54 @@
 describe "Basic setup", ->
+  it "restores inline styles and removes its select listeners on destroy", ->
+    div = $("<div>").html("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    spyOn(chosen, "results_update_field").and.callThrough()
+    select.chosen("destroy")
+    select.trigger("chosen:updated")
+    expect(chosen.results_update_field).not.toHaveBeenCalled()
+    expect(select[0].style.display).toBe("inline-block")
+    expect(select[0].style.position).toBe("relative")
+    expect(select[0].style.opacity).toBe("0.8")
+    div.remove()
+
+  it "inherits multiple option classes on selected choices", ->
+    div = $("<div>").html("<select multiple><option class='first second' selected>One</option></select>")
+    div.find("select").chosen(inherit_option_classes: true)
+    expect(div.find(".search-choice").hasClass("first")).toBe(true)
+    expect(div.find(".search-choice").hasClass("second")).toBe(true)
+
+  it "appends literal option values and labels", ->
+    div = $("<div>").html("<select multiple><option>One</option></select>")
+    select = div.find("select").chosen()
+    value = 'a" onclick="alert(1)'
+    label = '<img src=x onerror=alert(1)>'
+    select.data("chosen").select_append_option(value: value, text: label)
+    expect(select.find("option").length).toBe(2)
+    expect(select.find("option").last().val()).toBe(value)
+    expect(select.find("option").last().text()).toBe(label)
+    expect(select.find("img").length).toBe(0)
+
+  it "selects only available optgroup options without inspecting another container", ->
+    other = $("<div id='pops_chosen'><ul class='chosen-choices'><li><button class='search-choice-close' data-option-array-index='1'></button></li></ul></div>").appendTo("body")
+    div = $("<div>").html("<select multiple select-by-group><optgroup label='Group'><option>One</option><option>Two</option><option disabled>Three</option></optgroup></select>").appendTo("body")
+    div.find("select").chosen(hide_results_on_select: false)
+    div.find(".chosen-container").trigger("mousedown")
+    group = div.find(".group-result")
+    group.trigger($.Event("mouseup", which: 1))
+    group.trigger($.Event("mouseup", which: 1))
+    expect(div.find(".search-choice").length).toBe(2)
+    expect(div.find("option").last().prop("selected")).toBe(false)
+    div.remove()
+    other.remove()
+
+  it "keeps the result highlight when the pointer leaves an unrelated element", ->
+    div = $("<div>").html("<select><option>One</option></select>")
+    chosen = div.find("select").chosen().data("chosen")
+    spyOn(chosen, "result_clear_highlight")
+    chosen.search_results_mouseout(target: $("<span>")[0])
+    expect(chosen.result_clear_highlight).not.toHaveBeenCalled()
+
   it "uses the single select as the accessible dropdown control", ->
     div = $("<div>").html("<select><option>One</option><option>Two</option></select>")
     div.find("select").chosen()

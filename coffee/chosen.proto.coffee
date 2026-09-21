@@ -102,6 +102,10 @@ class @Chosen extends AbstractChosen
     else
       @container.update this.get_single_html()
 
+    @original_styles =
+      position: @form_field.style.position
+      opacity: @form_field.style.opacity
+      display: @form_field.style.display
     @form_field.setStyle({
       position: 'absolute',
       opacity: '0',
@@ -150,10 +154,15 @@ class @Chosen extends AbstractChosen
     @search_results.observe "touchmove", (evt) => this.search_results_touchmove(evt)
     @search_results.observe "touchend", (evt) => this.search_results_touchend(evt)
 
-    @form_field.observe "chosen:updated", (evt) => this.results_update_field(evt)
-    @form_field.observe "chosen:activate", (evt) => this.activate_field(evt)
-    @form_field.observe "chosen:open", (evt) => this.container_mousedown(evt)
-    @form_field.observe "chosen:close", (evt) => this.close_field(evt)
+    @form_field_observers =
+      updated: (evt) => this.results_update_field(evt)
+      activate: (evt) => this.activate_field(evt)
+      open: (evt) => this.container_mousedown(evt)
+      close: (evt) => this.close_field(evt)
+    @form_field.observe "chosen:updated", @form_field_observers.updated
+    @form_field.observe "chosen:activate", @form_field_observers.activate
+    @form_field.observe "chosen:open", @form_field_observers.open
+    @form_field.observe "chosen:close", @form_field_observers.close
 
     @search_field.observe "blur", (evt) => this.input_blur(evt)
     @search_field.observe "keyup", (evt) => this.keyup_checker(evt)
@@ -178,8 +187,10 @@ class @Chosen extends AbstractChosen
     else
       @container.ownerDocument.stopObserving "click", @click_test_action
 
-    for event in ['chosen:updated', 'chosen:activate', 'chosen:open', 'chosen:close']
-      @form_field.stopObserving(event)
+    @form_field.stopObserving "chosen:updated", @form_field_observers.updated
+    @form_field.stopObserving "chosen:activate", @form_field_observers.activate
+    @form_field.stopObserving "chosen:open", @form_field_observers.open
+    @form_field.stopObserving "chosen:close", @form_field_observers.close
 
     # Clean up scroll handler and pending timeout if dropdown is open
     if @results_showing
@@ -189,7 +200,7 @@ class @Chosen extends AbstractChosen
     @container.stopObserving()
     @search_results.stopObserving()
     @search_field.stopObserving()
-    @form_field_label.stopObserving() if @form_field_label?
+    @form_field_label.stopObserving('click', this.label_click_handler) if @form_field_label?
 
     if @is_multiple
       @search_choices.stopObserving()
@@ -202,7 +213,9 @@ class @Chosen extends AbstractChosen
       @form_field.tabIndex = @search_field.tabIndex
 
     @container.remove()
-    @form_field.show()
+    @form_field.style.position = @original_styles.position
+    @form_field.style.opacity = @original_styles.opacity
+    @form_field.style.display = @original_styles.display
 
   set_aria_labels: ->
     for name in @copied_aria_attributes or []
@@ -475,7 +488,8 @@ class @Chosen extends AbstractChosen
       close_link.observe "click", (evt) => this.choice_destroy_link_click(evt)
       choice.insert close_link
     if @inherit_option_classes && item.classes
-      choice[0].classList.add item.classes
+      for class_name in item.classes.split(/\s+/) when class_name
+        choice.addClassName class_name
 
     @search_container.insert { before: choice }
 
@@ -646,7 +660,7 @@ class @Chosen extends AbstractChosen
       this.select_append_option( value: terms, text: terms )
 
   select_append_option: (options) ->
-    @form_field.insert this.get_option_html(options)
+    @form_field.insert this.get_option_element(options)
     Event.fire @form_field, "chosen:updated"
     if typeof Event.simulate is 'function'
       @form_field.simulate("change")

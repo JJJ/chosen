@@ -54,6 +54,10 @@ class Chosen extends AbstractChosen
     else
       @container.html this.get_single_html()
 
+    @original_styles =
+      position: @form_field.style.position
+      opacity: @form_field.style.opacity
+      display: @form_field.style.display
     @form_field_jq.css('position', 'absolute').css('opacity', 0).css('display', 'none' ).after @container
     @dropdown = @container.find('div.chosen-drop').first()
 
@@ -103,10 +107,15 @@ class Chosen extends AbstractChosen
     @search_results.on 'touchmove.chosen', (evt) => this.search_results_touchmove(evt); return
     @search_results.on 'touchend.chosen', (evt) => this.search_results_touchend(evt); return
 
-    @form_field_jq.on "chosen:updated.chosen", (evt) => this.results_update_field(evt); return
-    @form_field_jq.on "chosen:activate.chosen", (evt) => this.activate_field(evt); return
-    @form_field_jq.on "chosen:open.chosen", (evt) => this.container_mousedown(evt); return
-    @form_field_jq.on "chosen:close.chosen", (evt) => this.close_field(evt); return
+    @form_field_observers =
+      updated: (evt) => this.results_update_field(evt)
+      activate: (evt) => this.activate_field(evt)
+      open: (evt) => this.container_mousedown(evt)
+      close: (evt) => this.close_field(evt)
+    @form_field_jq.on "chosen:updated.chosen", @form_field_observers.updated
+    @form_field_jq.on "chosen:activate.chosen", @form_field_observers.activate
+    @form_field_jq.on "chosen:open.chosen", @form_field_observers.open
+    @form_field_jq.on "chosen:close.chosen", @form_field_observers.close
 
     @search_field.on 'blur.chosen', (evt) => this.input_blur(evt); return
     @search_field.on 'keyup.chosen', (evt) => this.keyup_checker(evt); return
@@ -128,7 +137,11 @@ class Chosen extends AbstractChosen
 
   destroy: ->
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
-    @form_field_label.off 'click.chosen' if @form_field_label.length > 0
+    @form_field_label.off 'click.chosen', this.label_click_handler if @form_field_label.length > 0
+    @form_field_jq.off "chosen:updated.chosen", @form_field_observers.updated
+    @form_field_jq.off "chosen:activate.chosen", @form_field_observers.activate
+    @form_field_jq.off "chosen:open.chosen", @form_field_observers.open
+    @form_field_jq.off "chosen:close.chosen", @form_field_observers.close
 
     # Clean up scroll handler and pending timeout if dropdown is open
     if @results_showing
@@ -140,7 +153,9 @@ class Chosen extends AbstractChosen
 
     @container.remove()
     @form_field_jq.removeData('chosen')
-    @form_field_jq.show()
+    @form_field.style.position = @original_styles.position
+    @form_field.style.opacity = @original_styles.opacity
+    @form_field.style.display = @original_styles.display
 
   set_aria_labels: ->
     for name in @copied_aria_attributes or []
@@ -400,7 +415,7 @@ class Chosen extends AbstractChosen
     this.result_do_highlight( target ) if target
 
   search_results_mouseout: (evt) ->
-    this.result_clear_highlight() if $(evt.target).hasClass("active-result") or $(evt.target).parents('.active-result').first()
+    this.result_clear_highlight() if $(evt.target).hasClass("active-result") or $(evt.target).parents('.active-result').first().length
 
   choice_build: (item) ->
     choice = $('<li />', { class: "search-choice", "data-value": item.value, role: "option" }).html("<span>#{this.choice_label(item)}</span>")
@@ -413,7 +428,7 @@ class Chosen extends AbstractChosen
       choice.append close_link
 
     if @inherit_option_classes && item.classes
-      choice[0].classList.add item.classes
+      choice.addClass item.classes
 
     @search_container.before  choice
 
@@ -451,17 +466,12 @@ class Chosen extends AbstractChosen
 
   result_select: (evt) ->
     if $(evt.target).hasClass "group-result"
-      if not @can_select_by_group
+      if not @can_select_by_group or not @is_multiple
         return
       $(evt.target).nextAll().each (_, option) =>
         if not $(option).hasClass "group-result"
           array_index = $(option).attr "data-option-array-index"
-          is_chosen = false
-          $('#pops_chosen > .chosen-choices').find('.search-choice-close').each (_, choice) =>
-            if $(choice).attr("data-option-array-index") is array_index
-              is_chosen = true;
-              return false;
-          if not is_chosen
+          if $(option).hasClass('active-result') and not @results_data[array_index]?.selected
             @result_highlight = $(option)
             evt.target = option
             evt.selected = true
@@ -605,7 +615,7 @@ class Chosen extends AbstractChosen
       this.select_append_option( {value: terms, text: terms} )
 
   select_append_option: ( options ) ->
-    option = this.get_option_html(options)
+    option = this.get_option_element(options)
     @form_field_jq.append option
     @form_field_jq.trigger "chosen:updated"
     @form_field_jq.trigger "change"

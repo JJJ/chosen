@@ -567,10 +567,8 @@ class AbstractChosen
       </li>
     """
 
-  get_option_html: ({ value, text }) ->
-    """
-      <option value="#{value}" selected>#{text}</option>
-    """
+  get_option_element: ({ value, text }) ->
+    new Option(text, value, true, true)
 
   get_create_option_html: (terms) ->
     """
