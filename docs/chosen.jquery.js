@@ -1,6 +1,6 @@
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype
-Version 3.0.1
+Version 3.0.2
 Full source at https://github.com/jjj/chosen
 Copyright (c) 2011-2026 JJJ
 MIT License, https://github.com/jjj/chosen/blob/master/LICENSE.md
