@@ -38,6 +38,33 @@ describe "Basic setup", ->
     expect(div.down('img')).toBeUndefined()
     div.remove()
 
+  it "selects only available options in the clicked group", ->
+    div = new Element('div').update("<select multiple select-by-group><optgroup label='First'><option selected>One</option><option>Two</option><option disabled>Three</option></optgroup><option>Outside</option><optgroup label='Second'><option>Four</option></optgroup></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, hide_results_on_select: false)
+    chosen.results_show()
+    group = div.down('.group-result')
+    chosen.search_results_mouseup(target: group, which: 1, preventDefault: ->)
+    chosen.search_results_mouseup(target: group, which: 1, preventDefault: ->)
+    expect(div.select('.search-choice').length).toBe(2)
+    expect(select.options[0].selected).toBe(true)
+    expect(select.options[1].selected).toBe(true)
+    expect(select.options[2].selected).toBe(false)
+    expect(select.options[3].selected).toBe(false)
+    expect(select.options[4].selected).toBe(false)
+    div.remove()
+
+  it "does not select a group without the select-by-group attribute", ->
+    div = new Element('div').update("<select multiple><optgroup label='Group'><option>One</option></optgroup></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    chosen.search_results_mouseup(target: div.down('.group-result'), which: 1, preventDefault: ->)
+    expect(select.options[0].selected).toBe(false)
+    div.remove()
+
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
     div.update("<select><option>One</option><option>Two</option></select>")

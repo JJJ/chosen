@@ -12,6 +12,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Select only available options in the current optgroup without consulting another Chosen instance.
 - Preserve literal values and text when creating options instead of interpreting them as HTML.
 - Keep jQuery result highlighting intact when the pointer leaves an unrelated child element.
+- Support the opt-in `select-by-group` attribute in the Prototype adapter and keep group selection within its optgroup in both adapters.
 
 ### Maintenance
 - Remove the unused `gh-pages` Grunt task and document that GitHub Pages serves `master/docs`.

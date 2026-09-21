@@ -31,7 +31,7 @@ describe "Basic setup", ->
 
   it "selects only available optgroup options without inspecting another container", ->
     other = $("<div id='pops_chosen'><ul class='chosen-choices'><li><button class='search-choice-close' data-option-array-index='1'></button></li></ul></div>").appendTo("body")
-    div = $("<div>").html("<select multiple select-by-group><optgroup label='Group'><option>One</option><option>Two</option><option disabled>Three</option></optgroup></select>").appendTo("body")
+    div = $("<div>").html("<select multiple select-by-group><optgroup label='Group'><option>One</option><option>Two</option><option disabled>Three</option></optgroup><option>Outside</option></select>").appendTo("body")
     div.find("select").chosen(hide_results_on_select: false)
     div.find(".chosen-container").trigger("mousedown")
     group = div.find(".group-result")
@@ -39,6 +39,7 @@ describe "Basic setup", ->
     group.trigger($.Event("mouseup", which: 1))
     expect(div.find(".search-choice").length).toBe(2)
     expect(div.find("option").last().prop("selected")).toBe(false)
+    expect(div.find("option").eq(2).prop("selected")).toBe(false)
     div.remove()
     other.remove()
 
