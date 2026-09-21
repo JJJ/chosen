@@ -24,6 +24,44 @@ describe "Basic setup", ->
     expect(search.readAttribute("aria-label")).toBe("Choices")
     expect(search.readAttribute("aria-labelledby")).toBe("field-label")
     expect(search.readAttribute("aria-describedby")).toBe("field-help")
+
+  it "keeps generated listbox and option IDs unique without select IDs", ->
+    div = new Element('div').update("<select><option value=''></option><option>One</option></select><select><option value=''></option><option>Two</option></select>")
+    document.body.appendChild(div)
+    selects = div.select('select')
+    first = new Chosen(selects[0])
+    second = new Chosen(selects[1])
+    first.results_show()
+    second.results_show()
+    lists = div.select('.chosen-results')
+    expect(lists[0].id).not.toBe(lists[1].id)
+    options = div.select('.chosen-results li')
+    expect(options[0].id).not.toBe(options[options.length - 1].id)
+    for search in div.select('.chosen-search-input')
+      expect(search.readAttribute('aria-controls')).toBe(search.up('.chosen-container').down('.chosen-results').id)
+    div.remove()
+
+  it "copies custom ARIA attributes on update without replacing managed state", ->
+    div = new Element('div').update("<select aria-required='true' aria-invalid='true' aria-expanded='true'><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select)
+    search = div.down('.chosen-search-input')
+    expect(search.readAttribute('aria-required')).toBe('true')
+    expect(search.readAttribute('aria-invalid')).toBe('true')
+    expect(search.readAttribute('aria-expanded')).toBe('false')
+    select.removeAttribute('aria-invalid')
+    select.writeAttribute('aria-errormessage', 'field-error')
+    select.fire('chosen:updated')
+    expect(search.readAttribute('aria-invalid')).toBeNull()
+    expect(search.readAttribute('aria-errormessage')).toBe('field-error')
+    div.remove()
+
+  it "uses an associated label when the select has no explicit ARIA name", ->
+    div = new Element('div').update("<label for='label-test'>Choices</label><select id='label-test'><option>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'))
+    expect(div.down('.chosen-search-input').readAttribute('aria-labelledby')).toBe(div.down('label').id + ' ')
     div.remove()
 
   it "should add expose a Chosen global", ->

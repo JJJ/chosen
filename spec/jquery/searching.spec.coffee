@@ -1,4 +1,12 @@
 describe "Searching", ->
+  it "matches accented option text with an unaccented query", ->
+    div = $("<div>").html("<select><option value=''></option><option value='cafe'>Café</option></select>")
+    div.find("select").chosen()
+    div.find(".chosen-container").trigger("mousedown")
+    div.find(".chosen-search-input").val("cafe").trigger("keyup")
+    expect(div.find(".active-result").length).toBe(1)
+    expect(div.find(".active-result").text()).toBe("Café")
+
   it "should not match the actual text of HTML entities", ->
     tmpl = "
       <select data-placeholder='Choose an HTML Entity...'>

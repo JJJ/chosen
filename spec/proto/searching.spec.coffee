@@ -1,4 +1,15 @@
 describe "Searching", ->
+  it "matches accented option text with an unaccented query", ->
+    div = new Element('div').update("<select><option value=''></option><option value='cafe'>Café</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    chosen.search_field.value = 'cafe'
+    chosen.winnow_results()
+    expect(div.select('.active-result').length).toBe(1)
+    expect(div.down('.active-result').innerHTML.stripTags()).toBe('Café')
+    div.remove()
+
   it "should not match the actual text of HTML entities", ->
     tmpl = "
       <select data-placeholder='Choose an HTML Entity...'>

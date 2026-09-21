@@ -111,7 +111,7 @@ class @Chosen extends AbstractChosen
 
     @search_field = @container.down('input')
     @search_results = @container.down('ul.chosen-results')
-    @search_results.writeAttribute('id', "#{@form_field.id}-chosen-search-results")
+    @search_results.writeAttribute('id', "#{@result_id_base}-search-results")
     this.search_field_scale()
 
     @search_no_results = @container.down('li.no-results')
@@ -169,6 +169,7 @@ class @Chosen extends AbstractChosen
       @selected_item.observe "keydown", (evt) =>
         if evt.keyCode in [13, 32] and not @is_disabled
           evt.preventDefault()
+          @ignore_enter_keyup = true if evt.keyCode is 13
           this.results_toggle()
 
   destroy: ->
@@ -204,21 +205,22 @@ class @Chosen extends AbstractChosen
     @form_field.show()
 
   set_aria_labels: ->
+    for name in @copied_aria_attributes or []
+      @search_field.removeAttribute name
+    @copied_aria_attributes = []
+    for attribute in this.search_aria_attributes()
+      @search_field.writeAttribute attribute.name, attribute.value
+      @copied_aria_attributes.push attribute.name
     @search_field.writeAttribute "aria-owns", @search_results.readAttribute "id"
-    if @form_field.attributes["aria-label"]
-      @search_field.writeAttribute "aria-label", @form_field.readAttribute "aria-label"
-
-    if @form_field.attributes["aria-labelledby"]
-      @search_field.writeAttribute "aria-labelledby", @form_field.readAttribute "aria-labelledby"
-    else if not @form_field.attributes["aria-label"] and Object.prototype.hasOwnProperty.call(@form_field,'labels') and @form_field.labels.length
+    @search_field.writeAttribute "aria-controls", @search_results.readAttribute "id"
+    if not @form_field.attributes["aria-labelledby"] and not @form_field.attributes["aria-label"] and @form_field.labels?.length
       labelledbyList = ""
       for label, i in @form_field.labels
         if label.id is ""
-          label.id = "#{@form_field.id}-chosen-label-#{i}"
+          label.id = "#{@result_id_base}-label-#{i}"
         labelledbyList += @form_field.labels[i].id + " "
       @search_field.writeAttribute "aria-labelledby", labelledbyList
-    if @form_field.attributes["aria-describedby"]
-      @search_field.writeAttribute "aria-describedby", @form_field.readAttribute "aria-describedby"
+      @copied_aria_attributes.push "aria-labelledby"
 
   search_field_disabled: ->
     @is_disabled = @form_field.disabled || @form_field.up('fieldset')?.disabled || false
@@ -231,14 +233,11 @@ class @Chosen extends AbstractChosen
     @search_field.disabled = @is_disabled
 
     unless @is_multiple
-      @selected_item.stopObserving 'focus', this.activate_field
       @selected_item.writeAttribute 'aria-disabled', String(@is_disabled)
       @selected_item.writeAttribute 'tabindex', if @is_disabled then -1 else 0
 
     if @is_disabled
       this.close_field()
-    else unless @is_multiple
-      @selected_item.observe 'focus', this.activate_field
 
   container_mousedown: (evt) ->
     return if @is_disabled
