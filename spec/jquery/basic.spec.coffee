@@ -1,4 +1,25 @@
 describe "Basic setup", ->
+  it "uses the single select as the accessible dropdown control", ->
+    div = $("<div>").html("<select><option>One</option><option>Two</option></select>")
+    div.find("select").chosen()
+    control = div.find(".chosen-single")
+    expect(control.attr("role")).toBe("button")
+    expect(control.attr("tabindex")).toBe("0")
+    expect(control.find("button").length).toBe(0)
+    expect(control.attr("aria-expanded")).toBe("false")
+    control.trigger($.Event("keydown", which: 13))
+    expect(control.attr("aria-expanded")).toBe("true")
+    div.find("select").data("chosen").results_hide()
+    expect(control.attr("aria-expanded")).toBe("false")
+
+  it "copies accessible names and descriptions to the search input", ->
+    div = $("<div>").html("<select aria-label='Choices' aria-labelledby='field-label' aria-describedby='field-help'><option>One</option></select>")
+    div.find("select").chosen()
+    search = div.find(".chosen-search-input")
+    expect(search.attr("aria-label")).toBe("Choices")
+    expect(search.attr("aria-labelledby")).toBe("field-label")
+    expect(search.attr("aria-describedby")).toBe("field-help")
+
   it "should add chosen to jQuery object", ->
     expect(jQuery.fn.chosen).toBeDefined()
 
@@ -129,6 +150,8 @@ describe "Basic setup", ->
 
       container = div.find(".chosen-container")
       expect(container.hasClass("chosen-disabled")).toBe true
+      expect(container.find(".chosen-single").attr("aria-disabled")).toBe("true")
+      expect(container.find(".chosen-single").attr("tabindex")).toBe("-1")
 
   it "it should not render hidden options", ->
     tmpl = "

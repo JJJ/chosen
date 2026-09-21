@@ -4,13 +4,19 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
-## [Unreleased]
+## [3.0.1] - Unreleased
 
-### Added
-- **Accessibility Enhancement**: Added accessible button element inside dropdown arrow for screen reader support
-  - Button element with dynamic ARIA labels ("Show options" / "Hide options")
-  - Keyboard navigation support with visible focus outline
-  - Maintains backwards compatibility with existing `.chosen-single div b` CSS selectors
+### Fixed
+- Restore search compatibility with jQuery 4 by removing the `$.trim` call (#85).
+- Make the single-select dropdown control keyboard accessible and expose its expanded state without nesting an inaccessible button inside the decorative arrow (#68). Existing arrow CSS selectors remain valid.
+- Copy `aria-label`, `aria-labelledby`, and `aria-describedby` values from the original select to the search input in both jQuery and Prototype builds (#37).
+- Select search results on touchend in both builds without depending on a synthetic mouse event.
+
+### Maintenance
+- Update compatible npm development dependencies and remove the unused direct Puppeteer dependency.
+- Point the npm package entry point to the compiled file in `dist/js`.
+- Run Prototype specs in the standard test task and pin Jasmine 4 so the runner does not load an incompatible future release.
+- Use Node.js 24 LTS for development and CI builds.
 
 ## [3.0.0] - 2025-12-30
 

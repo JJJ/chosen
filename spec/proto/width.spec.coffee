@@ -16,7 +16,7 @@ describe "Width handling", ->
       div = new Element("div").update(tmpl)
       document.body.appendChild(div)
       select = div.down("select")
-      new Chosen(select)
+      chosen = new Chosen(select)
       
       container = div.down(".chosen-container-single")
       expect(container).toBeDefined()
@@ -40,12 +40,12 @@ describe "Width handling", ->
       div = new Element("div").update(tmpl)
       document.body.appendChild(div)
       select = div.down("select")
-      new Chosen(select)
+      chosen = new Chosen(select)
       
       # Select a short value
       container = div.down(".chosen-container")
-      container.fire("mousedown") # open the drop
-      container.down(".active-result").fire(simulant("mouseup", button: 0))
+      chosen.container_mousedown({ target: container, which: 1, type: 'mousedown', stop: -> })
+      chosen.search_results_mouseup({ target: container.down(".active-result"), which: 1, preventDefault: -> })
       
       # Check that the selected text is visible
       span = div.down(".chosen-single span")
@@ -74,12 +74,12 @@ describe "Width handling", ->
       div = new Element("div").update(tmpl)
       document.body.appendChild(div)
       select = div.down("select")
-      new Chosen(select)
+      chosen = new Chosen(select)
       
       # Select a year
       container = div.down(".chosen-container")
-      container.fire("mousedown") # open the drop
-      container.down(".active-result").fire(simulant("mouseup", button: 0))
+      chosen.container_mousedown({ target: container, which: 1, type: 'mousedown', stop: -> })
+      chosen.search_results_mouseup({ target: container.down(".active-result"), which: 1, preventDefault: -> })
       
       # Check that the year is fully visible
       span = div.down(".chosen-single span")
@@ -106,12 +106,12 @@ describe "Width handling", ->
       div = new Element("div").update(tmpl)
       document.body.appendChild(div)
       select = div.down("select")
-      new Chosen(select)
+      chosen = new Chosen(select)
       
       # Select a long value
       container = div.down(".chosen-container")
-      container.fire("mousedown") # open the drop
-      container.down(".active-result").fire(simulant("mouseup", button: 0))
+      chosen.container_mousedown({ target: container, which: 1, type: 'mousedown', stop: -> })
+      chosen.search_results_mouseup({ target: container.down(".active-result"), which: 1, preventDefault: -> })
       
       # The container should be wider than the minimum
       containerWidth = container.getWidth()
