@@ -17,6 +17,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Run browser specs against jQuery 4.0, 3.5, 1.12, and 1.7, plus Prototype 1.7, with maintained Playwright Core and Jasmine packages, including keyboard and accessibility checks.
 - Remove the outdated Jasmine/Grunt runner and watcher dependencies, clearing the development dependency audit.
 - Prepare npm trusted publishing from GitHub releases and correct the release documentation and package metadata.
+- Update GitHub Actions to the Node.js 24 based checkout and setup actions.
 
 ## [3.0.1] - 2026-09-21
 
