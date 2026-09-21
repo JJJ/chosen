@@ -471,7 +471,7 @@ class Chosen extends AbstractChosen
       $(evt.target).nextAll().each (_, option) =>
         if not $(option).hasClass "group-result"
           array_index = $(option).attr "data-option-array-index"
-          if $(option).hasClass('active-result') and not @results_data[array_index]?.selected
+          if $(option).hasClass('group-option') and $(option).hasClass('active-result') and not @results_data[array_index]?.selected
             @result_highlight = $(option)
             evt.target = option
             evt.selected = true

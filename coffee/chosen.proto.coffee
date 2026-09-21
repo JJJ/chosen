@@ -465,7 +465,7 @@ class @Chosen extends AbstractChosen
 
   search_results_mouseup: (evt) ->
     if evt.type is 'touchend' or this.mousedown_checker(evt) == 'left'
-      target = if evt.target.hasClassName("active-result") then evt.target else evt.target.up(".active-result")
+      target = if evt.target.hasClassName("active-result") or evt.target.hasClassName("group-result") then evt.target else evt.target.up(".active-result")
       if target
         @result_highlight = target
         this.result_select(evt)
@@ -527,6 +527,21 @@ class @Chosen extends AbstractChosen
     deselect_trigger.remove() if(deselect_trigger)
 
   result_select: (evt) ->
+    if evt.target.hasClassName "group-result"
+      return unless @can_select_by_group and @is_multiple
+      for option in evt.target.nextSiblings()
+        break if option.hasClassName "group-result"
+        array_index = option.readAttribute "data-option-array-index"
+        if option.hasClassName("group-option") and option.hasClassName("active-result") and not @results_data[array_index]?.selected
+          @result_highlight = option
+          selection_evt =
+            target: option
+            metaKey: evt.metaKey
+            ctrlKey: evt.ctrlKey
+            preventDefault: => evt.preventDefault()
+          this.result_select selection_evt
+      return
+
     if @result_highlight
       high = @result_highlight
 
