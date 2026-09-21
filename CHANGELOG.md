@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
+## Unreleased
+
+### Maintenance
+- Remove the unused `gh-pages` Grunt task and document that GitHub Pages serves `master/docs`.
+
 ## [3.0.2] - 2026-09-21
 
 ### Fixed

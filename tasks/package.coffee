@@ -20,11 +20,4 @@ module.exports = (grunt) ->
       src: ['dist/**/*']
       dest: 'chosen_<%= version_tag %>_dist.zip'
 
-  grunt.config 'gh-pages',
-    options:
-      base: 'public',
-      message: 'Updated to new Chosen version <%= pkg.version %>'
-    src: ['**']
-
   grunt.registerTask 'prep-release', ['build', 'dom_munger:latest_version', 'zip:chosen', 'zip:build']
-  grunt.registerTask 'publish-release', ['gh-pages']

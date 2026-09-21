@@ -213,5 +213,6 @@ This documentation is for Chosen maintainers.  You must have write permissions f
    the release. The [npm publish workflow](.github/workflows/publish.yml)
    verifies that the tag matches `package.json`, runs the browser suites, and
    publishes `chosen-jjj` using npm trusted publishing.
-5. Check the npm package and release artifacts. Run `grunt publish-release`
-   when updating the `gh-pages` branch, then verify the [docs site](https://jjj.github.io/chosen/).
+5. Check the npm package and release artifacts. GitHub Pages serves the
+   `docs/` directory from `master`; verify the [docs site](https://jjj.github.io/chosen/)
+   after the release commit is merged.
