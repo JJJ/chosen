@@ -28,4 +28,4 @@ jobs:
     - name: Run tests
       run: npm test
       env:
-        PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome

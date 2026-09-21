@@ -1,0 +1,34 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          package_version=$(node -p "require('./package.json').version")
+          test "${RELEASE_TAG#v}" = "$package_version"
+      - run: npm ci
+      - run: npm test
+        env:
+          CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome
+      - run: npm publish --access public

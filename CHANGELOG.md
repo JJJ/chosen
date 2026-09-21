@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This project is a continuation and modernization of the original [harvesthq/chosen](https://github.com/harvesthq/chosen) library, maintained by [JJJ](https://github.com/JJJ).
 
+## Unreleased
+
+### Fixed
+- Preserve unique result IDs when several selects have no ID.
+- Copy custom ARIA attributes and associated labels to the search input in both builds, including after `chosen:updated` (#37).
+- Keep keyboard focus on the single-select control until Enter or Space opens it, and prevent the opening Enter keyup from immediately selecting a result.
+- Restore accent-insensitive search fallback in both builds.
+- Improve placeholder contrast and correct the embedded arrow image URL.
+
+### Maintenance
+- Run browser specs against jQuery 4.0, 3.5, 1.12, and 1.7, plus Prototype 1.7, with maintained Playwright Core and Jasmine packages, including keyboard and accessibility checks.
+- Remove the outdated Jasmine/Grunt runner and watcher dependencies, clearing the development dependency audit.
+- Prepare npm trusted publishing from GitHub releases and correct the release documentation and package metadata.
+
 ## [3.0.1] - 2026-09-21
 
 ### Fixed

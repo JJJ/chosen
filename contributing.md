@@ -173,7 +173,7 @@ license your work under the [MIT License](http://en.wikipedia.org/wiki/MIT_Licen
 1. Make all changes in CoffeeScript files, **not** JavaScript files.
 2. Use [Grunt](#grunt) to build the JavaScript files.
 3. For feature changes, update both jQuery *and* Prototype versions
-4. Don't manually update the version number in `package.json`. This is done using a Grunt task on deployment.
+4. Change `package.json` and `package-lock.json` together when preparing a release.
 
 <a name="grunt"></a>
 #### Grunt tasks: Running Tests and building Chosen
@@ -181,15 +181,21 @@ license your work under the [MIT License](http://en.wikipedia.org/wiki/MIT_Licen
 
 To install all development dependencies, in the project's root directory, run
 
-    npm install
+    npm ci
 
-Once you're configured, `grunt` tasks are available:
+Install Google Chrome to run the browser suites. The tests cover jQuery 4.0,
+3.5, 1.12, and 1.7, plus Prototype 1.7. Set `CHROME_EXECUTABLE_PATH` if Chrome is
+installed outside its usual location.
 
-    grunt test                 # run the tests in spec/
+Once you're configured, these commands are available:
 
-    grunt build                # build Chosen from source
+    npm test                   # build and run the browser suites
 
-    grunt watch                # watch coffee/ for changes and build Chosen
+    npm run build              # build Chosen from source
+
+    npm run test:jquery        # run the jQuery browser suites
+
+    npm run test:proto         # run the Prototype browser suite
 
 If you're interested, you can find the task in [Gruntfile.coffee](https://github.com/jjj/chosen/blob/master/Gruntfile.coffee).
 
@@ -197,27 +203,15 @@ If you're interested, you can find the task in [Gruntfile.coffee](https://github
 
 This documentation is for Chosen maintainers.  You must have write permissions for this repository to cut a release.
 
-1. Bump the version number in the source but _do not push it yet_. [Example commit](https://github.com/jjj/chosen/commit/be0a298f528ec59ce97889eaeeeb47a2dca9ca79).
-
-2. Create a tag for that commit: `git tag -m "<tagname>" <tagname> <SHA>`
-
-    - `<tagname>` formatted as `vX.Y.Z`
-    - `<SHA>` is the SHA of the commit from step 1
-
-3. Push the commit _and_ the tag: `git push origin --follow-tags`
-
-4. Draft a new release [on the releases page](https://github.com/jjj/chosen/releases).
-
-    - Title formatted as "Version X.Y.Z"
-    - Tagged as `<tagname>` from step 2
-    - Body of the release should contain changes included in the release. Ideally, there will already be a draft release present with a running log from contributions merged since the last release.
-
-5. Run `grunt prep-release`
-
-6. Attach the generated `chosen_vX.Y.Z.zip` file (in the Chosen root directory) to the draft release from step 4.
-
-7. Publish the release.
-
-8. Run `grunt publish-release` to publish to the `gh-pages` branch.
-
-9. Verify https://jjj.github.io/chosen/ is showing the new version.
+1. Update the version in `package.json` and `package-lock.json`, then build,
+   test, and commit the generated files.
+2. Run `grunt prep-release` and review the generated ZIP archives and docs
+   version. Commit any docs changes.
+3. Tag the release commit with its version (for example, `3.0.2`) and push the
+   commit and tag.
+4. Draft a GitHub release for that tag, attach the ZIP archives, and publish
+   the release. The [npm publish workflow](.github/workflows/publish.yml)
+   verifies that the tag matches `package.json`, runs the browser suites, and
+   publishes `chosen-jjj` using npm trusted publishing.
+5. Check the npm package and release artifacts. Run `grunt publish-release`
+   when updating the `gh-pages` branch, then verify the [docs site](https://jjj.github.io/chosen/).

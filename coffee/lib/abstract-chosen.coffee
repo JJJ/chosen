@@ -2,6 +2,7 @@ class AbstractChosen
 
   constructor: (@form_field, @options={}) ->
     return unless AbstractChosen.browser_is_supported()
+    @result_id_base = if @form_field.id then "#{@form_field.id}-chosen" else "chosen-#{++AbstractChosen.next_id}"
     @is_multiple = @form_field.multiple
     @can_select_by_group = @form_field.getAttribute('select-by-group') isnt null
     this.set_default_text()
@@ -131,7 +132,7 @@ class AbstractChosen
         option_el.setAttribute(attrName, option.data[attrName])
     option_el.setAttribute("role", "option")
     option_el.innerHTML = option.highlighted_html or option.html
-    option_el.id = "#{@form_field.id}-chosen-search-result-#{option.data['data-option-array-index']}"
+    option_el.id = "#{@result_id_base}-search-result-#{option.data['data-option-array-index']}"
     option_el.title = option.title if option.title
 
     this.outerHTML(option_el)
@@ -156,6 +157,7 @@ class AbstractChosen
 
   results_update_field: ->
     this.set_default_text()
+    this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
     this.result_clear_highlight()
     this.results_build()
@@ -358,12 +360,17 @@ class AbstractChosen
   escape_special_char: (str) ->
     specialChars = this.get_list_special_char()
     for special in specialChars
-      str.replace(new RegExp(special.let, "g"), special.val)
+      str = str.replace(new RegExp(special.let, "g"), special.val)
     str
+
+  search_aria_attributes: ->
+    # These attributes describe state owned by Chosen's generated combobox.
+    managed = /^(aria-(activedescendant|autocomplete|busy|controls|disabled|expanded|haspopup|hidden|owns))$/
+    (attribute for attribute in @form_field.attributes when /^aria-/.test(attribute.name) and not managed.test(attribute.name))
 
   search_string_match: (search_string, regex) ->
     match = regex.exec(search_string)
-    match = regex.exec(this.escape_special_char(search_string)) if not @case_sensitive_search && match?
+    match = regex.exec(this.escape_special_char(search_string)) if not @case_sensitive_search && not match?
     match.index += 1 if not @search_contains && match?[1] # make up for lack of lookbehind operator in regex
     match
 
@@ -436,6 +443,9 @@ class AbstractChosen
 
   keyup_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
+    if @ignore_enter_keyup
+      @ignore_enter_keyup = false
+      return if stroke is 13
     this.search_field_scale()
 
     switch stroke
@@ -579,3 +589,4 @@ class AbstractChosen
   @default_no_result_text: "No results for:"
   @default_create_option_text: "Add Option:"
   @default_remove_item_text: "Remove selection"
+  @next_id: 0

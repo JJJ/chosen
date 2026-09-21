@@ -146,7 +146,7 @@
           <td>hide_results_on_select</td>
           <td>true</td>
           <td>
-            <p>By default, Chosen's results are hidden after a option is selected. Setting this option to <code class="language-javascript">false</code> will keep the results open after selection. This only applies to multiple selects.</p>
+            <p>By default, Chosen's results are hidden after an option is selected. Setting this option to <code class="language-javascript">false</code> will keep the results open after selection. This only applies to multiple selects.</p>
           </td>
         </tr>
         <tr>
@@ -191,7 +191,33 @@
           <td>selected, disabled, hidden</td>
           <td>Chosen automatically highlights selected options, hides hidden options and disables disabled options.</td>
         </tr>
+        <tr>
+          <td>aria-*</td>
+          <td>Chosen copies accessible names, descriptions, and other ARIA attributes from the select to its search input. Chosen manages the combobox state attributes itself. Trigger <code class="language-javascript">chosen:updated</code> after changing attributes on the select.</td>
+        </tr>
       </tbody></table>
+
+      <h2><a name="styling" class="anchor" href="#styling">Styling the arrow and height</a></h2>
+      <p>Chosen uses CSS for the single-select arrow and control height. To use a single down arrow and a shorter control for a select with <code>id="my-select"</code>, add this CSS after Chosen's stylesheet:</p>
+<pre><code class="language-css">#my-select_chosen .chosen-single {
+  line-height: 20px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+#my-select_chosen .chosen-single div b {
+  background: none;
+  position: relative;
+}
+#my-select_chosen .chosen-single div b:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  margin-top: -2px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #444;
+}</code></pre>
 
       <h2><a name="classes" class="anchor" href="#classes">Classes</a></h2>
       <p>Classes placed on the select tag can be used to configure Chosen.</p>

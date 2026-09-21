@@ -4,7 +4,7 @@ describe "Basic setup", ->
     div.find("select").chosen()
     control = div.find(".chosen-single")
     expect(control.attr("role")).toBe("button")
-    expect(control.attr("tabindex")).toBe("0")
+    expect(String(control.attr("tabindex"))).toBe("0")
     expect(control.find("button").length).toBe(0)
     expect(control.attr("aria-expanded")).toBe("false")
     control.trigger($.Event("keydown", which: 13))
@@ -19,6 +19,33 @@ describe "Basic setup", ->
     expect(search.attr("aria-label")).toBe("Choices")
     expect(search.attr("aria-labelledby")).toBe("field-label")
     expect(search.attr("aria-describedby")).toBe("field-help")
+
+  it "keeps generated listbox and option IDs unique without select IDs", ->
+    div = $("<div>").html("<select><option value=''></option><option>One</option></select><select><option value=''></option><option>Two</option></select>")
+    div.find("select").chosen()
+    div.find(".chosen-container").each -> $(this).trigger("mousedown")
+    lists = div.find(".chosen-results")
+    expect(lists.first().attr("id")).not.toBe(lists.last().attr("id"))
+    expect(div.find(".chosen-results li").first().attr("id")).not.toBe(div.find(".chosen-results li").last().attr("id"))
+    div.find(".chosen-search-input").each ->
+      expect($(this).attr("aria-controls")).toBe($(this).closest(".chosen-container").find(".chosen-results").attr("id"))
+
+  it "copies custom ARIA attributes on update without replacing managed state", ->
+    div = $("<div>").html("<select aria-required='true' aria-invalid='true' aria-expanded='true'><option>One</option></select>")
+    select = div.find("select").chosen()
+    search = div.find(".chosen-search-input")
+    expect(search.attr("aria-required")).toBe("true")
+    expect(search.attr("aria-invalid")).toBe("true")
+    expect(search.attr("aria-expanded")).toBe("false")
+    select.removeAttr("aria-invalid").attr("aria-errormessage", "field-error").trigger("chosen:updated")
+    expect(search.attr("aria-invalid")).toBeUndefined()
+    expect(search.attr("aria-errormessage")).toBe("field-error")
+
+  it "uses an associated label when the select has no explicit ARIA name", ->
+    div = $("<div>").html("<label for='label-test'>Choices</label><select id='label-test'><option>One</option></select>").appendTo("body")
+    div.find("select").chosen()
+    expect(div.find(".chosen-search-input").attr("aria-labelledby")).toBe(div.find("label").attr("id") + " ")
+    div.remove()
 
   it "should add chosen to jQuery object", ->
     expect(jQuery.fn.chosen).toBeDefined()
@@ -151,7 +178,7 @@ describe "Basic setup", ->
       container = div.find(".chosen-container")
       expect(container.hasClass("chosen-disabled")).toBe true
       expect(container.find(".chosen-single").attr("aria-disabled")).toBe("true")
-      expect(container.find(".chosen-single").attr("tabindex")).toBe("-1")
+      expect(String(container.find(".chosen-single").attr("tabindex"))).toBe("-1")
 
   it "it should not render hidden options", ->
     tmpl = "
