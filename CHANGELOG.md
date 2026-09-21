@@ -6,6 +6,13 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+### Fixed
+- Restore a select's inline styles and remove only Chosen's event handlers when destroying either adapter.
+- Inherit multiple option classes in selected choices, including in the Prototype adapter.
+- Select only available options in the current optgroup without consulting another Chosen instance.
+- Preserve literal values and text when creating options instead of interpreting them as HTML.
+- Keep jQuery result highlighting intact when the pointer leaves an unrelated child element.
+
 ### Maintenance
 - Remove the unused `gh-pages` Grunt task and document that GitHub Pages serves `master/docs`.
 

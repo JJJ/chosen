@@ -1,4 +1,43 @@
 describe "Basic setup", ->
+  it "restores inline styles and preserves other select listeners on destroy", ->
+    div = new Element('div').update("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    updates = 0
+    select.observe 'chosen:updated', -> updates += 1
+    chosen = new Chosen(select)
+    spyOn(chosen, 'results_update_field').and.callThrough()
+    chosen.destroy()
+    select.fire('chosen:updated')
+    expect(updates).toBe(1)
+    expect(chosen.results_update_field).not.toHaveBeenCalled()
+    expect(select.style.display).toBe('inline-block')
+    expect(select.style.position).toBe('relative')
+    expect(select.style.opacity).toBe('0.8')
+    div.remove()
+
+  it "inherits multiple option classes on selected choices", ->
+    div = new Element('div').update("<select multiple><option class='first second' selected>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'), inherit_option_classes: true)
+    expect(div.down('.search-choice').hasClassName('first')).toBe(true)
+    expect(div.down('.search-choice').hasClassName('second')).toBe(true)
+    div.remove()
+
+  it "appends literal option values and labels", ->
+    div = new Element('div').update("<select multiple><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    value = 'a" onclick="alert(1)'
+    label = '<img src=x onerror=alert(1)>'
+    chosen.select_append_option(value: value, text: label)
+    expect(select.options.length).toBe(2)
+    expect(select.options[1].value).toBe(value)
+    expect(select.options[1].text).toBe(label)
+    expect(div.down('img')).toBeUndefined()
+    div.remove()
+
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
     div.update("<select><option>One</option><option>Two</option></select>")
