@@ -15,7 +15,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ### Maintenance
 - Update compatible npm development dependencies and remove the unused direct Puppeteer dependency.
 - Point the npm package entry point to the compiled file in `dist/js`.
-- Run Prototype specs in the standard test task and pin Jasmine 4 so the runner does not load an incompatible future release.
+- Run Prototype specs in the standard test task, keep generated assets in sync while testing, and pin Jasmine 4 so the runner does not load an incompatible future release.
 - Use Node.js 24 LTS for development and CI builds.
 
 ## [3.0.0] - 2025-12-30
