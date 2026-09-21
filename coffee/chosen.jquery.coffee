@@ -119,6 +119,11 @@ class Chosen extends AbstractChosen
       @search_choices.on 'click.chosen', (evt) => this.choices_click(evt); return
     else
       @container.on 'click.chosen', (evt) -> evt.preventDefault(); return # gobble click of anchor
+      @selected_item.on 'keydown.chosen', (evt) =>
+        if evt.which in [13, 32] and not @is_disabled
+          evt.preventDefault()
+          this.results_toggle()
+        return
 
   destroy: ->
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
@@ -140,15 +145,17 @@ class Chosen extends AbstractChosen
     @search_field.attr "aria-owns", @search_results.attr "id"
     if @form_field.attributes["aria-label"]
       @search_field.attr "aria-label", @form_field_jq.attr "aria-label"
-      if @form_field.attributes["aria-labelledby"]
-        @search_field.attr "aria-labelledby", @form_field_jq.attr "aria-labelledby"
-    else if Object.prototype.hasOwnProperty.call(@form_field,'labels') && @form_field.labels.length
+    if @form_field.attributes["aria-labelledby"]
+      @search_field.attr "aria-labelledby", @form_field_jq.attr "aria-labelledby"
+    else if not @form_field.attributes["aria-label"] and Object.prototype.hasOwnProperty.call(@form_field,'labels') and @form_field.labels.length
       labelledbyList = ""
       for label, i in @form_field.labels
         if label.id is ""
           label.id = "#{@form_field.id}-chosen-label-#{i}"
         labelledbyList += @form_field.labels[i].id + " "
       @search_field.attr "aria-labelledby", labelledbyList
+    if @form_field.attributes["aria-describedby"]
+      @search_field.attr "aria-describedby", @form_field_jq.attr "aria-describedby"
 
   search_field_disabled: ->
     @is_disabled = @form_field.disabled || @form_field_jq.parents('fieldset').is(':disabled')
@@ -158,6 +165,8 @@ class Chosen extends AbstractChosen
 
     unless @is_multiple
       @selected_item.off 'focus.chosen', this.activate_field
+      @selected_item.attr 'aria-disabled', @is_disabled
+      @selected_item.attr 'tabindex', if @is_disabled then -1 else 0
 
     if @is_disabled
       this.close_field()
@@ -314,7 +323,7 @@ class Chosen extends AbstractChosen
       @container.addClass "chosen-dropup"
 
     @container.addClass "chosen-with-drop"
-    @container.find(".chosen-single-button").attr("aria-label", "Hide options")
+    @selected_item.attr("aria-expanded", true) unless @is_multiple
     @results_showing = true
 
     @search_field.attr("aria-expanded", true)
@@ -339,7 +348,7 @@ class Chosen extends AbstractChosen
 
       @container.removeClass "chosen-with-drop"
       @container.removeClass "chosen-dropup"
-      @container.find(".chosen-single-button").attr("aria-label", "Show options")
+      @selected_item.attr("aria-expanded", false) unless @is_multiple
       @form_field_jq.trigger("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.attr("aria-expanded", false)
@@ -379,7 +388,7 @@ class Chosen extends AbstractChosen
       @search_field.removeClass "default"
 
   search_results_mouseup: (evt) ->
-    if this.mousedown_checker(evt) == 'left'
+    if evt.type is 'touchend' or this.mousedown_checker(evt) == 'left'
       target = if $(evt.target).is ".active-result,.group-result" then $(evt.target) else $(evt.target).parents(".active-result").first()
       if target.length
         @result_highlight = target

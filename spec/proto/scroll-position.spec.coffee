@@ -152,7 +152,7 @@ describe "Scroll Position Adjustment", ->
     
     div.remove()
 
-  it "should properly register and unregister scroll handler", ->
+  it "should properly register and unregister scroll handler", (done) ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>
         <option value=''></option>
@@ -178,26 +178,24 @@ describe "Scroll Position Adjustment", ->
     chosen.container_mousedown(mockEvt)
     expect(chosen.results_showing).toBe true
     
-    # Trigger scroll event
-    Event.fire(window, 'scroll')
-    
-    # Handler should have been called
-    expect(scroll_count).toBeGreaterThan 0
-    
-    initial_count = scroll_count
-    
-    # Close dropdown
-    select.fire('chosen:close')
-    expect(chosen.results_showing).toBe false
-    
-    # Trigger scroll event again
-    Event.fire(window, 'scroll')
-    
-    # Handler should not be called anymore (count should not increase)
-    # Note: Due to throttling, we need to wait a bit
-    expect(scroll_count).toBe initial_count
-    
-    div.remove()
+    scroll_event = document.createEvent('Event')
+    scroll_event.initEvent('scroll', false, false)
+    window.dispatchEvent(scroll_event)
+
+    setTimeout ->
+      expect(scroll_count).toBeGreaterThan 0
+      initial_count = scroll_count
+
+      select.fire('chosen:close')
+      expect(chosen.results_showing).toBe false
+
+      window.dispatchEvent(scroll_event)
+      setTimeout ->
+        expect(scroll_count).toBe initial_count
+        div.remove()
+        done()
+      , 50
+    , 50
 
   it "should clean up scroll handler when widget is destroyed", ->
     tmpl = "
@@ -222,7 +220,7 @@ describe "Scroll Position Adjustment", ->
     chosen_instance.destroy()
     
     # Widget should be destroyed - container should be removed
-    expect(div.down('.chosen-container')).toBeNull()
+    expect(div.down('.chosen-container')).toBeUndefined()
     
     # Trigger scroll - should not cause errors
     expect(-> Event.fire(window, 'scroll')).not.toThrow()

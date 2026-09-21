@@ -1,4 +1,31 @@
 describe "Basic setup", ->
+  it "uses the single select as the accessible dropdown control", ->
+    div = new Element("div")
+    div.update("<select><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    control = div.down(".chosen-single")
+    expect(control.readAttribute("role")).toBe("button")
+    expect(control.readAttribute("tabindex")).toBe("0")
+    expect(control.down("button")).toBeUndefined()
+    expect(control.readAttribute("aria-expanded")).toBe("false")
+    chosen.results_show()
+    expect(control.readAttribute("aria-expanded")).toBe("true")
+    chosen.results_hide()
+    expect(control.readAttribute("aria-expanded")).toBe("false")
+    div.remove()
+
+  it "copies accessible names and descriptions to the search input", ->
+    div = new Element("div")
+    div.update("<select aria-label='Choices' aria-labelledby='field-label' aria-describedby='field-help'><option>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down("select"))
+    search = div.down(".chosen-search-input")
+    expect(search.readAttribute("aria-label")).toBe("Choices")
+    expect(search.readAttribute("aria-labelledby")).toBe("field-label")
+    expect(search.readAttribute("aria-describedby")).toBe("field-help")
+    div.remove()
+
   it "should add expose a Chosen global", ->
     expect(Chosen).toBeDefined()
 
@@ -166,6 +193,8 @@ describe "Basic setup", ->
 
       container = div.down(".chosen-container")
       expect(container.hasClassName("chosen-disabled")).toBe true
+      expect(container.down(".chosen-single").readAttribute("aria-disabled")).toBe("true")
+      expect(container.down(".chosen-single").readAttribute("tabindex")).toBe("-1")
       div.remove()
 
   it "it should not render hidden options", ->

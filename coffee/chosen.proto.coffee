@@ -25,12 +25,10 @@ class @Chosen extends AbstractChosen
 
     # HTML Templates
     @single_temp = new Template(
-      '<a class="chosen-single chosen-default" role="button">
+      '<a class="chosen-single chosen-default" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
         <span>#{default}</span>
         <div>
-          <b aria-hidden="true">
-            <button type="button" class="chosen-single-button" aria-label="Show options" tabindex="-1"></button>
-          </b>
+          <b aria-hidden="true"></b>
         </div>
       </a>
       <div class="chosen-drop">
@@ -168,6 +166,10 @@ class @Chosen extends AbstractChosen
       @search_choices.observe "click", (evt) => this.choices_click(evt)
     else
       @container.observe "click", (evt) => evt.preventDefault() # gobble click of anchor
+      @selected_item.observe "keydown", (evt) =>
+        if evt.keyCode in [13, 32] and not @is_disabled
+          evt.preventDefault()
+          this.results_toggle()
 
   destroy: ->
     if (@container.getRootNode?)
@@ -204,17 +206,19 @@ class @Chosen extends AbstractChosen
   set_aria_labels: ->
     @search_field.writeAttribute "aria-owns", @search_results.readAttribute "id"
     if @form_field.attributes["aria-label"]
-      @search_field.writeAttribute "aria-label", @form_field.attributes["aria-label"]
+      @search_field.writeAttribute "aria-label", @form_field.readAttribute "aria-label"
 
     if @form_field.attributes["aria-labelledby"]
-      @search_field.writeAttribute "aria-labelledby", @form_field.attributes["aria-labelledby"]
-    else if Object.prototype.hasOwnProperty.call(@form_field,'labels') && @form_field.labels.length
+      @search_field.writeAttribute "aria-labelledby", @form_field.readAttribute "aria-labelledby"
+    else if not @form_field.attributes["aria-label"] and Object.prototype.hasOwnProperty.call(@form_field,'labels') and @form_field.labels.length
       labelledbyList = ""
       for label, i in @form_field.labels
         if label.id is ""
           label.id = "#{@form_field.id}-chosen-label-#{i}"
         labelledbyList += @form_field.labels[i].id + " "
       @search_field.writeAttribute "aria-labelledby", labelledbyList
+    if @form_field.attributes["aria-describedby"]
+      @search_field.writeAttribute "aria-describedby", @form_field.readAttribute "aria-describedby"
 
   search_field_disabled: ->
     @is_disabled = @form_field.disabled || @form_field.up('fieldset')?.disabled || false
@@ -228,6 +232,8 @@ class @Chosen extends AbstractChosen
 
     unless @is_multiple
       @selected_item.stopObserving 'focus', this.activate_field
+      @selected_item.writeAttribute 'aria-disabled', String(@is_disabled)
+      @selected_item.writeAttribute 'tabindex', if @is_disabled then -1 else 0
 
     if @is_disabled
       this.close_field()
@@ -381,8 +387,7 @@ class @Chosen extends AbstractChosen
       @container.addClassName "chosen-dropup"
 
     @container.addClassName "chosen-with-drop"
-    single_button = @container.down(".chosen-single-button")
-    single_button.writeAttribute("aria-label", "Hide options") if single_button
+    @selected_item.writeAttribute("aria-expanded", "true") unless @is_multiple
     @results_showing = true
 
     @search_field.writeAttribute("aria-expanded", "true")
@@ -407,8 +412,7 @@ class @Chosen extends AbstractChosen
 
       @container.removeClassName "chosen-with-drop"
       @container.removeClassName "chosen-dropup"
-      single_button = @container.down(".chosen-single-button")
-      single_button.writeAttribute("aria-label", "Show options") if single_button
+      @selected_item.writeAttribute("aria-expanded", "false") unless @is_multiple
       @form_field.fire("chosen:hiding_dropdown", {chosen: this})
 
     @search_field.writeAttribute("aria-expanded", "false")
@@ -448,7 +452,7 @@ class @Chosen extends AbstractChosen
       @search_field.removeClassName "default"
 
   search_results_mouseup: (evt) ->
-    if this.mousedown_checker(evt) == 'left'
+    if evt.type is 'touchend' or this.mousedown_checker(evt) == 'left'
       target = if evt.target.hasClassName("active-result") then evt.target else evt.target.up(".active-result")
       if target
         @result_highlight = target

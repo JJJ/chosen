@@ -1,9 +1,9 @@
 {
   "author": "jjj",
   "name": "chosen-jjj",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
-  "main": "docs/chosen.jquery.js",
+  "main": "dist/js/chosen.jquery.js",
   "keywords": [
     "select",
     "multiselect",
@@ -28,9 +28,9 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.22",
-    "coffee-script": ">= 1.6",
-    "grunt": "^1.2.1",
+    "autoprefixer": "^10.6.1",
+    "coffee-script": "^1.12.7",
+    "grunt": "^1.6.3",
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-concat": "^2.1.0",
     "grunt-contrib-copy": "^1.0.0",
@@ -40,12 +40,11 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-dom-munger": "^4.0.0",
     "grunt-gh-pages": "^4.0.0",
-    "grunt-sass": "^4.0.1",
+    "grunt-sass": "^4.1.0",
     "grunt-zip": "^1.0.0",
     "load-grunt-tasks": "^5.1.0",
-    "postcss": "^8.4.31",
-    "puppeteer": "^23.11.1",
-    "sass": "^1.95.0",
+    "postcss": "^8.5.28",
+    "sass": "^1.104.1",
     "simulant": "^0.2.2"
   },
   "overrides": {

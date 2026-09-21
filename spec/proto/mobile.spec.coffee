@@ -50,8 +50,7 @@ describe "Mobile support", ->
       
       container = div.down('.chosen-container')
       # Simulate touchstart to open the dropdown
-      touchstartEvent = document.createEvent('TouchEvent') if document.createEvent
-      chosen.container_mousedown({ type: 'touchstart', preventDefault: -> })
+      chosen.container_mousedown({ target: container, type: 'touchstart', stop: -> })
       
       expect(container.hasClassName('chosen-container-active')).toBe true
       
@@ -80,7 +79,7 @@ describe "Mobile support", ->
       
       container = div.down('.chosen-container')
       # Open the dropdown
-      chosen.container_mousedown({ type: 'touchstart', preventDefault: -> })
+      chosen.container_mousedown({ target: container, type: 'touchstart', stop: -> })
       
       # Get the first result
       results = container.down('.chosen-results')
@@ -88,7 +87,7 @@ describe "Mobile support", ->
       
       # Simulate touch selection
       chosen.search_results_touchstart({ target: activeResult })
-      chosen.search_results_touchend({ target: activeResult })
+      chosen.search_results_touchend({ target: activeResult, type: 'touchend', preventDefault: -> })
       
       # Check that an option was selected
       expect(select.value).toBe 'United States'
