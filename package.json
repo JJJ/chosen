@@ -35,6 +35,8 @@
     "test": "grunt test && node scripts/run-browser-specs.js",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
+    "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
+    "triage:upstream": "node scripts/upstream-issues.js",
     "build": "grunt build",
     "prepublishOnly": "npm run build"
   },
