@@ -1,4 +1,18 @@
 describe "Searching", ->
+  it "keeps the active query when options are updated", ->
+    div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    chosen.search_field.value = "Al"
+    chosen.winnow_results()
+    select.add(new Option("Alpine", "Alpine"))
+    select.fire('chosen:updated')
+    expect(chosen.search_field.value).toBe("Al")
+    expect(div.select('.active-result').length).toBe(2)
+    div.remove()
+
   it "matches accented option text with an unaccented query", ->
     div = new Element('div').update("<select><option value=''></option><option value='cafe'>Café</option></select>")
     document.body.appendChild(div)

@@ -29,5 +29,30 @@
     "number": 2757,
     "status": "fixed-in-fork",
     "note": "Reproduced jQuery's active-field retap failure in iPad WebKit and added a touch regression."
+  },
+  {
+    "number": 2889,
+    "status": "fixed-in-fork",
+    "note": "Active queries now survive chosen:updated in both adapters; browser regressions added."
+  },
+  {
+    "number": 3090,
+    "status": "covered-in-fork",
+    "note": "Clearing a single select with chosen:updated and pressing Tab kept its value empty in Chrome."
+  },
+  {
+    "number": 3152,
+    "status": "covered-in-fork",
+    "note": "Dynamic options respected max_selected_options: 3 and fired chosen:maxselected for a fourth choice."
+  },
+  {
+    "number": 3115,
+    "status": "needs-reproduction",
+    "note": "Resembles #2757, but the report does not specify touch versus mouse or single versus multiple."
+  },
+  {
+    "number": 3159,
+    "status": "blocked",
+    "note": "Mobile failure report has no reproduction steps or browser details."
   }
 ]
