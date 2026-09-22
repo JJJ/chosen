@@ -6,6 +6,16 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+## [3.0.4] - 2026-09-21
+
+### Fixed
+- Load the Prototype adapter and initializer on the Prototype example page.
+
+### Maintenance
+- Clarify browser compatibility and the current automated test coverage in the README and demos while retaining the original compatibility target.
+- Link the arrow and height styling recipe from the demo FAQs, refresh example versions and links, and update the documentation footer.
+- Keep distribution files, source, and documentation in the npm package while excluding CI, specs, and build tooling.
+
 ## [3.0.3] - 2026-09-21
 
 ### Fixed
