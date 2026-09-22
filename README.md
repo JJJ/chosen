@@ -2,14 +2,20 @@
 
 Chosen is a library for making long, unwieldy select boxes more user friendly.
 
-- jQuery support: 1.7+
-- Prototype support: 1.7+
+- jQuery support: 1.7+ (tested with 1.7, 1.12, 3.5, and 4.0)
+- Prototype support: 1.7+ (tested with 1.7)
 
-For **documentation**, usage, and examples, see:
-https://jjj.github.io/chosen/
+The automated browser suites run in Chrome. Chosen's original compatibility
+target included Firefox, Safari, and Internet Explorer 9; those browsers are not
+currently covered by this fork's automated tests. Please include your browser
+and library versions when reporting a compatibility issue.
 
-For **downloads**, see:
-https://github.com/jjj/chosen/releases/
+For **documentation**, usage, and examples, see the
+[jQuery demo](https://jjj.github.io/chosen/),
+[Prototype demo](https://jjj.github.io/chosen/index.proto.html), and
+[options reference](https://jjj.github.io/chosen/options.html).
+
+For **downloads**, see the [GitHub releases](https://github.com/JJJ/chosen/releases/).
 
 ### Compiled Assets
 
@@ -20,7 +26,9 @@ The compiled JavaScript and CSS files are located in the `/dist` directory. This
 - `chosen.css` / `chosen.min.css` - Styles
 - `chosen.css.map` - CSS source map
 
-The `/docs` directory also contains copies of these files for use with GitHub Pages.
+The `/docs` directory also contains copies of these files for GitHub Pages.
+Each [release](https://github.com/JJJ/chosen/releases/latest) includes both a
+full archive and a compiled distribution archive.
 
 ### Package managers
 
