@@ -42,6 +42,10 @@ $chosen-selected-color: #e0e0e0;
 		clip-path: none;
 	}
 
+	&.chosen-container-multi.chosen-with-drop.chosen-empty-results .chosen-drop {
+		display: none;
+	}
+
 	&.chosen-dropup {
 		.chosen-choices,
 		.chosen-single {

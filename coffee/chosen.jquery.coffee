@@ -357,6 +357,9 @@ class Chosen extends AbstractChosen
   update_results_content: (content) ->
     @search_results.html content
 
+  update_empty_results_state: ->
+    @container.toggleClass 'chosen-empty-results', @is_multiple and not @create_option and @search_results.children().length is 0
+
   fire_search_updated: (search_term) ->
     @form_field_jq.trigger("chosen:search_updated", {chosen: this, search_term: search_term})
 

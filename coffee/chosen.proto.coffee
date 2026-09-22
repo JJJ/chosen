@@ -416,6 +416,12 @@ class @Chosen extends AbstractChosen
   update_results_content: (content) ->
     @search_results.update content
 
+  update_empty_results_state: ->
+    if @is_multiple and not @create_option and @search_results.childElements().length is 0
+      @container.addClassName 'chosen-empty-results'
+    else
+      @container.removeClassName 'chosen-empty-results'
+
   fire_search_updated: (search_term) ->
     @form_field.fire("chosen:search_updated", {chosen: this, search_term: search_term})
 

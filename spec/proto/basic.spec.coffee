@@ -1,4 +1,19 @@
 describe "Basic setup", ->
+  it "does not open an empty results drop after every visible option is selected", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, display_selected_options: false)
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    expect(div.down('.chosen-container').hasClassName('chosen-empty-results')).toBe(true)
+    expect(window.getComputedStyle(div.down('.chosen-drop')).display).toBe('none')
+    select.add(new Option('Two', 'Two'))
+    select.fire('chosen:updated')
+    expect(div.down('.chosen-container').hasClassName('chosen-empty-results')).toBe(false)
+    expect(window.getComputedStyle(div.down('.chosen-drop')).display).toBe('block')
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)
