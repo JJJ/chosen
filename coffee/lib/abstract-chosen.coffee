@@ -171,6 +171,12 @@ class AbstractChosen
     for result in @results_data
       result.selected = false if result.selected
 
+  current_option_for: (item) ->
+    return null unless item?
+    option = @form_field.options[item.options_index]
+    return option if option? and option is item.option_element
+    null
+
   results_toggle: ->
     if @results_showing
       this.results_hide()

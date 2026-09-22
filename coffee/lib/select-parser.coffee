@@ -31,6 +31,7 @@ class SelectParser
           @parsed[group_position].children += 1
         @parsed.push
           options_index: @options_index
+          option_element: option
           value: option.value
           text: option.text
           html: option.innerHTML.replace(/^\s+|\s+$/g, '')

@@ -79,5 +79,30 @@
     "number": 3034,
     "status": "needs-reproduction",
     "note": "The fork returns auto when the source select has no width; the reported Safari layout still needs an isolated demo."
+  },
+  {
+    "number": 3073,
+    "status": "fixed-in-fork",
+    "note": "A removed option made a stale result crash selection; both adapters now refresh stale results."
+  },
+  {
+    "number": 2957,
+    "status": "needs-reproduction",
+    "note": "The undefined-option error is guarded, but the exact AJAX/no_results sequence needs a separate reproduction."
+  },
+  {
+    "number": 3031,
+    "status": "covered-in-fork",
+    "note": "A select inside an open Shadow DOM kept its dropdown open after clicking in Chrome."
+  },
+  {
+    "number": 3021,
+    "status": "needs-reproduction",
+    "note": "Replacing options in the same select and triggering chosen:updated worked twice; the report may replace the select node."
+  },
+  {
+    "number": 2999,
+    "status": "covered-in-fork",
+    "note": "Current label handling uses an element reference and never calls form_field_label as a function."
   }
 ]
