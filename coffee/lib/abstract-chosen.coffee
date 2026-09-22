@@ -156,12 +156,16 @@ class AbstractChosen
     this.select_append_option(option)
 
   results_update_field: ->
+    active_query = this.get_search_field_value() if @results_showing
     this.set_default_text()
     this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
     this.result_clear_highlight()
     this.results_build()
-    this.winnow_results() if @results_showing
+    if @results_showing
+      search_input = @search_field[0] or @search_field
+      search_input.value = active_query
+      this.winnow_results()
 
   reset_single_select_options: () ->
     for result in @results_data

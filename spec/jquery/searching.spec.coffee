@@ -1,4 +1,15 @@
 describe "Searching", ->
+  it "keeps the active query when options are updated", ->
+    div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    div.find(".chosen-container").trigger("mousedown")
+    search = div.find(".chosen-search-input")
+    search.val("Al").trigger("keyup")
+    select.append("<option>Alpine</option>").trigger("chosen:updated")
+    expect(search.val()).toBe("Al")
+    expect(div.find(".active-result").length).toBe(2)
+    div.remove()
+
   it "matches accented option text with an unaccented query", ->
     div = $("<div>").html("<select><option value=''></option><option value='cafe'>Café</option></select>")
     div.find("select").chosen()
