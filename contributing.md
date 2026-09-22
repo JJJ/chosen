@@ -206,7 +206,8 @@ This documentation is for Chosen maintainers.  You must have write permissions f
 1. Update the version in `package.json` and `package-lock.json`, then build,
    test, and commit the generated files.
 2. Run `grunt prep-release` and review the generated ZIP archives and docs
-   version. Commit any docs changes.
+   version. Run `npm pack --dry-run` to review the npm package contents. Commit
+   any docs changes.
 3. Tag the release commit with its version (for example, `3.0.2`) and push the
    commit and tag.
 4. Draft a GitHub release for that tag, attach the ZIP archives, and publish
