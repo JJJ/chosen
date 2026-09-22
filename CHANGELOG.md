@@ -6,6 +6,8 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+## [3.0.3] - 2026-09-21
+
 ### Fixed
 - Restore a select's inline styles and remove only Chosen's event handlers when destroying either adapter.
 - Inherit multiple option classes in selected choices, including in the Prototype adapter.
