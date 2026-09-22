@@ -1,4 +1,17 @@
 describe "Basic setup", ->
+  it "does not open an empty results drop after every visible option is selected", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
+    select = div.find("select").chosen(display_selected_options: false)
+    chosen = select.data("chosen")
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    expect(div.find(".chosen-container").hasClass("chosen-empty-results")).toBe(true)
+    expect(window.getComputedStyle(div.find(".chosen-drop")[0]).display).toBe("none")
+    select.append("<option>Two</option>").trigger("chosen:updated")
+    expect(div.find(".chosen-container").hasClass("chosen-empty-results")).toBe(false)
+    expect(window.getComputedStyle(div.find(".chosen-drop")[0]).display).toBe("block")
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
     select = div.find("select").chosen()

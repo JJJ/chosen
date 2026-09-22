@@ -54,5 +54,30 @@
     "number": 3159,
     "status": "blocked",
     "note": "Mobile failure report has no reproduction steps or browser details."
+  },
+  {
+    "number": 3035,
+    "status": "fixed-in-fork",
+    "note": "The empty multi-select results drop is hidden without changing open-state events or search behavior."
+  },
+  {
+    "number": 2993,
+    "status": "covered-in-fork",
+    "note": "Single deselection clears the option's selected property and submitted value; the original selected HTML attribute remains as markup."
+  },
+  {
+    "number": 3062,
+    "status": "covered-in-fork",
+    "note": "After deselection, the option is unselected and querySelectorAll finds no search-choice node."
+  },
+  {
+    "number": 2958,
+    "status": "covered-in-fork",
+    "note": "Opening a second spaced select closes the first dropdown in Chrome."
+  },
+  {
+    "number": 3034,
+    "status": "needs-reproduction",
+    "note": "The fork returns auto when the source select has no width; the reported Safari layout still needs an isolated demo."
   }
 ]

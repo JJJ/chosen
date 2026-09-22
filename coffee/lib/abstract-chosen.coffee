@@ -296,6 +296,8 @@ class AbstractChosen
     if @create_option and (results < 1 or (!exact_result and @persistent_create_option)) and query.length
       this.show_create_option( query )
 
+    this.update_empty_results_state()
+
   get_search_regex: (escaped_search_string) ->
     regex_string = if @search_contains then escaped_search_string else "(^|\\s|\\b)#{escaped_search_string}[^\\s]*"
     regex_string = "^#{regex_string}" unless @enable_split_word_search or @search_contains
