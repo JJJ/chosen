@@ -1,0 +1,28 @@
+[
+  {
+    "number": 3039,
+    "status": "fixed-in-fork",
+    "note": "Nested click fixed in #95; WebKit touch coverage and the remaining touch fix added here.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/95"
+  },
+  {
+    "number": 3144,
+    "status": "covered-in-fork",
+    "note": "Dropup positioning and scroll regression tests already exist."
+  },
+  {
+    "number": 3143,
+    "status": "needs-reproduction",
+    "note": "Reproduce passive touch listener warning on a current mobile browser."
+  },
+  {
+    "number": 2658,
+    "status": "candidate",
+    "note": "Check current VoiceOver navigation after the fork's ARIA changes."
+  },
+  {
+    "number": 3146,
+    "status": "needs-reproduction",
+    "note": "Isolate the reported inline-script CSP error from host-page code."
+  }
+]

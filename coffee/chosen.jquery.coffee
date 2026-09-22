@@ -190,15 +190,16 @@ class Chosen extends AbstractChosen
 
   container_mousedown: (evt) ->
     return if @is_disabled
+    is_choice_close = evt? and $(evt.target).closest('.search-choice-close').length > 0
 
     if evt and this.mousedown_checker(evt) == 'left'
       if evt and evt.type is "mousedown" and not @results_showing
         evt.preventDefault()
 
-    if evt and evt.type in ['mousedown', 'touchstart'] and not @results_showing
+    if evt and evt.type in ['mousedown', 'touchstart'] and not @results_showing and not (evt.type is 'touchstart' and is_choice_close)
       evt.preventDefault()
 
-    if not (evt? and ($ evt.target).hasClass "search-choice-close")
+    if not is_choice_close
       if not @active_field
         @search_field.val "" if @is_multiple
         $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).on 'click.chosen', @click_test_action

@@ -29,3 +29,9 @@ jobs:
       run: npm test
       env:
         CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome
+
+    - name: Install WebKit for touch tests
+      run: npx playwright-core install --with-deps webkit
+
+    - name: Run iPad WebKit touch tests
+      run: node scripts/run-mobile-webkit.js
