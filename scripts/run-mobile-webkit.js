@@ -15,11 +15,12 @@ async function main() {
     for (const adapter of adapters) {
       const context = await browser.newContext(devices['iPad (gen 7)']);
       const page = await context.newPage();
+      page.setDefaultTimeout(5000);
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
       try {
-        await page.setContent(`<!doctype html><html><head></head><body>
-          <select id="choices" multiple><option value="one">One</option><option value="two">Two</option></select>
+        await page.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
+          <select id="choices" style="width:300px" multiple><option value="one">One</option><option value="two">Two</option></select>
         </body></html>`);
         await page.addStyleTag({ path: fixture('docs/chosen.css') });
         await page.addScriptTag({ path: fixture(adapter.library) });
@@ -48,6 +49,34 @@ async function main() {
         }
         if (errors.length) throw new Error(`${adapter.name}: ${errors.join('; ')}`);
         console.log(`${adapter.name}: iPad WebKit select and immediate remove passed`);
+
+        const retapPage = await context.newPage();
+        retapPage.setDefaultTimeout(5000);
+        const retapErrors = [];
+        retapPage.on('pageerror', (error) => retapErrors.push(error.message));
+        await retapPage.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
+          <select id="choices" style="width:300px" multiple><option value="one">One</option><option value="two">Two</option></select>
+        </body></html>`);
+        await retapPage.addStyleTag({ path: fixture('docs/chosen.css') });
+        await retapPage.addScriptTag({ path: fixture(adapter.library) });
+        await retapPage.addScriptTag({ path: fixture(adapter.chosen) });
+        await retapPage.evaluate((name) => {
+          const select = document.querySelector('#choices');
+          window.retapChosen = name === 'jQuery'
+            ? window.jQuery(select).chosen().data('chosen')
+            : new window.Chosen(select);
+        }, adapter.name);
+        await retapPage.locator('.chosen-container').tap();
+        await retapPage.locator('.chosen-results .active-result').first().tap();
+        if (await retapPage.evaluate(() => window.retapChosen.results_showing)) {
+          throw new Error(`${adapter.name}: results stayed open after selecting an option`);
+        }
+        await retapPage.locator('.chosen-search-input').tap();
+        if (!await retapPage.evaluate(() => window.retapChosen.results_showing)) {
+          throw new Error(`${adapter.name}: tapping the active multi-select did not reopen its results`);
+        }
+        if (retapErrors.length) throw new Error(`${adapter.name}: ${retapErrors.join('; ')}`);
+        console.log(`${adapter.name}: iPad WebKit retap opens results passed`);
       } finally {
         await context.close();
       }

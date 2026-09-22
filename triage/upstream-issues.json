@@ -12,8 +12,8 @@
   },
   {
     "number": 3143,
-    "status": "needs-reproduction",
-    "note": "Reproduce passive touch listener warning on a current mobile browser."
+    "status": "blocked",
+    "note": "No warning in a Chrome Android touch flow; need the reporter's page or listener stack to isolate it."
   },
   {
     "number": 2658,
@@ -22,7 +22,12 @@
   },
   {
     "number": 3146,
-    "status": "needs-reproduction",
-    "note": "Isolate the reported inline-script CSP error from host-page code."
+    "status": "blocked",
+    "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."
+  },
+  {
+    "number": 2757,
+    "status": "fixed-in-fork",
+    "note": "Reproduced jQuery's active-field retap failure in iPad WebKit and added a touch regression."
   }
 ]
