@@ -435,7 +435,7 @@ class Chosen extends AbstractChosen
   choice_destroy_link_click: (evt) ->
     evt.preventDefault()
     evt.stopPropagation()
-    this.choice_destroy $(evt.target) unless @is_disabled
+    this.choice_destroy $(evt.currentTarget) unless @is_disabled
 
   choice_destroy: (link) ->
     if this.result_deselect( link[0].getAttribute("data-option-array-index") )

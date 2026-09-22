@@ -1,4 +1,14 @@
 describe "Basic setup", ->
+  it "removes a selected choice when its inner label is clicked", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select)
+    div.down('.search-choice-close span').click()
+    expect(select.options[0].selected).toBe(false)
+    expect(div.down('.search-choice')).toBeUndefined()
+    div.remove()
+
   it "restores inline styles and preserves other select listeners on destroy", ->
     div = new Element('div').update("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>")
     document.body.appendChild(div)

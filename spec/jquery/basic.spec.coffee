@@ -1,4 +1,12 @@
 describe "Basic setup", ->
+  it "removes a selected choice when its inner label is clicked", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    div.find(".search-choice-close span").trigger("click")
+    expect(select.find("option").prop("selected")).toBe(false)
+    expect(div.find(".search-choice").length).toBe(0)
+    div.remove()
+
   it "restores inline styles and removes its select listeners on destroy", ->
     div = $("<div>").html("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>").appendTo("body")
     select = div.find("select").chosen()
