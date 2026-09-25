@@ -509,7 +509,13 @@ class AbstractChosen
     this.search_results_mouseout(evt)
 
   search_results_touchend: (evt) ->
-    this.search_results_mouseup(evt) if @touch_started
+    if @touch_started
+      @last_touch_time = Date.now()
+      this.search_results_mouseup(evt)
+    @touch_started = false
+
+  synthetic_activation_after_touch: (evt) ->
+    @last_touch_time? and Date.now() - @last_touch_time < 500 and evt?.type isnt 'touchstart'
 
   outerHTML: (element) ->
     return element.outerHTML if element.outerHTML

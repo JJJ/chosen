@@ -220,7 +220,7 @@ class Chosen extends AbstractChosen
         @search_field.val "" if @is_multiple
         $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).on 'click.chosen', @click_test_action
         this.results_show()
-      else if @is_multiple and evt?.type is 'touchstart' and not @results_showing
+      else if @is_multiple and not @results_showing and not this.synthetic_activation_after_touch(evt)
         this.results_show()
       else if not @is_multiple and evt and (($(evt.target)[0] == @selected_item[0]) || $(evt.target).parents("a.chosen-single").length)
         evt.preventDefault()

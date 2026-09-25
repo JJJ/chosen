@@ -285,6 +285,8 @@ class @Chosen extends AbstractChosen
         else
           @container.ownerDocument.observe "click", @click_test_action
         this.results_show()
+      else if @is_multiple and not @results_showing and not this.synthetic_activation_after_touch(evt)
+        this.results_show()
       else if not @is_multiple and evt and (evt.target is @selected_item || evt.target.up("a.chosen-single"))
         this.results_toggle()
 

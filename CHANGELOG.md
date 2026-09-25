@@ -12,6 +12,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ### Fixed
 - Keep required selects focusable so browsers can show native constraint-validation messages.
+- Reopen an active multiple select when it is clicked again after choosing an option.
 
 ## [3.0.4] - 2026-09-21
 

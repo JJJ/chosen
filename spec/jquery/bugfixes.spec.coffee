@@ -1,4 +1,36 @@
 describe "Bugfixes", ->
+  it "reopens an active multiple select on a repeated mouse click", ->
+    div = $("<div><select multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    container = div.find(".chosen-container")
+
+    container.trigger($.Event("mousedown", which: 1))
+    container.find(".active-result").first().trigger($.Event("mouseup", which: 1))
+    expect(chosen.results_showing).toBe(false)
+    expect(chosen.active_field).toBe(true)
+
+    container.find(".chosen-search-input").trigger($.Event("mousedown", which: 1))
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
+  it "ignores the compatibility mouse event after a touch selection", ->
+    div = $("<div><select multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    container = div.find(".chosen-container")
+
+    container.trigger("touchstart")
+    result = container.find(".active-result").first()
+    result.trigger("touchstart")
+    result.trigger($.Event("touchend"))
+    expect(chosen.results_showing).toBe(false)
+
+    container.trigger($.Event("mousedown", which: 1))
+    expect(chosen.results_showing).toBe(false)
+    chosen.container_mousedown()
+    expect(chosen.results_showing).toBe(false)
+    div.remove()
+
   it "recovers after clearing a search with no results", ->
     div = $("<div><select multiple><option value=''></option><option value='one'>One</option><option value='two'>Two</option></select></div>").appendTo("body")
     select = div.find("select").chosen
