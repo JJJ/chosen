@@ -97,8 +97,13 @@
   },
   {
     "number": 3021,
-    "status": "needs-reproduction",
-    "note": "Replacing options in the same select and triggering chosen:updated worked twice; the report may replace the select node."
+    "status": "covered-in-fork",
+    "note": "Replacing options in the same select and triggering chosen:updated works repeatedly; replacing the select node requires initializing Chosen on the new node."
+  },
+  {
+    "number": 1451,
+    "status": "fixed-in-fork",
+    "note": "Focused single and multiple controls use the browser's native outline, with Sass variables for customization."
   },
   {
     "number": 2999,
