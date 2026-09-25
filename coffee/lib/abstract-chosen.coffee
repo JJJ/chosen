@@ -132,6 +132,7 @@ class AbstractChosen
       if option.data.hasOwnProperty(attrName)
         option_el.setAttribute(attrName, option.data[attrName])
     option_el.setAttribute("role", "option")
+    option_el.setAttribute("aria-selected", if option.selected then "true" else "false")
     option_el.innerHTML = option.highlighted_html or option.html
     option_el.id = "#{@result_id_base}-search-result-#{option.data['data-option-array-index']}"
     option_el.title = option.title if option.title
