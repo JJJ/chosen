@@ -8,6 +8,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ### Added
 - Add Sass variables and CSS documentation for styling matched search text.
+- Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
 - Keep required selects focusable so browsers can show native constraint-validation messages.

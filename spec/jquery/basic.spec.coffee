@@ -126,6 +126,28 @@ describe "Basic setup", ->
     expect(select[0].hasAttribute("tabindex")).toBe(false)
     form.remove()
 
+  it "keeps readonly select values enabled for submission", ->
+    form = $("<form><select name='choice' readonly><option value='one' selected>One</option><option value='two'>Two</option></select></form>").appendTo("body")
+    select = form.find("select").chosen()
+    chosen = select.data("chosen")
+    container = form.find(".chosen-container")
+
+    expect(select[0].disabled).toBe(false)
+    expect(new FormData(form[0]).get("choice")).toBe("one")
+    expect(container.hasClass("chosen-disabled")).toBe(true)
+    expect(container.hasClass("chosen-readonly")).toBe(true)
+    expect(container.find(".chosen-search-input").prop("disabled")).toBe(true)
+    container.trigger("mousedown")
+    expect(chosen.results_showing).toBe(false)
+
+    select.removeAttr("readonly").trigger("chosen:updated")
+    expect(container.hasClass("chosen-disabled")).toBe(false)
+    expect(container.hasClass("chosen-readonly")).toBe(false)
+    expect(container.find(".chosen-search-input").prop("disabled")).toBe(false)
+    container.trigger("mousedown")
+    expect(chosen.results_showing).toBe(true)
+    form.remove()
+
   it "inherits multiple option classes on selected choices", ->
     div = $("<div>").html("<select multiple><option class='first second' selected>One</option></select>")
     div.find("select").chosen(inherit_option_classes: true)

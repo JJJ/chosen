@@ -155,6 +155,30 @@ describe "Basic setup", ->
     expect(select.readAttribute('tabindex')).toBeNull()
     form.remove()
 
+  it "keeps readonly select values enabled for submission", ->
+    form = new Element('form').update("<select name='choice' readonly><option value='one' selected>One</option><option value='two'>Two</option></select>")
+    document.body.appendChild(form)
+    select = form.down('select')
+    chosen = new Chosen(select)
+    container = form.down('.chosen-container')
+
+    expect(select.disabled).toBe(false)
+    expect(new FormData(form).get('choice')).toBe('one')
+    expect(container.hasClassName('chosen-disabled')).toBe(true)
+    expect(container.hasClassName('chosen-readonly')).toBe(true)
+    expect(container.down('.chosen-search-input').disabled).toBe(true)
+    chosen.container_mousedown(target: container, type: 'mousedown', which: 1, stop: ->)
+    expect(chosen.results_showing).toBe(false)
+
+    select.removeAttribute('readonly')
+    select.fire('chosen:updated')
+    expect(container.hasClassName('chosen-disabled')).toBe(false)
+    expect(container.hasClassName('chosen-readonly')).toBe(false)
+    expect(container.down('.chosen-search-input').disabled).toBe(false)
+    chosen.container_mousedown(target: container, type: 'mousedown', which: 1, stop: ->)
+    expect(chosen.results_showing).toBe(true)
+    form.remove()
+
   it "inherits multiple option classes on selected choices", ->
     div = new Element('div').update("<select multiple><option class='first second' selected>One</option></select>")
     document.body.appendChild(div)
