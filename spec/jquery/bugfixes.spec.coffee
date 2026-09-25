@@ -1,4 +1,24 @@
 describe "Bugfixes", ->
+  it "recovers after clearing a search with no results", ->
+    div = $("<div><select multiple><option value=''></option><option value='one'>One</option><option value='two'>Two</option></select></div>").appendTo("body")
+    select = div.find("select").chosen
+      search_contains: true
+      max_selected_options: 1
+    chosen = select.data("chosen")
+
+    chosen.results_show()
+    chosen.search_field.val("missing")
+    chosen.results_search()
+    expect(div.find(".no-results").length).toBe(1)
+
+    chosen.search_field.val("")
+    chosen.results_search()
+    div.find(".active-result").first().trigger($.Event("mouseup", which: 1))
+
+    expect(select[0].options[1].selected).toBe(true)
+    expect(div.find(".search-choice > span").first().text()).toBe("One")
+    div.remove()
+
   it "https://github.com/harvesthq/chosen/issues/2996 - XSS Vulnerability with `include_group_label_in_selected: true`", ->
     tmpl = "
       <select>

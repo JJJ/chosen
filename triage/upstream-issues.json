@@ -87,8 +87,8 @@
   },
   {
     "number": 2957,
-    "status": "needs-reproduction",
-    "note": "The undefined-option error is guarded, but the exact AJAX/no_results sequence needs a separate reproduction."
+    "status": "fixed-in-fork",
+    "note": "Both adapters recover after an empty search is cleared and select an existing option without stale-index errors; direct regressions cover the reported sequence."
   },
   {
     "number": 3031,
