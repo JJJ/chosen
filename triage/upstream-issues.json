@@ -18,7 +18,7 @@
   {
     "number": 2658,
     "status": "candidate",
-    "note": "Check current VoiceOver navigation after the fork's ARIA changes."
+    "note": "The fork now exposes current option selection and active-descendant state; manual VoiceOver navigation still needs verification."
   },
   {
     "number": 3146,

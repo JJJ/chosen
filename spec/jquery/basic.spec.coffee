@@ -199,6 +199,26 @@ describe "Basic setup", ->
     div.find("select").data("chosen").results_hide()
     expect(control.attr("aria-expanded")).toBe("false")
 
+  it "keeps active descendant and option selection state current", ->
+    div = $("<div>").html("<select><option>One</option><option selected>Two</option><option>Three</option></select>")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.results_show()
+    selected = div.find(".result-selected")
+
+    expect(selected.attr("aria-selected")).toBe("true")
+    expect(div.find(".active-result").not(selected).first().attr("aria-selected")).toBe("false")
+    expect(chosen.search_field.attr("aria-activedescendant")).toBe(chosen.result_highlight.attr("id"))
+
+    chosen.result_clear_highlight()
+    expect(chosen.search_field.attr("aria-activedescendant")).toBeUndefined()
+    expect(selected.attr("aria-selected")).toBe("true")
+
+    next_result = div.find(".active-result").last()
+    chosen.result_do_highlight(next_result)
+    chosen.result_select(target: next_result[0], preventDefault: ->)
+    expect(selected.attr("aria-selected")).toBe("false")
+    expect(next_result.attr("aria-selected")).toBe("true")
+
   it "copies accessible names and descriptions to the search input", ->
     div = $("<div>").html("<select aria-label='Choices' aria-labelledby='field-label' aria-describedby='field-help'><option>One</option></select>")
     div.find("select").chosen()

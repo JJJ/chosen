@@ -244,6 +244,28 @@ describe "Basic setup", ->
     expect(control.readAttribute("aria-expanded")).toBe("false")
     div.remove()
 
+  it "keeps active descendant and option selection state current", ->
+    div = new Element("div").update("<select><option>One</option><option selected>Two</option><option>Three</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    chosen.results_show()
+    selected = div.down(".result-selected")
+
+    expect(selected.readAttribute("aria-selected")).toBe("true")
+    expect(div.select(".active-result").find((result) -> result isnt selected).readAttribute("aria-selected")).toBe("false")
+    expect(chosen.search_field.readAttribute("aria-activedescendant")).toBe(chosen.result_highlight.id)
+
+    chosen.result_clear_highlight()
+    expect(chosen.search_field.readAttribute("aria-activedescendant")).toBeNull()
+    expect(selected.readAttribute("aria-selected")).toBe("true")
+
+    next_result = div.select(".active-result").last()
+    chosen.result_do_highlight(next_result)
+    chosen.result_select(target: next_result, preventDefault: ->)
+    expect(selected.readAttribute("aria-selected")).toBe("false")
+    expect(next_result.readAttribute("aria-selected")).toBe("true")
+    div.remove()
+
   it "copies accessible names and descriptions to the search input", ->
     div = new Element("div")
     div.update("<select aria-label='Choices' aria-labelledby='field-label' aria-describedby='field-help'><option>One</option></select>")

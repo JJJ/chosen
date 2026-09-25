@@ -347,6 +347,7 @@ class Chosen extends AbstractChosen
   result_clear_highlight: ->
     @result_highlight.removeClass "highlighted" if @result_highlight
     @result_highlight = null
+    @search_field.removeAttr "aria-activedescendant"
 
   results_show: ->
     if @is_multiple and @max_selected_options <= this.choices_count()
@@ -525,8 +526,10 @@ class Chosen extends AbstractChosen
         high.removeClass("active-result")
       else
         this.reset_single_select_options()
+        @search_results.find('[role="option"][aria-selected="true"]').attr('aria-selected', 'false')
 
       high.addClass("result-selected")
+      high.attr('aria-selected', 'true')
 
       item.selected = true
 
