@@ -213,8 +213,9 @@
   },
   {
     "number": 2925,
-    "status": "candidate",
-    "note": "The obvious skip-highlight fix was committed and reverted upstream; reproduce the scroll jump and preserve keyboard highlight behavior."
+    "status": "fixed-in-fork",
+    "note": "Stay-open multiple selects preserve their results scroll position and highlight the next nearby option without changing active-search behavior.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/117"
   },
   {
     "number": 3083,
