@@ -544,6 +544,8 @@ class Chosen extends AbstractChosen
       if @is_multiple && (not @hide_results_on_select || (evt.metaKey or evt.ctrlKey))
         if evt.metaKey or evt.ctrlKey
           this.winnow_results(skip_highlight: true)
+        else if this.get_search_field_value().length < 1
+          this.winnow_results_after_select(item)
         else
           @search_field.val("")
           this.winnow_results()
@@ -629,6 +631,17 @@ class Chosen extends AbstractChosen
     do_high = if selected_results.length then selected_results.first() else @search_results.find(".active-result").first()
 
     this.result_do_highlight do_high if do_high?
+
+  winnow_results_after_select: (item) ->
+    scroll_position = @search_results.scrollTop()
+    this.winnow_results(skip_highlight: true)
+    active_results = @search_results.find(".active-result")
+    next_result = active_results.filter((index, result) ->
+      parseInt(result.getAttribute("data-option-array-index"), 10) > item.data["data-option-array-index"]
+    ).first()
+    next_result = active_results.last() unless next_result.length
+    this.result_do_highlight(next_result) if next_result.length
+    @search_results.scrollTop(scroll_position)
 
   no_results: (terms) ->
     no_results_html = this.get_no_results_html(terms)

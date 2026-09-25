@@ -226,3 +226,23 @@ describe "Scroll Position Adjustment", ->
     expect(-> Event.fire(window, 'scroll')).not.toThrow()
     
     div.remove()
+
+  it "should keep an open multiple select near the selected result", ->
+    options = ("<option>Option #{index}</option>" for index in [1..30]).join('')
+    div = new Element('div').update("<select multiple>#{options}</select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, hide_results_on_select: false)
+    chosen.results_show()
+    results = div.down('.chosen-results')
+    results.setStyle(maxHeight: '60px')
+    selected_result = results.select('.active-result')[20]
+    chosen.result_do_highlight(selected_result)
+    results.scrollTop = 120
+    original_scroll_position = results.scrollTop
+
+    chosen.result_select(target: selected_result, preventDefault: ->)
+
+    expect(results.scrollTop).toBe(original_scroll_position)
+    expect(chosen.result_highlight.textContent).toBe('Option 22')
+    div.remove()
