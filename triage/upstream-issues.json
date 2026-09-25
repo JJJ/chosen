@@ -162,8 +162,8 @@
   },
   {
     "number": 3129,
-    "status": "candidate",
-    "note": "single_backstroke_delete only changes one-key versus two-key deletion; investigate a separate way to disable backspace deletion."
+    "status": "fixed-in-fork",
+    "note": "The backspace_deletes_choices option disables keyboard removal without changing the existing single_backstroke_delete behavior."
   },
   {
     "number": 3128,
