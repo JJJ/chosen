@@ -154,5 +154,30 @@
     "number": 536,
     "status": "fixed-in-fork",
     "note": "Accent-insensitive matching and highlighting are covered in both adapters, with normalize_search_text available for custom normalization."
+  },
+  {
+    "number": 1582,
+    "status": "fixed-in-fork",
+    "note": "Both adapters now expose browser_is_supported before initialization."
+  },
+  {
+    "number": 3129,
+    "status": "candidate",
+    "note": "single_backstroke_delete only changes one-key versus two-key deletion; investigate a separate way to disable backspace deletion."
+  },
+  {
+    "number": 3128,
+    "status": "covered-in-fork",
+    "note": "Selected disabled options render without removal controls and backspace skips them in both adapters."
+  },
+  {
+    "number": 3097,
+    "status": "covered-in-fork",
+    "note": "The fork copies accessible names and descriptions, preserves titles, and supports copying option data attributes through parser_config."
+  },
+  {
+    "number": 2874,
+    "status": "blocked",
+    "note": "The report is specific to IE 11 and JAWS 18; neither environment is in the maintained browser matrix."
   }
 ]
