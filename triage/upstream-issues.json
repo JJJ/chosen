@@ -179,5 +179,10 @@
     "number": 2874,
     "status": "blocked",
     "note": "The report is specific to IE 11 and JAWS 18; neither environment is in the maintained browser matrix."
+  },
+  {
+    "number": 3108,
+    "status": "fixed-in-fork",
+    "note": "Blank options with nonempty values remain selectable; only options with empty text and values are placeholders."
   }
 ]
