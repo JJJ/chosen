@@ -667,6 +667,8 @@ class Chosen extends AbstractChosen
         this.result_clear_highlight()
 
   keydown_backstroke: ->
+    return unless @backspace_deletes_choices
+
     if @pending_backstroke
       this.choice_destroy @pending_backstroke.find('.search-choice-close').first()
       this.clear_backstroke()

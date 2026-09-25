@@ -1,4 +1,25 @@
 describe "Basic setup", ->
+  it "deletes selected choices with backspace by default", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.keydown_backstroke()
+    expect(select.options[0].selected).toBe(false)
+    expect(div.select('.search-choice').length).toBe(0)
+    div.remove()
+
+  it "keeps selected choices when backspace deletion is disabled", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, backspace_deletes_choices: false)
+    chosen.keydown_backstroke()
+    chosen.keydown_backstroke()
+    expect(select.options[0].selected).toBe(true)
+    expect(div.select('.search-choice').length).toBe(1)
+    div.remove()
+
   it "exposes the browser support check", ->
     expect(Chosen.browser_is_supported).toBeDefined()
     expect(Chosen.browser_is_supported()).toBe(true)

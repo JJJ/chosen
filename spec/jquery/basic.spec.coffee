@@ -1,4 +1,19 @@
 describe "Basic setup", ->
+  it "deletes selected choices with backspace by default", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.keydown_backstroke()
+    expect(div.find("option").prop("selected")).toBe(false)
+    expect(div.find(".search-choice").length).toBe(0)
+
+  it "keeps selected choices when backspace deletion is disabled", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>")
+    chosen = div.find("select").chosen(backspace_deletes_choices: false).data("chosen")
+    chosen.keydown_backstroke()
+    chosen.keydown_backstroke()
+    expect(div.find("option").prop("selected")).toBe(true)
+    expect(div.find(".search-choice").length).toBe(1)
+
   it "exposes the browser support check", ->
     expect($.fn.chosen.browser_is_supported).toBeDefined()
     expect($.fn.chosen.browser_is_supported()).toBe(true)
