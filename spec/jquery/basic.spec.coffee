@@ -1,4 +1,19 @@
 describe "Basic setup", ->
+  it "focuses the search input when results open", ->
+    div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.results_show()
+    expect(document.activeElement).toBe(div.find(".chosen-search-input")[0])
+    div.remove()
+
+  it "refreshes restored form values when browser history shows the page", ->
+    div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    select[0].selectedIndex = 1
+    window.dispatchEvent(new Event("pageshow"))
+    expect(div.find(".chosen-single span").text()).toBe("Two")
+    div.remove()
+
   it "refreshes stale results when an option is removed before selection", ->
     div = $("<div>").html("<select><option value=''></option><option>One</option><option>Two</option></select>").appendTo("body")
     select = div.find("select").chosen()
@@ -58,6 +73,7 @@ describe "Basic setup", ->
     spyOn(chosen, "results_update_field").and.callThrough()
     select.chosen("destroy")
     select.trigger("chosen:updated")
+    window.dispatchEvent(new Event("pageshow"))
     expect(chosen.results_update_field).not.toHaveBeenCalled()
     expect(select[0].style.display).toBe("inline-block")
     expect(select[0].style.position).toBe("relative")

@@ -12,6 +12,7 @@ class @Chosen extends AbstractChosen
         @scroll_throttle_timeout = null
         @update_dropup_position()
       , 16) # ~60fps
+    @pageshow_handler = () => this.results_update_field()
 
   results_search: (evt) ->
     if @results_showing
@@ -136,6 +137,8 @@ class @Chosen extends AbstractChosen
     @form_field.fire("chosen:ready", { chosen: this })
 
   register_observers: ->
+    Event.observe window, 'pageshow', @pageshow_handler
+
     @container.observe "touchstart", (evt) => this.container_mousedown(evt)
     @container.observe "touchend", (evt) => this.container_mouseup(evt)
 
@@ -182,6 +185,7 @@ class @Chosen extends AbstractChosen
           this.results_toggle()
 
   destroy: ->
+    Event.stopObserving window, 'pageshow', @pageshow_handler
     if (@container.getRootNode?)
       @container.getRootNode().stopObserving "click", @click_test_action
     else

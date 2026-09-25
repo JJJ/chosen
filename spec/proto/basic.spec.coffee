@@ -1,4 +1,24 @@
 describe "Basic setup", ->
+  it "focuses the search input when results open", ->
+    div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    expect(document.activeElement).toBe(div.down('.chosen-search-input'))
+    div.remove()
+
+  it "refreshes restored form values when browser history shows the page", ->
+    div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select)
+    select.selectedIndex = 1
+    event = document.createEvent('Event')
+    event.initEvent('pageshow', true, true)
+    window.dispatchEvent(event)
+    expect(div.down('.chosen-single span').textContent).toBe('Two')
+    div.remove()
+
   it "refreshes stale results when an option is removed before selection", ->
     div = new Element('div').update("<select><option value=''></option><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)
@@ -69,6 +89,9 @@ describe "Basic setup", ->
     spyOn(chosen, 'results_update_field').and.callThrough()
     chosen.destroy()
     select.fire('chosen:updated')
+    event = document.createEvent('Event')
+    event.initEvent('pageshow', true, true)
+    window.dispatchEvent(event)
     expect(updates).toBe(1)
     expect(chosen.results_update_field).not.toHaveBeenCalled()
     expect(select.style.display).toBe('inline-block')
