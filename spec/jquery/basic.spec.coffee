@@ -1,4 +1,14 @@
 describe "Basic setup", ->
+  it "keeps blank options with nonempty values selectable", ->
+    div = $("<div>").html("<select><option value=''></option><option value=' '></option></select>")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    chosen.results_show()
+    result = div.find(".active-result")
+    expect(result.length).toBe(1)
+    result.trigger($.Event("mouseup", which: 1))
+    expect(select.val()).toBe(" ")
+
   it "deletes selected choices with backspace by default", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>")
     chosen = div.find("select").chosen().data("chosen")

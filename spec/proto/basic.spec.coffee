@@ -1,4 +1,16 @@
 describe "Basic setup", ->
+  it "keeps blank options with nonempty values selectable", ->
+    div = new Element('div').update("<select><option value=''></option><option value=' '></option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    results = div.select('.active-result')
+    expect(results.length).toBe(1)
+    chosen.search_results_mouseup(target: results[0], which: 1, preventDefault: ->)
+    expect(select.value).toBe(' ')
+    div.remove()
+
   it "deletes selected choices with backspace by default", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)
