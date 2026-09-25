@@ -34,3 +34,27 @@ describe "Events", ->
 
     expect(event_sequence).toEqual ['input', 'change']
     div.remove()
+
+  it "closes an open dropdown when the browser window loses focus", ->
+    div = new Element("div")
+    div.update("<select multiple><option>One</option></select><select><option>Two</option></select>")
+    document.body.appendChild(div)
+    selects = div.select("select")
+    first = new Chosen(selects.first())
+    second = new Chosen(selects.last())
+
+    selects.first().fire('chosen:open')
+    expect(first.results_showing).toBe true
+
+    blur_event = document.createEvent('HTMLEvents')
+    blur_event.initEvent('blur', false, false)
+    window.dispatchEvent(blur_event)
+    selects.last().fire('chosen:open')
+
+    expect(first.results_showing).toBe false
+    expect(second.results_showing).toBe true
+    expect(div.select('.chosen-with-drop').length).toBe 1
+
+    first.destroy()
+    second.destroy()
+    div.remove()

@@ -184,5 +184,10 @@
     "number": 3108,
     "status": "fixed-in-fork",
     "note": "Blank options with nonempty values remain selectable; only options with empty text and values are placeholders."
+  },
+  {
+    "number": 3119,
+    "status": "fixed-in-fork",
+    "note": "Open dropdowns close when the browser window loses focus, preventing another Chosen from opening alongside a stale dropdown."
   }
 ]

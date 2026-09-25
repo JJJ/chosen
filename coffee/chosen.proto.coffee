@@ -13,6 +13,7 @@ class @Chosen extends AbstractChosen
         @update_dropup_position()
       , 16) # ~60fps
     @pageshow_handler = () => this.results_update_field()
+    @window_blur_handler = () => this.close_field() if @results_showing
 
   results_search: (evt) ->
     if @results_showing
@@ -138,6 +139,7 @@ class @Chosen extends AbstractChosen
 
   register_observers: ->
     Event.observe window, 'pageshow', @pageshow_handler
+    Event.observe window, 'blur', @window_blur_handler
 
     @container.observe "touchstart", (evt) => this.container_mousedown(evt)
     @container.observe "touchend", (evt) => this.container_mouseup(evt)
@@ -186,6 +188,7 @@ class @Chosen extends AbstractChosen
 
   destroy: ->
     Event.stopObserving window, 'pageshow', @pageshow_handler
+    Event.stopObserving window, 'blur', @window_blur_handler
     if (@container.getRootNode?)
       @container.getRootNode().stopObserving "click", @click_test_action
     else

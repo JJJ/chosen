@@ -30,3 +30,23 @@ describe "Events", ->
 
     expect(event_sequence).toEqual ['input', 'change']
     div.remove()
+
+  it "closes an open dropdown when the browser window loses focus", ->
+    div = $("<div>").html("<select multiple><option>One</option></select><select><option>Two</option></select>")
+    $('body').append(div)
+    selects = div.find("select").chosen()
+    first = selects.first().data('chosen')
+    second = selects.last().data('chosen')
+
+    selects.first().trigger('chosen:open')
+    expect(first.results_showing).toBe true
+
+    $(window).triggerHandler('blur')
+    selects.last().trigger('chosen:open')
+
+    expect(first.results_showing).toBe false
+    expect(second.results_showing).toBe true
+    expect(div.find('.chosen-with-drop').length).toBe 1
+
+    selects.chosen('destroy')
+    div.remove()
