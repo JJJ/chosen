@@ -194,5 +194,10 @@
     "number": 515,
     "status": "fixed-in-fork",
     "note": "Required selects remain programmatically focusable so native constraint validation can focus the invalid control and display its message."
+  },
+  {
+    "number": 3155,
+    "status": "covered-in-fork",
+    "note": "The options guide documents the CSS override for bold search matches, and Sass variables expose the highlight style without changing defaults."
   }
 ]
