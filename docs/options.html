@@ -169,7 +169,7 @@
 
       <h3>Example:</h3>
 
-<pre>  <code class="language-markup">&lt;select class="my_select_box" data-placeholder="Select Your Options"&gt;
+<pre>  <code class="language-markup">&lt;select class="my_select_box" data-placeholder="Select Your Options" readonly&gt;
     &lt;option value="1"&gt;Option 1&lt;/option&gt;
     &lt;option value="2" selected&gt;Option 2&lt;/option&gt;
     &lt;option value="3" disabled&gt;Option 3&lt;/option&gt;
@@ -196,6 +196,10 @@
         <tr>
           <td>select-by-group</td>
           <td>On a multiple select, clicking an optgroup label selects its available options. Selected and disabled options are skipped. Supported by both the jQuery and Prototype versions.</td>
+        </tr>
+        <tr>
+          <td>readonly</td>
+          <td>As a Chosen extension, the <code class="language-html">readonly</code> attribute makes a select non-editable while leaving the original select enabled, so its selected value remains part of form submission. Remove the attribute and trigger <code class="language-javascript">chosen:updated</code> to make it editable again.</td>
         </tr>
         <tr>
           <td>selected, disabled, hidden</td>

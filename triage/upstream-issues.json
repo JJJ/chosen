@@ -199,5 +199,10 @@
     "number": 3155,
     "status": "covered-in-fork",
     "note": "The options guide documents the CSS override for bold search matches, and Sass variables expose the highlight style without changing defaults."
+  },
+  {
+    "number": 2973,
+    "status": "fixed-in-fork",
+    "note": "The readonly attribute makes Chosen non-editable without disabling the source select, so its selected value remains enabled for form submission."
   }
 ]

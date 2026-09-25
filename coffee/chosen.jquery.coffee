@@ -190,9 +190,11 @@ class Chosen extends AbstractChosen
       @copied_aria_attributes.push "aria-labelledby"
 
   search_field_disabled: ->
-    @is_disabled = @form_field.disabled || @form_field_jq.parents('fieldset').is(':disabled')
+    @is_read_only = @form_field.getAttribute('readonly') isnt null
+    @is_disabled = @form_field.disabled || @form_field_jq.parents('fieldset').is(':disabled') || @is_read_only
 
     @container.toggleClass 'chosen-disabled', @is_disabled
+    @container.toggleClass 'chosen-readonly', @is_read_only
     @search_field[0].disabled = @is_disabled
 
     unless @is_multiple

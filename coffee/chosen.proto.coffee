@@ -247,12 +247,18 @@ class @Chosen extends AbstractChosen
       @copied_aria_attributes.push "aria-labelledby"
 
   search_field_disabled: ->
-    @is_disabled = @form_field.disabled || @form_field.up('fieldset')?.disabled || false
+    @is_read_only = @form_field.getAttribute('readonly') isnt null
+    @is_disabled = @form_field.disabled || @form_field.up('fieldset')?.disabled || @is_read_only || false
 
     if @is_disabled
       @container.addClassName 'chosen-disabled'
     else
       @container.removeClassName 'chosen-disabled'
+
+    if @is_read_only
+      @container.addClassName 'chosen-readonly'
+    else
+      @container.removeClassName 'chosen-readonly'
 
     @search_field.disabled = @is_disabled
 
