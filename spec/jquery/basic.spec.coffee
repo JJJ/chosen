@@ -1,4 +1,8 @@
 describe "Basic setup", ->
+  it "exposes the browser support check", ->
+    expect($.fn.chosen.browser_is_supported).toBeDefined()
+    expect($.fn.chosen.browser_is_supported()).toBe(true)
+
   it "focuses the search input when results open", ->
     div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
     chosen = div.find("select").chosen().data("chosen")

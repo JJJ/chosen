@@ -19,6 +19,8 @@ $.fn.extend({
 
 })
 
+$.fn.chosen.browser_is_supported = AbstractChosen.browser_is_supported
+
 class Chosen extends AbstractChosen
 
   setup: ->

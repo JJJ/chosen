@@ -1,4 +1,8 @@
 describe "Basic setup", ->
+  it "exposes the browser support check", ->
+    expect(Chosen.browser_is_supported).toBeDefined()
+    expect(Chosen.browser_is_supported()).toBe(true)
+
   it "focuses the search input when results open", ->
     div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)
