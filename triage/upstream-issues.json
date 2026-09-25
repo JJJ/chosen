@@ -129,5 +129,30 @@
     "number": 3149,
     "status": "blocked",
     "note": "The report does not include option markup, an expected value, or a reproduction that distinguishes an HTML entity from option text."
+  },
+  {
+    "number": 3106,
+    "status": "fixed-in-fork",
+    "note": "Both adapters now rebuild from restored native select values when browser history fires pageshow."
+  },
+  {
+    "number": 3137,
+    "status": "covered-in-fork",
+    "note": "Opening results focuses the search input across the maintained jQuery matrix, including jQuery 4."
+  },
+  {
+    "number": 3139,
+    "status": "covered-in-fork",
+    "note": "The fork initializes Chosen on mobile user agents and covers touch opening, selection, removal, and retapping."
+  },
+  {
+    "number": 3102,
+    "status": "covered-in-fork",
+    "note": "Both adapters already fire chosen:no_results with the Chosen instance when a search has no matches."
+  },
+  {
+    "number": 536,
+    "status": "fixed-in-fork",
+    "note": "Accent-insensitive matching and highlighting are covered in both adapters, with normalize_search_text available for custom normalization."
   }
 ]

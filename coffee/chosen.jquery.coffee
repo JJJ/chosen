@@ -31,6 +31,7 @@ class Chosen extends AbstractChosen
         @scroll_throttle_timeout = null
         @update_dropup_position()
       , 16) # ~60fps
+    @pageshow_handler = () => this.results_update_field()
 
   set_up_html: ->
     container_classes = ["chosen-container"]
@@ -85,6 +86,8 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:ready", {chosen: this})
 
   register_observers: ->
+    $(window).on 'pageshow.chosen', @pageshow_handler
+
     @container.on 'touchstart.chosen', (evt) => this.container_mousedown(evt); return
     @container.on 'touchend.chosen', (evt) => this.container_mouseup(evt); return
 
@@ -136,6 +139,7 @@ class Chosen extends AbstractChosen
         return
 
   destroy: ->
+    $(window).off 'pageshow.chosen', @pageshow_handler
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
     @form_field_label.off 'click.chosen', this.label_click_handler if @form_field_label.length > 0
     @form_field_jq.off "chosen:updated.chosen", @form_field_observers.updated
