@@ -229,6 +229,14 @@
   border-top: 5px solid #444;
 }</code></pre>
 
+      <h2><a name="search-match-styling" class="anchor" href="#search-match-styling">Styling matched search text</a></h2>
+      <p>Chosen underlines the matching part of each search result by default. To show matches in bold instead, add this CSS after Chosen's stylesheet:</p>
+<pre><code class="language-css">.chosen-container .chosen-results li em {
+  font-weight: bold;
+  text-decoration: none;
+}</code></pre>
+      <p>Sass users can set <code>$chosen-highlight-font-style</code>, <code>$chosen-highlight-font-weight</code>, and <code>$chosen-highlight-text-decoration</code> before importing <code>chosen.scss</code>.</p>
+
       <h2><a name="classes" class="anchor" href="#classes">Classes</a></h2>
       <p>Classes placed on the select tag can be used to configure Chosen.</p>
 

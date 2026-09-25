@@ -9,6 +9,9 @@ $chosen-border-color: #aaa;
 $chosen-group-color: #999;
 $chosen-background-color: #fff;
 $chosen-selected-color: #e0e0e0;
+$chosen-highlight-font-style: normal !default;
+$chosen-highlight-font-weight: null !default;
+$chosen-highlight-text-decoration: underline !default;
 
 /* @group Base */
 .chosen-container {
@@ -288,8 +291,9 @@ $chosen-selected-color: #e0e0e0;
 		}
 
 		em {
-			font-style: normal;
-			text-decoration: underline;
+			font-style: $chosen-highlight-font-style;
+			font-weight: $chosen-highlight-font-weight;
+			text-decoration: $chosen-highlight-text-decoration;
 		}
 	}
 }

@@ -6,6 +6,9 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+### Added
+- Add Sass variables and CSS documentation for styling matched search text.
+
 ### Fixed
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 
