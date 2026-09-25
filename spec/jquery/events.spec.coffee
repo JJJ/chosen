@@ -50,3 +50,37 @@ describe "Events", ->
 
     selects.chosen('destroy')
     div.remove()
+
+  it "does not prevent non-cancelable wheel events", ->
+    div = $("<div><select><option>One</option></select></div>").appendTo('body')
+    select = div.find('select').chosen()
+    chosen = select.data('chosen')
+    preventDefault = jasmine.createSpy('preventDefault')
+
+    chosen.search_results_mousewheel
+      type: 'mousewheel'
+      cancelable: false
+      originalEvent: { deltaY: 10 }
+      preventDefault: preventDefault
+
+    expect(preventDefault).not.toHaveBeenCalled()
+
+    select.chosen('destroy')
+    div.remove()
+
+  it "prevents cancelable wheel events", ->
+    div = $("<div><select><option>One</option></select></div>").appendTo('body')
+    select = div.find('select').chosen()
+    chosen = select.data('chosen')
+    preventDefault = jasmine.createSpy('preventDefault')
+
+    chosen.search_results_mousewheel
+      type: 'mousewheel'
+      cancelable: true
+      originalEvent: { deltaY: 10 }
+      preventDefault: preventDefault
+
+    expect(preventDefault).toHaveBeenCalled()
+
+    select.chosen('destroy')
+    div.remove()

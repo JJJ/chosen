@@ -235,7 +235,7 @@ class Chosen extends AbstractChosen
   search_results_mousewheel: (evt) ->
     delta = evt.originalEvent.deltaY or -evt.originalEvent.wheelDelta or evt.originalEvent.detail if evt.originalEvent
     if delta?
-      evt.preventDefault()
+      evt.preventDefault() unless evt.cancelable is false
       delta = delta * 40 if evt.type is 'DOMMouseScroll'
       @search_results.scrollTop(delta + @search_results.scrollTop())
 
