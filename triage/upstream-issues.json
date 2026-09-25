@@ -47,8 +47,8 @@
   },
   {
     "number": 3115,
-    "status": "needs-reproduction",
-    "note": "Resembles #2757, but the report does not specify touch versus mouse or single versus multiple."
+    "status": "fixed-in-fork",
+    "note": "Active multiple selects reopen on repeated mouse clicks in both adapters, complementing the existing real iPad WebKit retap coverage."
   },
   {
     "number": 3159,

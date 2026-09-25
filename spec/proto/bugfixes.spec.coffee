@@ -1,4 +1,40 @@
 describe "Bugfixes", ->
+  it "reopens an active multiple select on a repeated mouse click", ->
+    div = new Element("div").update("<select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down("select")
+    chosen = new Chosen(select)
+    container = div.down(".chosen-container")
+    down_event = (target) -> { target: target, which: 1, type: 'mousedown', stop: -> }
+
+    chosen.container_mousedown(down_event(container))
+    result = container.select(".active-result").first()
+    chosen.search_results_mouseup(target: result, which: 1, preventDefault: ->)
+    expect(chosen.results_showing).toBe(false)
+    expect(chosen.active_field).toBe(true)
+
+    chosen.container_mousedown(down_event(chosen.search_field))
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
+  it "ignores the compatibility mouse event after a touch selection", ->
+    div = new Element("div").update("<select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    container = div.down(".chosen-container")
+
+    chosen.container_mousedown(target: container, type: 'touchstart', stop: ->)
+    result = container.select(".active-result").first()
+    chosen.search_results_touchstart(target: result)
+    chosen.search_results_touchend(target: result, type: 'touchend', preventDefault: ->)
+    expect(chosen.results_showing).toBe(false)
+
+    chosen.container_mousedown(target: container, type: 'mousedown', which: 1, stop: ->)
+    expect(chosen.results_showing).toBe(false)
+    chosen.container_mousedown()
+    expect(chosen.results_showing).toBe(false)
+    div.remove()
+
   it "recovers after clearing a search with no results", ->
     div = new Element("div").update("<select multiple><option value=''></option><option value='one'>One</option><option value='two'>Two</option></select>")
     document.body.appendChild(div)
