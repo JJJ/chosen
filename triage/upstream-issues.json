@@ -215,5 +215,11 @@
     "number": 2925,
     "status": "candidate",
     "note": "The obvious skip-highlight fix was committed and reverted upstream; reproduce the scroll jump and preserve keyboard highlight behavior."
+  },
+  {
+    "number": 3083,
+    "status": "fixed-in-fork",
+    "note": "A select placeholder attribute now supplies the default text when data-placeholder is absent, with both adapters covered.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/116"
   }
 ]
