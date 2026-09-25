@@ -558,7 +558,6 @@ class AbstractChosen
             role="combobox"
             style="width:25px;"
             type="text"
-            value="#{this.escape_html(@default_text)}"
           />
         </li>
       </ul>
