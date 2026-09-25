@@ -96,7 +96,7 @@ describe "Basic setup", ->
     div.remove()
 
   it "restores inline styles and removes its select listeners on destroy", ->
-    div = $("<div>").html("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>").appendTo("body")
+    div = $("<div>").html("<select tabindex='0' style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>").appendTo("body")
     select = div.find("select").chosen()
     chosen = select.data("chosen")
     spyOn(chosen, "results_update_field").and.callThrough()
@@ -107,7 +107,24 @@ describe "Basic setup", ->
     expect(select[0].style.display).toBe("inline-block")
     expect(select[0].style.position).toBe("relative")
     expect(select[0].style.opacity).toBe("0.8")
+    expect(select[0].getAttribute("tabindex")).toBe("0")
     div.remove()
+
+  it "keeps required selects focusable for native validation", ->
+    form = $("<form><select required><option value=''></option><option value='one'>One</option></select></form>").appendTo("body")
+    select = form.find("select").chosen()
+
+    expect(select[0].checkValidity()).toBe(false)
+    expect(select[0].style.display).not.toBe("none")
+    expect(select[0].style.position).toBe("absolute")
+    expect(select[0].style.opacity).toBe("0")
+    expect(select[0].tabIndex).toBe(-1)
+    expect(form[0].reportValidity()).toBe(false)
+    expect(document.activeElement).toBe(select[0])
+
+    select.chosen("destroy")
+    expect(select[0].hasAttribute("tabindex")).toBe(false)
+    form.remove()
 
   it "inherits multiple option classes on selected choices", ->
     div = $("<div>").html("<select multiple><option class='first second' selected>One</option></select>")

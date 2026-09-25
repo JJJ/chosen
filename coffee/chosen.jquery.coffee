@@ -25,6 +25,7 @@ class Chosen extends AbstractChosen
 
   setup: ->
     @form_field_jq = $ @form_field
+    @original_tab_index = @form_field.getAttribute('tabindex')
     @current_selectedIndex = @form_field.selectedIndex
     @scroll_throttle_timeout = null
     @scroll_handler = () =>
@@ -62,7 +63,9 @@ class Chosen extends AbstractChosen
       position: @form_field.style.position
       opacity: @form_field.style.opacity
       display: @form_field.style.display
-    @form_field_jq.css('position', 'absolute').css('opacity', 0).css('display', 'none' ).after @container
+    @form_field_jq.css('position', 'absolute').css('opacity', 0)
+    @form_field_jq.css('display', 'none') unless @form_field.required
+    @form_field_jq.after @container
     @dropdown = @container.find('div.chosen-drop').first()
 
     @search_field = @container.find('input').first()
@@ -157,8 +160,10 @@ class Chosen extends AbstractChosen
       $(window).off 'scroll.chosen', @scroll_handler
       clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
-    if @search_field[0].tabIndex
-      @form_field_jq[0].tabIndex = @search_field[0].tabIndex
+    if @original_tab_index?
+      @form_field.setAttribute('tabindex', @original_tab_index)
+    else
+      @form_field.removeAttribute('tabindex')
 
     @container.remove()
     @form_field_jq.removeData('chosen')
@@ -394,6 +399,7 @@ class Chosen extends AbstractChosen
       ti = @form_field.tabIndex
       @form_field.tabIndex = -1
       @search_field[0].tabIndex = ti
+    @form_field.tabIndex = -1 if @form_field.required
 
   set_label_behavior: ->
     @form_field_label = @form_field_jq.parents("label") # first check for a parent label

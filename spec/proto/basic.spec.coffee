@@ -117,7 +117,7 @@ describe "Basic setup", ->
     div.remove()
 
   it "restores inline styles and preserves other select listeners on destroy", ->
-    div = new Element('div').update("<select style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>")
+    div = new Element('div').update("<select tabindex='0' style='display:inline-block;position:relative;opacity:0.8'><option>One</option></select>")
     document.body.appendChild(div)
     select = div.down('select')
     updates = 0
@@ -134,7 +134,26 @@ describe "Basic setup", ->
     expect(select.style.display).toBe('inline-block')
     expect(select.style.position).toBe('relative')
     expect(select.style.opacity).toBe('0.8')
+    expect(select.readAttribute('tabindex')).toBe('0')
     div.remove()
+
+  it "keeps required selects focusable for native validation", ->
+    form = new Element('form').update("<select required><option value=''></option><option value='one'>One</option></select>")
+    document.body.appendChild(form)
+    select = form.down('select')
+    chosen = new Chosen(select)
+
+    expect(select.checkValidity()).toBe(false)
+    expect(select.style.display).not.toBe('none')
+    expect(select.style.position).toBe('absolute')
+    expect(select.style.opacity).toBe('0')
+    expect(select.tabIndex).toBe(-1)
+    expect(form.reportValidity()).toBe(false)
+    expect(document.activeElement).toBe(select)
+
+    chosen.destroy()
+    expect(select.readAttribute('tabindex')).toBeNull()
+    form.remove()
 
   it "inherits multiple option classes on selected choices", ->
     div = new Element('div').update("<select multiple><option class='first second' selected>One</option></select>")
