@@ -1,4 +1,15 @@
 describe "Width handling", ->
+
+  it "uses auto width when the source select has no measurable width", ->
+    div = new Element("div", style: "display:none").update("<select><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down("select")
+    expect(select.offsetWidth).toBe(0)
+
+    new Chosen(select)
+
+    expect(div.down(".chosen-container").style.width).toBe("auto")
+    div.remove()
   
   describe "min-width for short values", ->
     

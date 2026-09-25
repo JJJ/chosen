@@ -77,8 +77,8 @@
   },
   {
     "number": 3034,
-    "status": "needs-reproduction",
-    "note": "The fork returns auto when the source select has no width; the reported Safari layout still needs an isolated demo."
+    "status": "fixed-in-fork",
+    "note": "A source select with zero measurable width gives its Chosen container auto width instead of an inline 0px width; both adapters have regressions."
   },
   {
     "number": 3073,
