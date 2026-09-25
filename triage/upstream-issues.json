@@ -189,5 +189,10 @@
     "number": 3119,
     "status": "fixed-in-fork",
     "note": "Open dropdowns close when the browser window loses focus, preventing another Chosen from opening alongside a stale dropdown."
+  },
+  {
+    "number": 515,
+    "status": "fixed-in-fork",
+    "note": "Required selects remain programmatically focusable so native constraint validation can focus the invalid control and display its message."
   }
 ]

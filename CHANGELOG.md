@@ -6,6 +6,9 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+### Fixed
+- Keep required selects focusable so browsers can show native constraint-validation messages.
+
 ## [3.0.4] - 2026-09-21
 
 ### Fixed

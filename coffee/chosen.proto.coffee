@@ -2,6 +2,7 @@ class @Chosen extends AbstractChosen
 
   setup: ->
     @current_selectedIndex = @form_field.selectedIndex
+    @original_tab_index = @form_field.getAttribute('tabindex')
     @is_rtl = @form_field.hasClassName "chosen-rtl"
     # For Prototype compatibility with AbstractChosen which uses form_field_jq
     @form_field_jq = @form_field
@@ -110,9 +111,10 @@ class @Chosen extends AbstractChosen
       display: @form_field.style.display
     @form_field.setStyle({
       position: 'absolute',
-      opacity: '0',
-      display: 'none'
-    }).insert({ after: @container })
+      opacity: '0'
+    })
+    @form_field.setStyle(display: 'none') unless @form_field.required
+    @form_field.insert({ after: @container })
     @dropdown = @container.down('div.chosen-drop')
 
     @search_field = @container.down('input')
@@ -216,8 +218,10 @@ class @Chosen extends AbstractChosen
     else
       @selected_item.stopObserving()
 
-    if @search_field.tabIndex
-      @form_field.tabIndex = @search_field.tabIndex
+    if @original_tab_index?
+      @form_field.setAttribute('tabindex', @original_tab_index)
+    else
+      @form_field.removeAttribute('tabindex')
 
     @container.remove()
     @form_field.style.position = @original_styles.position
@@ -454,6 +458,7 @@ class @Chosen extends AbstractChosen
       ti = @form_field.tabIndex
       @form_field.tabIndex = -1
       @search_field.tabIndex = ti
+    @form_field.tabIndex = -1 if @form_field.required
 
   set_label_behavior: ->
     @form_field_label = @form_field.up("label") # first check for a parent label
