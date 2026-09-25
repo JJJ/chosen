@@ -84,3 +84,16 @@ describe "Events", ->
 
     select.chosen('destroy')
     div.remove()
+
+  it "leaves legacy wheel events alone when standard wheel scrolling is available", ->
+    return unless 'onwheel' of document
+    div = $("<div><select><option>One</option></select></div>").appendTo('body')
+    select = div.find('select').chosen()
+    event = document.createEvent('CustomEvent')
+    event.initCustomEvent('DOMMouseScroll', true, true, 3)
+
+    div.find('.chosen-results')[0].dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(false)
+    select.chosen('destroy')
+    div.remove()

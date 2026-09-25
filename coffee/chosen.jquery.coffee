@@ -106,12 +106,14 @@ class Chosen extends AbstractChosen
     @search_groups.bind 'mouseup.chosen', (evt) => this.search_results_mouseup(evt); return
     @search_groups.bind 'mouseover.chosen', (evt) => this.search_results_mouseover(evt); return
     @search_groups.bind 'mouseout.chosen', (evt) => this.search_results_mouseout(evt); return
-    @search_groups.bind 'mousewheel.chosen DOMMouseScroll.chosen', (evt) => this.search_results_mousewheel(evt); return
 
     @search_results.on 'mouseup.chosen', (evt) => this.search_results_mouseup(evt); return
     @search_results.on 'mouseover.chosen', (evt) => this.search_results_mouseover(evt); return
     @search_results.on 'mouseout.chosen', (evt) => this.search_results_mouseout(evt); return
-    @search_results.on 'mousewheel.chosen DOMMouseScroll.chosen', (evt) => this.search_results_mousewheel(evt); return
+
+    unless 'onwheel' of document
+      @search_groups.bind 'mousewheel.chosen DOMMouseScroll.chosen', (evt) => this.search_results_mousewheel(evt); return
+      @search_results.on 'mousewheel.chosen DOMMouseScroll.chosen', (evt) => this.search_results_mousewheel(evt); return
 
     @search_results.on 'touchstart.chosen', (evt) => this.search_results_touchstart(evt); return
     @search_results.on 'touchmove.chosen', (evt) => this.search_results_touchmove(evt); return
