@@ -222,5 +222,11 @@
     "status": "fixed-in-fork",
     "note": "A select placeholder attribute now supplies the default text when data-placeholder is absent, with both adapters covered.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/116"
+  },
+  {
+    "number": 2622,
+    "status": "fixed-in-fork",
+    "note": "Modern browsers use native standard wheel scrolling; manual mousewheel and DOMMouseScroll handling remains only as a legacy fallback.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/118"
   }
 ]
