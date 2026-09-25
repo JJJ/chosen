@@ -492,6 +492,12 @@ class Chosen extends AbstractChosen
         this.select_create_option(@search_field.val())
         return this.results_hide()
 
+      item = @results_data[ high[0].getAttribute("data-option-array-index") ]
+      option = this.current_option_for(item)
+      unless option?
+        this.results_update_field()
+        return false
+
       this.result_clear_highlight()
 
       if @is_multiple and @max_selected_options <= this.choices_count()
@@ -505,10 +511,9 @@ class Chosen extends AbstractChosen
 
       high.addClass("result-selected")
 
-      item = @results_data[ high[0].getAttribute("data-option-array-index") ]
       item.selected = true
 
-      @form_field.options[item.options_index].selected = true
+      option.selected = true
       @selected_option_count = null
 
       if @is_multiple
@@ -526,7 +531,7 @@ class Chosen extends AbstractChosen
         this.results_hide()
         this.show_search_field_default()
 
-      this.trigger_form_field_change selected: @form_field.options[item.options_index].value  if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
+      this.trigger_form_field_change selected: option.value  if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
       @current_selectedIndex = @form_field.selectedIndex
 
       evt.preventDefault()
@@ -545,17 +550,21 @@ class Chosen extends AbstractChosen
 
   result_deselect: (pos) ->
     result_data = @results_data[pos]
+    option = this.current_option_for(result_data)
+    unless option?
+      this.results_update_field()
+      return false
 
-    if not @form_field.options[result_data.options_index].disabled
+    if not option.disabled
       result_data.selected = false
 
-      @form_field.options[result_data.options_index].selected = false
+      option.selected = false
       @selected_option_count = null
 
       this.result_clear_highlight()
       this.winnow_results() if @results_showing
 
-      this.trigger_form_field_change deselected: @form_field.options[result_data.options_index].value
+      this.trigger_form_field_change deselected: option.value
       this.search_field_scale()
 
       return true

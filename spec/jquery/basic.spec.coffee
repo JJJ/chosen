@@ -1,4 +1,35 @@
 describe "Basic setup", ->
+  it "refreshes stale results when an option is removed before selection", ->
+    div = $("<div>").html("<select><option value=''></option><option>One</option><option>Two</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    chosen.results_show()
+    select.find("option").last().remove()
+    div.find(".active-result").last().trigger($.Event("mouseup", which: 1))
+    expect(select.val()).toBe("")
+    expect(div.find(".active-result").text()).toBe("One")
+    div.remove()
+
+  it "does not select a different option after source indices shift", ->
+    div = $("<div>").html("<select multiple><option>One</option><option>Two</option><option>Three</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    chosen.results_show()
+    stale_result = div.find(".active-result").eq(1)
+    select.find("option").first().remove()
+    stale_result.trigger($.Event("mouseup", which: 1))
+    expect(select.find("option").eq(1).prop("selected")).toBe(false)
+    expect(chosen.results_data[0].text).toBe("Two")
+    div.remove()
+
+  it "refreshes stale choices when their source option is removed", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    select.find("option").remove()
+    div.find(".search-choice-close").trigger("click")
+    expect(div.find(".search-choice").length).toBe(0)
+    div.remove()
+
   it "does not open an empty results drop after every visible option is selected", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
     select = div.find("select").chosen(display_selected_options: false)

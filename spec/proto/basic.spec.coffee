@@ -1,4 +1,39 @@
 describe "Basic setup", ->
+  it "refreshes stale results when an option is removed before selection", ->
+    div = new Element('div').update("<select><option value=''></option><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    select.removeChild(select.options[2])
+    chosen.search_results_mouseup(target: div.select('.active-result').last(), which: 1, preventDefault: ->)
+    expect(select.value).toBe("")
+    expect(div.select('.active-result').pluck('textContent').join('')).toBe('One')
+    div.remove()
+
+  it "does not select a different option after source indices shift", ->
+    div = new Element('div').update("<select multiple><option>One</option><option>Two</option><option>Three</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    stale_result = div.select('.active-result')[1]
+    select.removeChild(select.options[0])
+    chosen.search_results_mouseup(target: stale_result, which: 1, preventDefault: ->)
+    expect(select.options[1].selected).toBe(false)
+    expect(chosen.results_data[0].text).toBe('Two')
+    div.remove()
+
+  it "refreshes stale choices when their source option is removed", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select)
+    select.removeChild(select.options[0])
+    div.down('.search-choice-close').click()
+    expect(div.down('.search-choice')).toBeUndefined()
+    div.remove()
+
   it "does not open an empty results drop after every visible option is selected", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)
