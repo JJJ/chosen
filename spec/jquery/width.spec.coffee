@@ -1,4 +1,14 @@
 describe "Width handling", ->
+
+  it "uses auto width when the source select has no measurable width", ->
+    div = $("<div style='display:none'><select><option>One</option></select></div>").appendTo("body")
+    select = div.find("select")
+    expect(select[0].offsetWidth).toBe(0)
+
+    select.chosen()
+
+    expect(div.find(".chosen-container")[0].style.width).toBe("auto")
+    div.remove()
   
   describe "min-width for short values", ->
     
