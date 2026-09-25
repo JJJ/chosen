@@ -235,6 +235,22 @@ describe "Basic setup", ->
 
   describe "data-placeholder", ->
 
+    it "should use the placeholder attribute for multiple selects", ->
+      div = new Element("div")
+      div.update("
+        <select data-placeholder='Choose a Country...' multiple>
+          <option value='United States'>United States</option>
+        </select>
+      ")
+      document.body.appendChild(div)
+      new Chosen(div.down("select"))
+      search = div.down(".chosen-search-input")
+
+      expect(search.readAttribute("placeholder")).toBe("Choose a Country...")
+      expect(search.hasAttribute("value")).toBe(false)
+      expect(search.value).toBe("")
+      div.remove()
+
     it "should render", ->
       tmpl = "
         <select data-placeholder='Choose a Country...'>

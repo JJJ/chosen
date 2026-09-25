@@ -184,6 +184,19 @@ describe "Basic setup", ->
 
   describe "data-placeholder", ->
 
+    it "should use the placeholder attribute for multiple selects", ->
+      div = $("<div>").html("
+        <select data-placeholder='Choose a Country...' multiple>
+          <option value='United States'>United States</option>
+        </select>
+      ")
+      div.find("select").chosen()
+      search = div.find(".chosen-search-input")
+
+      expect(search.attr("placeholder")).toBe("Choose a Country...")
+      expect(search[0].hasAttribute("value")).toBe(false)
+      expect(search.val()).toBe("")
+
     it "should render", ->
       tmpl = "
         <select data-placeholder='Choose a Country...'>

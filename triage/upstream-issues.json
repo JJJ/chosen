@@ -104,5 +104,30 @@
     "number": 2999,
     "status": "covered-in-fork",
     "note": "Current label handling uses an element reference and never calls form_field_label as a function."
+  },
+  {
+    "number": 3133,
+    "status": "fixed-in-fork",
+    "note": "Multiple search inputs now expose placeholder text only through the standard placeholder attribute."
+  },
+  {
+    "number": 2891,
+    "status": "covered-in-fork",
+    "note": "The fork README lists the distributed jQuery, Prototype, and CSS files and includes npm and Composer installation commands."
+  },
+  {
+    "number": 3116,
+    "status": "covered-in-fork",
+    "note": "Appending options and firing chosen:updated is covered in both adapters, including preserving an active search."
+  },
+  {
+    "number": 3154,
+    "status": "covered-in-fork",
+    "note": "The maintained fork publishes current releases as chosen-jjj; it cannot backfill releases under Harvest's npm package."
+  },
+  {
+    "number": 3149,
+    "status": "blocked",
+    "note": "The report does not include option markup, an expected value, or a reproduction that distinguishes an HTML entity from option text."
   }
 ]
