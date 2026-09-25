@@ -288,6 +288,28 @@ describe "Basic setup", ->
 
   describe "data-placeholder", ->
 
+    it "should fall back to the select placeholder attribute", ->
+      div = $("<div>").html("
+        <select placeholder='Choose a Country...'>
+          <option value=''></option>
+          <option value='United States'>United States</option>
+        </select>
+      ")
+      div.find("select").chosen()
+
+      expect(div.find(".chosen-single > span").text()).toBe("Choose a Country...")
+
+    it "should prefer data-placeholder over the select placeholder attribute", ->
+      div = $("<div>").html("
+        <select placeholder='Fallback' data-placeholder='Preferred'>
+          <option value=''></option>
+          <option value='one'>One</option>
+        </select>
+      ")
+      div.find("select").chosen()
+
+      expect(div.find(".chosen-single > span").text()).toBe("Preferred")
+
     it "should use the placeholder attribute for multiple selects", ->
       div = $("<div>").html("
         <select data-placeholder='Choose a Country...' multiple>

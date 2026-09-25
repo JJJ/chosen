@@ -360,6 +360,34 @@ describe "Basic setup", ->
 
   describe "data-placeholder", ->
 
+    it "should fall back to the select placeholder attribute", ->
+      div = new Element("div")
+      div.update("
+        <select placeholder='Choose a Country...'>
+          <option value=''></option>
+          <option value='United States'>United States</option>
+        </select>
+      ")
+      document.body.appendChild(div)
+      new Chosen(div.down("select"))
+
+      expect(div.down(".chosen-single > span").innerText).toBe("Choose a Country...")
+      div.remove()
+
+    it "should prefer data-placeholder over the select placeholder attribute", ->
+      div = new Element("div")
+      div.update("
+        <select placeholder='Fallback' data-placeholder='Preferred'>
+          <option value=''></option>
+          <option value='one'>One</option>
+        </select>
+      ")
+      document.body.appendChild(div)
+      new Chosen(div.down("select"))
+
+      expect(div.down(".chosen-single > span").innerText).toBe("Preferred")
+      div.remove()
+
     it "should use the placeholder attribute for multiple selects", ->
       div = new Element("div")
       div.update("

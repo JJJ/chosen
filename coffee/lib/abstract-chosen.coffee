@@ -51,6 +51,8 @@ class AbstractChosen
   set_default_text: ->
     if @form_field.getAttribute("data-placeholder")
       @default_text = @form_field.getAttribute("data-placeholder")
+    else if @form_field.getAttribute("placeholder")
+      @default_text = @form_field.getAttribute("placeholder")
     else if @is_multiple
       @default_text = @options.placeholder_text_multiple || @options.placeholder_text || AbstractChosen.default_multiple_text
     else
