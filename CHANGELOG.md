@@ -11,6 +11,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
+- Show the browser's native focus outline around single and multiple Chosen controls.
 - Keep listbox option selection and active-descendant state accurate for assistive technologies.
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 - Reopen an active multiple select when it is clicked again after choosing an option.

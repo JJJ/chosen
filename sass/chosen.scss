@@ -9,6 +9,8 @@ $chosen-border-color: #aaa;
 $chosen-group-color: #999;
 $chosen-background-color: #fff;
 $chosen-selected-color: #e0e0e0;
+$chosen-focus-outline: auto !default;
+$chosen-focus-outline-offset: 2px !default;
 $chosen-highlight-font-style: normal !default;
 $chosen-highlight-font-weight: null !default;
 $chosen-highlight-text-decoration: underline !default;
@@ -118,6 +120,11 @@ $chosen-highlight-text-decoration: underline !default;
 		display: block;
 		overflow: hidden;
 		padding: 2.5px 0 2.5px 7px;
+
+		&:focus {
+			outline: $chosen-focus-outline;
+			outline-offset: $chosen-focus-outline-offset;
+		}
 		border: 1px solid $chosen-border-color;
 		border-radius: 4px;
 		background-color: $chosen-background-color;
@@ -312,6 +319,11 @@ $chosen-highlight-text-decoration: underline !default;
 		border: 1px solid $chosen-border-color;
 		background-color: $chosen-background-color;
 		cursor: text;
+
+		&:focus-within {
+			outline: $chosen-focus-outline;
+			outline-offset: $chosen-focus-outline-offset;
+		}
 	}
 
 	.chosen-choices li {

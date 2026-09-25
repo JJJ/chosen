@@ -113,6 +113,9 @@ async function main() {
         errors.push(...violations.map((item) => `Accessibility: ${item}`));
         const singleControl = page.locator('#accessibility-fixture .chosen-container-single .chosen-single');
         await singleControl.focus();
+        if (await singleControl.evaluate((element) => getComputedStyle(element).outlineStyle) === 'none') {
+          errors.push('Accessibility: Single select has no visible focus outline');
+        }
         await page.keyboard.press('Enter');
         if (await singleControl.getAttribute('aria-expanded') !== 'true') {
           const state = await page.evaluate(() => ({
@@ -124,6 +127,12 @@ async function main() {
         await page.keyboard.press('Escape');
         if (await singleControl.getAttribute('aria-expanded') !== 'false') {
           errors.push('Keyboard: Escape did not close the single select');
+        }
+        const multiSearch = page.locator('#accessibility-fixture .chosen-container-multi .chosen-search-input');
+        await multiSearch.focus();
+        const multiOutline = await multiSearch.evaluate((element) => getComputedStyle(element.closest('.chosen-choices')).outlineStyle);
+        if (multiOutline === 'none') {
+          errors.push('Accessibility: Multiple select has no visible focus outline');
         }
         console.log(`${suite.name}: ${result.total - result.failures.length}/${result.total} specs passed`);
         for (const error of errors) console.error(`  ${error}`);
