@@ -77,6 +77,38 @@ describe "Basic setup", ->
     expect(document.activeElement).toBe(div.find(".chosen-search-input")[0])
     div.remove()
 
+  it "navigates results with Home, End, Page Up, and Page Down", ->
+    options = ("<option>Option #{index}</option>" for index in [1..8]).join("")
+    div = $("<div><select>#{options}</select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.results_show()
+    results = chosen.search_results.find("li.active-result").css(height: "20px", padding: 0)
+    chosen.search_results.css(height: "60px", maxHeight: "60px")
+
+    chosen.search_field.trigger($.Event("keydown", which: 35))
+    expect(results.index(chosen.result_highlight)).toBe(7)
+
+    chosen.search_field.trigger($.Event("keydown", which: 36))
+    expect(results.index(chosen.result_highlight)).toBe(0)
+
+    chosen.search_field.trigger($.Event("keydown", which: 34))
+    expect(results.index(chosen.result_highlight)).toBe(3)
+
+    chosen.search_field.trigger($.Event("keydown", which: 33))
+    expect(results.index(chosen.result_highlight)).toBe(0)
+
+    chosen.results_hide()
+    chosen.selected_item.trigger($.Event("keydown", which: 35))
+    results = chosen.search_results.find("li.active-result")
+    expect(chosen.results_showing).toBe(true)
+    expect(results.index(chosen.result_highlight)).toBe(7)
+
+    chosen.search_field.val("Option")
+    home = $.Event("keydown", which: 36)
+    chosen.search_field.trigger(home)
+    expect(home.isDefaultPrevented()).toBe(false)
+    div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
     select = div.find("select").chosen()

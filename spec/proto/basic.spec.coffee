@@ -93,6 +93,40 @@ describe "Basic setup", ->
     expect(document.activeElement).toBe(div.down('.chosen-search-input'))
     div.remove()
 
+  it "navigates results with Home, End, Page Up, and Page Down", ->
+    options = ("<option>Option #{index}</option>" for index in [1..8]).join("")
+    div = new Element('div').update("<select>#{options}</select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    results = chosen.search_results.select("li.active-result")
+    result.setStyle(height: "20px", padding: 0) for result in results
+    chosen.search_results.setStyle(height: "60px", maxHeight: "60px")
+
+    chosen.keydown_checker(which: 35, preventDefault: ->)
+    expect(results.indexOf(chosen.result_highlight)).toBe(7)
+
+    chosen.keydown_checker(which: 36, preventDefault: ->)
+    expect(results.indexOf(chosen.result_highlight)).toBe(0)
+
+    chosen.keydown_checker(which: 34, preventDefault: ->)
+    expect(results.indexOf(chosen.result_highlight)).toBe(3)
+
+    chosen.keydown_checker(which: 33, preventDefault: ->)
+    expect(results.indexOf(chosen.result_highlight)).toBe(0)
+
+    chosen.results_hide()
+    chosen.selected_item_keydown(which: 35, preventDefault: ->)
+    results = chosen.search_results.select("li.active-result")
+    expect(chosen.results_showing).toBe(true)
+    expect(results.indexOf(chosen.result_highlight)).toBe(7)
+
+    prevented = false
+    chosen.search_field.value = "Option"
+    chosen.keydown_checker(which: 36, preventDefault: -> prevented = true)
+    expect(prevented).toBe(false)
+    div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)

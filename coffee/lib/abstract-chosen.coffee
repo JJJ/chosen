@@ -520,6 +520,14 @@ class AbstractChosen
       evt.preventDefault()
       @ignore_enter_keyup = true if stroke is 13
       this.results_toggle()
+    else if stroke in [33, 34, 35, 36]
+      evt.preventDefault()
+      this.results_show()
+      switch stroke
+        when 33 then this.keypage(-1)
+        when 34 then this.keypage(1)
+        when 35 then this.keyend()
+        when 36 then this.keyhome()
 
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
@@ -544,6 +552,24 @@ class AbstractChosen
         break
       when 32 # space
         evt.preventDefault() if @disable_search
+        break
+      when 33 # page up
+        evt.preventDefault()
+        this.keypage(-1)
+        break
+      when 34 # page down
+        evt.preventDefault()
+        this.keypage(1)
+        break
+      when 35 # end
+        unless this.get_search_field_value().length
+          evt.preventDefault()
+          this.keyend()
+        break
+      when 36 # home
+        unless this.get_search_field_value().length
+          evt.preventDefault()
+          this.keyhome()
         break
       when 38 # up arrow
         evt.preventDefault()
@@ -582,7 +608,7 @@ class AbstractChosen
           this.results_hide()
           @selected_item.focus() unless @is_multiple
         break
-      when 9, 16, 17, 18, 38, 40, 91
+      when 9, 16, 17, 18, 33, 34, 35, 36, 38, 40, 91
         # don't do anything on these keys
       else
         this.search_if_value_changed()

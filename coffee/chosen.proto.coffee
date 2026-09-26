@@ -789,6 +789,27 @@ class @Chosen extends AbstractChosen
         this.results_hide() if this.choices_count() > 0
         this.result_clear_highlight()
 
+  keyhome: ->
+    this.results_show() unless @results_showing
+    first = @search_results.select("li.active-result").first()
+    this.result_do_highlight(first) if first
+
+  keyend: ->
+    this.results_show() unless @results_showing
+    last = @search_results.select("li.active-result").last()
+    this.result_do_highlight(last) if last
+
+  keypage: (direction) ->
+    this.results_show() unless @results_showing
+    return unless @result_highlight
+
+    results = @search_results.select("li.active-result")
+    current_index = results.indexOf(@result_highlight)
+    item_height = @result_highlight.getHeight()
+    page_size = if item_height > 0 then Math.max(1, Math.floor(@search_results.getHeight() / item_height)) else 1
+    target_index = Math.max(0, Math.min(results.length - 1, current_index + direction * page_size))
+    this.result_do_highlight(results[target_index])
+
   keydown_backstroke: ->
     return unless @backspace_deletes_choices
 
