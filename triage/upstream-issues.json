@@ -270,5 +270,11 @@
     "status": "fixed-in-fork",
     "note": "The chosen:updated event now recalculates single-deselect eligibility when a true empty first option is added or removed dynamically.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/125"
+  },
+  {
+    "number": 2232,
+    "status": "fixed-in-fork",
+    "note": "When inherit_select_classes is enabled, chosen:updated now replaces inherited source classes while preserving Chosen's own live state classes.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/126"
   }
 ]
