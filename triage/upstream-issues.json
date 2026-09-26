@@ -252,5 +252,11 @@
     "status": "fixed-in-fork",
     "note": "Delayed multiple-select activation now verifies that its search input still owns focus, preventing rapid Tab navigation from reopening earlier controls.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/121"
+  },
+  {
+    "number": 2563,
+    "status": "fixed-in-fork",
+    "note": "Single selects with allow_single_deselect can now be cleared from the focused control with Backspace or Delete in both adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/122"
   }
 ]
