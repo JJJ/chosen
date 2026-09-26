@@ -533,6 +533,7 @@ class @Chosen extends AbstractChosen
 
   choice_build: (item) ->
     choice = new Element('li', { class: "search-choice", "data-value": item.value, role: "option" }).update("<span>#{this.choice_label(item)}</span>")
+    choice.writeAttribute "title", item.title if item.title
 
     if item.disabled
       choice.addClassName 'search-choice-disabled'

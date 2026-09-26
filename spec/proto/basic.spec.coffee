@@ -267,6 +267,13 @@ describe "Basic setup", ->
     expect(div.down('.chosen-container').readAttribute('title')).toBeNull()
     div.remove()
 
+  it "copies option titles to selected multiple choices", ->
+    div = new Element('div').update("<select multiple><option title='Choice details' selected>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'))
+    expect(div.down('.search-choice').readAttribute('title')).toBe('Choice details')
+    div.remove()
+
   it "refreshes inherited select classes without removing Chosen state", ->
     div = new Element('div').update("<select class='initial-class'><option>One</option></select>")
     document.body.appendChild(div)
@@ -422,11 +429,25 @@ describe "Basic setup", ->
     expect(control.readAttribute("aria-expanded")).toBe("true")
     expect(control.readAttribute("aria-hidden")).toBe("true")
     expect(chosen.dropdown.readAttribute("aria-hidden")).toBe("false")
+    escape_keydown =
+      which: 27
+      preventDefault: jasmine.createSpy("preventDefault")
+      stopPropagation: jasmine.createSpy("stopPropagation")
+    chosen.keydown_checker(escape_keydown)
+    expect(escape_keydown.preventDefault).toHaveBeenCalled()
+    expect(escape_keydown.stopPropagation).toHaveBeenCalled()
     chosen.keyup_checker(which: 27, preventDefault: ->)
     expect(control.readAttribute("aria-expanded")).toBe("false")
     expect(control.readAttribute("aria-hidden")).toBeNull()
     expect(chosen.dropdown.readAttribute("aria-hidden")).toBe("true")
     expect(document.activeElement).toBe(control)
+    closed_escape =
+      which: 27
+      preventDefault: jasmine.createSpy("closedPreventDefault")
+      stopPropagation: jasmine.createSpy("closedStopPropagation")
+    chosen.keydown_checker(closed_escape)
+    expect(closed_escape.preventDefault).not.toHaveBeenCalled()
+    expect(closed_escape.stopPropagation).not.toHaveBeenCalled()
     div.remove()
 
   it "keeps active descendant and option selection state current", ->

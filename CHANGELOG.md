@@ -16,6 +16,8 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
+- Stop an Escape key handled by an open Chosen dropdown from also reaching ancestor controls.
+- Copy an option's `title` to its selected multiple-choice element.
 - Keep search input text visible when a page uses a dark color scheme.
 - Restore native-style prefix navigation when search is disabled.
 - Support Home, End, Page Up, and Page Down navigation through visible results.

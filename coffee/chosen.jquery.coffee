@@ -467,6 +467,7 @@ class Chosen extends AbstractChosen
 
   choice_build: (item) ->
     choice = $('<li />', { class: "search-choice", "data-value": item.value, role: "option" }).html("<span>#{this.choice_label(item)}</span>")
+    choice.attr "title", item.title if item.title
 
     if item.disabled
       choice.addClass 'search-choice-disabled'

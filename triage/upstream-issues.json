@@ -365,5 +365,10 @@
     "status": "fixed-in-fork",
     "note": "The opt-in min_search_length setting keeps result rows hidden until the trimmed search text reaches the configured length.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/137"
+  },
+  {
+    "number": 3059,
+    "status": "fixed-in-fork",
+    "note": "Open dropdowns consume Escape before it reaches ancestor controls, selected multiple choices retain option titles, and the existing chosen:search_updated event reports result refreshes."
   }
 ]
