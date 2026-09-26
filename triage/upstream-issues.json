@@ -246,5 +246,11 @@
     "status": "fixed-in-fork",
     "note": "Initializing Chosen on a focused select transfers focus to the generated control without opening the dropdown, preserving native autofocus behavior.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/120"
+  },
+  {
+    "number": 2913,
+    "status": "fixed-in-fork",
+    "note": "Delayed multiple-select activation now verifies that its search input still owns focus, preventing rapid Tab navigation from reopening earlier controls.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/121"
   }
 ]
