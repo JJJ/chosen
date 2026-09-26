@@ -134,6 +134,9 @@ class Chosen extends AbstractChosen
     @search_field.on 'blur.chosen', (evt) => this.input_blur(evt); return
     @search_field.on 'keyup.chosen', (evt) => this.keyup_checker(evt); return
     @search_field.on 'keydown.chosen', (evt) => this.keydown_checker(evt); return
+    @search_field.on 'input.chosen', (evt) => this.search_if_value_changed(evt); return
+    @search_field.on 'compositionstart.chosen', (evt) => this.composition_start(evt); return
+    @search_field.on 'compositionend.chosen', (evt) => this.composition_end(evt); return
     @search_field.on 'focus.chosen', (evt) => this.input_focus(evt); return
     @search_field.on 'cut.chosen', (evt) => this.clipboard_event_checker(evt); return
     @search_field.on 'paste.chosen', (evt) => this.clipboard_event_checker(evt); return

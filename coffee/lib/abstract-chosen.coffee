@@ -29,6 +29,9 @@ class AbstractChosen
     @active_field = false
     @mouse_on_container = false
     @mouse_on_label = false
+    @composing = false
+    @ignore_composition_enter = false
+    @last_search_value = ""
     @results_showing = false
     @result_highlighted = null
     @is_rtl = @options.rtl || /\bchosen-rtl\b/.test(@form_field.className)
@@ -244,11 +247,24 @@ class AbstractChosen
       this.results_show()
 
   results_search: (evt) ->
+    @last_search_value = this.get_search_field_value()
     if @results_showing
       this.winnow_results()
     else
       this.results_show()
     @form_field_jq.trigger("chosen:search", {chosen: this})
+
+  search_if_value_changed: ->
+    this.results_search() unless @composing or this.get_search_field_value() is @last_search_value
+
+  composition_start: ->
+    @composing = true
+
+  composition_end: ->
+    @composing = false
+    @ignore_composition_enter = true
+    setTimeout (=> @ignore_composition_enter = false), 0
+    setTimeout (=> this.search_if_value_changed()), 0
 
   winnow_results: (options) ->
     this.no_results_clear()
@@ -257,6 +273,7 @@ class AbstractChosen
     exact_result = false
     match_value = false
 
+    @last_search_value = this.get_search_field_value()
     query = this.get_search_text()
     # Truncate query to prevent "Regular expression too large" errors
     query = query.substring(0, @max_search_length) if query.length > @max_search_length
@@ -506,6 +523,7 @@ class AbstractChosen
 
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
+    return if @composing or evt.isComposing or stroke is 229
     this.search_field_scale()
 
     this.clear_backstroke() if stroke != 8 and @pending_backstroke
@@ -538,6 +556,10 @@ class AbstractChosen
 
   keyup_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
+    if @ignore_composition_enter
+      @ignore_composition_enter = false
+      return if stroke is 13
+    return if @composing or evt.isComposing or stroke is 229
     if @ignore_enter_keyup
       @ignore_enter_keyup = false
       return if stroke is 13
@@ -549,7 +571,7 @@ class AbstractChosen
           this.keydown_backstroke()
         else if not @pending_backstroke
           this.result_clear_highlight()
-          this.results_search()
+          this.search_if_value_changed()
         break
       when 13 # enter
         evt.preventDefault()
@@ -563,12 +585,12 @@ class AbstractChosen
       when 9, 16, 17, 18, 38, 40, 91
         # don't do anything on these keys
       else
-        this.results_search()
+        this.search_if_value_changed()
         break
 
   clipboard_event_checker: (evt) ->
     return if @is_disabled
-    setTimeout (=> this.results_search()), 50
+    setTimeout (=> this.search_if_value_changed()), 50
 
   container_width: ->
     return @options.width if @options.width?
