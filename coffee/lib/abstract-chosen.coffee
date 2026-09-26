@@ -48,6 +48,7 @@ class AbstractChosen
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
     @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
+    @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
     @max_selected_options = @options.max_selected_options || Infinity
     @inherit_select_classes = @options.inherit_select_classes || false
     @inherit_option_classes = @options.inherit_option_classes || false
@@ -111,7 +112,7 @@ class AbstractChosen
     setTimeout (=> @mouse_on_label = false), 0
 
   label_click_handler: (evt) =>
-    if @is_multiple
+    if @open_on_label_click
       this.container_mousedown(evt)
     else
       this.activate_field()

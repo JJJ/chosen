@@ -17,6 +17,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Announce the number of available search results to assistive technologies. Use the `results_count_text` callback to localize the message.
 - Add Sass variables and CSS documentation for styling matched search text.
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
+- Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
 - Stop an Escape key handled by an open Chosen dropdown from also reaching ancestor controls.
@@ -26,7 +27,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support Home, End, Page Up, and Page Down navigation through visible results.
 - Search from completed input values without filtering or selecting stale text while an IME composition is active.
 - Expose one named combobox at a time for single selects, hide inactive dropdown semantics, and return focus to the closed control on Escape.
-- Show the browser's native focus outline around single and multiple Chosen controls.
+- Show a consistent focus outline around closed single and multiple Chosen controls, then use the joined active border while their dropdowns are open.
 - Keep listbox option selection and active-descendant state accurate for assistive technologies.
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 - Reopen an active multiple select when it is clicked again after choosing an option.

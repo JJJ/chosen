@@ -1,4 +1,34 @@
 describe "Bugfixes", ->
+  it "focuses a closed multiple select without opening it when open_on_label_click is false", ->
+    div = $("<div><label for='label-focus-jquery'>Choices</label><select id='label-focus-jquery' multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(open_on_label_click: false).data("chosen")
+
+    div.find("label").trigger("click")
+
+    expect(chosen.active_field).toBe(true)
+    expect(chosen.results_showing).toBe(false)
+    expect(document.activeElement).toBe(chosen.search_field[0])
+    div.remove()
+
+  it "opens a closed single select when open_on_label_click is true", ->
+    div = $("<div><label for='label-open-jquery'>Choices</label><select id='label-open-jquery'><option>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(open_on_label_click: true).data("chosen")
+
+    div.find("label").trigger("click")
+
+    expect(chosen.active_field).toBe(true)
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
+  it "preserves the default multiple-label opening behavior", ->
+    div = $("<div><label for='label-default-jquery'>Choices</label><select id='label-default-jquery' multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+
+    div.find("label").trigger("click")
+
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
   it "keeps an open select visible while its associated label is pressed", (done) ->
     div = $("<div><label for='label-press-jquery'>Choices</label><select id='label-press-jquery'><option>One</option><option>Two</option></select></div>").appendTo("body")
     chosen = div.find("select").chosen().data("chosen")
