@@ -258,5 +258,11 @@
     "status": "fixed-in-fork",
     "note": "Single selects with allow_single_deselect can now be cleared from the focused control with Backspace or Delete in both adapters.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/122"
+  },
+  {
+    "number": 2311,
+    "status": "fixed-in-fork",
+    "note": "The chosen:updated event now mirrors changes to the source select title onto the visible Chosen container, including title removal.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/124"
   }
 ]

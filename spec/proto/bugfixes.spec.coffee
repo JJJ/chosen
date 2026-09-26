@@ -1,4 +1,44 @@
 describe "Bugfixes", ->
+  it "keeps an open select visible while its associated label is pressed", (done) ->
+    div = new Element("div").update("<label for='label-press-proto'>Choices</label><select id='label-press-proto'><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    chosen.container_mousedown()
+
+    event = document.createEvent('MouseEvents')
+    event.initEvent('mousedown', true, true)
+    div.down('label').dispatchEvent(event)
+    chosen.search_field.blur()
+
+    setTimeout ->
+      expect(chosen.results_showing).withContext("before the label click").toBe(true)
+      event = document.createEvent('MouseEvents')
+      event.initEvent('click', true, true)
+      div.down('label').dispatchEvent(event)
+      setTimeout ->
+        expect(chosen.results_showing).withContext("after the label click").toBe(true)
+        div.remove()
+        done()
+      , 0
+    , 120
+
+  it "keeps an open select visible while its wrapping label is pressed", (done) ->
+    div = new Element("div").update("<label>Choices<select><option>One</option><option>Two</option></select></label>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    chosen.container_mousedown()
+
+    event = document.createEvent('MouseEvents')
+    event.initEvent('mousedown', true, true)
+    div.down('label').dispatchEvent(event)
+    chosen.search_field.blur()
+
+    setTimeout ->
+      expect(chosen.results_showing).toBe(true)
+      div.remove()
+      done()
+    , 120
+
   it "does not reopen multiple selects after focus has moved", (done) ->
     div = new Element("div").update("<select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select>")
     document.body.appendChild(div)

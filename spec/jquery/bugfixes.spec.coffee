@@ -1,4 +1,36 @@
 describe "Bugfixes", ->
+  it "keeps an open select visible while its associated label is pressed", (done) ->
+    div = $("<div><label for='label-press-jquery'>Choices</label><select id='label-press-jquery'><option>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.container_mousedown()
+
+    div.find("label").trigger("mousedown")
+    chosen.search_field.trigger("blur")
+
+    setTimeout ->
+      expect(chosen.results_showing).withContext("before the label click").toBe(true)
+      div.find("label").trigger("mouseup").trigger("click")
+      setTimeout ->
+        expect(chosen.results_showing).withContext("after the label click").toBe(true)
+        div.remove()
+        done()
+      , 0
+    , 120
+
+  it "keeps an open select visible while its wrapping label is pressed", (done) ->
+    div = $("<div><label>Choices<select><option>One</option><option>Two</option></select></label></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.container_mousedown()
+
+    div.find("label").trigger("mousedown")
+    chosen.search_field.trigger("blur")
+
+    setTimeout ->
+      expect(chosen.results_showing).toBe(true)
+      div.remove()
+      done()
+    , 120
+
   it "does not reopen multiple selects after focus has moved", (done) ->
     div = $("<div><select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select></div>").appendTo("body")
     selects = div.find("select").chosen()

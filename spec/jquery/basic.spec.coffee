@@ -110,6 +110,16 @@ describe "Basic setup", ->
     expect(window.getComputedStyle(div.find(".chosen-drop")[0]).display).toBe("block")
     div.remove()
 
+  it "refreshes the select title when updated", ->
+    div = $("<div>").html("<select title='Initial title'><option>One</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    expect(div.find(".chosen-container").attr("title")).toBe("Initial title")
+    select.attr("title", "Updated title").trigger("chosen:updated")
+    expect(div.find(".chosen-container").attr("title")).toBe("Updated title")
+    select.removeAttr("title").trigger("chosen:updated")
+    expect(div.find(".chosen-container").attr("title")).toBeUndefined()
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
     select = div.find("select").chosen()

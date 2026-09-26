@@ -28,6 +28,7 @@ class AbstractChosen
     @activate_action = (evt) => this.activate_field(evt)
     @active_field = false
     @mouse_on_container = false
+    @mouse_on_label = false
     @results_showing = false
     @result_highlighted = null
     @is_rtl = @options.rtl || /\bchosen-rtl\b/.test(@form_field.className)
@@ -88,9 +89,13 @@ class AbstractChosen
       @activate_field() unless @active_field
 
   input_blur: (evt) ->
-    if not @mouse_on_container
+    if not @mouse_on_container and not @mouse_on_label
       @active_field = false
       setTimeout (=> this.blur_test()), 100
+
+  label_mousedown_handler: (evt) =>
+    @mouse_on_label = true
+    setTimeout (=> @mouse_on_label = false), 0
 
   label_click_handler: (evt) =>
     if @is_multiple
@@ -170,6 +175,7 @@ class AbstractChosen
   results_update_field: ->
     active_query = this.get_search_field_value() if @results_showing
     this.set_default_text()
+    this.sync_container_title()
     this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
     this.result_clear_highlight()
@@ -178,6 +184,13 @@ class AbstractChosen
       search_input = @search_field[0] or @search_field
       search_input.value = active_query
       this.winnow_results()
+
+  sync_container_title: ->
+    container = @container[0] or @container
+    if @form_field.hasAttribute("title")
+      container.setAttribute("title", @form_field.title)
+    else
+      container.removeAttribute("title")
 
   reset_single_select_options: () ->
     for result in @results_data
