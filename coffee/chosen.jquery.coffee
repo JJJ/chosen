@@ -148,6 +148,7 @@ class Chosen extends AbstractChosen
       @selected_item.on 'keydown.chosen', (evt) => this.selected_item_keydown(evt); return
 
   destroy: ->
+    this.cancel_pending_search()
     $(window).off 'pageshow.chosen', @pageshow_handler
     $(window).off 'blur.chosen', @window_blur_handler
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
@@ -394,6 +395,7 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:search_updated", {chosen: this, search_term: search_term})
 
   results_hide: ->
+    this.cancel_pending_search()
     this.clear_typeahead()
     if @results_showing
       this.result_clear_highlight()

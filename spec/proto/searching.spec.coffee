@@ -33,6 +33,39 @@ describe "Searching", ->
     expect(chosen.results_search.calls.count()).toBe(1)
     div.remove()
 
+  it "delays configured searches and flushes before keyboard actions", (done) ->
+    div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), search_delay: 20)
+    chosen.results_show()
+    spyOn(chosen, 'results_search').and.callThrough()
+
+    chosen.search_field.value = "Al"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(3)
+    expect(chosen.results_search.calls.count()).toBe(0)
+
+    setTimeout ->
+      expect(div.select('.active-result').length).toBe(2)
+      expect(chosen.results_search.calls.count()).toBe(1)
+
+      chosen.search_field.value = "Be"
+      chosen.search_if_value_changed()
+      chosen.keydown_checker(which: 13, preventDefault: ->)
+      expect(div.down('.active-result').textContent).toBe("Beta")
+      expect(chosen.results_search.calls.count()).toBe(2)
+
+      chosen.search_field.value = "Al"
+      chosen.search_if_value_changed()
+      chosen.results_hide()
+      setTimeout ->
+        expect(chosen.results_search.calls.count()).toBe(2)
+        expect(chosen.results_showing).toBe(false)
+        div.remove()
+        done()
+      , 30
+    , 30
+
   it "announces the number of available results", ->
     div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>")
     document.body.appendChild(div)

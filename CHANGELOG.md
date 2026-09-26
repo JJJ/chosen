@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an opt-in `search_delay` for debouncing searches in large option lists.
 - Announce the number of available search results to assistive technologies. Use the `results_count_text` callback to localize the message.
 - Add Sass variables and CSS documentation for styling matched search text.
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.

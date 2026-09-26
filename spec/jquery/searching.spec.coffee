@@ -29,6 +29,37 @@ describe "Searching", ->
     expect(searches).toBe(1)
     div.remove()
 
+  it "delays configured searches and flushes before keyboard actions", (done) ->
+    div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>").appendTo("body")
+    select = div.find("select").chosen(search_delay: 20)
+    chosen = select.data("chosen")
+    searches = 0
+    select.on "chosen:search", -> searches += 1
+    chosen.results_show()
+
+    chosen.search_field.val("Al").trigger("input")
+    expect(div.find(".active-result").length).toBe(3)
+    expect(searches).toBe(0)
+
+    setTimeout ->
+      expect(div.find(".active-result").length).toBe(2)
+      expect(searches).toBe(1)
+
+      chosen.search_field.val("Be").trigger("input")
+      chosen.search_field.trigger($.Event("keydown", which: 13))
+      expect(div.find(".active-result").text()).toBe("Beta")
+      expect(searches).toBe(2)
+
+      chosen.search_field.val("Al").trigger("input")
+      chosen.results_hide()
+      setTimeout ->
+        expect(searches).toBe(2)
+        expect(chosen.results_showing).toBe(false)
+        div.remove()
+        done()
+      , 30
+    , 30
+
   it "announces the number of available results", ->
     div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>").appendTo("body")
     chosen = div.find("select").chosen(
