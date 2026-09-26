@@ -7,7 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
-- Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard, and localization support.
+- Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard shortcuts, and customizable text.
 - Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
 - Support per-option synonyms and aliases through the `data-search-text` attribute without changing visible labels.
 - Add an opt-in `display_selected_value` setting for showing option values in selected controls while retaining labels in the dropdown.

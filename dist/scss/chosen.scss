@@ -269,7 +269,14 @@ $chosen-highlight-text-decoration: underline !default;
 
 		&.chosen-bulk-action {
 			color: $chosen-hover-color;
-			font-weight: bold;
+			font-weight: normal;
+		}
+
+		&.chosen-bulk-action-last {
+			margin-bottom: 4px;
+			padding-bottom: 7px;
+			border-bottom: 1px solid $chosen-border-color;
+			border-radius: 0;
 		}
 
 		&.disabled-result {

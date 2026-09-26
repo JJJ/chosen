@@ -161,14 +161,18 @@ class AbstractChosen
     content
 
   bulk_actions_html: ->
+    actions = []
+    actions.push ['select-all', @select_all_text] if @allow_select_all and this.has_selectable_results()
+    actions.push ['deselect-all', @deselect_all_text] if @allow_deselect_all and this.has_deselectable_results()
     content = ''
-    content += this.bulk_action_html('select-all', @select_all_text) if @allow_select_all and this.has_selectable_results()
-    content += this.bulk_action_html('deselect-all', @deselect_all_text) if @allow_deselect_all and this.has_deselectable_results()
+    for action, index in actions
+      content += this.bulk_action_html(action[0], action[1], index is actions.length - 1)
     content
 
-  bulk_action_html: (action, text) ->
+  bulk_action_html: (action, text, is_last) ->
     action_el = document.createElement('li')
     action_el.className = "active-result chosen-bulk-action chosen-#{action}"
+    action_el.className += " chosen-bulk-action-last" if is_last
     action_el.id = "#{@result_id_base}-#{action}"
     action_el.setAttribute('data-chosen-action', action)
     action_el.setAttribute('role', 'option')
@@ -700,6 +704,15 @@ class AbstractChosen
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
     return if @composing or evt.isComposing or stroke is 229
+    if @is_multiple and stroke is 65 and (evt.metaKey or evt.ctrlKey) and not evt.altKey and this.get_search_field_value().length is 0
+      if evt.shiftKey and @allow_deselect_all
+        evt.preventDefault()
+        this.deselect_all_results()
+        return
+      else if not evt.shiftKey and @allow_select_all
+        evt.preventDefault()
+        this.select_all_results()
+        return
     this.flush_pending_search() if stroke in [9, 13, 33, 34, 35, 36, 38, 40]
     if @disable_search and not @is_multiple and @results_showing and this.typeahead_search_results(evt)
       evt.preventDefault()

@@ -478,6 +478,34 @@ describe "Basic setup", ->
     expect(maxselected).toHaveBeenCalled()
     div.remove()
 
+  it "uses bulk shortcuts only when the multiple search is empty", ->
+    div = new Element('div').update("<select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, allow_select_all: true, allow_deselect_all: true)
+    chosen.results_show()
+
+    chosen.search_field.value = "O"
+    chosen.winnow_results()
+    text_select = jasmine.createSpy("textSelect")
+    chosen.keydown_checker(which: 65, ctrlKey: true, altKey: false, shiftKey: false, preventDefault: text_select)
+    expect(text_select).not.toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(0)
+
+    chosen.search_field.value = ""
+    chosen.winnow_results()
+    select_all = jasmine.createSpy("selectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: false, preventDefault: select_all)
+    expect(select_all).toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(2)
+
+    deselect_all = jasmine.createSpy("deselectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: true, preventDefault: deselect_all)
+    expect(deselect_all).toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(0)
+    expect(div.select(".chosen-bulk-action-last").length).toBe(1)
+    div.remove()
+
   it "does not add bulk actions unless requested", ->
     div = new Element('div').update("<select multiple><option>One</option></select>")
     document.body.appendChild(div)

@@ -396,6 +396,32 @@ describe "Basic setup", ->
     expect(select.find(":selected").length).toBe(2)
     expect(maxselected).toHaveBeenCalled()
 
+  it "uses bulk shortcuts only when the multiple search is empty", ->
+    div = $("<div>").html("<select multiple><option>One</option><option>Two</option></select>")
+    select = div.find("select")
+    chosen = select.chosen(allow_select_all: true, allow_deselect_all: true).data("chosen")
+    chosen.results_show()
+
+    chosen.search_field.val("O")
+    chosen.winnow_results()
+    text_select = jasmine.createSpy("textSelect")
+    chosen.keydown_checker(which: 65, ctrlKey: true, altKey: false, shiftKey: false, preventDefault: text_select)
+    expect(text_select).not.toHaveBeenCalled()
+    expect(select.find(":selected").length).toBe(0)
+
+    chosen.search_field.val("")
+    chosen.winnow_results()
+    select_all = jasmine.createSpy("selectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: false, preventDefault: select_all)
+    expect(select_all).toHaveBeenCalled()
+    expect(select.find(":selected").length).toBe(2)
+
+    deselect_all = jasmine.createSpy("deselectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: true, preventDefault: deselect_all)
+    expect(deselect_all).toHaveBeenCalled()
+    expect(select.find(":selected").length).toBe(0)
+    expect(div.find(".chosen-bulk-action-last").length).toBe(1)
+
   it "does not add bulk actions unless requested", ->
     div = $("<div>").html("<select multiple><option>One</option></select>")
     div.find("select").chosen()
