@@ -432,6 +432,47 @@ describe "Basic setup", ->
     div.find("select").chosen(allow_deselect_all: true, display_selected_options: false)
     expect(div.find(".chosen-deselect-all").length).toBe(1)
 
+  it "deselects selected results by pointer or Enter when enabled", ->
+    div = $("<div><select multiple><option value='one' selected>One</option><option value='locked' selected disabled>Locked</option><option value='three'>Three</option></select></div>").appendTo("body")
+    select = div.find("select")
+    changes = 0
+    select.on "change", -> changes++
+    chosen = select.chosen(deselect_selected_results: true, max_selected_options: 2, hide_results_on_select: false).data("chosen")
+
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    expect(div.find(".result-selected.active-result.chosen-result-deselectable").length).toBe(1)
+    expect(div.find(".result-selected.chosen-result-deselectable").length).toBe(1)
+    div.find(".result-selected.active-result").trigger($.Event("mouseup", which: 1, ctrlKey: true))
+    expect(select.find("option").eq(0).prop("selected")).toBe(false)
+    expect(select.find("option").eq(1).prop("selected")).toBe(true)
+    expect(div.find(".search-choice").length).toBe(1)
+    expect(chosen.results_showing).toBe(true)
+
+    div.find(".active-result").filter(-> $(this).text() is "Three").trigger($.Event("mouseup", which: 1))
+    selected = div.find(".result-selected.active-result").filter(-> $(this).text() is "Three")
+    chosen.result_do_highlight(selected)
+    chosen.keyup_checker(which: 13, preventDefault: ->)
+    expect(select.find("option").eq(2).prop("selected")).toBe(false)
+    expect(div.find(".search-choice").length).toBe(1)
+    expect(changes).toBe(3)
+    div.remove()
+
+  it "keeps selected results inert unless deselection is enabled", ->
+    div = $("<div><select multiple><option selected>One</option></select></div>")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.results_show()
+    expect(div.find(".result-selected.active-result").length).toBe(0)
+    expect(div.find(".chosen-result-deselectable").length).toBe(0)
+
+  it "opens Deselect all at the selection limit", ->
+    div = $("<div><select multiple><option selected>One</option></select></div>")
+    chosen = div.find("select").chosen(allow_deselect_all: true, max_selected_options: 1).data("chosen")
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    div.find(".chosen-deselect-all").trigger($.Event("mouseup", which: 1))
+    expect(div.find("option").prop("selected")).toBe(false)
+
   it "keeps the result highlight when the pointer leaves an unrelated element", ->
     div = $("<div>").html("<select><option>One</option></select>")
     chosen = div.find("select").chosen().data("chosen")

@@ -409,6 +409,33 @@ $chosen-highlight-text-decoration: underline !default;
 			color: $chosen-active-color;
 			cursor: default;
 		}
+
+		.chosen-result-deselectable {
+			position: relative;
+			padding-right: 26px;
+			cursor: pointer;
+
+			&::after {
+				position: absolute;
+				top: 50%;
+				right: 6px;
+				width: 15px;
+				height: 15px;
+				transform: translateY(-50%);
+				background: $chosen-clear no-repeat center;
+				background-size: 15px 15px;
+				content: "";
+				pointer-events: none;
+			}
+
+			&.highlighted {
+				color: #fff;
+
+				&::after {
+					filter: brightness(0) invert(1);
+				}
+			}
+		}
 	}
 
 	&.chosen-dropup {

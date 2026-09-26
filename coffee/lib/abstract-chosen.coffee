@@ -50,6 +50,7 @@ class AbstractChosen
     @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
     @allow_select_all = @options.allow_select_all || false
     @allow_deselect_all = @options.allow_deselect_all || false
+    @deselect_selected_results = @options.deselect_selected_results || false
     @select_all_text = @options.select_all_text || AbstractChosen.default_select_all_text
     @deselect_all_text = @options.deselect_all_text || AbstractChosen.default_deselect_all_text
     @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
@@ -241,9 +242,10 @@ class AbstractChosen
     return '' unless this.include_option_in_results(option)
 
     classes = []
-    classes.push "active-result" if !option.disabled and !(option.selected and @is_multiple)
+    classes.push "active-result" if !option.disabled and !(option.selected and @is_multiple and not @deselect_selected_results)
     classes.push "disabled-result" if option.disabled and !(option.selected and @is_multiple)
     classes.push "result-selected" if option.selected
+    classes.push "chosen-result-deselectable" if @is_multiple and @deselect_selected_results and option.selected and not option.disabled
     classes.push "group-option" if option.group_array_index?
     classes.push option.classes if option.classes != ""
 

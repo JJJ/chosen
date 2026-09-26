@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in removal of individual multiple selections from their dropdown results by pointer or Enter, with a visible remove mark.
 - Allow integrations to override Chosen's existing Sass palette variables before importing the stylesheet.
 - Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard shortcuts, and customizable text.
 - Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
@@ -22,6 +23,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Keep the dropdown available at the selection limit when Deselect all or individual result deselection is enabled.
 - Stop an Escape key handled by an open Chosen dropdown from also reaching ancestor controls.
 - Copy an option's `title` to its selected multiple-choice element.
 - Keep search input text visible when a page uses a dark color scheme.
@@ -39,6 +41,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Enabling `deselect_selected_results` adds `active-result chosen-result-deselectable` to enabled selected option rows. The remove mark is CSS generated, so the result-row markup does not gain another child element.
 - Enabling `allow_select_all` or `allow_deselect_all` adds action rows with `data-chosen-action` to the generated results list. Integrations that inspect result-list children should allow these opt-in rows.
 - Single-select markup keeps the same elements and nesting, but its accessibility attributes now change with dropdown state. `.chosen-single` uses `role="combobox"` instead of `role="button"`, receives the select's accessible name and `aria-controls`, and is removed from the accessibility tree and tab order while the searchable combobox is open. `.chosen-drop` now toggles `aria-hidden` between closed and open states. Integrations that assert generated roles, ARIA attributes, or `tabindex` values should update those expectations.
 - Each generated `.chosen-container` now includes a visually hidden `.chosen-results-status` element after `.chosen-drop`. It uses `role="status"` to announce the available result count and is cleared when the dropdown closes. Integrations that assert the container's direct children should allow this new element.
