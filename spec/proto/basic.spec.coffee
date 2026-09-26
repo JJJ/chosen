@@ -155,6 +155,34 @@ describe "Basic setup", ->
     expect(chosen.result_highlight.innerHTML).toBe("Alpha")
     div.remove()
 
+  it "selects a highlighted multiple result with Tab only when enabled", ->
+    build = (options = {}) ->
+      div = new Element('div').update("<select multiple><option>Alpha</option><option>Beta</option></select>")
+      document.body.appendChild(div)
+      select = div.down('select')
+      chosen = new Chosen(select, options)
+      chosen.results_show()
+      chosen.search_field.value = "Beta"
+      chosen.search_if_value_changed()
+      { div, select, chosen }
+
+    press_tab = (control) ->
+      control.chosen.keydown_checker(
+        which: 9
+        target: control.chosen.search_field
+        preventDefault: ->
+      )
+
+    default_control = build()
+    press_tab(default_control)
+    expect(default_control.select.selectedIndex).toBe(-1)
+    default_control.div.remove()
+
+    enabled_control = build(multiselect_allow_tab_to_select: true)
+    press_tab(enabled_control)
+    expect(enabled_control.select.selectedOptions[0].text).toBe("Beta")
+    enabled_control.div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)

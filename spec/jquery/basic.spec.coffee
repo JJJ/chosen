@@ -135,6 +135,25 @@ describe "Basic setup", ->
     expect(chosen.result_highlight.text()).toBe("Alpha")
     div.remove()
 
+  it "selects a highlighted multiple result with Tab only when enabled", ->
+    build = (options = {}) ->
+      div = $("<div><select multiple><option>Alpha</option><option>Beta</option></select></div>").appendTo("body")
+      select = div.find("select").chosen(options)
+      chosen = select.data("chosen")
+      chosen.results_show()
+      chosen.search_field.val("Beta").trigger("input")
+      { div, select, chosen }
+
+    default_control = build()
+    default_control.chosen.search_field.trigger($.Event("keydown", which: 9))
+    expect(default_control.select.find("option:selected").length).toBe(0)
+    default_control.div.remove()
+
+    enabled_control = build(multiselect_allow_tab_to_select: true)
+    enabled_control.chosen.search_field.trigger($.Event("keydown", which: 9))
+    expect(enabled_control.select.val()).toEqual(["Beta"])
+    enabled_control.div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
     select = div.find("select").chosen()

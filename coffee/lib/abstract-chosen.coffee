@@ -46,6 +46,7 @@ class AbstractChosen
     @search_contains = @options.search_contains || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
+    @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
     @max_selected_options = @options.max_selected_options || Infinity
     @inherit_select_classes = @options.inherit_select_classes || false
     @inherit_option_classes = @options.inherit_option_classes || false
@@ -568,7 +569,7 @@ class AbstractChosen
         @backstroke_length = this.get_search_field_value().length
         break
       when 9 # tab
-        this.result_select(evt) if @results_showing and not @is_multiple
+        this.result_select(evt) if @results_showing and (not @is_multiple or @multiselect_allow_tab_to_select)
         @mouse_on_container = false
         break
       when 13 # enter
