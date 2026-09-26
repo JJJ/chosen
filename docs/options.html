@@ -135,6 +135,11 @@
           <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. This is especially useful for options that include a lot of special characters or phrases in ()s and []s.</td>
         </tr>
         <tr>
+          <td>search_matcher</td>
+          <td>Built-in matching.</td>
+          <td>Optional function called with the current search text and each parsed option or group. Return <code class="language-javascript">true</code> to match. It replaces Chosen's word, value, alternate-text, and group matching rules; the callback also receives an empty search. The usual result visibility and minimum search length still apply. Custom matches are not highlighted because the boolean result has no match position. See the example below for a regex-based rule.</td>
+        </tr>
+        <tr>
           <td>search_input_type</td>
           <td>"search"</td>
           <td>Chosen renders its generated search input as <code class="language-html">type="search"</code>. Set this option to <code class="language-javascript">"text"</code> if an integration depends on the previous input type. Chosen keeps <code class="language-html">autocomplete="off"</code> and hides the native search clear button. Browser autofill suggestions may still appear depending on the browser and its settings.</td>
@@ -249,6 +254,16 @@
           </td>
         </tr>
       </tbody></table>
+
+      <h3>Custom search matcher</h3>
+      <p>This example searches only options with SKU values. Group records have <code>group: true</code>; option records provide <code>text</code>, <code>value</code>, and the original <code>option_element</code>.</p>
+<pre><code class="language-javascript">$(".my_select_box").chosen({
+  search_matcher: function(query, item) {
+    if (item.group) return false;
+    return /^SKU-\d+$/i.test(item.value) &amp;&amp;
+      item.text.toLowerCase().includes(query.toLowerCase());
+  }
+});</code></pre>
 
       <h2><a name="attributes" class="anchor" href="#attributes">Attributes</a></h2>
       <p>Certain attributes placed on the select tag or its options can be used to configure Chosen.</p>
