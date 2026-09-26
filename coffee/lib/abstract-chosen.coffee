@@ -2,6 +2,7 @@ class AbstractChosen
 
   constructor: (@form_field, @options={}) ->
     return unless AbstractChosen.browser_is_supported()
+    form_field_had_focus = document.activeElement is @form_field
     @result_id_base = if @form_field.id then "#{@form_field.id}-chosen" else "chosen-#{++AbstractChosen.next_id}"
     @is_multiple = @form_field.multiple
     @can_select_by_group = @form_field.getAttribute('select-by-group') isnt null
@@ -12,8 +13,15 @@ class AbstractChosen
 
     this.set_up_html()
     this.register_observers()
+    this.transfer_focus() if form_field_had_focus
     # instantiation done, fire ready
     this.on_ready()
+
+  transfer_focus: ->
+    if @is_multiple
+      this.activate_field()
+    else
+      (@selected_item[0] or @selected_item).focus()
 
   set_default_values: ->
     @click_test_action = (evt) => this.test_active_click(evt)
