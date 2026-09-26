@@ -86,7 +86,8 @@ class @Chosen extends AbstractChosen
   set_up_html: ->
     container_classes = ["chosen-container"]
     container_classes.push "chosen-container-" + (if @is_multiple then "multi" else "single")
-    container_classes.push @form_field.className if @inherit_select_classes && @form_field.className
+    @inherited_select_classes = if @inherit_select_classes then this.select_class_names() else []
+    container_classes = container_classes.concat(@inherited_select_classes)
     container_classes.push "chosen-rtl" if @is_rtl
 
     container_props =

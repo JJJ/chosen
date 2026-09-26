@@ -161,6 +161,22 @@ describe "Basic setup", ->
     expect(div.down('.chosen-container').readAttribute('title')).toBeNull()
     div.remove()
 
+  it "refreshes inherited select classes without removing Chosen state", ->
+    div = new Element('div').update("<select class='initial-class'><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select, inherit_select_classes: true)
+    container = div.down('.chosen-container').addClassName('chosen-container-active')
+    expect(container.hasClassName('initial-class')).toBe(true)
+
+    select.removeClassName('initial-class').addClassName('updated-class')
+    select.fire('chosen:updated')
+    expect(container.hasClassName('initial-class')).toBe(false)
+    expect(container.hasClassName('updated-class')).toBe(true)
+    expect(container.hasClassName('chosen-container')).toBe(true)
+    expect(container.hasClassName('chosen-container-active')).toBe(true)
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)

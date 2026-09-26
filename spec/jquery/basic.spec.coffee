@@ -133,6 +133,19 @@ describe "Basic setup", ->
     expect(div.find(".chosen-container").attr("title")).toBeUndefined()
     div.remove()
 
+  it "refreshes inherited select classes without removing Chosen state", ->
+    div = $("<div>").html("<select class='initial-class'><option>One</option></select>").appendTo("body")
+    select = div.find("select").chosen(inherit_select_classes: true)
+    container = div.find(".chosen-container").addClass("chosen-container-active")
+    expect(container.hasClass("initial-class")).toBe(true)
+
+    select.removeClass("initial-class").addClass("updated-class").trigger("chosen:updated")
+    expect(container.hasClass("initial-class")).toBe(false)
+    expect(container.hasClass("updated-class")).toBe(true)
+    expect(container.hasClass("chosen-container")).toBe(true)
+    expect(container.hasClass("chosen-container-active")).toBe(true)
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>").appendTo("body")
     select = div.find("select").chosen()

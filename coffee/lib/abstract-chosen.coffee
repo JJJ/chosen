@@ -177,6 +177,7 @@ class AbstractChosen
     this.set_default_text()
     this.update_allow_single_deselect()
     this.sync_container_title()
+    this.sync_container_classes()
     this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
     this.result_clear_highlight()
@@ -196,6 +197,18 @@ class AbstractChosen
       container.setAttribute("title", @form_field.title)
     else
       container.removeAttribute("title")
+
+  select_class_names: ->
+    (class_name for class_name in @form_field.className.split(/\s+/) when class_name.length)
+
+  sync_container_classes: ->
+    return unless @inherit_select_classes
+
+    container = @container[0] or @container
+    current_classes = (class_name for class_name in container.className.split(/\s+/) when class_name.length and class_name not in @inherited_select_classes)
+    @inherited_select_classes = this.select_class_names()
+    current_classes.push(class_name) for class_name in @inherited_select_classes when class_name not in current_classes
+    container.className = current_classes.join(" ")
 
   reset_single_select_options: () ->
     for result in @results_data
