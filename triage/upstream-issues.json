@@ -61,7 +61,8 @@
   {
     "number": 3018,
     "status": "fixed-in-fork",
-    "note": "The opt-in search_delay setting debounces input for large lists while keyboard actions flush pending results before navigation or selection."
+    "note": "The opt-in search_delay setting debounces input for large lists while keyboard actions flush pending results before navigation or selection.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/134"
   },
   {
     "number": 3146,
