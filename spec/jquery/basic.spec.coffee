@@ -22,6 +22,12 @@ describe "Basic setup", ->
     result.trigger($.Event("mouseup", which: 1))
     expect(select.val()).toBe(" ")
 
+  it "does not style a selected option as a placeholder when their text matches", ->
+    div = $("<div>").html("<select data-placeholder='Same text'><option></option><option selected>Same text</option></select>")
+    select = div.find("select").chosen()
+    expect(div.find(".chosen-single span").text()).toBe("Same text")
+    expect(div.find(".chosen-single").hasClass("chosen-default")).toBe(false)
+
   it "deletes selected choices with backspace by default", ->
     div = $("<div>").html("<select multiple><option selected>One</option></select>")
     chosen = div.find("select").chosen().data("chosen")

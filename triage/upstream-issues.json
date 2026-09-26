@@ -276,5 +276,11 @@
     "status": "fixed-in-fork",
     "note": "When inherit_select_classes is enabled, chosen:updated now replaces inherited source classes while preserving Chosen's own live state classes.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/126"
+  },
+  {
+    "number": 2870,
+    "status": "fixed-in-fork",
+    "note": "A selected option whose label matches the placeholder text now remains selected styling instead of receiving the chosen-default class.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/127"
   }
 ]
