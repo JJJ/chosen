@@ -47,6 +47,12 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/131"
   },
   {
+    "number": 1912,
+    "status": "fixed-in-fork",
+    "note": "Home, End, Page Up, and Page Down navigate available results in both adapters while preserving caret movement in nonempty search input.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/132"
+  },
+  {
     "number": 3146,
     "status": "blocked",
     "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."

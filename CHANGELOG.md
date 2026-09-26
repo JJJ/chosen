@@ -12,6 +12,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
+- Support Home, End, Page Up, and Page Down navigation through visible results.
 - Search from completed input values without filtering or selecting stale text while an IME composition is active.
 - Expose one named combobox at a time for single selects, hide inactive dropdown semantics, and return focus to the closed control on Escape.
 - Show the browser's native focus outline around single and multiple Chosen controls.
