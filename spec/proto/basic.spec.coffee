@@ -155,6 +155,14 @@ describe "Basic setup", ->
     expect(chosen.result_highlight.innerHTML).toBe("Alpha")
     div.remove()
 
+  it "keeps search input text visible under a dark color scheme", ->
+    div = new Element('div', style: 'color-scheme:dark').update("<select><option>One</option><option>Two</option></select><select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    new Chosen(select) for select in div.select('select')
+    for input in div.select('.chosen-search-input')
+      expect(window.getComputedStyle(input).color).toBe("rgb(68, 68, 68)")
+    div.remove()
+
   it "selects a highlighted multiple result with Tab only when enabled", ->
     build = (options = {}) ->
       div = new Element('div').update("<select multiple><option>Alpha</option><option>Beta</option></select>")

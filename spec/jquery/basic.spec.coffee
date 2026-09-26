@@ -135,6 +135,13 @@ describe "Basic setup", ->
     expect(chosen.result_highlight.text()).toBe("Alpha")
     div.remove()
 
+  it "keeps search input text visible under a dark color scheme", ->
+    div = $("<div style='color-scheme:dark'><select><option>One</option><option>Two</option></select><select multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    div.find("select").chosen()
+    div.find(".chosen-search-input").each ->
+      expect(window.getComputedStyle(this).color).toBe("rgb(68, 68, 68)")
+    div.remove()
+
   it "selects a highlighted multiple result with Tab only when enabled", ->
     build = (options = {}) ->
       div = $("<div><select multiple><option>Alpha</option><option>Beta</option></select></div>").appendTo("body")
