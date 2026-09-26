@@ -120,6 +120,20 @@ describe "Basic setup", ->
     expect(window.getComputedStyle(div.down('.chosen-drop')).display).toBe('block')
     div.remove()
 
+  it "refreshes the select title when updated", ->
+    div = new Element('div').update("<select title='Initial title'><option>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select)
+    expect(div.down('.chosen-container').readAttribute('title')).toBe('Initial title')
+    select.writeAttribute('title', 'Updated title')
+    select.fire('chosen:updated')
+    expect(div.down('.chosen-container').readAttribute('title')).toBe('Updated title')
+    select.removeAttribute('title')
+    select.fire('chosen:updated')
+    expect(div.down('.chosen-container').readAttribute('title')).toBeNull()
+    div.remove()
+
   it "removes a selected choice when its inner label is clicked", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)

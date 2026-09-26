@@ -175,6 +175,7 @@ class AbstractChosen
   results_update_field: ->
     active_query = this.get_search_field_value() if @results_showing
     this.set_default_text()
+    this.sync_container_title()
     this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
     this.result_clear_highlight()
@@ -183,6 +184,13 @@ class AbstractChosen
       search_input = @search_field[0] or @search_field
       search_input.value = active_query
       this.winnow_results()
+
+  sync_container_title: ->
+    container = @container[0] or @container
+    if @form_field.hasAttribute("title")
+      container.setAttribute("title", @form_field.title)
+    else
+      container.removeAttribute("title")
 
   reset_single_select_options: () ->
     for result in @results_data
