@@ -1,4 +1,46 @@
 describe "Basic setup", ->
+  it "applies runtime theme variable overrides", ->
+    div = new Element('div').update("<select><option>One</option></select>")
+    document.body.insert(div)
+    chosen = new Chosen(div.down('select'))
+    div.style.setProperty('--chosen-text-color', '#123456')
+    div.style.setProperty('--chosen-border-radius', '9px')
+    div.style.setProperty('--chosen-control-padding-block', '8px')
+    div.style.setProperty('--chosen-control-shadow', '0 0 0 2px #010203')
+    div.style.setProperty('--chosen-dropdown-background', '#101112')
+    div.style.setProperty('--chosen-focus-ring-width', '3px')
+    div.style.setProperty('--chosen-focus-ring-color', '#456789')
+    chosen.selected_item.focus()
+
+    expect(getComputedStyle(chosen.selected_item).color).toBe('rgb(18, 52, 86)')
+    expect(getComputedStyle(chosen.selected_item).borderRadius).toBe('9px')
+    expect(getComputedStyle(chosen.selected_item).paddingTop).toBe('8px')
+    expect(getComputedStyle(chosen.selected_item).boxShadow).toContain('rgb(1, 2, 3)')
+    expect(getComputedStyle(chosen.dropdown).backgroundColor).toBe('rgb(16, 17, 18)')
+    expect(getComputedStyle(chosen.selected_item).outlineWidth).toBe('3px')
+    expect(getComputedStyle(chosen.selected_item).outlineColor).toBe('rgb(69, 103, 137)')
+    div.remove()
+
+  it "preserves RTL spacing with logical theme properties", ->
+    div = new Element('div').update("<select class='chosen-rtl'><option>One</option></select><select class='chosen-rtl' multiple><optgroup label='Group'><option selected>Two</option><option>Three</option></optgroup></select>")
+    document.body.insert(div)
+    chosen = (new Chosen(select) for select in div.select('select'))
+    chosen[1].results_show()
+
+    singleElement = div.down('.chosen-container-single .chosen-single')
+    choiceElement = div.down('.chosen-container-multi .search-choice')
+    groupOptionElement = div.down('.chosen-container-multi .group-option')
+    throw new Error("RTL fixture missing single=#{singleElement?}, choice=#{choiceElement?}, group option=#{groupOptionElement?}") unless singleElement? and choiceElement? and groupOptionElement?
+    single = getComputedStyle(singleElement)
+    choice = getComputedStyle(choiceElement)
+    groupOption = getComputedStyle(groupOptionElement)
+
+    expect(single.direction).toBe('rtl')
+    expect([single.paddingTop, single.paddingRight, single.paddingBottom, single.paddingLeft]).toEqual(['2px', '7px', '2px', '0px'])
+    expect([choice.paddingTop, choice.paddingRight, choice.paddingBottom, choice.paddingLeft]).toEqual(['3px', '5px', '3px', '20px'])
+    expect([groupOption.paddingRight, groupOption.paddingLeft]).toEqual(['15px', '0px'])
+    div.remove()
+
   it "sizes the dropdown independently from the control", ->
     div = new Element('div').update("<select class='fixed'><option>Short</option></select><select class='intrinsic'><option>Short</option><option>An intentionally long option label that should remain on one line</option></select>")
     document.body.insert(div)

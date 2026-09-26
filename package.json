@@ -41,6 +41,8 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/postcss": "^4.3.3",
     "autoprefixer": "^10.6.1",
     "axe-core": "^4.13.0",
     "coffee-script": "^1.12.7",
@@ -59,7 +61,8 @@
     "playwright-core": "^1.63.0",
     "postcss": "^8.5.28",
     "sass": "^1.104.1",
-    "simulant": "^0.2.2"
+    "simulant": "^0.2.2",
+    "tailwindcss": "^4.3.3"
   },
   "overrides": {
     "tar-fs": "^3.0.4",

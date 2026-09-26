@@ -324,6 +324,103 @@
       <p>Chosen's appearance is controlled with standard CSS. Load your overrides after <code>chosen.css</code> so they take precedence, and scope them to a wrapper, an inherited class, or one generated Chosen container when the change should not apply globally.</p>
       <p>A select with <code>id="my-select"</code> receives a Chosen container with <code>id="my_select_chosen"</code>. Chosen replaces punctuation in source IDs with underscores before adding the <code>_chosen</code> suffix. The <code>inherit_select_classes</code> option can also copy application classes from the original select to its Chosen container.</p>
 
+      <h3>Theme variables</h3>
+      <p>Chosen accepts CSS custom properties on each <code>.chosen-container</code> or an ancestor. Override them on all Chosen controls, or use a wrapper or inherited class to scope a theme. The standalone stylesheet supplies fallback values, so no CSS framework is required.</p>
+
+      <table class="docs-table docs-table-variables">
+        <tbody><tr>
+          <th>Variable</th>
+          <th>Purpose</th>
+        </tr>
+        <tr><td><code>--chosen-font-family</code> and <code>--chosen-font-size</code></td><td>Base control typography. The family inherits from the application by default.</td></tr>
+        <tr><td><code>--chosen-text-color</code>, <code>--chosen-placeholder-color</code>, and <code>--chosen-group-color</code></td><td>Primary, placeholder, disabled-choice, and selected-group text.</td></tr>
+        <tr><td><code>--chosen-background</code></td><td>Fallback surface color when a more specific background is not set.</td></tr>
+        <tr><td><code>--chosen-control-background</code>, <code>--chosen-dropdown-background</code>, and <code>--chosen-search-background</code></td><td>Independent closed control, result dropdown, and search field surfaces.</td></tr>
+        <tr><td><code>--chosen-border-width</code>, <code>--chosen-border-style</code>, and <code>--chosen-border-color</code></td><td>Shared default border.</td></tr>
+        <tr><td><code>--chosen-dropdown-border-color</code>, <code>--chosen-search-border-color</code>, and <code>--chosen-choice-border-color</code></td><td>Surface-specific borders that fall back to the shared border.</td></tr>
+        <tr><td><code>--chosen-active-color</code>, <code>--chosen-active-border-color</code>, and <code>--chosen-hover-border-color</code></td><td>Active result text and interactive control borders.</td></tr>
+        <tr><td><code>--chosen-highlight-color</code> and <code>--chosen-highlight-text-color</code></td><td>Highlighted result colors.</td></tr>
+        <tr><td><code>--chosen-bulk-action-color</code> and <code>--chosen-divider-color</code></td><td>Bulk action text and the divider below its last row.</td></tr>
+        <tr><td><code>--chosen-selected-background</code></td><td>Selected single-result background.</td></tr>
+        <tr><td><code>--chosen-muted-color</code> and <code>--chosen-muted-background</code></td><td>No-results message colors.</td></tr>
+        <tr><td><code>--chosen-border-radius</code> and <code>--chosen-choice-border-radius</code></td><td>Control, dropdown, search, result, and selected-choice radii.</td></tr>
+        <tr><td><code>--chosen-control-line-height</code>, <code>--chosen-control-padding-block</code>, <code>--chosen-control-padding-inline-start</code>, and <code>--chosen-control-padding-inline-end</code></td><td>Closed single-select size and density.</td></tr>
+        <tr><td><code>--chosen-rtl-control-padding-block</code></td><td>Optional right-to-left single-select block padding. It inherits an explicit control-padding override and otherwise preserves Chosen's compact RTL default.</td></tr>
+        <tr><td><code>--chosen-control-shadow</code></td><td>Closed single- and multiple-select shadow.</td></tr>
+        <tr><td><code>--chosen-dropdown-shadow</code>, <code>--chosen-dropdown-offset</code>, and <code>--chosen-dropdown-z-index</code></td><td>Dropdown elevation, overlap, and stacking.</td></tr>
+        <tr><td><code>--chosen-search-text-color</code>, <code>--chosen-search-placeholder-color</code>, and <code>--chosen-search-shadow</code></td><td>Search field text, placeholder, and shadow.</td></tr>
+        <tr><td><code>--chosen-search-padding-block</code>, <code>--chosen-search-padding-inline-start</code>, and <code>--chosen-search-padding-inline-end</code></td><td>Search field density and icon space.</td></tr>
+        <tr><td><code>--chosen-result-padding-block</code>, <code>--chosen-result-padding-inline</code>, <code>--chosen-result-line-height</code>, and <code>--chosen-group-option-indent</code></td><td>Result density and grouped-option indentation.</td></tr>
+        <tr><td><code>--chosen-results-max-height</code></td><td>Maximum scrollable result-list height.</td></tr>
+        <tr><td><code>--chosen-choice-color</code>, <code>--chosen-choice-background</code>, and <code>--chosen-choice-focus-background</code></td><td>Selected multiple-choice colors.</td></tr>
+        <tr><td><code>--chosen-choice-padding-block</code>, <code>--chosen-choice-padding-inline-start</code>, <code>--chosen-choice-padding-inline-end</code>, <code>--chosen-choice-gap</code>, and <code>--chosen-choice-line-height</code></td><td>Selected multiple-choice size and spacing.</td></tr>
+        <tr><td><code>--chosen-rtl-choice-padding-block</code></td><td>Optional right-to-left selected-choice block padding. It inherits an explicit choice-padding override and otherwise preserves Chosen's compact RTL default.</td></tr>
+        <tr><td><code>--chosen-choice-disabled-border-color</code> and <code>--chosen-choice-disabled-background</code></td><td>Disabled selected-choice surface.</td></tr>
+        <tr><td><code>--chosen-disabled-background</code>, <code>--chosen-disabled-text-color</code>, and <code>--chosen-disabled-opacity</code></td><td>Disabled control treatment.</td></tr>
+        <tr><td><code>--chosen-focus-ring-width</code>, <code>--chosen-focus-ring-style</code>, and <code>--chosen-focus-ring-color</code></td><td>Composable keyboard focus ring.</td></tr>
+        <tr><td><code>--chosen-focus-outline</code> and <code>--chosen-focus-outline-offset</code></td><td>Full outline override and its offset. The ring variables are used when the full outline is not set.</td></tr>
+        <tr><td><code>--chosen-transition-duration</code> and <code>--chosen-transition-timing</code></td><td>Control border, background, and shadow transitions.</td></tr>
+        <tr><td><code>--chosen-icon-chevrons</code>, <code>--chosen-icon-search</code>, <code>--chosen-icon-clear</code>, and <code>--chosen-icon-clear-active</code></td><td>Control icons as CSS images.</td></tr>
+      </tbody></table>
+
+      <h3>Tailwind CSS</h3>
+      <p>Tailwind projects can map Chosen directly to their theme in the components layer. Load <code>chosen.css</code> before this application stylesheet. Chosen does not require Tailwind at runtime. The example also enables Tailwind's optional forms reset; Chosen's own selectors and variables keep the generated controls consistent under either forms-plugin strategy.</p>
+<pre><code class="language-css">@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@layer components {
+  .chosen-container {
+    --chosen-font-family: var(--font-sans);
+    --chosen-font-size: var(--text-sm);
+    --chosen-text-color: var(--color-slate-900);
+    --chosen-placeholder-color: var(--color-slate-500);
+    --chosen-control-background: var(--color-white);
+    --chosen-border-color: var(--color-slate-300);
+    --chosen-search-border-color: var(--color-slate-300);
+    --chosen-active-color: var(--color-indigo-500);
+    --chosen-active-border-color: var(--color-indigo-500);
+    --chosen-hover-border-color: var(--color-slate-400);
+    --chosen-highlight-color: var(--color-indigo-600);
+    --chosen-bulk-action-color: var(--color-indigo-600);
+    --chosen-divider-color: var(--color-slate-300);
+    --chosen-selected-background: var(--color-indigo-50);
+    --chosen-border-radius: var(--radius-lg);
+    --chosen-choice-border-radius: var(--radius-md);
+    --chosen-control-shadow: var(--shadow-xs);
+    --chosen-dropdown-shadow: var(--shadow-lg);
+    --chosen-control-padding-block: calc(var(--spacing) * 2);
+    --chosen-control-padding-inline-start: calc(var(--spacing) * 3);
+    --chosen-search-padding-block: calc(var(--spacing) * 2);
+    --chosen-search-padding-inline-start: calc(var(--spacing) * 3);
+    --chosen-result-padding-block: calc(var(--spacing) * 2);
+    --chosen-result-padding-inline: calc(var(--spacing) * 3);
+    --chosen-focus-ring-color: var(--color-indigo-500);
+    --chosen-transition-duration: 150ms;
+    --chosen-transition-timing: var(--ease-out);
+  }
+
+  .dark .chosen-container {
+    color-scheme: dark;
+    --chosen-text-color: var(--color-slate-100);
+    --chosen-placeholder-color: var(--color-slate-400);
+    --chosen-control-background: var(--color-slate-900);
+    --chosen-dropdown-background: var(--color-slate-800);
+    --chosen-search-background: var(--color-slate-900);
+    --chosen-border-color: var(--color-slate-700);
+    --chosen-search-border-color: var(--color-slate-600);
+    --chosen-hover-border-color: var(--color-slate-500);
+    --chosen-bulk-action-color: var(--color-indigo-400);
+    --chosen-divider-color: var(--color-slate-600);
+    --chosen-selected-background: var(--color-slate-700);
+    --chosen-muted-background: var(--color-slate-700);
+    --chosen-choice-background: var(--color-slate-700);
+    --chosen-choice-color: var(--color-slate-100);
+    --chosen-choice-disabled-background: var(--color-slate-800);
+    --chosen-disabled-background: var(--color-slate-800);
+    --chosen-dropdown-shadow: var(--shadow-2xl);
+  }
+}</code></pre>
+
       <table class="docs-table">
         <tbody><tr>
           <th>Selector</th>

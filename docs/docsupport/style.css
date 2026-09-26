@@ -459,6 +459,27 @@ li > p {
   white-space: normal;
 }
 
+.docs-table-variables {
+  table-layout: fixed;
+}
+
+.docs-table-variables th,
+.docs-table-variables td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.docs-table-variables th:first-child,
+.docs-table-variables td:first-child {
+  width: 44%;
+}
+
+.docs-table-variables th:last-child,
+.docs-table-variables td:last-child {
+  width: 56%;
+  min-width: 0;
+}
+
 .docs-table tr:last-child td {
   border-bottom: 0;
 }
@@ -663,8 +684,8 @@ footer {
   background: #414956;
 }
 
-:root[data-theme="dark"] .chosen-container .chosen-results li.chosen-bulk-action-last::after {
-  border-bottom-color: #59616d;
+:root[data-theme="dark"] .chosen-container {
+  --chosen-divider-color: #59616d;
 }
 
 :root[data-theme="dark"] #content pre[class*="language-"] {
