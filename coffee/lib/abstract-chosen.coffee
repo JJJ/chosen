@@ -433,6 +433,18 @@ class AbstractChosen
 
     return mousedown_type
 
+  selected_item_keydown: (evt) ->
+    return if @is_disabled
+
+    stroke = evt.which ? evt.keyCode
+    if stroke in [8, 46] and @allow_single_deselect and @form_field.selectedIndex > 0
+      evt.preventDefault()
+      this.results_reset()
+    else if stroke in [13, 32]
+      evt.preventDefault()
+      @ignore_enter_keyup = true if stroke is 13
+      this.results_toggle()
+
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
     this.search_field_scale()

@@ -140,12 +140,7 @@ class Chosen extends AbstractChosen
       @search_choices.on 'click.chosen', (evt) => this.choices_click(evt); return
     else
       @container.on 'click.chosen', (evt) -> evt.preventDefault(); return # gobble click of anchor
-      @selected_item.on 'keydown.chosen', (evt) =>
-        if evt.which in [13, 32] and not @is_disabled
-          evt.preventDefault()
-          @ignore_enter_keyup = true if evt.which is 13
-          this.results_toggle()
-        return
+      @selected_item.on 'keydown.chosen', (evt) => this.selected_item_keydown(evt); return
 
   destroy: ->
     $(window).off 'pageshow.chosen', @pageshow_handler

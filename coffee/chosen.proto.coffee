@@ -184,11 +184,7 @@ class @Chosen extends AbstractChosen
       @search_choices.observe "click", (evt) => this.choices_click(evt)
     else
       @container.observe "click", (evt) => evt.preventDefault() # gobble click of anchor
-      @selected_item.observe "keydown", (evt) =>
-        if evt.keyCode in [13, 32] and not @is_disabled
-          evt.preventDefault()
-          @ignore_enter_keyup = true if evt.keyCode is 13
-          this.results_toggle()
+      @selected_item.observe "keydown", (evt) => this.selected_item_keydown(evt)
 
   destroy: ->
     Event.stopObserving window, 'pageshow', @pageshow_handler
