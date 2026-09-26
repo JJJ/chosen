@@ -94,6 +94,11 @@
           <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. This is especially useful for options that include a lot of special characters or phrases in ()s and []s.</td>
         </tr>
         <tr>
+          <td>min_search_length</td>
+          <td>0</td>
+          <td>Keep result rows hidden until the trimmed search text reaches this many characters. The search field remains available, and the default shows results immediately.</td>
+        </tr>
+        <tr>
           <td>split_search_terms</td>
           <td>false</td>
           <td>When <code class="language-javascript">true</code>, whitespace-separated search terms may match in any order, and every term must match. The default treats the full search text as one phrase.</td>

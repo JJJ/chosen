@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an opt-in `min_search_length` setting for keeping results hidden until enough search text is entered.
 - Add opt-in, order-independent multi-term searching through `split_search_terms`.
 - Add an opt-in `multiselect_allow_tab_to_select` setting for accepting highlighted multiple-select results with Tab.
 - Add an opt-in `search_delay` for debouncing searches in large option lists.
