@@ -1,14 +1,14 @@
 describe "Basic setup", ->
-  it "keeps text inputs by default and supports search inputs for both select types", ->
+  it "uses search inputs by default and supports text inputs for both select types", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""
       div = new Element('div').update("<select#{attribute}><option>One</option><option>Two</option></select>")
       default_chosen = new Chosen(div.down('select'))
-      expect(default_chosen.search_field.type).toBe("text")
+      expect(default_chosen.search_field.type).toBe("search")
 
       configured = new Element('div').update("<select#{attribute}><option>One</option><option>Two</option></select>")
-      chosen = new Chosen(configured.down('select'), search_input_type: "search")
-      expect(chosen.search_field.type).toBe("search")
+      chosen = new Chosen(configured.down('select'), search_input_type: "text")
+      expect(chosen.search_field.type).toBe("text")
       expect(chosen.search_field.readAttribute("autocomplete")).toBe("off")
       chosen.results_show()
       chosen.search_field.value = "Two"

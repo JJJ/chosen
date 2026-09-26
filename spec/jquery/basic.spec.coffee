@@ -1,14 +1,14 @@
 describe "Basic setup", ->
-  it "keeps text inputs by default and supports search inputs for both select types", ->
+  it "uses search inputs by default and supports text inputs for both select types", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""
       div = $("<div><select#{attribute}><option>One</option><option>Two</option></select></div>")
       default_chosen = div.find("select").chosen().data("chosen")
-      expect(default_chosen.search_field.attr("type")).toBe("text")
+      expect(default_chosen.search_field.attr("type")).toBe("search")
 
       configured = $("<div><select#{attribute}><option>One</option><option>Two</option></select></div>")
-      chosen = configured.find("select").chosen(search_input_type: "search").data("chosen")
-      expect(chosen.search_field.attr("type")).toBe("search")
+      chosen = configured.find("select").chosen(search_input_type: "text").data("chosen")
+      expect(chosen.search_field.attr("type")).toBe("text")
       expect(chosen.search_field.attr("autocomplete")).toBe("off")
       chosen.results_show()
       chosen.search_field.val("Two").trigger("input")
