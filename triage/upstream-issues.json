@@ -363,6 +363,7 @@
   {
     "number": 2961,
     "status": "fixed-in-fork",
-    "note": "The opt-in min_search_length setting keeps result rows hidden until the trimmed search text reaches the configured length."
+    "note": "The opt-in min_search_length setting keeps result rows hidden until the trimmed search text reaches the configured length.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/137"
   }
 ]
