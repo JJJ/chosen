@@ -96,6 +96,35 @@ describe "Basic setup", ->
     expect(select.value).toBe(' ')
     div.remove()
 
+  it "collapses extra selected choices without changing selected values", ->
+    div = new Element('div').update("<select multiple><option selected>One</option><option selected>Two</option><option selected>Three</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select,
+      max_items_shown: 1
+      more_items_text: (count) -> "#{count} hidden"
+      show_fewer_items_text: "Collapse")
+    choices = div.select('li.search-choice')
+    summary = div.down('.chosen-choice-summary button')
+
+    expect(choices.length).toBe(3)
+    expect(choices.filter((choice) -> choice.hidden).length).toBe(2)
+    expect(summary.textContent).toBe("2 hidden")
+    expect($A(select.selectedOptions).pluck('value')).toEqual(["One", "Two", "Three"])
+
+    summary.click()
+    expect(choices.filter((choice) -> choice.hidden).length).toBe(0)
+    expect(summary.textContent).toBe("Collapse")
+
+    summary.click()
+    expect(choices.filter((choice) -> choice.hidden).length).toBe(2)
+    select.options[2].selected = false
+    select.fire('chosen:updated')
+    expect(div.select('li.search-choice').filter((choice) -> choice.hidden).length).toBe(1)
+    expect(div.down('.chosen-choice-summary button').textContent).toBe("1 hidden")
+    expect($A(select.selectedOptions).pluck('value')).toEqual(["One", "Two"])
+    div.remove()
+
   it "does not style a selected option as a placeholder when their text matches", ->
     div = new Element('div').update("<select data-placeholder='Same text'><option></option><option selected>Same text</option></select>")
     document.body.appendChild(div)

@@ -106,6 +106,34 @@ describe "Basic setup", ->
     result.trigger($.Event("mouseup", which: 1))
     expect(select.val()).toBe(" ")
 
+  it "collapses extra selected choices without changing selected values", ->
+    div = $("<div><select multiple><option selected>One</option><option selected>Two</option><option selected>Three</option></select></div>").appendTo("body")
+    select = div.find("select")
+    select.chosen
+      max_items_shown: 1
+      more_items_text: (count) -> "#{count} hidden"
+      show_fewer_items_text: "Collapse"
+    choices = div.find("li.search-choice")
+    summary = div.find(".chosen-choice-summary button")[0]
+
+    expect(choices.length).toBe(3)
+    expect(choices.filter(':hidden').length).toBe(2)
+    expect(summary.textContent).toBe("2 hidden")
+    expect(select.val()).toEqual(["One", "Two", "Three"])
+
+    summary.click()
+    expect(choices.filter(':hidden').length).toBe(0)
+    expect(summary.textContent).toBe("Collapse")
+
+    summary.click()
+    expect(choices.filter(':hidden').length).toBe(2)
+    select.find("option").last().prop("selected", false)
+    select.trigger("chosen:updated")
+    expect(div.find("li.search-choice:hidden").length).toBe(1)
+    expect(div.find(".chosen-choice-summary button").text()).toBe("1 hidden")
+    expect(select.val()).toEqual(["One", "Two"])
+    div.remove()
+
   it "does not style a selected option as a placeholder when their text matches", ->
     div = $("<div>").html("<select data-placeholder='Same text'><option></option><option selected>Same text</option></select>")
     select = div.find("select").chosen()

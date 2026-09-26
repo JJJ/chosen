@@ -489,6 +489,24 @@ $chosen-highlight-text-decoration: underline !default;
 		&.search-choice-focus {
 			background: var(--chosen-choice-focus-background, #{$chosen-choice-focus-background-color});
 		}
+
+		&.search-choice[hidden] {
+			display: none;
+		}
+
+		&.chosen-choice-summary {
+			margin: 3px var(--chosen-choice-gap, #{$chosen-choice-gap}) 3px 0;
+
+			button {
+				padding: var(--chosen-choice-padding-block, #{$chosen-choice-padding-block}) var(--chosen-choice-padding-inline-start, #{$chosen-choice-padding-inline-start});
+				border: var(--chosen-border-width, #{$chosen-border-width}) var(--chosen-border-style, #{$chosen-border-style}) var(--chosen-choice-border-color, var(--chosen-border-color, #{$chosen-border-color}));
+				border-radius: var(--chosen-choice-border-radius, #{$chosen-choice-border-radius});
+				background: var(--chosen-choice-background, #{$chosen-choice-background-color});
+				color: var(--chosen-choice-color, #{$chosen-choice-color});
+				font: inherit;
+				cursor: pointer;
+			}
+		}
 	}
 
 	.chosen-drop {

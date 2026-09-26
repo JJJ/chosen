@@ -109,6 +109,21 @@
           <td>Limits how many options the user can select. When the limit is reached, the <code class="language-javascript">chosen:maxselected</code> event is triggered.</td>
         </tr>
         <tr>
+          <td>max_items_shown</td>
+          <td>Infinity</td>
+          <td>On multiple selects, show at most this many selected choices while collapsed. A summary button reveals the rest for review or removal. This does not limit how many options can be selected. Use a positive integer; omit it to keep every choice visible.</td>
+        </tr>
+        <tr>
+          <td>more_items_text</td>
+          <td><code class="language-javascript">function(count) { return "and " + count + " more selected"; }</code></td>
+          <td>Returns the summary button text for selected choices hidden by <code class="language-javascript">max_items_shown</code>. The count is the number of hidden choices. Override it for localization.</td>
+        </tr>
+        <tr>
+          <td>show_fewer_items_text</td>
+          <td>"Show fewer"</td>
+          <td>Text for the summary button after all selected choices have been expanded.</td>
+        </tr>
+        <tr>
           <td>no_results_text</td>
           <td>"No results for:"</td>
           <td>The text to be displayed when no matching results are found. The current search is shown at the end of the text (<i>e.g.</i>,
