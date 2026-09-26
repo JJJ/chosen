@@ -32,7 +32,7 @@ class AbstractChosen
     @results_showing = false
     @result_highlighted = null
     @is_rtl = @options.rtl || /\bchosen-rtl\b/.test(@form_field.className)
-    @allow_single_deselect = if @options.allow_single_deselect? and @form_field.options[0]? and @form_field.options[0].text is "" then @options.allow_single_deselect else false
+    this.update_allow_single_deselect()
     @disable_search_threshold = @options.disable_search_threshold || 0
     @disable_search = @options.disable_search || false
     @enable_split_word_search = if @options.enable_split_word_search? then @options.enable_split_word_search else true
@@ -175,6 +175,7 @@ class AbstractChosen
   results_update_field: ->
     active_query = this.get_search_field_value() if @results_showing
     this.set_default_text()
+    this.update_allow_single_deselect()
     this.sync_container_title()
     this.set_aria_labels()
     this.results_reset_cleanup() if not @is_multiple
@@ -184,6 +185,10 @@ class AbstractChosen
       search_input = @search_field[0] or @search_field
       search_input.value = active_query
       this.winnow_results()
+
+  update_allow_single_deselect: ->
+    first_option = @form_field.options[0]
+    @allow_single_deselect = Boolean(@options.allow_single_deselect and first_option? and first_option.text is "" and first_option.value is "")
 
   sync_container_title: ->
     container = @container[0] or @container
