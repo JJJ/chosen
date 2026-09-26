@@ -309,18 +309,26 @@ describe "Basic setup", ->
 
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
-    div.update("<select><option>One</option><option>Two</option></select>")
+    div.update("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)
     chosen = new Chosen(div.down("select"))
     control = div.down(".chosen-single")
-    expect(control.readAttribute("role")).toBe("button")
+    expect(control.readAttribute("role")).toBe("combobox")
     expect(control.readAttribute("tabindex")).toBe("0")
     expect(control.down("button")).toBeUndefined()
+    expect(control.readAttribute("aria-labelledby")).toBe(div.down("label").id + " ")
+    expect(control.readAttribute("aria-controls")).toBe(chosen.search_results.id)
     expect(control.readAttribute("aria-expanded")).toBe("false")
+    expect(chosen.dropdown.readAttribute("aria-hidden")).toBe("true")
     chosen.results_show()
     expect(control.readAttribute("aria-expanded")).toBe("true")
-    chosen.results_hide()
+    expect(control.readAttribute("aria-hidden")).toBe("true")
+    expect(chosen.dropdown.readAttribute("aria-hidden")).toBe("false")
+    chosen.keyup_checker(which: 27, preventDefault: ->)
     expect(control.readAttribute("aria-expanded")).toBe("false")
+    expect(control.readAttribute("aria-hidden")).toBeNull()
+    expect(chosen.dropdown.readAttribute("aria-hidden")).toBe("true")
+    expect(document.activeElement).toBe(control)
     div.remove()
 
   it "keeps active descendant and option selection state current", ->
@@ -354,6 +362,9 @@ describe "Basic setup", ->
     expect(search.readAttribute("aria-label")).toBe("Choices")
     expect(search.readAttribute("aria-labelledby")).toBe("field-label")
     expect(search.readAttribute("aria-describedby")).toBe("field-help")
+    expect(div.down(".chosen-single").readAttribute("aria-label")).toBe("Choices")
+    expect(div.down(".chosen-single").readAttribute("aria-labelledby")).toBe("field-label")
+    expect(div.down(".chosen-single").readAttribute("aria-describedby")).toBe("field-help")
 
   it "keeps generated listbox and option IDs unique without select IDs", ->
     div = new Element('div').update("<select><option value=''></option><option>One</option></select><select><option value=''></option><option>Two</option></select>")
@@ -392,6 +403,7 @@ describe "Basic setup", ->
     document.body.appendChild(div)
     new Chosen(div.down('select'))
     expect(div.down('.chosen-search-input').readAttribute('aria-labelledby')).toBe(div.down('label').id + ' ')
+    expect(div.down('.chosen-single').readAttribute('aria-labelledby')).toBe(div.down('label').id + ' ')
     div.remove()
 
   it "should add expose a Chosen global", ->

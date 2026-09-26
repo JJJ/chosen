@@ -18,8 +18,8 @@
   },
   {
     "number": 2658,
-    "status": "candidate",
-    "note": "The fork now exposes current option selection and active-descendant state; manual VoiceOver navigation still needs verification."
+    "status": "fixed-in-fork",
+    "note": "The fork exposes one named combobox at a time, hides inactive dropdown semantics, keeps option state current, and restores the closed control focus on Escape."
   },
   {
     "number": 3146,

@@ -174,12 +174,15 @@ class Chosen extends AbstractChosen
   set_aria_labels: ->
     for name in @copied_aria_attributes or []
       @search_field.removeAttr name
+      @selected_item.removeAttr name unless @is_multiple
     @copied_aria_attributes = []
     for attribute in this.search_aria_attributes()
       @search_field.attr attribute.name, attribute.value
+      @selected_item.attr attribute.name, attribute.value unless @is_multiple
       @copied_aria_attributes.push attribute.name
     @search_field.attr "aria-owns", @search_results.attr "id"
     @search_field.attr "aria-controls", @search_results.attr "id"
+    @selected_item.attr "aria-controls", @search_results.attr "id" unless @is_multiple
     if not @form_field.attributes["aria-labelledby"] and not @form_field.attributes["aria-label"] and @form_field.labels?.length
       labelledbyList = ""
       for label, i in @form_field.labels
@@ -187,6 +190,7 @@ class Chosen extends AbstractChosen
           label.id = "#{@result_id_base}-label-#{i}"
         labelledbyList += @form_field.labels[i].id + " "
       @search_field.attr "aria-labelledby", labelledbyList
+      @selected_item.attr "aria-labelledby", labelledbyList unless @is_multiple
       @copied_aria_attributes.push "aria-labelledby"
 
   search_field_disabled: ->
@@ -199,7 +203,7 @@ class Chosen extends AbstractChosen
 
     unless @is_multiple
       @selected_item.attr 'aria-disabled', @is_disabled
-      @selected_item.attr 'tabindex', if @is_disabled then -1 else 0
+      @selected_item.attr 'tabindex', if @is_disabled then -1 else @selected_item_tab_index
 
     if @is_disabled
       this.close_field()
@@ -361,10 +365,13 @@ class Chosen extends AbstractChosen
 
     @container.addClass "chosen-with-drop"
     @selected_item.attr("aria-expanded", true) unless @is_multiple
+    @dropdown.attr("aria-hidden", false)
     @results_showing = true
 
     @search_field.attr("aria-expanded", true)
     @search_field.trigger "focus"
+    @selected_item.attr("tabindex", -1) unless @is_multiple
+    @selected_item.attr("aria-hidden", true) unless @is_multiple
     @search_field.val this.get_search_field_value()
 
     this.winnow_results()
@@ -389,8 +396,11 @@ class Chosen extends AbstractChosen
       @container.removeClass "chosen-with-drop"
       @container.removeClass "chosen-dropup"
       @selected_item.attr("aria-expanded", false) unless @is_multiple
+      @selected_item.removeAttr("aria-hidden") unless @is_multiple
+      @selected_item.attr("tabindex", @selected_item_tab_index) unless @is_multiple or @is_disabled
       @form_field_jq.trigger("chosen:hiding_dropdown", {chosen: this})
 
+    @dropdown.attr("aria-hidden", true)
     @search_field.attr("aria-expanded", false)
     @results_showing = false
 
@@ -400,10 +410,13 @@ class Chosen extends AbstractChosen
 
 
   set_tab_index: (el) ->
-    if @form_field.tabIndex
-      ti = @form_field.tabIndex
-      @form_field.tabIndex = -1
-      @search_field[0].tabIndex = ti
+    ti = @form_field.tabIndex
+    if @is_multiple
+      @search_field[0].tabIndex = ti if ti
+    else
+      @selected_item_tab_index = ti or 0
+      @selected_item.attr("tabindex", if @is_disabled then -1 else @selected_item_tab_index)
+      @search_field[0].tabIndex = -1
     @form_field.tabIndex = -1 if @form_field.required
 
   set_label_behavior: ->
