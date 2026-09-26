@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in, order-independent multi-term searching through `split_search_terms`.
 - Add an opt-in `multiselect_allow_tab_to_select` setting for accepting highlighted multiple-select results with Tab.
 - Add an opt-in `search_delay` for debouncing searches in large option lists.
 - Announce the number of available search results to assistive technologies. Use the `results_count_text` callback to localize the message.
@@ -14,6 +15,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
+- Keep search input text visible when a page uses a dark color scheme.
 - Restore native-style prefix navigation when search is disabled.
 - Support Home, End, Page Up, and Page Down navigation through visible results.
 - Search from completed input values without filtering or selecting stale text while an IME composition is active.
