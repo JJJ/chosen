@@ -83,7 +83,7 @@ class AbstractChosen
 
   input_focus: (evt) ->
     if @is_multiple
-      setTimeout (=> this.container_mousedown()), 50 unless @active_field
+      setTimeout (=> this.container_mousedown() if document.activeElement is (@search_field[0] or @search_field)), 50 unless @active_field
     else
       @activate_field() unless @active_field
 
