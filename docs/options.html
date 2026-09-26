@@ -352,6 +352,18 @@
         </tr>
       </tbody></table>
 
+      <h3>Customizing the Sass palette</h3>
+      <p>Projects that compile Chosen's Sass can replace its palette defaults without editing the distributed source. This also lets an integration map Chosen to colors from a shared design system.</p>
+<pre><code class="language-scss">@use "chosen-jjj/sass/chosen" with (
+  $chosen-text-color: #1f2937,
+  $chosen-active-color: #2563eb,
+  $chosen-hover-color: #1d4ed8,
+  $chosen-border-color: #9ca3af,
+  $chosen-group-color: #6b7280,
+  $chosen-background-color: #ffffff,
+  $chosen-selected-color: #e5e7eb
+);</code></pre>
+
       <h3>Changing the single-select arrow and height</h3>
       <p>To use a single down arrow and a shorter control for a select with <code>id="my-select"</code>, add this CSS after Chosen's stylesheet:</p>
 <pre><code class="language-css">#my_select_chosen .chosen-single {

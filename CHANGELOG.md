@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Allow integrations to override Chosen's existing Sass palette variables before importing the stylesheet.
 - Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard shortcuts, and customizable text.
 - Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
 - Support per-option synonyms and aliases through the `data-search-text` attribute without changing visible labels.
