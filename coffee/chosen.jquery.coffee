@@ -362,7 +362,7 @@ class Chosen extends AbstractChosen
     @search_field.removeAttr "aria-activedescendant"
 
   results_show: ->
-    if @is_multiple and @max_selected_options <= this.choices_count()
+    if @is_multiple and @max_selected_options <= this.choices_count() and not (@allow_deselect_all or @deselect_selected_results)
       @form_field_jq.trigger("chosen:maxselected", {chosen: this})
       return false
 
@@ -550,6 +550,11 @@ class Chosen extends AbstractChosen
       unless option?
         this.results_update_field()
         return false
+
+      if @is_multiple and @deselect_selected_results and item.selected
+        this.results_update_field() if this.result_deselect(high[0].getAttribute("data-option-array-index"))
+        evt.preventDefault()
+        return
 
       this.result_clear_highlight()
 

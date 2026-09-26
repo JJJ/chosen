@@ -520,6 +520,50 @@ describe "Basic setup", ->
     expect(div.select(".chosen-deselect-all").length).toBe(1)
     div.remove()
 
+  it "deselects selected results by pointer or Enter when enabled", ->
+    div = new Element('div').update("<select multiple><option value='one' selected>One</option><option value='locked' selected disabled>Locked</option><option value='three'>Three</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    changes = 0
+    select.observe "change", -> changes++
+    chosen = new Chosen(select, deselect_selected_results: true, max_selected_options: 2, hide_results_on_select: false)
+
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    expect(div.select(".result-selected.active-result.chosen-result-deselectable").length).toBe(1)
+    expect(div.select(".result-selected.chosen-result-deselectable").length).toBe(1)
+    first_selected = div.down(".result-selected.active-result")
+    chosen.search_results_mouseup(target: first_selected, which: 1, ctrlKey: true, preventDefault: ->)
+    expect(select.options[0].selected).toBe(false)
+    expect(select.options[1].selected).toBe(true)
+    expect(div.select(".search-choice").length).toBe(1)
+    expect(chosen.results_showing).toBe(true)
+
+    third = div.down(".active-result[data-option-array-index='2']")
+    chosen.search_results_mouseup(target: third, which: 1, preventDefault: ->)
+    selected = div.down(".result-selected.active-result[data-option-array-index='2']")
+    chosen.result_do_highlight(selected)
+    chosen.keyup_checker(which: 13, target: chosen.search_field, preventDefault: ->)
+    expect(select.options[2].selected).toBe(false)
+    expect(div.select(".search-choice").length).toBe(1)
+    expect(changes).toBe(3)
+    div.remove()
+
+  it "keeps selected results inert unless deselection is enabled", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    expect(div.select(".result-selected.active-result").length).toBe(0)
+    expect(div.select(".chosen-result-deselectable").length).toBe(0)
+
+  it "opens Deselect all at the selection limit", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    chosen = new Chosen(div.down('select'), allow_deselect_all: true, max_selected_options: 1)
+    chosen.results_show()
+    expect(chosen.results_showing).toBe(true)
+    chosen.search_results_mouseup(target: div.down(".chosen-deselect-all"), which: 1, preventDefault: ->)
+    expect(div.down('option').selected).toBe(false)
+
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
     div.update("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>")
