@@ -1,19 +1,36 @@
 describe "Basic setup", ->
-  it "keeps text inputs by default and supports search inputs for both select types", ->
+  it "uses search inputs by default and supports text inputs for both select types", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""
       div = $("<div><select#{attribute}><option>One</option><option>Two</option></select></div>")
       default_chosen = div.find("select").chosen().data("chosen")
-      expect(default_chosen.search_field.attr("type")).toBe("text")
+      expect(default_chosen.search_field.attr("type")).toBe("search")
 
       configured = $("<div><select#{attribute}><option>One</option><option>Two</option></select></div>")
-      chosen = configured.find("select").chosen(search_input_type: "search").data("chosen")
-      expect(chosen.search_field.attr("type")).toBe("search")
+      chosen = configured.find("select").chosen(search_input_type: "text").data("chosen")
+      expect(chosen.search_field.attr("type")).toBe("text")
       expect(chosen.search_field.attr("autocomplete")).toBe("off")
       chosen.results_show()
       chosen.search_field.val("Two").trigger("input")
       expect(configured.find(".active-result").length).toBe(1)
       expect(configured.find(".active-result").text()).toBe("Two")
+
+  it "applies the same Chosen search styles to search and text inputs", ->
+    for multiple in [false, true]
+      attribute = if multiple then " multiple" else ""
+      div = $("<div><select class='default'#{attribute}><option>One</option><option>Two</option></select><select class='legacy'#{attribute}><option>One</option><option>Two</option></select></div>").appendTo("body")
+      default_chosen = div.find("select.default").chosen().data("chosen")
+      legacy_chosen = div.find("select.legacy").chosen(search_input_type: "text").data("chosen")
+      default_input = default_chosen.search_field[0]
+      legacy_input = legacy_chosen.search_field[0]
+      expect(default_input.classList.contains("chosen-search-input")).toBe(true)
+      expect(legacy_input.classList.contains("chosen-search-input")).toBe(true)
+
+      default_style = getComputedStyle(default_input)
+      legacy_style = getComputedStyle(legacy_input)
+      for property in ["paddingTop", "paddingRight", "borderTopWidth", "borderTopColor", "backgroundImage", "backgroundColor", "color", "fontSize", "fontFamily", "lineHeight", "height", "boxSizing"]
+        expect(default_style[property]).toBe(legacy_style[property])
+      div.remove()
 
   it "applies runtime theme variable overrides", ->
     div = $("<div><select><option>One</option></select></div>").appendTo("body")

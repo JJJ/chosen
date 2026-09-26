@@ -44,7 +44,7 @@ class AbstractChosen
     @group_search = if @options.group_search? then @options.group_search else true
     @search_in_values = @options.search_in_values || false
     @search_contains = @options.search_contains || false
-    @search_input_type = if @options.search_input_type is "search" then "search" else "text"
+    @search_input_type = if @options.search_input_type is "text" then "text" else "search"
     @split_search_terms = @options.split_search_terms || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
