@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Announce the number of available search results to assistive technologies. Use the `results_count_text` callback to localize the message.
 - Add Sass variables and CSS documentation for styling matched search text.
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
@@ -19,6 +20,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ### Developer notes
 - Single-select markup keeps the same elements and nesting, but its accessibility attributes now change with dropdown state. `.chosen-single` uses `role="combobox"` instead of `role="button"`, receives the select's accessible name and `aria-controls`, and is removed from the accessibility tree and tab order while the searchable combobox is open. `.chosen-drop` now toggles `aria-hidden` between closed and open states. Integrations that assert generated roles, ARIA attributes, or `tabindex` values should update those expectations.
+- Each generated `.chosen-container` now includes a visually hidden `.chosen-results-status` element after `.chosen-drop`. It uses `role="status"` to announce the available result count and is cleared when the dropdown closes. Integrations that assert the container's direct children should allow this new element.
 
 ## [3.0.4] - 2026-09-21
 

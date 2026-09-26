@@ -56,6 +56,7 @@ class AbstractChosen
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
     @max_search_length = @options.max_search_length || 1000
+    @results_count_text = @options.results_count_text || (count) -> "#{count} #{if count is 1 then 'result' else 'results'} available"
 
   set_default_text: ->
     if @form_field.getAttribute("data-placeholder")
@@ -362,6 +363,17 @@ class AbstractChosen
       this.show_create_option( query )
 
     this.update_empty_results_state()
+    this.announce_results_count()
+
+  announce_results_count: ->
+    status = @results_status[0] or @results_status
+    results = @search_results[0] or @search_results
+    count = results.querySelectorAll('[role="option"]').length
+    status.textContent = @results_count_text(count)
+
+  clear_results_count: ->
+    status = @results_status[0] or @results_status
+    status.textContent = ""
 
   get_search_regex: (escaped_search_string) ->
     regex_string = if @search_contains then escaped_search_string else "(^|\\s|\\b)#{escaped_search_string}[^\\s]*"
@@ -622,6 +634,7 @@ class AbstractChosen
         >
         </ul>
       </div>
+      <span class="chosen-results-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></span>
     """
 
   get_multi_html: ->
@@ -648,6 +661,7 @@ class AbstractChosen
         >
         </ul>
       </div>
+      <span class="chosen-results-status visually-hidden" role="status" aria-live="polite" aria-atomic="true"></span>
     """
 
   get_no_results_html: (terms) ->
