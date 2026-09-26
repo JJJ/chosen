@@ -1,9 +1,19 @@
 /* Run the existing Jasmine suites in an installed Chrome browser. */
 const path = require('node:path');
+const fs = require('node:fs/promises');
+const postcss = require('postcss');
+const tailwindcss = require('@tailwindcss/postcss');
 const { chromium } = require('playwright-core');
 
 const root = path.resolve(__dirname, '..');
 const fixture = (name) => path.join(root, name);
+
+async function buildTailwindFixture() {
+  const from = fixture('spec/fixtures/tailwind.css');
+  const source = await fs.readFile(from, 'utf8');
+  const result = await postcss([tailwindcss()]).process(source, { from });
+  return result.css;
+}
 const suites = [
   {
     name: 'jQuery 4.0.0',
@@ -44,6 +54,7 @@ async function main() {
   }
 
   const executablePath = process.env.CHROME_EXECUTABLE_PATH;
+  const tailwindFixture = await buildTailwindFixture();
   const browser = await chromium.launch({
     ...(executablePath ? { executablePath } : { channel: 'chrome' }),
     args: ['--no-sandbox'],
@@ -212,6 +223,50 @@ async function main() {
           await page.waitForFunction(() => document.querySelector('#accessibility-fixture .chosen-container-multi .chosen-results').scrollTop > 0);
         } catch {
           errors.push('Wheel: Native wheel input did not scroll the multiple-select results');
+        }
+        await page.addStyleTag({ content: tailwindFixture });
+        const tailwindStyles = await singleControl.evaluate((element) => {
+          const container = element.closest('.chosen-container');
+          const dropdown = container.querySelector('.chosen-drop');
+          const search = container.querySelector('.chosen-search-input');
+          const probe = document.createElement('div');
+          probe.style.cssText = 'position:absolute;border-radius:var(--radius-lg);padding-top:calc(var(--spacing) * 2);font-size:var(--text-sm)';
+          document.body.appendChild(probe);
+          const probeStyles = getComputedStyle(probe);
+          const expected = {
+            borderRadius: probeStyles.borderRadius,
+            fontSize: probeStyles.fontSize,
+            searchPaddingTop: probeStyles.paddingTop,
+          };
+          probe.remove();
+          return {
+            borderRadius: getComputedStyle(element).borderRadius,
+            controlShadow: getComputedStyle(element).boxShadow,
+            dropdownShadow: getComputedStyle(dropdown).boxShadow,
+            fontSize: getComputedStyle(container).fontSize,
+            searchPaddingTop: getComputedStyle(search).paddingTop,
+            expected,
+          };
+        });
+        if (tailwindStyles.borderRadius !== tailwindStyles.expected.borderRadius || tailwindStyles.controlShadow === 'none' || tailwindStyles.dropdownShadow === 'none' || tailwindStyles.fontSize !== tailwindStyles.expected.fontSize || tailwindStyles.searchPaddingTop !== tailwindStyles.expected.searchPaddingTop) {
+          errors.push(`Tailwind: Theme variables or forms reset did not integrate cleanly (${JSON.stringify(tailwindStyles)})`);
+        }
+        const darkStyles = await singleControl.evaluate((element) => {
+          document.documentElement.classList.add('dark');
+          try {
+            const container = element.closest('.chosen-container');
+            const dropdown = container.querySelector('.chosen-drop');
+            return {
+              colorScheme: getComputedStyle(container).colorScheme,
+              controlBackground: getComputedStyle(element).backgroundColor,
+              dropdownBackground: getComputedStyle(dropdown).backgroundColor,
+            };
+          } finally {
+            document.documentElement.classList.remove('dark');
+          }
+        });
+        if (darkStyles.colorScheme !== 'dark' || darkStyles.controlBackground === 'rgb(255, 255, 255)' || darkStyles.controlBackground === darkStyles.dropdownBackground) {
+          errors.push(`Tailwind: Dark theme surfaces did not apply (${JSON.stringify(darkStyles)})`);
         }
         console.log(`${suite.name}: ${result.total - result.failures.length}/${result.total} specs passed`);
         for (const error of errors) console.error(`  ${error}`);

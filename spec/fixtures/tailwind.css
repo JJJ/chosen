@@ -1,0 +1,55 @@
+@import "tailwindcss" source(none);
+@plugin "@tailwindcss/forms";
+
+@layer components {
+  .chosen-container {
+    --chosen-font-family: var(--font-sans);
+    --chosen-font-size: var(--text-sm);
+    --chosen-text-color: var(--color-slate-900);
+    --chosen-placeholder-color: var(--color-slate-500);
+    --chosen-control-background: var(--color-white);
+    --chosen-border-color: var(--color-slate-300);
+    --chosen-search-border-color: var(--color-slate-300);
+    --chosen-active-color: var(--color-indigo-500);
+    --chosen-active-border-color: var(--color-indigo-500);
+    --chosen-hover-border-color: var(--color-slate-400);
+    --chosen-highlight-color: var(--color-indigo-600);
+    --chosen-bulk-action-color: var(--color-indigo-600);
+    --chosen-divider-color: var(--color-slate-300);
+    --chosen-selected-background: var(--color-indigo-50);
+    --chosen-border-radius: var(--radius-lg);
+    --chosen-choice-border-radius: var(--radius-md);
+    --chosen-control-shadow: var(--shadow-xs);
+    --chosen-dropdown-shadow: var(--shadow-lg);
+    --chosen-control-padding-block: calc(var(--spacing) * 2);
+    --chosen-control-padding-inline-start: calc(var(--spacing) * 3);
+    --chosen-search-padding-block: calc(var(--spacing) * 2);
+    --chosen-search-padding-inline-start: calc(var(--spacing) * 3);
+    --chosen-result-padding-block: calc(var(--spacing) * 2);
+    --chosen-result-padding-inline: calc(var(--spacing) * 3);
+    --chosen-focus-ring-color: var(--color-indigo-500);
+    --chosen-transition-duration: 150ms;
+    --chosen-transition-timing: var(--ease-out);
+  }
+
+  .dark .chosen-container {
+    color-scheme: dark;
+    --chosen-text-color: var(--color-slate-100);
+    --chosen-placeholder-color: var(--color-slate-400);
+    --chosen-control-background: var(--color-slate-900);
+    --chosen-dropdown-background: var(--color-slate-800);
+    --chosen-search-background: var(--color-slate-900);
+    --chosen-border-color: var(--color-slate-700);
+    --chosen-search-border-color: var(--color-slate-600);
+    --chosen-hover-border-color: var(--color-slate-500);
+    --chosen-bulk-action-color: var(--color-indigo-400);
+    --chosen-divider-color: var(--color-slate-600);
+    --chosen-selected-background: var(--color-slate-700);
+    --chosen-muted-background: var(--color-slate-700);
+    --chosen-choice-background: var(--color-slate-700);
+    --chosen-choice-color: var(--color-slate-100);
+    --chosen-choice-disabled-background: var(--color-slate-800);
+    --chosen-disabled-background: var(--color-slate-800);
+    --chosen-dropdown-shadow: var(--shadow-2xl);
+  }
+}
