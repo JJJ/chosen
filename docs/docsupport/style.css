@@ -647,13 +647,13 @@ footer {
   color: #c4ccd7;
 }
 
-:root[data-theme="dark"] .chosen-container-single .chosen-search input[type="text"],
-:root[data-theme="dark"] .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+:root[data-theme="dark"] .chosen-container-single .chosen-search input.chosen-search-input,
+:root[data-theme="dark"] .chosen-container-multi .chosen-choices li.search-field input.chosen-search-input {
   border-color: #68717d;
   color: #e6edf3;
 }
 
-:root[data-theme="dark"] .chosen-container-single .chosen-search input[type="text"] {
+:root[data-theme="dark"] .chosen-container-single .chosen-search input.chosen-search-input {
   background-color: #15191f;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23c4ccd7' stroke-width='2' stroke-linecap='round' d='m21 21-4.5-4.5M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z'/%3E%3C/svg%3E");
 }

@@ -1,4 +1,21 @@
 describe "Basic setup", ->
+  it "keeps text inputs by default and supports search inputs for both select types", ->
+    for multiple in [false, true]
+      attribute = if multiple then " multiple" else ""
+      div = new Element('div').update("<select#{attribute}><option>One</option><option>Two</option></select>")
+      default_chosen = new Chosen(div.down('select'))
+      expect(default_chosen.search_field.type).toBe("text")
+
+      configured = new Element('div').update("<select#{attribute}><option>One</option><option>Two</option></select>")
+      chosen = new Chosen(configured.down('select'), search_input_type: "search")
+      expect(chosen.search_field.type).toBe("search")
+      expect(chosen.search_field.readAttribute("autocomplete")).toBe("off")
+      chosen.results_show()
+      chosen.search_field.value = "Two"
+      simulant.fire(chosen.search_field, "input")
+      expect(configured.select(".active-result").length).toBe(1)
+      expect(configured.down(".active-result").textContent).toBe("Two")
+
   it "applies runtime theme variable overrides", ->
     div = new Element('div').update("<select><option>One</option></select>")
     document.body.insert(div)

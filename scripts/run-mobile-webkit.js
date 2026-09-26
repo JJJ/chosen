@@ -50,6 +50,32 @@ async function main() {
         if (errors.length) throw new Error(`${adapter.name}: ${errors.join('; ')}`);
         console.log(`${adapter.name}: iPad WebKit select and immediate remove passed`);
 
+        const searchInput = await page.evaluate((name) => {
+          const select = document.createElement('select');
+          select.id = 'search-input-check';
+          select.style.width = '300px';
+          select.multiple = true;
+          select.innerHTML = '<option>One</option><option>Two</option>';
+          document.body.appendChild(select);
+          const chosen = name === 'jQuery'
+            ? window.jQuery(select).chosen({ search_input_type: 'search' }).data('chosen')
+            : new window.Chosen(select, { search_input_type: 'search' });
+          return (chosen.search_field[0] || chosen.search_field).outerHTML;
+        }, adapter.name);
+        if (!searchInput.includes('type="search"') || !searchInput.includes('autocomplete="off"')) {
+          throw new Error(`${adapter.name}: opted-in search input attributes are missing`);
+        }
+        const searchField = page.locator('#search_input_check_chosen .chosen-search-input');
+        const appearance = await searchField.evaluate((input) => getComputedStyle(input).appearance);
+        if (appearance !== 'none') {
+          throw new Error(`${adapter.name}: native search styling was not suppressed (${appearance})`);
+        }
+        await searchField.fill('Two');
+        if (await page.locator('#search_input_check_chosen .active-result').count() !== 1) {
+          throw new Error(`${adapter.name}: opted-in search input did not filter results`);
+        }
+        console.log(`${adapter.name}: iPad WebKit search input styling and filtering passed`);
+
         const retapPage = await context.newPage();
         retapPage.setDefaultTimeout(5000);
         const retapErrors = [];

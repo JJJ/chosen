@@ -12,6 +12,12 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/150"
   },
   {
+    "number": 3002,
+    "status": "fixed-in-fork",
+    "note": "The opt-in search_input_type setting renders search inputs in both adapters while preserving text inputs by default; browser autofill behavior remains browser-dependent.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/153"
+  },
+  {
     "number": 3091,
     "status": "fixed-in-fork",
     "note": "An opt-in setting lets users deselect enabled multiple-select choices from the dropdown by Ctrl-click or Enter.",
