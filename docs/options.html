@@ -274,18 +274,57 @@
         </tr>
       </tbody></table>
 
-      <h2><a name="styling" class="anchor" href="#styling">Styling the arrow and height</a></h2>
-      <p>Chosen uses CSS for the single-select arrow and control height. To use a single down arrow and a shorter control for a select with <code>id="my-select"</code>, add this CSS after Chosen's stylesheet:</p>
-<pre><code class="language-css">#my-select_chosen .chosen-single {
+      <h2><a name="styling" class="anchor" href="#styling">Styling Chosen</a></h2>
+      <p>Chosen's appearance is controlled with standard CSS. Load your overrides after <code>chosen.css</code> so they take precedence, and scope them to a wrapper, an inherited class, or one generated Chosen container when the change should not apply globally.</p>
+      <p>A select with <code>id="my-select"</code> receives a Chosen container with <code>id="my_select_chosen"</code>. Chosen replaces punctuation in source IDs with underscores before adding the <code>_chosen</code> suffix. The <code>inherit_select_classes</code> option can also copy application classes from the original select to its Chosen container.</p>
+
+      <table class="docs-table">
+        <tbody><tr>
+          <th>Selector</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td><code>.chosen-container</code></td>
+          <td>The generated wrapper for every Chosen control.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-single</code></td>
+          <td>The closed single-select control.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-choices</code> and <code>.search-choice</code></td>
+          <td>The multiple-select control and each selected choice.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-drop</code> and <code>.chosen-results</code></td>
+          <td>The dropdown and its result list.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-search-input</code></td>
+          <td>The search input used by single and multiple selects.</td>
+        </tr>
+        <tr>
+          <td><code>.active-result</code>, <code>.highlighted</code>, <code>.result-selected</code>, and <code>.disabled-result</code></td>
+          <td>Result availability, keyboard or pointer highlight, selection, and disabled states.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-rtl</code>, and <code>.chosen-dropup</code></td>
+          <td>Open, active, disabled, right-to-left, and upward-opening container states.</td>
+        </tr>
+      </tbody></table>
+
+      <h3>Changing the single-select arrow and height</h3>
+      <p>To use a single down arrow and a shorter control for a select with <code>id="my-select"</code>, add this CSS after Chosen's stylesheet:</p>
+<pre><code class="language-css">#my_select_chosen .chosen-single {
   line-height: 20px;
   padding-top: 2px;
   padding-bottom: 2px;
 }
-#my-select_chosen .chosen-single div b {
+#my_select_chosen .chosen-single div b {
   background: none;
   position: relative;
 }
-#my-select_chosen .chosen-single div b:after {
+#my_select_chosen .chosen-single div b:after {
   content: "";
   position: absolute;
   top: 50%;
