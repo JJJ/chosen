@@ -6,6 +6,12 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/148"
   },
   {
+    "number": 3053,
+    "status": "fixed-in-fork",
+    "note": "The shipped Sass palette variables use !default, so integrations can override colors before compiling while retaining the existing defaults.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/150"
+  },
+  {
     "number": 3039,
     "status": "fixed-in-fork",
     "note": "Nested click fixed in #95; WebKit touch coverage and the remaining touch fix added here.",
