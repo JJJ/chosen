@@ -228,5 +228,11 @@
     "status": "fixed-in-fork",
     "note": "Modern browsers use native standard wheel scrolling; manual mousewheel and DOMMouseScroll handling remains only as a legacy fallback.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/118"
+  },
+  {
+    "number": 3022,
+    "status": "fixed-in-fork",
+    "note": "Single-select result selection now blurs the hidden search input and returns focus to the visible control, dismissing the mobile keyboard in both adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/119"
   }
 ]
