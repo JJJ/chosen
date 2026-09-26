@@ -1,4 +1,30 @@
 describe "Searching", ->
+  it "lets a custom matcher replace built-in matches without false highlights", ->
+    div = $("<div>").html("<select><option value=''></option><optgroup label='Group'><option value='SKU-42'>Alpha</option><option value='other'>Beta</option></optgroup></select>").appendTo("body")
+    seen = []
+    chosen = div.find("select").chosen(
+      group_search: false
+      search_in_values: true
+      normalize_search_text: -> throw new Error("Built-in normalization should be skipped")
+      search_matcher: (query, item) ->
+        seen.push([query, item.group is true])
+        if item.group then item.label is query else item.value is "SKU-42" and query is "needle"
+    ).data("chosen")
+    chosen.results_show()
+
+    chosen.search_field.val("needle").trigger("input")
+    expect(div.find(".active-result").length).toBe(1)
+    expect(div.find(".active-result").html()).toBe("Alpha")
+    expect(seen).toContain(["needle", true])
+
+    chosen.search_field.val("Alpha").trigger("input")
+    expect(div.find(".active-result").length).toBe(0)
+
+    chosen.search_field.val("Group").trigger("input")
+    expect(div.find(".group-result").length).toBe(1)
+    expect(div.find(".active-result").length).toBe(2)
+    div.remove()
+
   it "waits for IME composition to finish before searching", (done) ->
     div = $("<div>").html("<select><option value=''></option><option>人文</option><option>社科</option></select>").appendTo("body")
     select = div.find("select").chosen()

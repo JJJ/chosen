@@ -44,6 +44,7 @@ class AbstractChosen
     @group_search = if @options.group_search? then @options.group_search else true
     @search_in_values = @options.search_in_values || false
     @search_contains = @options.search_contains || false
+    @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
     @split_search_terms = @options.split_search_terms || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
@@ -394,13 +395,13 @@ class AbstractChosen
       this.clear_results_count()
       return
 
-    normalized_query = this.normalize_search_text(query)
+    normalized_query = if @search_matcher then query else this.normalize_search_text(query)
     escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-    regex = this.get_search_regex(escaped_query)
-    normalized_terms = if @split_search_terms then normalized_query.split(/\s+/) else []
-    term_regexes = (this.get_search_regex(term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")) for term in normalized_terms)
+    unless @search_matcher
+      regex = this.get_search_regex(escaped_query)
+      normalized_terms = if @split_search_terms then normalized_query.split(/\s+/) else []
+      term_regexes = (this.get_search_regex(term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")) for term in normalized_terms)
     exact_regex = new RegExp("^#{escaped_query}$")
-    highlight_regex = this.get_highlight_regex(escaped_query)
 
     for option in @results_data
 
@@ -423,9 +424,11 @@ class AbstractChosen
 
         text = if option.group then option.label else option.text
 
-        unless option.group and not @group_search
-          normalized_text = this.normalize_search_text(text)
-          if term_regexes.length > 1
+        unless option.group and not @group_search and not @search_matcher
+          normalized_text = this.normalize_search_text(text) unless @search_matcher
+          if @search_matcher
+            option.search_match = Boolean(@search_matcher(query, option))
+          else if term_regexes.length > 1
             search_matches = (this.search_string_match(normalized_text, term_regex) for term_regex in term_regexes)
             option.search_match = search_matches.every (match) -> match?
             search_match = search_matches[0]
@@ -433,7 +436,7 @@ class AbstractChosen
             search_match = this.search_string_match(normalized_text, regex)
             option.search_match = search_match?
 
-          if not option.search_match and option.search_text
+          if not @search_matcher and not option.search_match and option.search_text
             normalized_search_text = this.normalize_search_text(option.search_text)
             if term_regexes.length > 1
               alternate_matches = (this.search_string_match(normalized_search_text, term_regex) for term_regex in term_regexes)
@@ -442,7 +445,7 @@ class AbstractChosen
               option.search_match = this.search_string_match(normalized_search_text, regex)
             match_alternate_text = option.search_match
 
-          if not option.search_match and @search_in_values
+          if not @search_matcher and not option.search_match and @search_in_values
             if term_regexes.length > 1
               value_matches = (this.search_string_match(option.value, term_regex) for term_regex in term_regexes)
               option.search_match = value_matches.every (match) -> match?
@@ -455,9 +458,9 @@ class AbstractChosen
           exact_result = exact_result || exact_regex.test option.html
 
           if option.search_match
-            if query.length and not match_alternate_text and term_regexes.length > 1
+            if not @search_matcher and query.length and not match_alternate_text and term_regexes.length > 1
               option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms)
-            else if query.length and not match_alternate_text
+            else if not @search_matcher and query.length and not match_alternate_text
               startpos = search_match.index
 
               # If normalization changed the text, we need to find the correct

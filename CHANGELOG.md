@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an opt-in `search_matcher(query, item)` callback for custom result filtering, including regex-based rules. It replaces built-in search matching and leaves custom matches unhighlighted because a boolean result has no match position.
 - Use `type="search"` for generated search inputs by default and allow `search_input_type: "text"` for integrations that need the previous markup.
 - Add opt-in removal of individual multiple selections from their dropdown results by pointer or Enter, with a visible remove mark.
 - Allow integrations to override Chosen's existing Sass palette variables before importing the stylesheet.
