@@ -31,6 +31,9 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
+### Maintenance
+- Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
+
 ### Developer notes
 - Single-select markup keeps the same elements and nesting, but its accessibility attributes now change with dropdown state. `.chosen-single` uses `role="combobox"` instead of `role="button"`, receives the select's accessible name and `aria-controls`, and is removed from the accessibility tree and tab order while the searchable combobox is open. `.chosen-drop` now toggles `aria-hidden` between closed and open states. Integrations that assert generated roles, ARIA attributes, or `tabindex` values should update those expectations.
 - Each generated `.chosen-container` now includes a visually hidden `.chosen-results-status` element after `.chosen-drop`. It uses `role="status"` to announce the available result count and is cleared when the dropdown closes. Integrations that assert the container's direct children should allow this new element.
