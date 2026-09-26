@@ -62,3 +62,15 @@ describe "search", ->
     results = div.find(".active-result")
     expect(results.length).toBe(1)
     expect(results.first().text()).toBe "United Kingdom"
+
+  it "keeps a selected single option inside the result limit", ->
+    options = ("<option#{if index is 11 then ' selected' else ''}>Option #{index}</option>" for index in [1..11]).join("")
+    div = $("<div><select>#{options}</select></div>")
+    chosen = div.find("select").chosen(max_shown_results: 10).data("chosen")
+    chosen.results_show()
+    results = div.find(".active-result")
+
+    expect(results.length).toBe(10)
+    expect(results.first().text()).toBe("Option 2")
+    expect(results.last().text()).toBe("Option 11")
+    expect(results.last().hasClass("result-selected")).toBe(true)
