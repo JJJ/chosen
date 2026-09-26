@@ -1,4 +1,21 @@
 describe "Bugfixes", ->
+  it "does not reopen multiple selects after focus has moved", (done) ->
+    div = $("<div><select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select></div>").appendTo("body")
+    selects = div.find("select").chosen()
+    fields = div.find(".chosen-search-input")
+
+    fields.eq(0).trigger("focus").trigger("blur")
+    fields.eq(1).trigger("focus").trigger("blur")
+    fields.eq(2).trigger("focus")
+
+    setTimeout ->
+      expect(div.find(".chosen-with-drop").length).toBe(1)
+      expect(selects.eq(2).data("chosen").results_showing).toBe(true)
+      expect(document.activeElement).toBe(fields[2])
+      div.remove()
+      done()
+    , 160
+
   it "reopens an active multiple select on a repeated mouse click", ->
     div = $("<div><select multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
     select = div.find("select").chosen()

@@ -1,4 +1,24 @@
 describe "Bugfixes", ->
+  it "does not reopen multiple selects after focus has moved", (done) ->
+    div = new Element("div").update("<select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select>")
+    document.body.appendChild(div)
+    chosens = (new Chosen(select) for select in div.select("select"))
+    fields = div.select(".chosen-search-input")
+
+    fields[0].focus()
+    fields[0].blur()
+    fields[1].focus()
+    fields[1].blur()
+    fields[2].focus()
+
+    setTimeout ->
+      expect(div.select(".chosen-with-drop").length).toBe(1)
+      expect(chosens[2].results_showing).toBe(true)
+      expect(document.activeElement).toBe(fields[2])
+      div.remove()
+      done()
+    , 160
+
   it "reopens an active multiple select on a repeated mouse click", ->
     div = new Element("div").update("<select multiple><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)
