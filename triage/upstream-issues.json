@@ -377,5 +377,15 @@
     "status": "fixed-in-fork",
     "note": "The opt-in display_selected_value setting shows escaped option values in closed single controls and selected multiple choices while retaining labels in the dropdown.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/139"
+  },
+  {
+    "number": 2928,
+    "status": "fixed-in-fork",
+    "note": "Options can provide synonyms and aliases through data-search-text; matches keep the visible option label unchanged."
+  },
+  {
+    "number": 2995,
+    "status": "fixed-in-fork",
+    "note": "Covered by the per-option data-search-text support tracked with issue 2928."
   }
 ]

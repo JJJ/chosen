@@ -153,6 +153,23 @@ describe "Searching", ->
     expect(div.select('.active-result').length).toBe(0)
     div.remove()
 
+  it "matches optional alternate search text without changing the visible label", ->
+    div = new Element('div').update("<select><option value=''></option><option data-search-text='kitten felis catus'>Cat</option><option data-search-text='puppy canine'>Dog</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), split_search_terms: true)
+    chosen.results_show()
+
+    chosen.search_field.value = "felis kitten"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(1)
+    expect(div.down('.active-result').textContent).toBe('Cat')
+    expect(div.down('.active-result').innerHTML).toBe('Cat')
+
+    chosen.search_field.value = "Dog"
+    chosen.search_if_value_changed()
+    expect(div.down('.active-result').innerHTML).toBe('<em>Dog</em>')
+    div.remove()
+
   it "matches accented option text with an unaccented query", ->
     div = new Element('div').update("<select><option value=''></option><option value='cafe'>Café</option></select>")
     document.body.appendChild(div)
