@@ -12,6 +12,18 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/150"
   },
   {
+    "number": 3091,
+    "status": "fixed-in-fork",
+    "note": "An opt-in setting lets users deselect enabled multiple-select choices from the dropdown by Ctrl-click or Enter.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/151"
+  },
+  {
+    "number": 3087,
+    "status": "fixed-in-fork",
+    "note": "Opt-in selected result rows show a CSS remove mark and can remove individual enabled choices.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/151"
+  },
+  {
     "number": 3039,
     "status": "fixed-in-fork",
     "note": "Nested click fixed in #95; WebKit touch coverage and the remaining touch fix added here.",
