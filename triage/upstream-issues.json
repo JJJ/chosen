@@ -351,11 +351,13 @@
   {
     "number": 3038,
     "status": "fixed-in-fork",
-    "note": "The opt-in split_search_terms setting requires every whitespace-separated term to match in any order and highlights every match."
+    "note": "The opt-in split_search_terms setting requires every whitespace-separated term to match in any order and highlights every match.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/136"
   },
   {
     "number": 3117,
     "status": "fixed-in-fork",
-    "note": "Covered by the order-independent multi-term search option tracked with issue 3038."
+    "note": "Covered by the order-independent multi-term search option tracked with issue 3038.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/136"
   }
 ]
