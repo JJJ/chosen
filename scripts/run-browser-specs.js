@@ -131,12 +131,19 @@ async function main() {
           }));
           errors.push(`Keyboard: Enter did not open the single select (${JSON.stringify(state)})`);
         }
+        const resultsStatus = page.locator('#accessibility-fixture .chosen-container-single .chosen-results-status');
+        if (await resultsStatus.textContent() !== '2 results available') {
+          errors.push(`Accessibility: Result count was not announced (${JSON.stringify(await resultsStatus.textContent())})`);
+        }
         await page.keyboard.press('Escape');
         if (await singleControl.getAttribute('aria-expanded') !== 'false') {
           errors.push('Keyboard: Escape did not close the single select');
         }
         if (await singleControl.evaluate((element) => document.activeElement === element) !== true) {
           errors.push('Keyboard: Escape did not return focus to the single select');
+        }
+        if (await resultsStatus.textContent() !== '') {
+          errors.push('Accessibility: Result count was not cleared when the single select closed');
         }
         const multiSearch = page.locator('#accessibility-fixture .chosen-container-multi .chosen-search-input');
         await multiSearch.focus();

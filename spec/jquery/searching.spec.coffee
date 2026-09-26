@@ -1,4 +1,20 @@
 describe "Searching", ->
+  it "announces the number of available results", ->
+    div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>").appendTo("body")
+    chosen = div.find("select").chosen(
+      results_count_text: (count) -> "#{count} matching choices"
+    ).data("chosen")
+
+    chosen.results_show()
+    expect(div.find(".chosen-results-status").text()).toBe("3 matching choices")
+    chosen.search_field.val("Al").trigger("keyup")
+    expect(div.find(".chosen-results-status").text()).toBe("2 matching choices")
+    chosen.search_field.val("Missing").trigger("keyup")
+    expect(div.find(".chosen-results-status").text()).toBe("0 matching choices")
+    chosen.results_hide()
+    expect(div.find(".chosen-results-status").text()).toBe("")
+    div.remove()
+
   it "keeps the active query when options are updated", ->
     div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>").appendTo("body")
     select = div.find("select").chosen()

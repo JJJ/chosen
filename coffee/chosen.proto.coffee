@@ -120,6 +120,7 @@ class @Chosen extends AbstractChosen
 
     @search_field = @container.down('input')
     @search_results = @container.down('ul.chosen-results')
+    @results_status = @container.down('.chosen-results-status')
     @search_results.writeAttribute('id', "#{@result_id_base}-search-results")
     this.search_field_scale()
 
@@ -468,6 +469,7 @@ class @Chosen extends AbstractChosen
 
     @dropdown.writeAttribute("aria-hidden", "true")
     @search_field.writeAttribute("aria-expanded", "false")
+    this.clear_results_count()
     @results_showing = false
 
     # Unregister scroll handler and clear any pending timeout

@@ -71,6 +71,7 @@ class Chosen extends AbstractChosen
 
     @search_field = @container.find('input').first()
     @search_results = @container.find('ul.chosen-results').first()
+    @results_status = @container.find('.chosen-results-status').first()
     @search_results.attr('id', "#{@result_id_base}-search-results")
     @search_groups = @container.find('li.group-results').first()
     this.search_field_scale()
@@ -402,6 +403,7 @@ class Chosen extends AbstractChosen
 
     @dropdown.attr("aria-hidden", true)
     @search_field.attr("aria-expanded", false)
+    this.clear_results_count()
     @results_showing = false
 
     # Unregister scroll handler and clear any pending timeout

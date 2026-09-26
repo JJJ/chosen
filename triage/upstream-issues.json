@@ -23,6 +23,12 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/129"
   },
   {
+    "number": 264,
+    "status": "fixed-in-fork",
+    "note": "The fork exposes current combobox, listbox, option, expansion, and selection state and announces localized result counts during search.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/130"
+  },
+  {
     "number": 3146,
     "status": "blocked",
     "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."

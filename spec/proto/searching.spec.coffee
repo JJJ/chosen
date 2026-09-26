@@ -1,4 +1,23 @@
 describe "Searching", ->
+  it "announces the number of available results", ->
+    div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'),
+      results_count_text: (count) -> "#{count} matching choices"
+    )
+
+    chosen.results_show()
+    expect(div.down('.chosen-results-status').textContent).toBe("3 matching choices")
+    chosen.search_field.value = "Al"
+    chosen.winnow_results()
+    expect(div.down('.chosen-results-status').textContent).toBe("2 matching choices")
+    chosen.search_field.value = "Missing"
+    chosen.winnow_results()
+    expect(div.down('.chosen-results-status').textContent).toBe("0 matching choices")
+    chosen.results_hide()
+    expect(div.down('.chosen-results-status').textContent).toBe("")
+    div.remove()
+
   it "keeps the active query when options are updated", ->
     div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>")
     document.body.appendChild(div)
