@@ -582,6 +582,15 @@ class @Chosen extends AbstractChosen
     deselect_trigger.remove() if(deselect_trigger)
 
   result_select: (evt) ->
+    action = @result_highlight?.readAttribute('data-chosen-action') or evt.target?.readAttribute?('data-chosen-action')
+    if action
+      evt.preventDefault()
+      if action is 'select-all'
+        this.select_all_results()
+      else if action is 'deselect-all'
+        this.deselect_all_results()
+      return
+
     if evt.target.hasClassName "group-result"
       return unless @can_select_by_group and @is_multiple
       for option in evt.target.nextSiblings()
@@ -691,6 +700,9 @@ class @Chosen extends AbstractChosen
       return true
     else
       return false
+
+  trigger_max_selected: ->
+    @form_field.fire("chosen:maxselected", { chosen: this })
 
   single_deselect_control_build: ->
     return unless @allow_single_deselect

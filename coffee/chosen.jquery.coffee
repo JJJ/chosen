@@ -515,6 +515,15 @@ class Chosen extends AbstractChosen
     @selected_item.find('.search-choice-close').remove()
 
   result_select: (evt) ->
+    action = @result_highlight?.attr('data-chosen-action') or $(evt.target).attr('data-chosen-action')
+    if action
+      evt.preventDefault()
+      if action is 'select-all'
+        this.select_all_results()
+      else if action is 'deselect-all'
+        this.deselect_all_results()
+      return
+
     if $(evt.target).hasClass "group-result"
       if not @can_select_by_group or not @is_multiple
         return
@@ -624,6 +633,9 @@ class Chosen extends AbstractChosen
       return true
     else
       return false
+
+  trigger_max_selected: ->
+    @form_field_jq.trigger("chosen:maxselected", {chosen: this})
 
   single_deselect_control_build: ->
     return unless @allow_single_deselect

@@ -52,6 +52,26 @@
           <td>When set to <code class="language-javascript">true</code> on a single select, Chosen adds a UI element which selects the first element (if it is blank). The selection can also be cleared with Backspace or Delete when the control is focused.</td>
         </tr>
         <tr>
+          <td>allow_select_all</td>
+          <td>false</td>
+          <td>When set to <code class="language-javascript">true</code> on a multiple select, Chosen adds a Select all result that selects the currently filtered, enabled options. The action respects <code class="language-javascript">max_selected_options</code>. Command/Ctrl+A selects all when the search input is empty; with search text present, the shortcut retains its normal text-selection behavior.</td>
+        </tr>
+        <tr>
+          <td>allow_deselect_all</td>
+          <td>false</td>
+          <td>When set to <code class="language-javascript">true</code> on a multiple select, Chosen adds a Deselect all result that clears every enabled selected option. Disabled selected options remain selected. Command/Ctrl+Shift+A invokes the action when the search input is empty.</td>
+        </tr>
+        <tr>
+          <td>select_all_text</td>
+          <td>"Select all"</td>
+          <td>Sets the text for the opt-in Select all action.</td>
+        </tr>
+        <tr>
+          <td>deselect_all_text</td>
+          <td>"Deselect all"</td>
+          <td>Sets the text for the opt-in Deselect all action.</td>
+        </tr>
+        <tr>
           <td>disable_search</td>
           <td>false</td>
           <td>When set to <code class="language-javascript">true</code>, Chosen will not display the search field (single selects only).</td>

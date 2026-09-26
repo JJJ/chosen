@@ -1288,11 +1288,33 @@
         <pre><code class="language-javascript">$("chosen_select_field").observe("chosen:maxselected", function(evt) { ... }); </code></pre>
       </div>
 
+      <h2><a name="select-all-actions" class="anchor" href="#select-all-actions">Select All and Deselect All</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Multiple selects can add opt-in bulk actions. Select all applies to the currently filtered enabled options; Deselect all clears every enabled choice. With an empty search, use Command/Ctrl+A to select all or Command/Ctrl+Shift+A to deselect all.</p>
+        <pre><code class="language-javascript">new Chosen($("chosen_select_field"), {
+  allow_select_all: true,
+  allow_deselect_all: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="bulk-select">Try searching for “bear” first</label>
+          <select id="bulk-select" data-placeholder="Choose some animals" class="chosen-select-bulk" multiple="" tabindex="12">
+            <option selected>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option disabled>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="allow-deselect-on-single-selects" class="anchor" href="#allow-deselect-on-single-selects">Allow Deselect on Single Selects</a></h2>
       <div class="side-by-side clearfix">
         <p>When a single select box isn't a required field, you can set <code class="language-javascript">allow_single_deselect: true</code> and Chosen will add a UI element for option deselection. The selection can also be cleared with Backspace or Delete when the control is focused. This will only work if the first option has blank text.</p>
         <div class="side-by-side clearfix">
-          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select-deselect" tabindex="12">
+          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select-deselect" tabindex="13">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1312,7 +1334,7 @@
         <pre><code class="language-javascript"> $(".chosen-select").chosen({rtl: true}); </code></pre>
         <div>
           <label class="comparison-label" for="rtl-single">Single Right-to-Left Select</label>
-          <select id="rtl-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select-rtl" tabindex="13">
+          <select id="rtl-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select-rtl" tabindex="14">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1324,7 +1346,7 @@
         </div>
         <div>
           <label class="comparison-label" for="rtl-multiple">Multiple Right-to-Left Select</label>
-          <select id="rtl-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-rtl" tabindex="14">
+          <select id="rtl-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-rtl" tabindex="15">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1367,7 +1389,7 @@ chosen.destroy();</code></pre>
         <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{width: "95%"}); </code></pre>
         <div>
           <label class="comparison-label" for="width-single">Single Select</label>
-          <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="15">
+          <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="16">
             <option value=""></option>
             <option selected="">American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1381,7 +1403,7 @@ chosen.destroy();</code></pre>
         </div>
         <div>
           <label class="comparison-label" for="width-multiple">Multiple Select</label>
-          <select id="width-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-width" tabindex="16">
+          <select id="width-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-width" tabindex="17">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1401,7 +1423,7 @@ chosen.destroy();</code></pre>
         <p></p>
         <div>
           <label class="comparison-label" for="single-label-example">Click to Highlight Single Select</label>
-          <select data-placeholder="Your Favorite Types of Bear" class="chosen-select" tabindex="17" id="single-label-example">
+          <select data-placeholder="Your Favorite Types of Bear" class="chosen-select" tabindex="18" id="single-label-example">
             <option value=""></option>
             <option selected="">American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1415,7 +1437,7 @@ chosen.destroy();</code></pre>
         </div>
         <div>
           <label class="comparison-label" for="multiple-label-example">Click to Highlight Multiple Select</label>
-          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="18" id="multiple-label-example">
+          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="19" id="multiple-label-example">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>

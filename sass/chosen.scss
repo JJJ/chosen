@@ -9,6 +9,7 @@ $chosen-border-color: #aaa;
 $chosen-group-color: #999;
 $chosen-background-color: #fff;
 $chosen-selected-color: #e0e0e0;
+$chosen-divider-color: #c4c4c4 !default;
 $chosen-focus-outline: 2px solid $chosen-active-color !default;
 $chosen-focus-outline-offset: 1px !default;
 $chosen-highlight-font-style: normal !default;
@@ -265,6 +266,26 @@ $chosen-highlight-text-decoration: underline !default;
 		&.active-result {
 			display: list-item;
 			cursor: pointer;
+		}
+
+		&.chosen-bulk-action {
+			color: $chosen-hover-color;
+			font-weight: normal;
+		}
+
+		&.chosen-bulk-action-last {
+			position: relative;
+			margin-bottom: 11px;
+
+			&::after {
+				position: absolute;
+				right: 0;
+				bottom: -6px;
+				left: 0;
+				border-bottom: 1px solid $chosen-divider-color;
+				content: "";
+				pointer-events: none;
+			}
 		}
 
 		&.disabled-result {

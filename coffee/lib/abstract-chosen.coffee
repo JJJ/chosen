@@ -48,6 +48,10 @@ class AbstractChosen
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
     @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
+    @allow_select_all = @options.allow_select_all || false
+    @allow_deselect_all = @options.allow_deselect_all || false
+    @select_all_text = @options.select_all_text || AbstractChosen.default_select_all_text
+    @deselect_all_text = @options.deselect_all_text || AbstractChosen.default_deselect_all_text
     @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
     @max_selected_options = @options.max_selected_options || Infinity
     @inherit_select_classes = @options.inherit_select_classes || false
@@ -151,7 +155,80 @@ class AbstractChosen
       if rendered_results >= @max_shown_results and not (options?.first and @is_multiple)
         break
 
+    if @is_multiple
+      content = this.bulk_actions_html() + content
+
     content
+
+  bulk_actions_html: ->
+    actions = []
+    actions.push ['select-all', @select_all_text] if @allow_select_all and this.has_selectable_results()
+    actions.push ['deselect-all', @deselect_all_text] if @allow_deselect_all and this.has_deselectable_results()
+    content = ''
+    for action, index in actions
+      content += this.bulk_action_html(action[0], action[1], index is actions.length - 1)
+    content
+
+  bulk_action_html: (action, text, is_last) ->
+    action_el = document.createElement('li')
+    action_el.className = "active-result chosen-bulk-action chosen-#{action}"
+    action_el.className += " chosen-bulk-action-last" if is_last
+    action_el.id = "#{@result_id_base}-#{action}"
+    action_el.setAttribute('data-chosen-action', action)
+    action_el.setAttribute('role', 'option')
+    action_el.setAttribute('aria-selected', 'false')
+    action_el.innerHTML = this.escape_html(text)
+    this.outerHTML(action_el)
+
+  has_selectable_results: ->
+    for item in @results_data when not item.group and item.search_match and not item.selected and not item.disabled and this.include_option_in_results(item)
+      return true if this.current_option_for(item)?
+    false
+
+  has_deselectable_results: ->
+    for item in @results_data when not item.group and item.selected and not item.disabled
+      return true if this.current_option_for(item)?
+    false
+
+  select_all_results: ->
+    changed = false
+    limit_reached = false
+    selected_count = this.choices_count()
+
+    for item in @results_data when not item.group and item.search_match and not item.selected and not item.disabled and this.include_option_in_results(item)
+      option = this.current_option_for(item)
+      continue unless option?
+      if selected_count >= @max_selected_options
+        limit_reached = true
+        break
+      item.selected = true
+      option.selected = true
+      selected_count++
+      changed = true
+
+    @selected_option_count = null
+    this.finish_bulk_action() if changed
+    this.trigger_max_selected() if limit_reached
+    changed
+
+  deselect_all_results: ->
+    changed = false
+    for item in @results_data when not item.group and item.selected and not item.disabled
+      option = this.current_option_for(item)
+      continue unless option?
+      item.selected = false
+      option.selected = false
+      changed = true
+
+    @selected_option_count = null
+    this.finish_bulk_action() if changed
+    changed
+
+  finish_bulk_action: ->
+    this.results_update_field()
+    this.trigger_form_field_change()
+    this.search_field_scale()
+    (@search_field[0] or @search_field).focus()
 
   result_is_visible: (data) ->
     if data.group
@@ -445,7 +522,7 @@ class AbstractChosen
   announce_results_count: ->
     status = @results_status[0] or @results_status
     results = @search_results[0] or @search_results
-    count = results.querySelectorAll('[role="option"]').length
+    count = results.querySelectorAll('[role="option"]:not([data-chosen-action])').length
     status.textContent = @results_count_text(count)
 
   clear_results_count: ->
@@ -627,6 +704,15 @@ class AbstractChosen
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
     return if @composing or evt.isComposing or stroke is 229
+    if @is_multiple and stroke is 65 and (evt.metaKey or evt.ctrlKey) and not evt.altKey and this.get_search_field_value().length is 0
+      if evt.shiftKey and @allow_deselect_all
+        evt.preventDefault()
+        this.deselect_all_results()
+        return
+      else if not evt.shiftKey and @allow_select_all
+        evt.preventDefault()
+        this.select_all_results()
+        return
     this.flush_pending_search() if stroke in [9, 13, 33, 34, 35, 36, 38, 40]
     if @disable_search and not @is_multiple and @results_showing and this.typeahead_search_results(evt)
       evt.preventDefault()
@@ -874,4 +960,6 @@ class AbstractChosen
   @default_no_result_text: "No results for:"
   @default_create_option_text: "Add Option:"
   @default_remove_item_text: "Remove selection"
+  @default_select_all_text: "Select all"
+  @default_deselect_all_text: "Deselect all"
   @next_id: 0

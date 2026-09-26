@@ -442,6 +442,84 @@ describe "Basic setup", ->
     expect(select.options[0].selected).toBe(false)
     div.remove()
 
+  it "selects filtered options and deselects enabled choices with opt-in bulk actions", ->
+    div = new Element('div').update("<select multiple><option value='alpha'>Alpha</option><option value='alpine' disabled>Alpine</option><option value='beta' selected>Beta</option><option value='locked' selected disabled>Locked</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    changes = 0
+    select.observe "change", -> changes++
+    chosen = new Chosen(select, allow_select_all: true, allow_deselect_all: true, select_all_text: "Take these", deselect_all_text: "Clear choices")
+
+    chosen.results_show()
+    chosen.search_field.value = "Al"
+    chosen.winnow_results()
+    expect(div.down(".chosen-select-all").innerHTML).toBe("Take these")
+    chosen.search_results_mouseup(target: div.down(".chosen-select-all"), type: 'mouseup', which: 1, preventDefault: ->)
+    expect((option.value for option in select.options when option.selected)).toEqual(["alpha", "beta", "locked"])
+    expect(changes).toBe(1)
+
+    expect(div.down(".chosen-deselect-all").innerHTML).toBe("Clear choices")
+    chosen.search_results_mouseup(target: div.down(".chosen-deselect-all"), type: 'mouseup', which: 1, preventDefault: ->)
+    expect((option.value for option in select.options when option.selected)).toEqual(["locked"])
+    expect(changes).toBe(2)
+    div.remove()
+
+  it "respects the selection limit during bulk selection", ->
+    div = new Element('div').update("<select multiple><option>One</option><option>Two</option><option>Three</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    maxselected = jasmine.createSpy("maxselected")
+    select.observe "chosen:maxselected", maxselected
+    chosen = new Chosen(select, allow_select_all: true, max_selected_options: 2)
+    chosen.results_show()
+    chosen.keyup_checker(which: 13, preventDefault: ->)
+
+    expect((option for option in select.options when option.selected).length).toBe(2)
+    expect(maxselected).toHaveBeenCalled()
+    div.remove()
+
+  it "uses bulk shortcuts only when the multiple search is empty", ->
+    div = new Element('div').update("<select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select, allow_select_all: true, allow_deselect_all: true)
+    chosen.results_show()
+
+    chosen.search_field.value = "O"
+    chosen.winnow_results()
+    text_select = jasmine.createSpy("textSelect")
+    chosen.keydown_checker(which: 65, ctrlKey: true, altKey: false, shiftKey: false, preventDefault: text_select)
+    expect(text_select).not.toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(0)
+
+    chosen.search_field.value = ""
+    chosen.winnow_results()
+    select_all = jasmine.createSpy("selectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: false, preventDefault: select_all)
+    expect(select_all).toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(2)
+
+    deselect_all = jasmine.createSpy("deselectAll")
+    chosen.keydown_checker(which: 65, metaKey: true, altKey: false, shiftKey: true, preventDefault: deselect_all)
+    expect(deselect_all).toHaveBeenCalled()
+    expect((option for option in select.options when option.selected).length).toBe(0)
+    expect(div.select(".chosen-bulk-action-last").length).toBe(1)
+    div.remove()
+
+  it "does not add bulk actions unless requested", ->
+    div = new Element('div').update("<select multiple><option>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'))
+    expect(div.select("[data-chosen-action]").length).toBe(0)
+    div.remove()
+
+  it "keeps Deselect all available when selected results are hidden", ->
+    div = new Element('div').update("<select multiple><option selected>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'), allow_deselect_all: true, display_selected_options: false)
+    expect(div.select(".chosen-deselect-all").length).toBe(1)
+    div.remove()
+
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
     div.update("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>")
