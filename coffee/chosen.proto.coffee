@@ -499,7 +499,7 @@ class @Chosen extends AbstractChosen
       if target
         @result_highlight = target
         this.result_select(evt)
-        @search_field.focus()
+        @search_field.focus() if @is_multiple or @results_showing
 
   search_results_mouseover: (evt) ->
     target = if evt.target.hasClassName("active-result") then evt.target else evt.target.up(".active-result")
@@ -621,6 +621,9 @@ class @Chosen extends AbstractChosen
       else
         this.results_hide()
         this.show_search_field_default()
+        unless @is_multiple
+          @search_field.blur()
+          @selected_item.focus()
 
       this.trigger_form_field_change() if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
       @current_selectedIndex = @form_field.selectedIndex
