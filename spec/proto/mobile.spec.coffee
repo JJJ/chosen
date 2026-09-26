@@ -91,6 +91,7 @@ describe "Mobile support", ->
       
       # Check that an option was selected
       expect(select.value).toBe 'United States'
+      expect(document.activeElement).toBe container.down('.chosen-single')
       
       # Cleanup
       div.remove()
