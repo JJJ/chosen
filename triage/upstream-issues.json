@@ -399,6 +399,7 @@
   {
     "number": 1738,
     "status": "fixed-in-fork",
-    "note": "The options page now explains how to override Chosen styles and maps the main control, result, and state selectors."
+    "note": "The options page now explains how to override Chosen styles and maps the main control, result, and state selectors.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/142"
   }
 ]
