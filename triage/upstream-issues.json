@@ -331,5 +331,16 @@
     "status": "fixed-in-fork",
     "note": "An empty-search max_shown_results window now shifts to include the selected single option without exceeding the configured result limit.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/128"
+  },
+  {
+    "number": 3017,
+    "status": "covered-in-fork",
+    "note": "Both adapters treat selects inside disabled fieldsets as disabled and refresh that state on chosen:updated."
+  },
+  {
+    "number": 2430,
+    "status": "fixed-in-fork",
+    "note": "The opt-in multiselect_allow_tab_to_select setting accepts a highlighted multiple-select result with Tab while preserving the existing default.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/135"
   }
 ]
