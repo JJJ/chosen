@@ -44,6 +44,7 @@ class AbstractChosen
     @group_search = if @options.group_search? then @options.group_search else true
     @search_in_values = @options.search_in_values || false
     @search_contains = @options.search_contains || false
+    @split_search_terms = @options.split_search_terms || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
     @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
@@ -304,6 +305,8 @@ class AbstractChosen
     normalized_query = this.normalize_search_text(query)
     escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
     regex = this.get_search_regex(escaped_query)
+    normalized_terms = if @split_search_terms then normalized_query.split(/\s+/) else []
+    term_regexes = (this.get_search_regex(term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")) for term in normalized_terms)
     exact_regex = new RegExp("^#{escaped_query}$")
     highlight_regex = this.get_highlight_regex(escaped_query)
 
@@ -312,6 +315,7 @@ class AbstractChosen
       option.search_match = false
       results_group = null
       search_match = null
+      match_value = false
       option.highlighted_html = ''
 
       if this.include_option_in_results(option)
@@ -329,25 +333,36 @@ class AbstractChosen
 
         unless option.group and not @group_search
           normalized_text = this.normalize_search_text(text)
-          search_match = this.search_string_match(normalized_text, regex)
-          option.search_match = search_match?
+          if term_regexes.length > 1
+            search_matches = (this.search_string_match(normalized_text, term_regex) for term_regex in term_regexes)
+            option.search_match = search_matches.every (match) -> match?
+            search_match = search_matches[0]
+          else
+            search_match = this.search_string_match(normalized_text, regex)
+            option.search_match = search_match?
 
           if not option.search_match and @search_in_values
-            option.search_match = this.search_string_match(option.value, regex)
-            match_value = true
+            if term_regexes.length > 1
+              value_matches = (this.search_string_match(option.value, term_regex) for term_regex in term_regexes)
+              option.search_match = value_matches.every (match) -> match?
+            else
+              option.search_match = this.search_string_match(option.value, regex)
+            match_value = option.search_match
 
           results += 1 if option.search_match and not option.group
 
           exact_result = exact_result || exact_regex.test option.html
 
           if option.search_match
-            if query.length and not match_value
+            if query.length and not match_value and term_regexes.length > 1
+              option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms)
+            else if query.length and not match_value
               startpos = search_match.index
-              
+
               # If normalization changed the text, we need to find the correct
               # highlighting boundaries in the original (non-normalized) text.
               # Note: This algorithm has O(n²) complexity due to repeated normalization.
-              # For most use cases with short option text (typically <100 chars), 
+              # For most use cases with short option text (typically <100 chars),
               # performance impact is minimal and negligible compared to DOM operations.
               if normalized_text != text
                 # When using normalization, highlight the full matched portion
@@ -426,6 +441,41 @@ class AbstractChosen
     regex_anchor = if @search_contains then "" else "\\b"
     regex_flag = if @case_sensitive_search then "" else "i"
     new RegExp(regex_anchor + escaped_search_string, regex_flag)
+
+  highlight_search_terms: (text, normalized_text, matches, normalized_terms) ->
+    ranges = []
+    for match, index in matches when match?
+      start = match.index
+      finish = start + normalized_terms[index].length
+      if normalized_text != text
+        start = this.original_index_for_normalized(text, start, false)
+        finish = this.original_index_for_normalized(text, finish, true)
+      ranges.push({start, finish}) if finish > start
+
+    ranges.sort (left, right) -> left.start - right.start
+    merged = []
+    for range in ranges
+      previous = merged[merged.length - 1]
+      if previous? and range.start <= previous.finish
+        previous.finish = Math.max(previous.finish, range.finish)
+      else
+        merged.push({start: range.start, finish: range.finish})
+
+    highlighted = ''
+    cursor = 0
+    for range in merged
+      highlighted += this.escape_html(text.slice(cursor, range.start))
+      highlighted += "<em>#{this.escape_html(text.slice(range.start, range.finish))}</em>"
+      cursor = range.finish
+    highlighted + this.escape_html(text.slice(cursor))
+
+  original_index_for_normalized: (text, normalized_index, end_index) ->
+    return 0 if normalized_index <= 0
+    for i in [1..text.length]
+      length = this.normalize_search_text(text.substring(0, i)).length
+      return i if end_index and length >= normalized_index
+      return i - 1 if not end_index and length > normalized_index
+    text.length
 
   get_list_special_char: () ->
     chars = []

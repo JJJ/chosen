@@ -94,6 +94,11 @@
           <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. This is especially useful for options that include a lot of special characters or phrases in ()s and []s.</td>
         </tr>
         <tr>
+          <td>split_search_terms</td>
+          <td>false</td>
+          <td>When <code class="language-javascript">true</code>, whitespace-separated search terms may match in any order, and every term must match. The default treats the full search text as one phrase.</td>
+        </tr>
+        <tr>
           <td>search_delay</td>
           <td>0</td>
           <td>Wait this many milliseconds after input before updating search results. The default keeps searches immediate. Enter, Tab, and result-navigation keys apply any pending search first.</td>

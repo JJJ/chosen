@@ -342,5 +342,20 @@
     "status": "fixed-in-fork",
     "note": "The opt-in multiselect_allow_tab_to_select setting accepts a highlighted multiple-select result with Tab while preserving the existing default.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/135"
+  },
+  {
+    "number": 2372,
+    "status": "covered-in-fork",
+    "note": "Both adapters fire chosen:search_updated after replacing filtered result markup, with the Chosen instance and search term."
+  },
+  {
+    "number": 3038,
+    "status": "fixed-in-fork",
+    "note": "The opt-in split_search_terms setting requires every whitespace-separated term to match in any order and highlights every match."
+  },
+  {
+    "number": 3117,
+    "status": "fixed-in-fork",
+    "note": "Covered by the order-independent multi-term search option tracked with issue 3038."
   }
 ]

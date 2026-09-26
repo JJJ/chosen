@@ -99,6 +99,39 @@ describe "Searching", ->
     expect(div.select('.active-result').length).toBe(2)
     div.remove()
 
+  it "matches and highlights every split search term in any order when enabled", ->
+    remove_accents = (text) -> text.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    div = new Element('div').update("<select><option value=''></option><option>My project</option><option>The project is here</option><option>Here is my project</option><option>The Café is here</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), split_search_terms: true, normalize_search_text: remove_accents)
+    chosen.results_show()
+
+    chosen.search_field.value = "project here"
+    chosen.search_if_value_changed()
+    results = div.select('.active-result')
+    expect(results.length).toBe(2)
+    expect(results[0].innerHTML).toBe("The <em>project</em> is <em>here</em>")
+    expect(results[1].innerHTML).toBe("<em>Here</em> is my <em>project</em>")
+
+    chosen.search_field.value = "here project"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(2)
+
+    chosen.search_field.value = "cafe here"
+    chosen.search_if_value_changed()
+    expect(div.down('.active-result').innerHTML).toBe("The <em>Café</em> is <em>here</em>")
+    div.remove()
+
+  it "keeps spaced searches contiguous by default", ->
+    div = new Element('div').update("<select><option value=''></option><option>The project is here</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    chosen.search_field.value = "project here"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(0)
+    div.remove()
+
   it "matches accented option text with an unaccented query", ->
     div = new Element('div').update("<select><option value=''></option><option value='cafe'>Café</option></select>")
     document.body.appendChild(div)
