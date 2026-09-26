@@ -634,8 +634,11 @@ class @Chosen extends AbstractChosen
 
       this.search_field_scale()
 
-  single_set_selected_text: (text = @default_text) ->
-    if text is @default_text
+  single_set_selected_text: (text) ->
+    is_default = arguments.length is 0
+    text = @default_text if is_default
+
+    if is_default
       @selected_item.addClassName("chosen-default")
       text = this.escape_html(text)
     else

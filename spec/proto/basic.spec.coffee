@@ -25,6 +25,14 @@ describe "Basic setup", ->
     expect(select.value).toBe(' ')
     div.remove()
 
+  it "does not style a selected option as a placeholder when their text matches", ->
+    div = new Element('div').update("<select data-placeholder='Same text'><option></option><option selected>Same text</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down('select'))
+    expect(div.down('.chosen-single span').innerHTML).toBe('Same text')
+    expect(div.down('.chosen-single').hasClassName('chosen-default')).toBe(false)
+    div.remove()
+
   it "deletes selected choices with backspace by default", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")
     document.body.appendChild(div)
