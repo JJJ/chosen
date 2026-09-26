@@ -53,6 +53,7 @@ class AbstractChosen
     @inherit_option_classes = @options.inherit_option_classes || false
     @display_selected_options = if @options.display_selected_options? then @options.display_selected_options else true
     @display_disabled_options = if @options.display_disabled_options? then @options.display_disabled_options else true
+    @display_selected_value = @options.display_selected_value || false
     @parser_config = @options.parser_config || {}
     @include_group_label_in_selected = @options.include_group_label_in_selected || false
     @max_shown_results = @options.max_shown_results || Number.POSITIVE_INFINITY
@@ -85,10 +86,11 @@ class AbstractChosen
     @create_option_text = @form_field.getAttribute("data-create_option_text") || @options.create_option_text || AbstractChosen.default_create_option_text
 
   choice_label: (item) ->
+    label = if @display_selected_value then this.escape_html(item.value) else item.html
     if @include_group_label_in_selected and item.group_label?
-      "<b class='group-name'>#{this.escape_html(item.group_label)}</b>#{item.html}"
+      "<b class='group-name'>#{this.escape_html(item.group_label)}</b>#{label}"
     else
-      item.html
+      label
 
   mouse_enter: -> @mouse_on_container = true
   mouse_leave: -> @mouse_on_container = false

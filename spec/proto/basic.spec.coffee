@@ -274,6 +274,24 @@ describe "Basic setup", ->
     expect(div.down('.search-choice').readAttribute('title')).toBe('Choice details')
     div.remove()
 
+  it "can display selected values while keeping labels in the results", ->
+    div = new Element('div').update("<select><option value='&lt;44&gt;' selected>+44 United Kingdom</option></select><select multiple><option value='ca' selected>Canada</option></select>")
+    document.body.appendChild(div)
+    selects = div.select('select')
+    single = new Chosen(selects[0], display_selected_value: true)
+    multiple = new Chosen(selects[1], display_selected_value: true)
+    single.results_show()
+    multiple.results_show()
+
+    expect(div.down('.chosen-single span').textContent).toBe('<44>')
+    expect(div.down('.chosen-single span').innerHTML).toBe('&lt;44&gt;')
+    expect(div.down('.search-choice > span').textContent).toBe('ca')
+    expect(single.search_results.down('li').textContent).toBe('+44 United Kingdom')
+    expect(multiple.search_results.down('li').textContent).toBe('Canada')
+    single.destroy()
+    multiple.destroy()
+    div.remove()
+
   it "refreshes inherited select classes without removing Chosen state", ->
     div = new Element('div').update("<select class='initial-class'><option>One</option></select>")
     document.body.appendChild(div)

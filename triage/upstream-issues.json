@@ -371,5 +371,10 @@
     "status": "fixed-in-fork",
     "note": "Open dropdowns consume Escape before it reaches ancestor controls, selected multiple choices retain option titles, and the existing chosen:search_updated event reports result refreshes.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/138"
+  },
+  {
+    "number": 3025,
+    "status": "fixed-in-fork",
+    "note": "The opt-in display_selected_value setting shows escaped option values in closed single controls and selected multiple choices while retaining labels in the dropdown."
   }
 ]

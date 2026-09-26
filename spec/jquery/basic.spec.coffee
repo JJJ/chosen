@@ -229,6 +229,22 @@ describe "Basic setup", ->
     expect(div.find(".search-choice").attr("title")).toBe("Choice details")
     div.remove()
 
+  it "can display selected values while keeping labels in the results", ->
+    div = $("<div>").html("<select><option value='&lt;44&gt;' selected>+44 United Kingdom</option></select><select multiple><option value='ca' selected>Canada</option></select>").appendTo("body")
+    selects = div.find("select").chosen(display_selected_value: true)
+    single = selects.eq(0).data("chosen")
+    multiple = selects.eq(1).data("chosen")
+    single.results_show()
+    multiple.results_show()
+
+    expect(div.find(".chosen-single span").text()).toBe("<44>")
+    expect(div.find(".chosen-single span").html()).toBe("&lt;44&gt;")
+    expect(div.find(".search-choice > span").text()).toBe("ca")
+    expect(single.search_results.children().first().text()).toBe("+44 United Kingdom")
+    expect(multiple.search_results.children().first().text()).toBe("Canada")
+    selects.chosen("destroy")
+    div.remove()
+
   it "refreshes inherited select classes without removing Chosen state", ->
     div = $("<div>").html("<select class='initial-class'><option>One</option></select>").appendTo("body")
     select = div.find("select").chosen(inherit_select_classes: true)
