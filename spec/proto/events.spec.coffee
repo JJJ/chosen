@@ -92,3 +92,17 @@ describe "Events", ->
 
     chosen.destroy()
     div.remove()
+
+  it "leaves legacy wheel events alone when standard wheel scrolling is available", ->
+    return unless 'onwheel' of document
+    div = new Element('div').update('<select><option>One</option></select>')
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    event = document.createEvent('CustomEvent')
+    event.initCustomEvent('DOMMouseScroll', true, true, 3)
+
+    chosen.search_results.dispatchEvent(event)
+
+    expect(event.defaultPrevented).toBe(false)
+    chosen.destroy()
+    div.remove()

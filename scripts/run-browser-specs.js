@@ -134,6 +134,26 @@ async function main() {
         if (multiOutline === 'none') {
           errors.push('Accessibility: Multiple select has no visible focus outline');
         }
+        await page.evaluate((kind) => {
+          const select = document.querySelector('#multi-field');
+          for (let index = 3; index <= 40; index += 1) {
+            select.add(new Option(`Option ${index}`, String(index)));
+          }
+          if (kind === 'jquery') {
+            window.jQuery(select).trigger('chosen:updated').trigger('chosen:open');
+          } else {
+            select.fire('chosen:updated');
+            select.fire('chosen:open');
+          }
+        }, suite.family);
+        const multiResults = page.locator('#accessibility-fixture .chosen-container-multi .chosen-results');
+        await multiResults.hover();
+        await page.mouse.wheel(0, 200);
+        try {
+          await page.waitForFunction(() => document.querySelector('#accessibility-fixture .chosen-container-multi .chosen-results').scrollTop > 0);
+        } catch {
+          errors.push('Wheel: Native wheel input did not scroll the multiple-select results');
+        }
         console.log(`${suite.name}: ${result.total - result.failures.length}/${result.total} specs passed`);
         for (const error of errors) console.error(`  ${error}`);
         if (errors.length || result.total === 0) failed = true;
