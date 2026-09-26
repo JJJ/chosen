@@ -105,16 +105,26 @@ class AbstractChosen
 
   results_option_build: (options) ->
     content = ''
-    shown_results = 0
+    rendered_results = 0
+    result_index = 0
+    first_result = 0
+
+    if not @is_multiple and @max_shown_results < Number.POSITIVE_INFINITY and this.get_search_field_value().length is 0
+      selected_result_index = 0
+      for data in @results_data when this.result_is_visible(data)
+        if data.selected
+          first_result = Math.max(0, selected_result_index - @max_shown_results + 1)
+          break
+        selected_result_index++
+
     for data in @results_data
-      data_content = ''
-      if data.group
-        data_content = this.result_add_group data
-      else
-        data_content = this.result_add_option data
-      if data_content != ''
-        shown_results++
-        content += data_content
+      if this.result_is_visible(data)
+        if result_index >= first_result and rendered_results < @max_shown_results
+          data_content = if data.group then this.result_add_group(data) else this.result_add_option(data)
+          if data_content != ''
+            rendered_results++
+            content += data_content
+        result_index++
 
       # this select logic pins on an awkward flag
       # we can make it better
@@ -124,10 +134,16 @@ class AbstractChosen
         else if data.selected and not @is_multiple
           this.single_set_selected_text(this.choice_label(data))
 
-      if shown_results >= @max_shown_results
+      if rendered_results >= @max_shown_results and not (options?.first and @is_multiple)
         break
 
     content
+
+  result_is_visible: (data) ->
+    if data.group
+      (data.search_match or data.group_match) and data.active_options > 0
+    else
+      data.search_match and this.include_option_in_results(data)
 
   result_add_option: (option) ->
     return '' unless option.search_match

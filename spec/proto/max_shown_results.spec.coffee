@@ -72,3 +72,17 @@ describe 'search', ->
     results = div.select('.active-result')
     expect(results.length).toBe(1)
     expect(results[0].innerText).toBe 'United Kingdom'
+
+  it 'keeps a selected single option inside the result limit', ->
+    options = ("<option#{if index is 11 then ' selected' else ''}>Option #{index}</option>" for index in [1..11]).join('')
+    div = new Element('div').update("<select>#{options}</select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), max_shown_results: 10)
+    chosen.results_show()
+    results = div.select('.active-result')
+
+    expect(results.length).toBe(10)
+    expect(results[0].innerText).toBe('Option 2')
+    expect(results[9].innerText).toBe('Option 11')
+    expect(results[9].hasClassName('result-selected')).toBe(true)
+    div.remove()
