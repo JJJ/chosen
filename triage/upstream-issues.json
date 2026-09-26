@@ -264,5 +264,11 @@
     "status": "fixed-in-fork",
     "note": "The chosen:updated event now mirrors changes to the source select title onto the visible Chosen container, including title removal.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/124"
+  },
+  {
+    "number": 1835,
+    "status": "fixed-in-fork",
+    "note": "The chosen:updated event now recalculates single-deselect eligibility when a true empty first option is added or removed dynamically.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/125"
   }
 ]

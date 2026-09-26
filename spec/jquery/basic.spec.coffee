@@ -47,6 +47,19 @@ describe "Basic setup", ->
       expect(select.val()).toBe("")
       expect(event.isDefaultPrevented()).toBe(true)
 
+  it "refreshes single deselection when the empty option changes", ->
+    div = $("<div><select><option selected>One</option></select></div>").appendTo("body")
+    select = div.find("select").chosen(allow_single_deselect: true)
+    expect(div.find(".search-choice-close").length).toBe(0)
+
+    select.prepend("<option value=''></option>").trigger("chosen:updated")
+    expect(div.find(".search-choice-close").length).toBe(1)
+
+    select.find("option").first().remove()
+    select.trigger("chosen:updated")
+    expect(div.find(".search-choice-close").length).toBe(0)
+    div.remove()
+
   it "exposes the browser support check", ->
     expect($.fn.chosen.browser_is_supported).toBeDefined()
     expect($.fn.chosen.browser_is_supported()).toBe(true)

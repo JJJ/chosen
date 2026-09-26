@@ -57,6 +57,22 @@ describe "Basic setup", ->
       expect(select.value).toBe("")
       expect(prevented).toBe(true)
 
+  it "refreshes single deselection when the empty option changes", ->
+    div = new Element('div').update("<select><option selected>One</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    new Chosen(select, allow_single_deselect: true)
+    expect(div.down('.search-choice-close')).toBeUndefined()
+
+    select.insertBefore(new Option('', ''), select.firstChild)
+    select.fire('chosen:updated')
+    expect(div.down('.search-choice-close')).toBeDefined()
+
+    select.removeChild(select.options[0])
+    select.fire('chosen:updated')
+    expect(div.down('.search-choice-close')).toBeUndefined()
+    div.remove()
+
   it "exposes the browser support check", ->
     expect(Chosen.browser_is_supported).toBeDefined()
     expect(Chosen.browser_is_supported()).toBe(true)
