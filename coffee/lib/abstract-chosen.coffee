@@ -63,6 +63,7 @@ class AbstractChosen
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
     @max_search_length = @options.max_search_length || 1000
+    @min_search_length = Math.max(0, parseInt(@options.min_search_length, 10) || 0)
     @search_delay = Math.max(0, parseInt(@options.search_delay, 10) || 0)
     @pending_search_timeout = null
     @results_count_text = @options.results_count_text || (count) -> "#{count} #{if count is 1 then 'result' else 'results'} available"
@@ -302,6 +303,15 @@ class AbstractChosen
     query = this.get_search_text()
     # Truncate query to prevent "Regular expression too large" errors
     query = query.substring(0, @max_search_length) if query.length > @max_search_length
+
+    if query.length < @min_search_length
+      this.update_results_content ""
+      this.result_clear_highlight()
+      this.fire_search_updated query
+      this.update_empty_results_state()
+      this.clear_results_count()
+      return
+
     normalized_query = this.normalize_search_text(query)
     escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
     regex = this.get_search_regex(escaped_query)

@@ -359,5 +359,11 @@
     "status": "fixed-in-fork",
     "note": "Covered by the order-independent multi-term search option tracked with issue 3038.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/136"
+  },
+  {
+    "number": 2961,
+    "status": "fixed-in-fork",
+    "note": "The opt-in min_search_length setting keeps result rows hidden until the trimmed search text reaches the configured length.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/137"
   }
 ]

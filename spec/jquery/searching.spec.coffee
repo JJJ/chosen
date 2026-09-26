@@ -87,6 +87,25 @@ describe "Searching", ->
     expect(div.find(".active-result").length).toBe(2)
     div.remove()
 
+  it "can hide results until the minimum search length is reached", ->
+    div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>").appendTo("body")
+    select = div.find("select").chosen(min_search_length: 2)
+    chosen = select.data("chosen")
+    chosen.results_show()
+
+    expect(div.find(".active-result").length).toBe(0)
+    expect(div.find(".no-results").length).toBe(0)
+    expect(div.find(".chosen-results-status").text()).toBe("")
+
+    chosen.search_field.val("A").trigger("input")
+    expect(div.find(".active-result").length).toBe(0)
+    expect(div.find(".no-results").length).toBe(0)
+
+    chosen.search_field.val("Al").trigger("input")
+    expect(div.find(".active-result").length).toBe(2)
+    expect(div.find(".chosen-results-status").text()).toBe("2 results available")
+    div.remove()
+
   it "matches and highlights every split search term in any order when enabled", ->
     remove_accents = (text) -> text.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     div = $("<div>").html("<select><option value=''></option><option>My project</option><option>The project is here</option><option>Here is my project</option><option>The Café is here</option></select>").appendTo("body")

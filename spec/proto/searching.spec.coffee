@@ -99,6 +99,27 @@ describe "Searching", ->
     expect(div.select('.active-result').length).toBe(2)
     div.remove()
 
+  it "can hide results until the minimum search length is reached", ->
+    div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), min_search_length: 2)
+    chosen.results_show()
+
+    expect(div.select('.active-result').length).toBe(0)
+    expect(div.select('.no-results').length).toBe(0)
+    expect(div.down('.chosen-results-status').textContent).toBe("")
+
+    chosen.search_field.value = "A"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(0)
+    expect(div.select('.no-results').length).toBe(0)
+
+    chosen.search_field.value = "Al"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(2)
+    expect(div.down('.chosen-results-status').textContent).toBe("2 results available")
+    div.remove()
+
   it "matches and highlights every split search term in any order when enabled", ->
     remove_accents = (text) -> text.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     div = new Element('div').update("<select><option value=''></option><option>My project</option><option>The project is here</option><option>Here is my project</option><option>The Café is here</option></select>")
