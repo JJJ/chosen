@@ -34,6 +34,7 @@ class SelectParser
           option_element: option
           value: option.value
           text: option.text
+          search_text: option.getAttribute('data-search-text') || ''
           html: option.innerHTML.replace(/^\s+|\s+$/g, '')
           title: option.title if option.title
           selected: option.selected

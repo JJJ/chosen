@@ -299,7 +299,6 @@ class AbstractChosen
 
     results = 0
     exact_result = false
-    match_value = false
 
     @last_search_value = this.get_search_field_value()
     query = this.get_search_text()
@@ -327,7 +326,7 @@ class AbstractChosen
       option.search_match = false
       results_group = null
       search_match = null
-      match_value = false
+      match_alternate_text = false
       option.highlighted_html = ''
 
       if this.include_option_in_results(option)
@@ -353,22 +352,31 @@ class AbstractChosen
             search_match = this.search_string_match(normalized_text, regex)
             option.search_match = search_match?
 
+          if not option.search_match and option.search_text
+            normalized_search_text = this.normalize_search_text(option.search_text)
+            if term_regexes.length > 1
+              alternate_matches = (this.search_string_match(normalized_search_text, term_regex) for term_regex in term_regexes)
+              option.search_match = alternate_matches.every (match) -> match?
+            else
+              option.search_match = this.search_string_match(normalized_search_text, regex)
+            match_alternate_text = option.search_match
+
           if not option.search_match and @search_in_values
             if term_regexes.length > 1
               value_matches = (this.search_string_match(option.value, term_regex) for term_regex in term_regexes)
               option.search_match = value_matches.every (match) -> match?
             else
               option.search_match = this.search_string_match(option.value, regex)
-            match_value = option.search_match
+            match_alternate_text = option.search_match
 
           results += 1 if option.search_match and not option.group
 
           exact_result = exact_result || exact_regex.test option.html
 
           if option.search_match
-            if query.length and not match_value and term_regexes.length > 1
+            if query.length and not match_alternate_text and term_regexes.length > 1
               option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms)
-            else if query.length and not match_value
+            else if query.length and not match_alternate_text
               startpos = search_match.index
 
               # If normalization changed the text, we need to find the correct
