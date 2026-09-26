@@ -37,6 +37,16 @@ describe "Basic setup", ->
     expect(div.find("option").prop("selected")).toBe(true)
     expect(div.find(".search-choice").length).toBe(1)
 
+  it "clears an allowed single selection with Backspace or Delete", ->
+    for key in [8, 46]
+      div = $("<div><select><option value=''></option><option selected>One</option></select></div>")
+      select = div.find("select").chosen(allow_single_deselect: true)
+      event = $.Event("keydown", which: key)
+      div.find(".chosen-single").trigger(event)
+
+      expect(select.val()).toBe("")
+      expect(event.isDefaultPrevented()).toBe(true)
+
   it "exposes the browser support check", ->
     expect($.fn.chosen.browser_is_supported).toBeDefined()
     expect($.fn.chosen.browser_is_supported()).toBe(true)

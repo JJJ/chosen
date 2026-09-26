@@ -46,6 +46,17 @@ describe "Basic setup", ->
     expect(div.select('.search-choice').length).toBe(1)
     div.remove()
 
+  it "clears an allowed single selection with Backspace or Delete", ->
+    for key in [8, 46]
+      div = new Element('div').update("<select><option value=''></option><option selected>One</option></select>")
+      select = div.down('select')
+      chosen = new Chosen(select, allow_single_deselect: true)
+      prevented = false
+      chosen.selected_item_keydown(keyCode: key, preventDefault: -> prevented = true)
+
+      expect(select.value).toBe("")
+      expect(prevented).toBe(true)
+
   it "exposes the browser support check", ->
     expect(Chosen.browser_is_supported).toBeDefined()
     expect(Chosen.browser_is_supported()).toBe(true)
