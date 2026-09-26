@@ -282,5 +282,11 @@
     "status": "fixed-in-fork",
     "note": "A selected option whose label matches the placeholder text now remains selected styling instead of receiving the chosen-default class.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/127"
+  },
+  {
+    "number": 2930,
+    "status": "fixed-in-fork",
+    "note": "An empty-search max_shown_results window now shifts to include the selected single option without exceeding the configured result limit.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/128"
   }
 ]
