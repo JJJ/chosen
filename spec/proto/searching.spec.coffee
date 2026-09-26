@@ -1,4 +1,38 @@
 describe "Searching", ->
+  it "waits for IME composition to finish before searching", (done) ->
+    div = new Element('div').update("<select><option value=''></option><option>人文</option><option>社科</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+
+    chosen.composition_start()
+    chosen.search_field.value = "人文"
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(2)
+    chosen.composition_end()
+    chosen.keyup_checker(which: 13, preventDefault: ->)
+
+    setTimeout ->
+      expect(div.select('.active-result').length).toBe(1)
+      expect(div.down('.active-result').textContent).toBe("人文")
+      expect(select.value).toBe("")
+      div.remove()
+      done()
+    , 10
+
+  it "does not search twice for the same input and keyup", ->
+    div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    spyOn(chosen, 'results_search').and.callThrough()
+    chosen.search_field.value = "Al"
+    chosen.search_if_value_changed()
+    chosen.keyup_checker(which: 65)
+    expect(chosen.results_search.calls.count()).toBe(1)
+    div.remove()
+
   it "announces the number of available results", ->
     div = new Element('div').update("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>")
     document.body.appendChild(div)

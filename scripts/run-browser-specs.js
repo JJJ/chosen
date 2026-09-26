@@ -135,6 +135,29 @@ async function main() {
         if (await resultsStatus.textContent() !== '2 results available') {
           errors.push(`Accessibility: Result count was not announced (${JSON.stringify(await resultsStatus.textContent())})`);
         }
+        const compositionState = await page.evaluate(async () => {
+          const input = document.querySelector('#accessibility-fixture .chosen-container-single .chosen-search-input');
+          const select = document.querySelector('#single-field');
+          input.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+          input.value = 'Two';
+          input.dispatchEvent(new InputEvent('input', { bubbles: true, data: 'Two', inputType: 'insertCompositionText' }));
+          const during = document.querySelectorAll('#accessibility-fixture .chosen-container-single .active-result').length;
+          input.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'Two' }));
+          for (const type of ['keydown', 'keyup']) {
+            const event = new KeyboardEvent(type, { bubbles: true, cancelable: true, key: 'Enter', code: 'Enter' });
+            Object.defineProperty(event, 'which', { value: 13 });
+            input.dispatchEvent(event);
+          }
+          await new Promise((resolve) => setTimeout(resolve, 10));
+          return {
+            during,
+            after: document.querySelectorAll('#accessibility-fixture .chosen-container-single .active-result').length,
+            value: select.value,
+          };
+        });
+        if (compositionState.during !== 2 || compositionState.after !== 1 || compositionState.value !== '') {
+          errors.push(`IME: Composition filtered or selected stale input (${JSON.stringify(compositionState)})`);
+        }
         await page.keyboard.press('Escape');
         if (await singleControl.getAttribute('aria-expanded') !== 'false') {
           errors.push('Keyboard: Escape did not close the single select');

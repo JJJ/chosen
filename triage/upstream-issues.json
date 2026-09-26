@@ -29,6 +29,24 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/130"
   },
   {
+    "number": 2663,
+    "status": "fixed-in-fork",
+    "note": "Search listens for completed input values, waits for IME composition to end, and does not treat composition confirmation as option selection.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/131"
+  },
+  {
+    "number": 2908,
+    "status": "fixed-in-fork",
+    "note": "Covered by the composition-aware input search fix tracked with issue 2663.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/131"
+  },
+  {
+    "number": 2983,
+    "status": "fixed-in-fork",
+    "note": "Covered by the input-event search fallback tracked with issue 2663.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/131"
+  },
+  {
     "number": 3146,
     "status": "blocked",
     "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."

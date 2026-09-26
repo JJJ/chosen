@@ -1,4 +1,34 @@
 describe "Searching", ->
+  it "waits for IME composition to finish before searching", (done) ->
+    div = $("<div>").html("<select><option value=''></option><option>人文</option><option>社科</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    chosen.results_show()
+
+    chosen.search_field.trigger("compositionstart").val("人文").trigger("input")
+    expect(div.find(".active-result").length).toBe(2)
+    chosen.search_field.trigger("compositionend")
+    chosen.keyup_checker(which: 13, preventDefault: ->)
+
+    setTimeout ->
+      expect(div.find(".active-result").length).toBe(1)
+      expect(div.find(".active-result").text()).toBe("人文")
+      expect(select.val()).toBe("")
+      div.remove()
+      done()
+    , 10
+
+  it "does not search twice for the same input and keyup", ->
+    div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Beta</option></select>").appendTo("body")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    searches = 0
+    select.on "chosen:search", -> searches += 1
+    chosen.results_show()
+    chosen.search_field.val("Al").trigger("input").trigger($.Event("keyup", which: 65))
+    expect(searches).toBe(1)
+    div.remove()
+
   it "announces the number of available results", ->
     div = $("<div>").html("<select><option value=''></option><option>Alpha</option><option>Alpine</option><option>Beta</option></select>").appendTo("body")
     chosen = div.find("select").chosen(
