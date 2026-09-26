@@ -14,6 +14,132 @@ async function buildTailwindFixture() {
   const result = await postcss([tailwindcss()]).process(source, { from });
   return result.css;
 }
+
+async function loadCoreFixtures() {
+  return JSON.parse(await fs.readFile(fixture('spec/fixtures/core-cases.json'), 'utf8'));
+}
+
+async function runCoreFilterFixtures(page, kind, cases) {
+  return page.evaluate(({ kind, cases }) => {
+    const errors = [];
+    const optionNames = {
+      displayDisabledOptions: 'display_disabled_options',
+      displaySelectedOptions: 'display_selected_options',
+      groupSearch: 'group_search',
+      searchContains: 'search_contains',
+      searchInValues: 'search_in_values',
+      splitSearchTerms: 'split_search_terms',
+    };
+
+    for (const testCase of cases) {
+      const wrapper = document.createElement('div');
+      const select = document.createElement('select');
+      select.multiple = testCase.settings.multiple;
+      wrapper.appendChild(select);
+      document.body.appendChild(wrapper);
+      let instance;
+      try {
+        function addOption(parent, source) {
+          const option = new Option(source.label, source.value, false, !!source.selected);
+          option.disabled = !!source.disabled;
+          option.hidden = !!source.hidden;
+          if (source.searchText) option.setAttribute('data-search-text', source.searchText);
+          parent.appendChild(option);
+        }
+        for (const entry of testCase.options) {
+          if (entry.options) {
+            const group = document.createElement('optgroup');
+            group.label = entry.label;
+            group.disabled = !!entry.disabled;
+            group.hidden = !!entry.hidden;
+            for (const child of entry.options) addOption(group, child);
+            select.appendChild(group);
+          } else {
+            addOption(select, entry);
+          }
+        }
+        const adapterSettings = {};
+        for (const [key, legacyName] of Object.entries(optionNames)) {
+          if (testCase.settings[key] !== undefined) adapterSettings[legacyName] = testCase.settings[key];
+        }
+        if (kind === 'jquery') {
+          window.jQuery(select).chosen(adapterSettings);
+          instance = window.jQuery(select).data('chosen');
+        } else {
+          instance = new window.Chosen(select, adapterSettings);
+        }
+        instance.results_show();
+        wrapper.querySelector('.chosen-search-input').value = testCase.query;
+        instance.winnow_results();
+        const visible = Array.from(wrapper.querySelectorAll('.chosen-results > li.group-result, .chosen-results > li[data-option-array-index]'))
+          .map((item) => item.textContent.trim());
+        const core = window.ChosenCore.filterOptions(testCase.options, testCase.query, testCase.settings)
+          .items.map((item) => item.label);
+        if (JSON.stringify(visible) !== JSON.stringify(testCase.expected) || JSON.stringify(core) !== JSON.stringify(testCase.expected)) {
+          errors.push(`Core parity: ${testCase.name} (${JSON.stringify({ visible, core, expected: testCase.expected })})`);
+        }
+      } catch (error) {
+        errors.push(`Core parity: ${testCase.name} (${error.message})`);
+      } finally {
+        if (instance) instance.destroy();
+        wrapper.remove();
+      }
+    }
+    return errors;
+  }, { kind, cases });
+}
+
+async function runCoreSelectionFixtures(page, kind, cases) {
+  return page.evaluate(({ kind, cases }) => {
+    const errors = [];
+    for (const testCase of cases) {
+      const wrapper = document.createElement('div');
+      const select = document.createElement('select');
+      select.multiple = testCase.settings.multiple;
+      wrapper.appendChild(select);
+      document.body.appendChild(wrapper);
+      let instance;
+      try {
+        const names = testCase.initial.slice();
+        for (const step of testCase.steps) {
+          if (!names.includes(step.option.value)) names.push(step.option.value);
+        }
+        for (const name of names) {
+          const option = new Option(name, name, false, testCase.initial.includes(name));
+          option.disabled = testCase.steps.some((step) => step.option.value === name && step.option.disabled);
+          select.appendChild(option);
+        }
+        const settings = {
+          max_selected_options: testCase.settings.maxSelectedOptions,
+          deselect_selected_results: true,
+          hide_results_on_select: false,
+        };
+        if (kind === 'jquery') {
+          window.jQuery(select).chosen(settings);
+          instance = window.jQuery(select).data('chosen');
+        } else {
+          instance = new window.Chosen(select, settings);
+        }
+        for (const step of testCase.steps) {
+          instance.results_show();
+          const result = Array.from(wrapper.querySelectorAll('.chosen-results > li[data-value]'))
+            .find((item) => item.getAttribute('data-value') === step.option.value);
+          if (result) result.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, button: 0 }));
+          const actual = Array.from(select.selectedOptions).map((item) => item.value);
+          if (JSON.stringify(actual) !== JSON.stringify(step.expected)) {
+            errors.push(`Core selection parity: ${testCase.name} after ${step.action || 'select'} ${step.option.value} (${JSON.stringify({ actual, expected: step.expected })})`);
+          }
+        }
+      } catch (error) {
+        errors.push(`Core selection parity: ${testCase.name} (${error.message})`);
+      } finally {
+        if (instance) instance.destroy();
+        wrapper.remove();
+      }
+    }
+    return errors;
+  }, { kind, cases });
+}
 const suites = [
   {
     name: 'jQuery 4.0.0',
@@ -55,6 +181,7 @@ async function main() {
 
   const executablePath = process.env.CHROME_EXECUTABLE_PATH;
   const tailwindFixture = await buildTailwindFixture();
+  const coreFixtures = await loadCoreFixtures();
   const browser = await chromium.launch({
     ...(executablePath ? { executablePath } : { channel: 'chrome' }),
     args: ['--no-sandbox'],
@@ -95,6 +222,8 @@ async function main() {
           jasmine.getEnv().execute();
         }));
         const errors = [...result.failures, ...pageErrors];
+        errors.push(...await runCoreFilterFixtures(page, suite.family, coreFixtures.filterCases));
+        errors.push(...await runCoreSelectionFixtures(page, suite.family, coreFixtures.selectionCases));
         await page.evaluate((kind) => {
           const fixture = document.createElement('div');
           fixture.id = 'accessibility-fixture';

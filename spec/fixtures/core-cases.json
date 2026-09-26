@@ -1,0 +1,115 @@
+{
+  "filterCases": [
+    {
+      "name": "blank placeholder options are omitted",
+      "options": [
+        { "value": "", "label": "" },
+        { "value": "one", "label": "One" }
+      ],
+      "query": "",
+      "settings": { "multiple": true },
+      "expected": ["One"]
+    },
+    {
+      "name": "group label reveals enabled and disabled children",
+      "options": [
+        {
+          "label": "Animals",
+          "options": [
+            { "value": "cat", "label": "Cat" },
+            { "value": "dog", "label": "Dog", "disabled": true }
+          ]
+        },
+        { "value": "oak", "label": "Oak" }
+      ],
+      "query": "Animals",
+      "settings": { "multiple": true },
+      "expected": ["Animals", "Cat", "Dog"]
+    },
+    {
+      "name": "hidden and selected options obey result settings",
+      "options": [
+        {
+          "label": "Animals",
+          "options": [
+            { "value": "cat", "label": "Cat" },
+            { "value": "dog", "label": "Dog", "disabled": true },
+            { "value": "bird", "label": "Bird", "selected": true },
+            { "value": "fox", "label": "Fox", "hidden": true }
+          ]
+        }
+      ],
+      "query": "",
+      "settings": {
+        "multiple": true,
+        "displayDisabledOptions": false,
+        "displaySelectedOptions": false
+      },
+      "expected": ["Animals", "Cat"]
+    },
+    {
+      "name": "alternate search text finds an option",
+      "options": [
+        { "value": "cat", "label": "Cat", "searchText": "kitten felis catus" },
+        { "value": "dog", "label": "Dog" }
+      ],
+      "query": "felis",
+      "settings": { "multiple": true },
+      "expected": ["Cat"]
+    },
+    {
+      "name": "split terms match in either order",
+      "options": [
+        { "value": "one", "label": "The project is here" },
+        { "value": "two", "label": "Here is my project" },
+        { "value": "three", "label": "My project" }
+      ],
+      "query": "project here",
+      "settings": { "multiple": true, "splitSearchTerms": true },
+      "expected": ["The project is here", "Here is my project"]
+    },
+    {
+      "name": "accented labels use the legacy folding rules",
+      "options": [
+        { "value": "cafe", "label": "Café" },
+        { "value": "helper", "label": "Assistant" }
+      ],
+      "query": "cafe",
+      "settings": { "multiple": true },
+      "expected": ["Café"]
+    },
+    {
+      "name": "a value can match without changing the visible label",
+      "options": [
+        { "value": "helper", "label": "Assistant" },
+        { "value": "other", "label": "Other" }
+      ],
+      "query": "helper",
+      "settings": { "multiple": true, "searchInValues": true },
+      "expected": ["Assistant"]
+    }
+  ],
+  "selectionCases": [
+    {
+      "name": "multiple limit, disabled option, and removal",
+      "initial": ["one"],
+      "settings": { "multiple": true, "maxSelectedOptions": 2 },
+      "steps": [
+        { "option": { "value": "two" }, "expected": ["one", "two"], "changed": true, "limitReached": false },
+        { "option": { "value": "three" }, "expected": ["one", "two"], "changed": false, "limitReached": true },
+        { "option": { "value": "blocked", "disabled": true }, "expected": ["one", "two"], "changed": false, "limitReached": false },
+        { "option": { "value": "one" }, "action": "remove", "expected": ["two"], "changed": true, "limitReached": false },
+        { "option": { "value": "three" }, "expected": ["two", "three"], "changed": true, "limitReached": false }
+      ]
+    },
+    {
+      "name": "single selection replaces the value",
+      "initial": ["one"],
+      "settings": { "multiple": false },
+      "steps": [
+        { "option": { "value": "two" }, "expected": ["two"], "changed": true, "limitReached": false },
+        { "option": { "value": "two" }, "expected": ["two"], "changed": false, "limitReached": false }
+      ]
+    }
+  ]
+}

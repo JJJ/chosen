@@ -363,7 +363,7 @@ class Chosen extends AbstractChosen
     @search_field.removeAttr "aria-activedescendant"
 
   results_show: ->
-    if @is_multiple and @max_selected_options <= this.choices_count() and not (@allow_deselect_all or @deselect_selected_results)
+    if @is_multiple and ChosenCore.selectionLimitReached(this.choices_count(), @max_selected_options) and not (@allow_deselect_all or @deselect_selected_results)
       @form_field_jq.trigger("chosen:maxselected", {chosen: this})
       return false
 
@@ -561,7 +561,7 @@ class Chosen extends AbstractChosen
 
       this.result_clear_highlight()
 
-      if @is_multiple and @max_selected_options <= this.choices_count()
+      if @is_multiple and ChosenCore.selectionLimitReached(this.choices_count(), @max_selected_options)
         @form_field_jq.trigger("chosen:maxselected", {chosen: this})
         return false
 
