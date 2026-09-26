@@ -381,11 +381,13 @@
   {
     "number": 2928,
     "status": "fixed-in-fork",
-    "note": "Options can provide synonyms and aliases through data-search-text; matches keep the visible option label unchanged."
+    "note": "Options can provide synonyms and aliases through data-search-text; matches keep the visible option label unchanged.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/140"
   },
   {
     "number": 2995,
     "status": "fixed-in-fork",
-    "note": "Covered by the per-option data-search-text support tracked with issue 2928."
+    "note": "Covered by the per-option data-search-text support tracked with issue 2928.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/140"
   }
 ]
