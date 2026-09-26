@@ -25,8 +25,9 @@
   },
   {
     "number": 3069,
-    "status": "candidate",
-    "note": "An opt-in display limit can collapse extra selected choices while keeping every underlying option selected."
+    "status": "fixed-in-fork",
+    "note": "An opt-in display limit collapses extra selected choices with an expandable summary while keeping every underlying option selected.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/157"
   },
   {
     "number": 3091,
