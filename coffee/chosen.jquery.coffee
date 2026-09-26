@@ -68,6 +68,7 @@ class Chosen extends AbstractChosen
     @form_field_jq.css('display', 'none') unless @form_field.required
     @form_field_jq.after @container
     @dropdown = @container.find('div.chosen-drop').first()
+    @dropdown.css "width", @options.dropdown_width if @options.dropdown_width?
 
     @search_field = @container.find('input').first()
     @search_results = @container.find('ul.chosen-results').first()

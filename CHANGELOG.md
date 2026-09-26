@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
 - Support per-option synonyms and aliases through the `data-search-text` attribute without changing visible labels.
 - Add an opt-in `display_selected_value` setting for showing option values in selected controls while retaining labels in the dropdown.
 - Add an opt-in `min_search_length` setting for keeping results hidden until enough search text is entered.
