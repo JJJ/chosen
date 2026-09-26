@@ -35,6 +35,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
 ### Maintenance
+- Add operating-system dark-mode support and a persistent theme switch to the jQuery, Prototype, and Options example pages.
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
