@@ -9,6 +9,7 @@ document.observe('dom:loaded', function(evt) {
   }
   
   for (var selector in config) {
+    config[selector].open_on_label_click = false;
     $$(selector).each(function(element) {
       new Chosen(element, config[selector]);
     });

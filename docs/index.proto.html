@@ -1,34 +1,45 @@
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
   <title>Chosen: A Prototype Plugin by Harvest to Tame Unwieldy Select Boxes</title>
-  <link rel="stylesheet" href="docsupport/style.css">
+  <link rel="stylesheet" href="docsupport/style.css?ver=3.0.4">
   <link rel="stylesheet" href="docsupport/prism.css">
   <link rel="stylesheet" href="chosen.css?ver=3.0.4">
 
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://ajax.googleapis.com; style-src 'self'; img-src 'self' data:">
 
 </head>
-<body>
+<body class="docs-home">
   <div id="container">
     <div id="content">
-      <header>
-        <h1>Chosen - Prototype Version <small>(<span id="latest-version">v3.0.4</span>)</small></h1>
+      <header class="site-header">
+        <div class="site-nav-wrap">
+          <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
+          <nav class="site-nav" aria-label="Primary navigation">
+            <a href="index.html">jQuery demo</a>
+            <a class="is-current" href="index.proto.html">Prototype demo</a>
+            <a href="options.html">Options &amp; API</a>
+            <a href="https://github.com/JJJ/chosen">GitHub</a>
+          </nav>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Prototype plugin</p>
+          <h1>Tame unwieldy select boxes.</h1>
+          <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+          <div class="hero-actions">
+            <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+            <a class="button" href="options.html">Explore the API</a>
+            <a class="text-link" href="index.html">View the jQuery demo <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
       </header>
-      <p>Chosen is a Prototype plugin that makes long, unwieldy select boxes much more user-friendly.</p>
-
-      <p>
-        <a class="button button-blue" href="https://github.com/jjj/chosen/releases">Downloads</a>
-        <a class="button" href="https://github.com/jjj/chosen">Project Source</a>
-        <a class="button" href="https://github.com/jjj/chosen/blob/master/contributing.md">Contribute</a>
-      </p>
-
-      <p class="jquery-version-refer">Looking for the <a href="index.html">jQuery version?</a></p>
 
       <h2><a name="standard-select" class="anchor" href="#standard-select">Standard Select</a></h2>
       <div class="side-by-side clearfix">
         <div>
-          <em>Turns This</em>
-          <select data-placeholder="Choose a Country..." class="select" tabindex="1">
+          <label class="comparison-label" for="standard-select-native">Turns This</label>
+          <select id="standard-select-native" data-placeholder="Choose a Country..." class="select" tabindex="1">
             <option value="" selected="" disabled="" hidden="">Choose a Country...</option>
             <option value="United States">United States</option>
             <option value="United Kingdom">United Kingdom</option>
@@ -284,8 +295,8 @@
           </select>
         </div>
         <div>
-          <em>Into This</em>
-          <select data-placeholder="Choose a Country..." class="chosen-select" tabindex="2">
+          <label class="comparison-label" for="standard-select-chosen">Into This</label>
+          <select id="standard-select-chosen" data-placeholder="Choose a Country..." class="chosen-select" tabindex="2">
             <option value="" selected="" disabled="" hidden="">Choose a Country...</option>
             <option value="United States">United States</option>
             <option value="United Kingdom">United Kingdom</option>
@@ -545,8 +556,8 @@
       <h2><a name="multiple-select" class="anchor" href="#multiple-select">Multiple Select</a></h2>
       <div class="side-by-side clearfix">
         <div>
-          <em>Turns This</em>
-          <select data-placeholder="Choose a Country..." class="select" multiple="" tabindex="3">
+          <label class="comparison-label" for="multiple-select-native">Turns This</label>
+          <select id="multiple-select-native" data-placeholder="Choose a Country..." class="select" multiple="" tabindex="3">
             <option value=""></option>
             <option value="United States">United States</option>
             <option value="United Kingdom">United Kingdom</option>
@@ -802,8 +813,8 @@
           </select>
         </div>
         <div>
-          <em>Into This</em>
-          <select data-placeholder="Choose a Country..." class="chosen-select" multiple="" tabindex="4">
+          <label class="comparison-label" for="multiple-select-chosen">Into This</label>
+          <select id="multiple-select-chosen" data-placeholder="Choose a Country..." class="chosen-select" multiple="" tabindex="4">
             <option value=""></option>
             <option value="United States">United States</option>
             <option value="United Kingdom">United Kingdom</option>
@@ -1063,8 +1074,8 @@
       <h2><a name="optgroup-support" class="anchor" href="#optgroup-support">&lt;optgroup&gt; Support</a></h2>
       <div class="side-by-side clearfix">
         <div>
-          <em>Single Select with Groups</em>
-          <select data-placeholder="Your Favorite Football Team" class="chosen-select" tabindex="5">
+          <label class="comparison-label" for="optgroup-single">Single Select with Groups</label>
+          <select id="optgroup-single" data-placeholder="Your Favorite Football Team" class="chosen-select" tabindex="5">
             <option value=""></option>
             <optgroup label="NFC EAST">
               <option>Dallas Cowboys</option>
@@ -1117,8 +1128,8 @@
           </select>
         </div>
         <div>
-          <em>Multiple Select with Groups</em>
-          <select data-placeholder="Your Favorite Football Team" class="chosen-select" multiple="" tabindex="6">
+          <label class="comparison-label" for="optgroup-multiple">Multiple Select with Groups</label>
+          <select id="optgroup-multiple" data-placeholder="Your Favorite Football Team" class="chosen-select" multiple="" tabindex="6">
             <option value=""></option>
             <optgroup label="NFC EAST">
               <option>Dallas Cowboys</option>
@@ -1176,8 +1187,8 @@
       <div class="side-by-side clearfix">
         <p>Chosen automatically highlights selected options and removes disabled and / or hidden options.</p>
         <div>
-          <em>Single Select</em>
-          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select" tabindex="7">
+          <label class="comparison-label" for="selected-single">Single Select</label>
+          <select id="selected-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select" tabindex="7">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1190,8 +1201,8 @@
           </select>
         </div>
         <div>
-          <em>Multiple Select</em>
-          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="8">
+          <label class="comparison-label" for="selected-multiple">Multiple Select</label>
+          <select id="selected-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="8">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1240,8 +1251,8 @@
         <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{no_results_text: "Oops, nothing found!"}); </code></pre>
 
         <div>
-          <em>Single Select</em>
-          <select data-placeholder="Type 'C' to view" class="chosen-select-no-results" tabindex="10">
+          <label class="comparison-label" for="no-results-single">Single Select</label>
+          <select id="no-results-single" data-placeholder="Type 'C' to view" class="chosen-select-no-results" tabindex="10">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1254,8 +1265,8 @@
           </select>
         </div>
         <div>
-          <em>Multiple Select</em>
-          <select data-placeholder="Type 'C' to view" multiple="" class="chosen-select-no-results" tabindex="11">
+          <label class="comparison-label" for="no-results-multiple">Multiple Select</label>
+          <select id="no-results-multiple" data-placeholder="Type 'C' to view" multiple="" class="chosen-select-no-results" tabindex="11">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1300,8 +1311,8 @@
         <p>You can set right-to-left text by setting <code class="language-javascript">rtl: true</code></p>
         <pre><code class="language-javascript"> $(".chosen-select").chosen({rtl: true}); </code></pre>
         <div>
-          <em>Single Right-to-Left Select</em>
-          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select-rtl" tabindex="13">
+          <label class="comparison-label" for="rtl-single">Single Right-to-Left Select</label>
+          <select id="rtl-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select-rtl" tabindex="13">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1312,8 +1323,8 @@
           </select>
         </div>
         <div>
-          <em>Multiple Right-to-Left Select</em>
-          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-rtl" tabindex="14">
+          <label class="comparison-label" for="rtl-multiple">Multiple Right-to-Left Select</label>
+          <select id="rtl-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-rtl" tabindex="14">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1355,8 +1366,8 @@ chosen.destroy();</code></pre>
         <p>Using a custom width with Chosen is as easy as passing an option when you create Chosen:</p>
         <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{width: "95%"}); </code></pre>
         <div>
-          <em>Single Select</em>
-          <select data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="15">
+          <label class="comparison-label" for="width-single">Single Select</label>
+          <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="15">
             <option value=""></option>
             <option selected="">American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1369,8 +1380,8 @@ chosen.destroy();</code></pre>
           </select>
         </div>
         <div>
-          <em>Multiple Select</em>
-          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-width" tabindex="16">
+          <label class="comparison-label" for="width-multiple">Multiple Select</label>
+          <select id="width-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-width" tabindex="16">
             <option value=""></option>
             <option>American Black Bear</option>
             <option>Asiatic Black Bear</option>
@@ -1386,10 +1397,10 @@ chosen.destroy();</code></pre>
 
       <h2><a name="labels-work-too" class="anchor" href="#labels-work-too">Labels work, too</a></h2>
       <div class="side-by-side clearfix">
-        <p>Use labels just like you would a standard select</p>
+        <p>Use labels just like you would with a standard select. This demo sets <code class="language-javascript">open_on_label_click: false</code>, so clicking either label focuses its closed Chosen control without opening the dropdown.</p>
         <p></p>
         <div>
-          <em><label for="single-label-example">Click to Highlight Single Select</label></em>
+          <label class="comparison-label" for="single-label-example">Click to Highlight Single Select</label>
           <select data-placeholder="Your Favorite Types of Bear" class="chosen-select" tabindex="17" id="single-label-example">
             <option value=""></option>
             <option selected="">American Black Bear</option>
@@ -1403,7 +1414,7 @@ chosen.destroy();</code></pre>
           </select>
         </div>
         <div>
-          <em><label for="multiple-label-example">Click to Highlight Multiple Select</label></em>
+          <label class="comparison-label" for="multiple-label-example">Click to Highlight Multiple Select</label>
           <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="18" id="multiple-label-example">
             <option value=""></option>
             <option>American Black Bear</option>

@@ -7,5 +7,6 @@ var config = {
   '.chosen-select-width'     : { width: '95%' }
 }
 for (var selector in config) {
+  config[selector].open_on_label_click = false;
   $(selector).chosen(config[selector]);
 }

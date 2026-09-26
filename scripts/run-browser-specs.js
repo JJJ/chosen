@@ -121,6 +121,13 @@ async function main() {
           errors.push('Accessibility: Single select has no visible focus outline');
         }
         await page.keyboard.press('Enter');
+        const openSingleStyles = await singleControl.evaluate((element) => ({
+          borderColor: getComputedStyle(element).borderColor,
+          outlineStyle: getComputedStyle(element).outlineStyle,
+        }));
+        if (openSingleStyles.outlineStyle !== 'none' || openSingleStyles.borderColor !== 'rgb(88, 151, 251)') {
+          errors.push(`Accessibility: Open single select did not use only the joined active border (${JSON.stringify(openSingleStyles)})`);
+        }
         if (await singleComboboxes.count() !== 1) {
           errors.push(`Accessibility: Open single select exposed ${await singleComboboxes.count()} named comboboxes`);
         }
@@ -186,6 +193,18 @@ async function main() {
             select.fire('chosen:open');
           }
         }, suite.family);
+        const openMultiStyles = await multiSearch.evaluate((element) => {
+          const choices = element.closest('.chosen-choices');
+          const drop = element.closest('.chosen-container').querySelector('.chosen-drop');
+          return {
+            choicesBorderColor: getComputedStyle(choices).borderColor,
+            dropBorderColor: getComputedStyle(drop).borderColor,
+            outlineStyle: getComputedStyle(choices).outlineStyle,
+          };
+        });
+        if (openMultiStyles.outlineStyle !== 'none' || openMultiStyles.choicesBorderColor !== 'rgb(88, 151, 251)' || openMultiStyles.dropBorderColor !== 'rgb(88, 151, 251)') {
+          errors.push(`Accessibility: Open multiple select did not use only the joined active border (${JSON.stringify(openMultiStyles)})`);
+        }
         const multiResults = page.locator('#accessibility-fixture .chosen-container-multi .chosen-results');
         await multiResults.hover();
         await page.mouse.wheel(0, 200);

@@ -9,8 +9,8 @@ $chosen-border-color: #aaa;
 $chosen-group-color: #999;
 $chosen-background-color: #fff;
 $chosen-selected-color: #e0e0e0;
-$chosen-focus-outline: auto !default;
-$chosen-focus-outline-offset: 2px !default;
+$chosen-focus-outline: 2px solid $chosen-active-color !default;
+$chosen-focus-outline-offset: 1px !default;
 $chosen-highlight-font-style: normal !default;
 $chosen-highlight-font-weight: null !default;
 $chosen-highlight-text-decoration: underline !default;
@@ -411,6 +411,7 @@ $chosen-highlight-text-decoration: underline !default;
 			border-top-width: 1px;
 			border-bottom-right-radius: 0;
 			border-bottom-left-radius: 0;
+			outline: none;
 		}
 
 		.chosen-single div b {

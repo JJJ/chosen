@@ -1,4 +1,43 @@
 describe "Bugfixes", ->
+  it "focuses a closed multiple select without opening it when open_on_label_click is false", ->
+    div = new Element("div").update("<label for='label-focus-proto'>Choices</label><select id='label-focus-proto' multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"), open_on_label_click: false)
+
+    event = document.createEvent('MouseEvents')
+    event.initEvent('click', true, true)
+    div.down('label').dispatchEvent(event)
+
+    expect(chosen.active_field).toBe(true)
+    expect(chosen.results_showing).toBe(false)
+    expect(document.activeElement).toBe(chosen.search_field)
+    div.remove()
+
+  it "opens a closed single select when open_on_label_click is true", ->
+    div = new Element("div").update("<label for='label-open-proto'>Choices</label><select id='label-open-proto'><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"), open_on_label_click: true)
+
+    event = document.createEvent('MouseEvents')
+    event.initEvent('click', true, true)
+    div.down('label').dispatchEvent(event)
+
+    expect(chosen.active_field).toBe(true)
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
+  it "preserves the default multiple-label opening behavior", ->
+    div = new Element("div").update("<label for='label-default-proto'>Choices</label><select id='label-default-proto' multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+
+    event = document.createEvent('MouseEvents')
+    event.initEvent('click', true, true)
+    div.down('label').dispatchEvent(event)
+
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
   it "keeps an open select visible while its associated label is pressed", (done) ->
     div = new Element("div").update("<label for='label-press-proto'>Choices</label><select id='label-press-proto'><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)
