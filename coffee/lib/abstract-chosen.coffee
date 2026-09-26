@@ -61,6 +61,8 @@ class AbstractChosen
     @persistent_create_option = @options.persistent_create_option || false
     @skip_no_results = @options.skip_no_results || false
     @max_search_length = @options.max_search_length || 1000
+    @search_delay = Math.max(0, parseInt(@options.search_delay, 10) || 0)
+    @pending_search_timeout = null
     @results_count_text = @options.results_count_text || (count) -> "#{count} #{if count is 1 then 'result' else 'results'} available"
 
   set_default_text: ->
@@ -249,6 +251,7 @@ class AbstractChosen
       this.results_show()
 
   results_search: (evt) ->
+    this.cancel_pending_search()
     @last_search_value = this.get_search_field_value()
     if @results_showing
       this.winnow_results()
@@ -257,7 +260,25 @@ class AbstractChosen
     @form_field_jq.trigger("chosen:search", {chosen: this})
 
   search_if_value_changed: ->
-    this.results_search() unless @composing or this.get_search_field_value() is @last_search_value
+    return if @composing or this.get_search_field_value() is @last_search_value
+
+    if @search_delay > 0
+      this.cancel_pending_search()
+      @pending_search_timeout = setTimeout((=>
+        @pending_search_timeout = null
+        this.results_search() if not @composing and this.get_search_field_value() isnt @last_search_value
+      ), @search_delay)
+    else
+      this.results_search()
+
+  flush_pending_search: ->
+    return unless @pending_search_timeout?
+    this.cancel_pending_search()
+    this.results_search() if not @composing and this.get_search_field_value() isnt @last_search_value
+
+  cancel_pending_search: ->
+    clearTimeout(@pending_search_timeout) if @pending_search_timeout?
+    @pending_search_timeout = null
 
   composition_start: ->
     @composing = true
@@ -534,6 +555,7 @@ class AbstractChosen
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
     return if @composing or evt.isComposing or stroke is 229
+    this.flush_pending_search() if stroke in [9, 13, 33, 34, 35, 36, 38, 40]
     if @disable_search and not @is_multiple and @results_showing and this.typeahead_search_results(evt)
       evt.preventDefault()
       return

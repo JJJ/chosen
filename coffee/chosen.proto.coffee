@@ -192,6 +192,7 @@ class @Chosen extends AbstractChosen
       @selected_item.observe "keydown", (evt) => this.selected_item_keydown(evt)
 
   destroy: ->
+    this.cancel_pending_search()
     Event.stopObserving window, 'pageshow', @pageshow_handler
     Event.stopObserving window, 'blur', @window_blur_handler
     if (@container.getRootNode?)
@@ -460,6 +461,7 @@ class @Chosen extends AbstractChosen
     @form_field.fire("chosen:search_updated", {chosen: this, search_term: search_term})
 
   results_hide: ->
+    this.cancel_pending_search()
     this.clear_typeahead()
     if @results_showing
       this.result_clear_highlight()
