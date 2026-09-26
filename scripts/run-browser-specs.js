@@ -112,11 +112,18 @@ async function main() {
         });
         errors.push(...violations.map((item) => `Accessibility: ${item}`));
         const singleControl = page.locator('#accessibility-fixture .chosen-container-single .chosen-single');
+        const singleComboboxes = page.getByRole('combobox', { name: 'Single choice' });
+        if (await singleComboboxes.count() !== 1) {
+          errors.push(`Accessibility: Closed single select exposed ${await singleComboboxes.count()} named comboboxes`);
+        }
         await singleControl.focus();
         if (await singleControl.evaluate((element) => getComputedStyle(element).outlineStyle) === 'none') {
           errors.push('Accessibility: Single select has no visible focus outline');
         }
         await page.keyboard.press('Enter');
+        if (await singleComboboxes.count() !== 1) {
+          errors.push(`Accessibility: Open single select exposed ${await singleComboboxes.count()} named comboboxes`);
+        }
         if (await singleControl.getAttribute('aria-expanded') !== 'true') {
           const state = await page.evaluate(() => ({
             focus: document.activeElement?.outerHTML.slice(0, 160),
@@ -127,6 +134,9 @@ async function main() {
         await page.keyboard.press('Escape');
         if (await singleControl.getAttribute('aria-expanded') !== 'false') {
           errors.push('Keyboard: Escape did not close the single select');
+        }
+        if (await singleControl.evaluate((element) => document.activeElement === element) !== true) {
+          errors.push('Keyboard: Escape did not return focus to the single select');
         }
         const multiSearch = page.locator('#accessibility-fixture .chosen-container-multi .chosen-search-input');
         await multiSearch.focus();

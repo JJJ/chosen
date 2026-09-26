@@ -544,7 +544,9 @@ class AbstractChosen
         this.result_select(evt) if this.results_showing
         break
       when 27 # escape
-        this.results_hide() if @results_showing
+        if @results_showing
+          this.results_hide()
+          @selected_item.focus() unless @is_multiple
         break
       when 9, 16, 17, 18, 38, 40, 91
         # don't do anything on these keys
@@ -595,13 +597,13 @@ class AbstractChosen
 
   get_single_html: ->
     """
-      <a class="chosen-single chosen-default" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+      <a class="chosen-single chosen-default" role="combobox" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
         <span>#{this.escape_html(@default_text)}</span>
         <div>
           <b aria-hidden="true"></b>
         </div>
       </a>
-      <div class="chosen-drop">
+      <div class="chosen-drop" aria-hidden="true">
         <div class="chosen-search">
           <input
             aria-autocomplete="list"
@@ -638,7 +640,7 @@ class AbstractChosen
           />
         </li>
       </ul>
-      <div class="chosen-drop">
+      <div class="chosen-drop" aria-hidden="true">
         <ul
           aria-busy="true"
           class="chosen-results"

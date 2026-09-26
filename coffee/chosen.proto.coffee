@@ -232,12 +232,15 @@ class @Chosen extends AbstractChosen
   set_aria_labels: ->
     for name in @copied_aria_attributes or []
       @search_field.removeAttribute name
+      @selected_item.removeAttribute name unless @is_multiple
     @copied_aria_attributes = []
     for attribute in this.search_aria_attributes()
       @search_field.writeAttribute attribute.name, attribute.value
+      @selected_item.writeAttribute attribute.name, attribute.value unless @is_multiple
       @copied_aria_attributes.push attribute.name
     @search_field.writeAttribute "aria-owns", @search_results.readAttribute "id"
     @search_field.writeAttribute "aria-controls", @search_results.readAttribute "id"
+    @selected_item.writeAttribute "aria-controls", @search_results.readAttribute "id" unless @is_multiple
     if not @form_field.attributes["aria-labelledby"] and not @form_field.attributes["aria-label"] and @form_field.labels?.length
       labelledbyList = ""
       for label, i in @form_field.labels
@@ -245,6 +248,7 @@ class @Chosen extends AbstractChosen
           label.id = "#{@result_id_base}-label-#{i}"
         labelledbyList += @form_field.labels[i].id + " "
       @search_field.writeAttribute "aria-labelledby", labelledbyList
+      @selected_item.writeAttribute "aria-labelledby", labelledbyList unless @is_multiple
       @copied_aria_attributes.push "aria-labelledby"
 
   search_field_disabled: ->
@@ -265,7 +269,7 @@ class @Chosen extends AbstractChosen
 
     unless @is_multiple
       @selected_item.writeAttribute 'aria-disabled', String(@is_disabled)
-      @selected_item.writeAttribute 'tabindex', if @is_disabled then -1 else 0
+      @selected_item.writeAttribute 'tabindex', if @is_disabled then -1 else @selected_item_tab_index
 
     if @is_disabled
       this.close_field()
@@ -424,10 +428,13 @@ class @Chosen extends AbstractChosen
 
     @container.addClassName "chosen-with-drop"
     @selected_item.writeAttribute("aria-expanded", "true") unless @is_multiple
+    @dropdown.writeAttribute("aria-hidden", "false")
     @results_showing = true
 
     @search_field.writeAttribute("aria-expanded", "true")
     @search_field.focus()
+    @selected_item.writeAttribute("tabindex", -1) unless @is_multiple
+    @selected_item.writeAttribute("aria-hidden", "true") unless @is_multiple
     @search_field.value = this.get_search_field_value()
 
     this.winnow_results()
@@ -455,8 +462,11 @@ class @Chosen extends AbstractChosen
       @container.removeClassName "chosen-with-drop"
       @container.removeClassName "chosen-dropup"
       @selected_item.writeAttribute("aria-expanded", "false") unless @is_multiple
+      @selected_item.removeAttribute("aria-hidden") unless @is_multiple
+      @selected_item.writeAttribute("tabindex", @selected_item_tab_index) unless @is_multiple or @is_disabled
       @form_field.fire("chosen:hiding_dropdown", {chosen: this})
 
+    @dropdown.writeAttribute("aria-hidden", "true")
     @search_field.writeAttribute("aria-expanded", "false")
     @results_showing = false
 
@@ -466,10 +476,13 @@ class @Chosen extends AbstractChosen
 
 
   set_tab_index: (el) ->
-    if @form_field.tabIndex
-      ti = @form_field.tabIndex
-      @form_field.tabIndex = -1
-      @search_field.tabIndex = ti
+    ti = @form_field.tabIndex
+    if @is_multiple
+      @search_field.tabIndex = ti if ti
+    else
+      @selected_item_tab_index = ti or 0
+      @selected_item.writeAttribute("tabindex", if @is_disabled then -1 else @selected_item_tab_index)
+      @search_field.tabIndex = -1
     @form_field.tabIndex = -1 if @form_field.required
 
   set_label_behavior: ->

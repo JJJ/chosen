@@ -11,10 +11,14 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 
 ### Fixed
+- Expose one named combobox at a time for single selects, hide inactive dropdown semantics, and return focus to the closed control on Escape.
 - Show the browser's native focus outline around single and multiple Chosen controls.
 - Keep listbox option selection and active-descendant state accurate for assistive technologies.
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 - Reopen an active multiple select when it is clicked again after choosing an option.
+
+### Developer notes
+- Single-select markup keeps the same elements and nesting, but its accessibility attributes now change with dropdown state. `.chosen-single` uses `role="combobox"` instead of `role="button"`, receives the select's accessible name and `aria-controls`, and is removed from the accessibility tree and tab order while the searchable combobox is open. `.chosen-drop` now toggles `aria-hidden` between closed and open states. Integrations that assert generated roles, ARIA attributes, or `tabindex` values should update those expectations.
 
 ## [3.0.4] - 2026-09-21
 

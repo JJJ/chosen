@@ -252,17 +252,27 @@ describe "Basic setup", ->
     expect(chosen.result_clear_highlight).not.toHaveBeenCalled()
 
   it "uses the single select as the accessible dropdown control", ->
-    div = $("<div>").html("<select><option>One</option><option>Two</option></select>")
+    div = $("<div>").html("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>").appendTo("body")
     div.find("select").chosen()
     control = div.find(".chosen-single")
-    expect(control.attr("role")).toBe("button")
+    chosen = div.find("select").data("chosen")
+    expect(control.attr("role")).toBe("combobox")
     expect(String(control.attr("tabindex"))).toBe("0")
     expect(control.find("button").length).toBe(0)
+    expect(control.attr("aria-labelledby")).toBe(div.find("label").attr("id") + " ")
+    expect(control.attr("aria-controls")).toBe(chosen.search_results.attr("id"))
     expect(control.attr("aria-expanded")).toBe("false")
+    expect(chosen.dropdown.attr("aria-hidden")).toBe("true")
     control.trigger($.Event("keydown", which: 13))
     expect(control.attr("aria-expanded")).toBe("true")
-    div.find("select").data("chosen").results_hide()
+    expect(control.attr("aria-hidden")).toBe("true")
+    expect(chosen.dropdown.attr("aria-hidden")).toBe("false")
+    chosen.search_field.trigger($.Event("keyup", which: 27))
     expect(control.attr("aria-expanded")).toBe("false")
+    expect(control.attr("aria-hidden")).toBeUndefined()
+    expect(chosen.dropdown.attr("aria-hidden")).toBe("true")
+    expect(document.activeElement).toBe(control[0])
+    div.remove()
 
   it "keeps active descendant and option selection state current", ->
     div = $("<div>").html("<select><option>One</option><option selected>Two</option><option>Three</option></select>")
@@ -291,6 +301,9 @@ describe "Basic setup", ->
     expect(search.attr("aria-label")).toBe("Choices")
     expect(search.attr("aria-labelledby")).toBe("field-label")
     expect(search.attr("aria-describedby")).toBe("field-help")
+    expect(div.find(".chosen-single").attr("aria-label")).toBe("Choices")
+    expect(div.find(".chosen-single").attr("aria-labelledby")).toBe("field-label")
+    expect(div.find(".chosen-single").attr("aria-describedby")).toBe("field-help")
 
   it "keeps generated listbox and option IDs unique without select IDs", ->
     div = $("<div>").html("<select><option value=''></option><option>One</option></select><select><option value=''></option><option>Two</option></select>")
@@ -317,6 +330,7 @@ describe "Basic setup", ->
     div = $("<div>").html("<label for='label-test'>Choices</label><select id='label-test'><option>One</option></select>").appendTo("body")
     div.find("select").chosen()
     expect(div.find(".chosen-search-input").attr("aria-labelledby")).toBe(div.find("label").attr("id") + " ")
+    expect(div.find(".chosen-single").attr("aria-labelledby")).toBe(div.find("label").attr("id") + " ")
     div.remove()
 
   it "should add chosen to jQuery object", ->
