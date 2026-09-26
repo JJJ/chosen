@@ -211,7 +211,9 @@ class @Chosen extends AbstractChosen
     @container.stopObserving()
     @search_results.stopObserving()
     @search_field.stopObserving()
-    @form_field_label.stopObserving('click', this.label_click_handler) if @form_field_label?
+    if @form_field_label?
+      @form_field_label.stopObserving('mousedown', this.label_mousedown_handler)
+      @form_field_label.stopObserving('click', this.label_click_handler)
 
     if @is_multiple
       @search_choices.stopObserving()
@@ -358,7 +360,9 @@ class @Chosen extends AbstractChosen
     @search_field.focus()
 
   test_active_click: (evt) ->
-    if this.mousedown_checker(evt) == 'left' and evt.target.up('.chosen-container') is @container
+    active_label = @form_field_label? and (evt.target is @form_field_label or @form_field_label.contains(evt.target))
+    active_form_field = evt.target is @form_field
+    if active_label or active_form_field or (this.mousedown_checker(evt) == 'left' and evt.target.up('.chosen-container') is @container)
       @active_field = true
     else
       this.close_field()
@@ -477,6 +481,7 @@ class @Chosen extends AbstractChosen
       @form_field_label = $$("label[for='#{@form_field.id}']").first() #next check for a for=#{id}
 
     if @form_field_label?
+      @form_field_label.observe "mousedown", this.label_mousedown_handler
       @form_field_label.observe "click", this.label_click_handler
 
   set_search_field_placeholder: ->

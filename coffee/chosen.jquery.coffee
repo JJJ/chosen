@@ -151,7 +151,9 @@ class Chosen extends AbstractChosen
     $(window).off 'pageshow.chosen', @pageshow_handler
     $(window).off 'blur.chosen', @window_blur_handler
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
-    @form_field_label.off 'click.chosen', this.label_click_handler if @form_field_label.length > 0
+    if @form_field_label.length > 0
+      @form_field_label.off 'mousedown.chosen', this.label_mousedown_handler
+      @form_field_label.off 'click.chosen', this.label_click_handler
     @form_field_jq.off "chosen:updated.chosen", @form_field_observers.updated
     @form_field_jq.off "chosen:activate.chosen", @form_field_observers.activate
     @form_field_jq.off "chosen:open.chosen", @form_field_observers.open
@@ -295,7 +297,9 @@ class Chosen extends AbstractChosen
 
   test_active_click: (evt) ->
     active_container = $(evt.target).closest('.chosen-container')
-    if this.mousedown_checker(evt) == 'left' and active_container.length and @container[0] == active_container[0]
+    active_label = @form_field_label.length and (@form_field_label.is(evt.target) or @form_field_label.has(evt.target).length)
+    active_form_field = evt.target is @form_field
+    if active_label or active_form_field or (this.mousedown_checker(evt) == 'left' and active_container.length and @container[0] == active_container[0])
       @active_field = true
     else
       this.close_field()
@@ -412,6 +416,7 @@ class Chosen extends AbstractChosen
       @form_field_label = $("label[for='#{@form_field.id}']") #next check for a for=#{id}
 
     if @form_field_label.length > 0
+      @form_field_label.on 'mousedown.chosen', this.label_mousedown_handler
       @form_field_label.on 'click.chosen', this.label_click_handler
 
   set_search_field_placeholder: ->
