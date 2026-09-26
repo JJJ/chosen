@@ -393,6 +393,7 @@
   {
     "number": 406,
     "status": "fixed-in-fork",
-    "note": "The opt-in dropdown_width setting sizes the result dropdown independently from the control and accepts fixed or intrinsic CSS widths."
+    "note": "The opt-in dropdown_width setting sizes the result dropdown independently from the control and accepts fixed or intrinsic CSS widths.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/141"
   }
 ]
