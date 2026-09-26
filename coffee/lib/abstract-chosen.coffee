@@ -636,7 +636,9 @@ class AbstractChosen
         evt.preventDefault() if @results_showing
         break
       when 27 # escape
-        evt.preventDefault() if @results_showing
+        if @results_showing
+          evt.preventDefault()
+          evt.stopPropagation()
         break
       when 32 # space
         evt.preventDefault() if @disable_search

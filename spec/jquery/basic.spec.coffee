@@ -223,6 +223,12 @@ describe "Basic setup", ->
     expect(div.find(".chosen-container").attr("title")).toBeUndefined()
     div.remove()
 
+  it "copies option titles to selected multiple choices", ->
+    div = $("<div>").html("<select multiple><option title='Choice details' selected>One</option></select>").appendTo("body")
+    div.find("select").chosen()
+    expect(div.find(".search-choice").attr("title")).toBe("Choice details")
+    div.remove()
+
   it "refreshes inherited select classes without removing Chosen state", ->
     div = $("<div>").html("<select class='initial-class'><option>One</option></select>").appendTo("body")
     select = div.find("select").chosen(inherit_select_classes: true)
@@ -351,11 +357,25 @@ describe "Basic setup", ->
     expect(control.attr("aria-expanded")).toBe("true")
     expect(control.attr("aria-hidden")).toBe("true")
     expect(chosen.dropdown.attr("aria-hidden")).toBe("false")
+    escape_keydown =
+      which: 27
+      preventDefault: jasmine.createSpy("preventDefault")
+      stopPropagation: jasmine.createSpy("stopPropagation")
+    chosen.keydown_checker(escape_keydown)
+    expect(escape_keydown.preventDefault).toHaveBeenCalled()
+    expect(escape_keydown.stopPropagation).toHaveBeenCalled()
     chosen.search_field.trigger($.Event("keyup", which: 27))
     expect(control.attr("aria-expanded")).toBe("false")
     expect(control.attr("aria-hidden")).toBeUndefined()
     expect(chosen.dropdown.attr("aria-hidden")).toBe("true")
     expect(document.activeElement).toBe(control[0])
+    closed_escape =
+      which: 27
+      preventDefault: jasmine.createSpy("closedPreventDefault")
+      stopPropagation: jasmine.createSpy("closedStopPropagation")
+    chosen.keydown_checker(closed_escape)
+    expect(closed_escape.preventDefault).not.toHaveBeenCalled()
+    expect(closed_escape.stopPropagation).not.toHaveBeenCalled()
     div.remove()
 
   it "keeps active descendant and option selection state current", ->
