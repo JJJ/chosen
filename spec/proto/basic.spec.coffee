@@ -1,4 +1,18 @@
 describe "Basic setup", ->
+  it "transfers native autofocus to the generated control", ->
+    for multiple in [false, true]
+      multiple_attribute = if multiple then " multiple" else ""
+      div = new Element('div').update("<select autofocus#{multiple_attribute}><option>One</option><option>Two</option></select>")
+      document.body.insert(div)
+      select = div.down('select')
+      select.focus()
+      chosen = new Chosen(select)
+      control = div.down(if multiple then '.chosen-search-input' else '.chosen-single')
+
+      expect(document.activeElement).toBe(control)
+      expect(chosen.results_showing).toBe(false)
+      div.remove()
+
   it "keeps blank options with nonempty values selectable", ->
     div = new Element('div').update("<select><option value=''></option><option value=' '></option></select>")
     document.body.appendChild(div)

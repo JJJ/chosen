@@ -1,4 +1,17 @@
 describe "Basic setup", ->
+  it "transfers native autofocus to the generated control", ->
+    for multiple in [false, true]
+      multiple_attribute = if multiple then " multiple" else ""
+      div = $("<div><select autofocus#{multiple_attribute}><option>One</option><option>Two</option></select></div>").appendTo("body")
+      select = div.find("select")
+      select[0].focus()
+      chosen = select.chosen().data("chosen")
+      control = div.find(if multiple then ".chosen-search-input" else ".chosen-single")
+
+      expect(document.activeElement).toBe(control[0])
+      expect(chosen.results_showing).toBe(false)
+      div.remove()
+
   it "keeps blank options with nonempty values selectable", ->
     div = $("<div>").html("<select><option value=''></option><option value=' '></option></select>")
     select = div.find("select").chosen()
