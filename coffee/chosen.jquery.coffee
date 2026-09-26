@@ -394,6 +394,7 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:search_updated", {chosen: this, search_term: search_term})
 
   results_hide: ->
+    this.clear_typeahead()
     if @results_showing
       this.result_clear_highlight()
 
@@ -628,6 +629,9 @@ class Chosen extends AbstractChosen
 
   get_search_field_value: ->
     @search_field.val()
+
+  result_for_array_index: (array_index) ->
+    @search_results.find("[data-option-array-index='#{array_index}']").first()
 
   get_search_text: ->
     text = this.get_search_field_value()

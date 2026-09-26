@@ -32,6 +32,8 @@ class AbstractChosen
     @composing = false
     @ignore_composition_enter = false
     @last_search_value = ""
+    @typeahead_search = ""
+    @typeahead_timeout = null
     @results_showing = false
     @result_highlighted = null
     @is_rtl = @options.rtl || /\bchosen-rtl\b/.test(@form_field.className)
@@ -532,6 +534,9 @@ class AbstractChosen
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
     return if @composing or evt.isComposing or stroke is 229
+    if @disable_search and not @is_multiple and @results_showing and this.typeahead_search_results(evt)
+      evt.preventDefault()
+      return
     this.search_field_scale()
 
     this.clear_backstroke() if stroke != 8 and @pending_backstroke
@@ -617,6 +622,40 @@ class AbstractChosen
   clipboard_event_checker: (evt) ->
     return if @is_disabled
     setTimeout (=> this.search_if_value_changed()), 50
+
+  typeahead_search_results: (evt) ->
+    return false if evt.altKey or evt.ctrlKey or evt.metaKey
+
+    stroke = evt.which ? evt.keyCode
+    character = if evt.key? and evt.key.length is 1 then evt.key else if 48 <= stroke <= 90 then String.fromCharCode(stroke) else ""
+    return false unless character.length and /\S/.test(character)
+
+    query = @typeahead_search + character
+    match = this.typeahead_result(query)
+    unless match?
+      query = character
+      match = this.typeahead_result(query)
+
+    @typeahead_search = query
+    clearTimeout(@typeahead_timeout) if @typeahead_timeout
+    @typeahead_timeout = setTimeout((=> @typeahead_search = ""), 500)
+    this.result_do_highlight(match) if match?
+    true
+
+  typeahead_result: (query) ->
+    normalized_query = @normalize_search_text(query)
+    normalized_query = normalized_query.toLowerCase() unless @case_sensitive_search
+
+    for item in @results_data when not item.group and not item.empty and not item.disabled and this.include_option_in_results(item)
+      text = @normalize_search_text(item.text)
+      text = text.toLowerCase() unless @case_sensitive_search
+      return this.result_for_array_index(item.data["data-option-array-index"]) if text.indexOf(normalized_query) is 0
+    null
+
+  clear_typeahead: ->
+    @typeahead_search = ""
+    clearTimeout(@typeahead_timeout) if @typeahead_timeout
+    @typeahead_timeout = null
 
   container_width: ->
     return @options.width if @options.width?

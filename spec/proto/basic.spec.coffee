@@ -127,6 +127,34 @@ describe "Basic setup", ->
     expect(prevented).toBe(false)
     div.remove()
 
+  it "uses typeahead navigation when search is disabled", ->
+    div = new Element('div').update("<select><option>Alpha</option><option disabled>Banana</option><option>Blue</option><option>North</option><option>New</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), disable_search: true)
+    chosen.results_show()
+
+    prevented = false
+    chosen.keydown_checker(which: 66, key: "b", preventDefault: -> prevented = true)
+    expect(chosen.result_highlight.innerHTML).toBe("Blue")
+    expect(prevented).toBe(true)
+
+    chosen.clear_typeahead()
+    chosen.keydown_checker(which: 78, key: "n", preventDefault: ->)
+    chosen.keydown_checker(which: 69, key: "e", preventDefault: ->)
+    expect(chosen.result_highlight.innerHTML).toBe("New")
+    div.remove()
+
+  it "keeps multiple-select search editable when disable_search is set", ->
+    div = new Element('div').update("<select multiple><option>Alpha</option><option>Blue</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'), disable_search: true)
+    chosen.results_show()
+    prevented = false
+    chosen.keydown_checker(which: 66, key: "b", preventDefault: -> prevented = true)
+    expect(prevented).toBe(false)
+    expect(chosen.result_highlight.innerHTML).toBe("Alpha")
+    div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = new Element('div').update("<select><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)

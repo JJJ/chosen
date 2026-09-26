@@ -53,6 +53,12 @@
     "fork_pr": "https://github.com/JJJ/chosen/pull/132"
   },
   {
+    "number": 2948,
+    "status": "fixed-in-fork",
+    "note": "When disable_search is enabled, printable keys now build a short prefix and highlight the first available matching result in both adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/133"
+  },
+  {
     "number": 3146,
     "status": "blocked",
     "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."
