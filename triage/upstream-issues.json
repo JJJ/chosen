@@ -252,5 +252,11 @@
     "status": "fixed-in-fork",
     "note": "Delayed multiple-select activation now verifies that its search input still owns focus, preventing rapid Tab navigation from reopening earlier controls.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/121"
+  },
+  {
+    "number": 2311,
+    "status": "fixed-in-fork",
+    "note": "The chosen:updated event now mirrors changes to the source select title onto the visible Chosen container, including title removal.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/124"
   }
 ]
