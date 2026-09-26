@@ -361,6 +361,51 @@ describe "Basic setup", ->
     div.remove()
     other.remove()
 
+  it "selects filtered options and deselects enabled choices with opt-in bulk actions", ->
+    div = $("<div>").html("<select multiple><option value='alpha'>Alpha</option><option value='alpine' disabled>Alpine</option><option value='beta' selected>Beta</option><option value='locked' selected disabled>Locked</option></select>").appendTo("body")
+    select = div.find("select")
+    changes = 0
+    select.on "change", -> changes++
+    chosen = select.chosen(allow_select_all: true, allow_deselect_all: true, select_all_text: "Take these", deselect_all_text: "Clear choices").data("chosen")
+
+    chosen.results_show()
+    chosen.search_field.val("Al")
+    chosen.winnow_results()
+    expect(div.find(".chosen-select-all").text()).toBe("Take these")
+    div.find(".chosen-select-all").trigger($.Event("mouseup", which: 1))
+    selected_values = select.find("option").filter(-> @selected).map(-> @value).get()
+    expect(selected_values).toEqual(["alpha", "beta", "locked"])
+    expect(changes).toBe(1)
+
+    expect(div.find(".chosen-deselect-all").text()).toBe("Clear choices")
+    div.find(".chosen-deselect-all").trigger($.Event("mouseup", which: 1))
+    selected_values = select.find("option").filter(-> @selected).map(-> @value).get()
+    expect(selected_values).toEqual(["locked"])
+    expect(changes).toBe(2)
+    div.remove()
+
+  it "respects the selection limit during bulk selection", ->
+    div = $("<div>").html("<select multiple><option>One</option><option>Two</option><option>Three</option></select>")
+    select = div.find("select")
+    maxselected = jasmine.createSpy("maxselected")
+    select.on "chosen:maxselected", maxselected
+    chosen = select.chosen(allow_select_all: true, max_selected_options: 2).data("chosen")
+    chosen.results_show()
+    chosen.keyup_checker(which: 13, preventDefault: ->)
+
+    expect(select.find(":selected").length).toBe(2)
+    expect(maxselected).toHaveBeenCalled()
+
+  it "does not add bulk actions unless requested", ->
+    div = $("<div>").html("<select multiple><option>One</option></select>")
+    div.find("select").chosen()
+    expect(div.find("[data-chosen-action]").length).toBe(0)
+
+  it "keeps Deselect all available when selected results are hidden", ->
+    div = $("<div>").html("<select multiple><option selected>One</option></select>")
+    div.find("select").chosen(allow_deselect_all: true, display_selected_options: false)
+    expect(div.find(".chosen-deselect-all").length).toBe(1)
+
   it "keeps the result highlight when the pointer leaves an unrelated element", ->
     div = $("<div>").html("<select><option>One</option></select>")
     chosen = div.find("select").chosen().data("chosen")

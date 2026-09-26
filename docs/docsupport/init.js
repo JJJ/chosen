@@ -1,6 +1,7 @@
 var config = {
   '.chosen-select'           : { create_option: true, skip_no_results: true },
   '.chosen-select-deselect'  : { allow_single_deselect: true },
+  '.chosen-select-bulk'      : { allow_select_all: true, allow_deselect_all: true, hide_results_on_select: false, width: '100%' },
   '.chosen-select-no-single' : { disable_search_threshold: 10 },
   '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
   '.chosen-select-rtl'       : { rtl: true },

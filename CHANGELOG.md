@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard, and localization support.
 - Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
 - Support per-option synonyms and aliases through the `data-search-text` attribute without changing visible labels.
 - Add an opt-in `display_selected_value` setting for showing option values in selected controls while retaining labels in the dropdown.
@@ -36,6 +37,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Enabling `allow_select_all` or `allow_deselect_all` adds action rows with `data-chosen-action` to the generated results list. Integrations that inspect result-list children should allow these opt-in rows.
 - Single-select markup keeps the same elements and nesting, but its accessibility attributes now change with dropdown state. `.chosen-single` uses `role="combobox"` instead of `role="button"`, receives the select's accessible name and `aria-controls`, and is removed from the accessibility tree and tab order while the searchable combobox is open. `.chosen-drop` now toggles `aria-hidden` between closed and open states. Integrations that assert generated roles, ARIA attributes, or `tabindex` values should update those expectations.
 - Each generated `.chosen-container` now includes a visually hidden `.chosen-results-status` element after `.chosen-drop`. It uses `role="status"` to announce the available result count and is cleared when the dropdown closes. Integrations that assert the container's direct children should allow this new element.
 

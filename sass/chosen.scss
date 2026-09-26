@@ -267,6 +267,11 @@ $chosen-highlight-text-decoration: underline !default;
 			cursor: pointer;
 		}
 
+		&.chosen-bulk-action {
+			color: $chosen-hover-color;
+			font-weight: bold;
+		}
+
 		&.disabled-result {
 			display: list-item;
 			opacity: 0.5;
