@@ -82,6 +82,16 @@ $chosen-highlight-text-decoration: underline !default;
 		box-sizing: border-box;
 	}
 
+	input.chosen-search-input[type="search"] {
+		-webkit-appearance: none;
+		appearance: none;
+
+		&::-webkit-search-cancel-button,
+		&::-webkit-search-decoration {
+			display: none;
+		}
+	}
+
 	.chosen-drop {
 		position: absolute;
 		top: 100%;
@@ -250,7 +260,7 @@ $chosen-highlight-text-decoration: underline !default;
 		padding: 0 4px;
 		white-space: nowrap;
 
-		input[type="text"] {
+		input.chosen-search-input {
 			margin: 0;
 			padding-block: var(--chosen-search-padding-block, #{$chosen-search-padding-block});
 			padding-inline: var(--chosen-search-padding-inline-start, #{$chosen-search-padding-inline-start}) var(--chosen-search-padding-inline-end, #{$chosen-search-padding-inline-end});
@@ -434,7 +444,7 @@ $chosen-highlight-text-decoration: underline !default;
 			padding: 0;
 			white-space: nowrap;
 
-			input[type="text"] {
+			input.chosen-search-input {
 				margin: 0 3px;
 				padding: 6.5px 0;
 				outline: none;
@@ -647,7 +657,7 @@ $chosen-highlight-text-decoration: underline !default;
 	.chosen-choices li {
 		float: right;
 
-		&.search-field input[type="text"] {
+		&.search-field input.chosen-search-input {
 			direction: rtl;
 		}
 
@@ -671,7 +681,7 @@ $chosen-highlight-text-decoration: underline !default;
 		padding-inline-end: 0;
 	}
 
-	.chosen-search input[type="text"] {
+	.chosen-search input.chosen-search-input {
 		background-position: left 5px top 55%;
 		direction: rtl;
 	}

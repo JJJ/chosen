@@ -23,66 +23,6 @@ class @Chosen extends AbstractChosen
       this.results_show()
     @form_field.fire("chosen:search", { chosen: this })
 
-  set_default_values: ->
-    super()
-
-    # HTML Templates
-    @single_temp = new Template(
-      '<a class="chosen-single chosen-default" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
-        <span>#{default}</span>
-        <div>
-          <b aria-hidden="true"></b>
-        </div>
-      </a>
-      <div class="chosen-drop">
-        <div class="chosen-search">
-          <input
-            aria-autocomplete="list"
-            aria-expanded="false"
-            aria-haspopup="listbox"
-            autocomplete="off"
-            class="chosen-search-input"
-            role="combobox"
-            type="text"
-          />
-        </div>
-        <ul
-          aria-busy="true"
-          class="chosen-results"
-          role="listbox"
-        >
-        </ul>
-      </div>'
-    )
-    @multi_temp = new Template(
-      '<ul class="chosen-choices">
-        <li class="search-field">
-          <input
-            aria-autocomplete="list"
-            aria-expanded="false"
-            aria-haspopup="listbox"
-            autocomplete="off"
-            class="chosen-search-input"
-            role="combobox"
-            style="width:25px;"
-            type="text"
-            value="#{default}"
-          />
-        </li>
-      </ul>
-      <div class="chosen-drop">
-        <ul
-          aria-busy="true"
-          class="chosen-results"
-          role="listbox"
-        >
-        </ul>
-      </div>'
-    )
-    @no_results_temp = new Template(
-      '<li class="no-results">' + @results_none_found + ' "<span>#{terms}</span>"</li>'
-    )
-
   set_up_html: ->
     container_classes = ["chosen-container"]
     container_classes.push "chosen-container-" + (if @is_multiple then "multi" else "single")
