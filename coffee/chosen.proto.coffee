@@ -117,6 +117,7 @@ class @Chosen extends AbstractChosen
     @form_field.setStyle(display: 'none') unless @form_field.required
     @form_field.insert({ after: @container })
     @dropdown = @container.down('div.chosen-drop')
+    @dropdown.setStyle(width: @options.dropdown_width) if @options.dropdown_width?
 
     @search_field = @container.down('input')
     @search_results = @container.down('ul.chosen-results')

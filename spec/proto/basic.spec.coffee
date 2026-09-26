@@ -1,4 +1,16 @@
 describe "Basic setup", ->
+  it "sizes the dropdown independently from the control", ->
+    div = new Element('div').update("<select class='fixed'><option>Short</option></select><select class='intrinsic'><option>Short</option><option>An intentionally long option label that should remain on one line</option></select>")
+    document.body.insert(div)
+    chosen = new Chosen(div.down('select.fixed'), width: '140px', dropdown_width: '320px')
+
+    expect(chosen.container.getWidth()).toBe(140)
+    expect(chosen.dropdown.getWidth()).toBe(320)
+
+    intrinsic = new Chosen(div.down('select.intrinsic'), width: '140px', dropdown_width: 'max-content')
+    expect(intrinsic.dropdown.getBoundingClientRect().width).toBeGreaterThan(intrinsic.container.getBoundingClientRect().width)
+    div.remove()
+
   it "transfers native autofocus to the generated control", ->
     for multiple in [false, true]
       multiple_attribute = if multiple then " multiple" else ""

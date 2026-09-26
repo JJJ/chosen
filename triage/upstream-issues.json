@@ -389,5 +389,10 @@
     "status": "fixed-in-fork",
     "note": "Covered by the per-option data-search-text support tracked with issue 2928.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/140"
+  },
+  {
+    "number": 406,
+    "status": "fixed-in-fork",
+    "note": "The opt-in dropdown_width setting sizes the result dropdown independently from the control and accepts fixed or intrinsic CSS widths."
   }
 ]
