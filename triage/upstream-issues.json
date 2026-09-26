@@ -369,6 +369,7 @@
   {
     "number": 3059,
     "status": "fixed-in-fork",
-    "note": "Open dropdowns consume Escape before it reaches ancestor controls, selected multiple choices retain option titles, and the existing chosen:search_updated event reports result refreshes."
+    "note": "Open dropdowns consume Escape before it reaches ancestor controls, selected multiple choices retain option titles, and the existing chosen:search_updated event reports result refreshes.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/138"
   }
 ]
