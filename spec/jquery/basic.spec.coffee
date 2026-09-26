@@ -109,6 +109,32 @@ describe "Basic setup", ->
     expect(home.isDefaultPrevented()).toBe(false)
     div.remove()
 
+  it "uses typeahead navigation when search is disabled", ->
+    div = $("<div><select><option>Alpha</option><option disabled>Banana</option><option>Blue</option><option>North</option><option>New</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(disable_search: true).data("chosen")
+    chosen.results_show()
+
+    blue = $.Event("keydown", which: 66, key: "b")
+    chosen.search_field.trigger(blue)
+    expect(chosen.result_highlight.text()).toBe("Blue")
+    expect(blue.isDefaultPrevented()).toBe(true)
+
+    chosen.clear_typeahead()
+    chosen.search_field.trigger($.Event("keydown", which: 78, key: "n"))
+    chosen.search_field.trigger($.Event("keydown", which: 69, key: "e"))
+    expect(chosen.result_highlight.text()).toBe("New")
+    div.remove()
+
+  it "keeps multiple-select search editable when disable_search is set", ->
+    div = $("<div><select multiple><option>Alpha</option><option>Blue</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(disable_search: true).data("chosen")
+    chosen.results_show()
+    printable = $.Event("keydown", which: 66, key: "b")
+    chosen.search_field.trigger(printable)
+    expect(printable.isDefaultPrevented()).toBe(false)
+    expect(chosen.result_highlight.text()).toBe("Alpha")
+    div.remove()
+
   it "refreshes restored form values when browser history shows the page", ->
     div = $("<div>").html("<select><option>One</option><option>Two</option></select>").appendTo("body")
     select = div.find("select").chosen()
