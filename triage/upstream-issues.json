@@ -1337,8 +1337,9 @@
   },
   {
     "number": 86,
-    "status": "candidate",
-    "note": "Overflow clipping remains a valid integration pain point; assess a safe dropdown positioning strategy."
+    "status": "fixed-in-fork",
+    "note": "Opt-in dropdown_position: fixed keeps results visible beyond an overflow:hidden ancestor and aligned during page or nested scrolling and resize in both adapters. Transformed or paint-contained ancestors remain a documented limit.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/168"
   },
   {
     "number": 79,
