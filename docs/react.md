@@ -5,6 +5,10 @@ React 18 or newer is a peer dependency. Import the standalone theme separately;
 the JavaScript entry has no stylesheet side effect and is safe to import during
 server rendering.
 
+Try the [interactive React demo](https://jjj.github.io/chosen/react.html) for
+single and multiple selection, native form submission, right-to-left layout,
+and light/dark token themes.
+
 ```jsx
 import { useState } from 'react';
 import { Chosen } from 'chosen-jjj/react';
@@ -42,10 +46,16 @@ than enhancing a `<select>`, uses camelCase props, and matches substrings by
 default (`searchContains={true}`). Set `splitSearchTerms` to match words in any
 order, `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
-mode. `open` and `onOpenChange` control the popup; `defaultOpen` is its
+mode, or `displayDisabledOptions={false}` to hide disabled results without
+removing them from the underlying native select. When selected results are
+visible, clicking one or pressing Enter on it
+removes that selection; its chip's remove button does the same. `open` and
+`onOpenChange` control the popup; `defaultOpen` is its
 uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
 `maxSelectedOptions`, `placeholder`, `searchPlaceholder`, and `noResultsText`
 cover common form behavior without framework-specific markup hooks.
+Options under a group heading are indented on the inline start side; override
+`--chosen-group-option-indent` to adjust that spacing in either direction.
 
 ## Forms and accessibility
 
@@ -54,9 +64,13 @@ native `<label htmlFor>` and a matching `id`, or `aria-label` /
 `aria-labelledby`. `aria-describedby` connects help or error text; use
 `aria-invalid={true}` for an invalid state. The opt-in invalid border uses
 `--chosen-invalid-border-color` (`#dc2626` by default); native validation alone
-does not change the default theme. Focus remains on the input while arrow keys
+does not change the default theme. Pressing an associated label keeps an open
+dropdown visible. Focus remains on the input while arrow keys
 move the active result; Enter selects and Escape closes. Multiple selections
 have named remove buttons. Results are announced through a polite status node.
+The highlighted result is the current keyboard or pointer target; selected
+results have a separate background and check mark. Moving the pointer to a
+different result updates the active target, so only one row is highlighted.
 
 Chosen renders a visually hidden native `<select>` for `name`, `form`,
 `required`, `disabled`, form data, and browser validation. It is not a separate

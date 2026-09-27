@@ -52,6 +52,43 @@ test('multiple selection respects limits, disabled options, and removal', () => 
   assert.deepEqual(changes[1], []);
 });
 
+test('pointer target and selected result remain distinct', () => {
+  render(h(Chosen, { options, multiple: true, defaultValue: ['a'], 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  const apple = screen.getByRole('option', { name: 'Apple' });
+  const banana = screen.getByRole('option', { name: 'Banana' });
+  const cherry = screen.getByRole('option', { name: 'Cherry' });
+  assert.equal(apple.getAttribute('aria-selected'), 'true');
+  assert.ok(apple.classList.contains('chosen-react__option--selected'));
+  fireEvent.mouseEnter(banana);
+  assert.ok(!apple.classList.contains('chosen-react__option--active'));
+  assert.ok(banana.classList.contains('chosen-react__option--active'));
+  assert.equal(input.getAttribute('aria-activedescendant'), banana.id);
+  fireEvent.mouseEnter(cherry);
+  assert.equal(input.getAttribute('aria-activedescendant'), banana.id);
+});
+
+test('selected multiple results toggle off by pointer and Enter, including at the limit', () => {
+  const changes = [];
+  render(h('form', null, h(Chosen, { options, name: 'fruit', multiple: true,
+    defaultValue: ['a'], maxSelectedOptions: 1, onChange: value => changes.push(value),
+    'aria-label': 'Fruit' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  const apple = screen.getByRole('option', { name: 'Apple' });
+  fireEvent.click(apple);
+  assert.deepEqual(changes, [[]]);
+  assert.equal(apple.getAttribute('aria-selected'), 'false');
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('fruit'), []);
+  fireEvent.click(apple);
+  assert.deepEqual(changes[1], ['a']);
+  fireEvent.mouseEnter(apple);
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.deepEqual(changes[2], []);
+  assert.equal(apple.getAttribute('aria-selected'), 'false');
+});
+
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',

@@ -66,17 +66,18 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "grunt test && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:visual",
+    "test": "grunt test && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:react-demo && npm run test:visual",
     "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
     "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
     "test:react": "node scripts/build-react.js && node --test spec/react/*.test.mjs && tsc -p spec/react/tsconfig.json && node scripts/run-react-browser-specs.js",
+    "test:react-demo": "node scripts/build-react.js && node scripts/build-react-demo.js && node scripts/run-react-demo-specs.js",
     "test:visual": "node scripts/run-visual-fixtures.js",
     "visual:fixtures": "node scripts/run-visual-fixtures.js --capture",
     "size:react": "node scripts/report-react-size.js",
     "triage:upstream": "node scripts/upstream-issues.js",
-    "build": "grunt build && node scripts/build-react.js",
+    "build": "grunt build && node scripts/build-react.js && node scripts/build-react-demo.js",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

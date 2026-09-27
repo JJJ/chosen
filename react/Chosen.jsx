@@ -34,6 +34,7 @@ export const Chosen = forwardRef(function Chosen({
   const statusId = `${baseId}-status`;
   const inputRef = useRef(null);
   const selectRef = useRef(null);
+  const labelPointerDown = useRef(false);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
@@ -83,7 +84,8 @@ export const Chosen = forwardRef(function Chosen({
 
   const choose = (option, event) => {
     const next = updateSelection(selectedValues, option, {
-      multiple, maxSelectedOptions, disabled, readOnly
+      multiple, maxSelectedOptions, disabled, readOnly,
+      action: multiple && selectedSet.has(option.value) ? 'remove' : 'select'
     });
     if (next.limitReached) setLimitNotice(true);
     if (!next.changed) return;
@@ -128,6 +130,32 @@ export const Chosen = forwardRef(function Chosen({
   }, [defaultValue, multiple, value, controlledOpen, form]);
 
   useEffect(() => {
+    let releaseTimer;
+    const pointerDown = event => {
+      clearTimeout(releaseTimer);
+      const label = event.target?.closest?.('label');
+      labelPointerDown.current = label?.control === inputRef.current;
+    };
+    const pointerEnd = () => {
+      if (!labelPointerDown.current) return;
+      labelPointerDown.current = false;
+      releaseTimer = setTimeout(() => {
+        const host = inputRef.current?.parentElement?.parentElement;
+        if (host && !host.contains(document.activeElement)) changeOpen(false);
+      }, 0);
+    };
+    document.addEventListener('pointerdown', pointerDown, true);
+    document.addEventListener('pointerup', pointerEnd, true);
+    document.addEventListener('pointercancel', pointerEnd, true);
+    return () => {
+      clearTimeout(releaseTimer);
+      document.removeEventListener('pointerdown', pointerDown, true);
+      document.removeEventListener('pointerup', pointerEnd, true);
+      document.removeEventListener('pointercancel', pointerEnd, true);
+    };
+  }, [changeOpen]);
+
+  useEffect(() => {
     if (!isOpen || !activeOption) return;
     document.getElementById(`${baseId}-option-${activeOption.index}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [isOpen, activeOption?.index, baseId]);
@@ -167,6 +195,7 @@ export const Chosen = forwardRef(function Chosen({
   };
 
   const onInputBlur = (event) => {
+    if (labelPointerDown.current) return;
     if (!event.currentTarget.parentElement?.parentElement?.contains(event.relatedTarget)) changeOpen(false);
     onBlur?.(event);
   };
@@ -177,9 +206,10 @@ export const Chosen = forwardRef(function Chosen({
     isOpen ? `${results.count} result${results.count === 1 ? '' : 's'} available.` :
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');
 
-  const renderOption = item => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
+  const renderOption = (item, position) => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
     aria-selected={selectedSet.has(item.value)} aria-disabled={item.disabled || undefined}
-    className={`chosen-react__option${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}`}
+    className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}`}
+    onMouseEnter={() => { if (!item.disabled) setActiveIndex(position); }}
     onMouseDown={event => event.preventDefault()}
     onClick={event => choose(item, event)}>{item.label}</div>;
   const renderedResults = [];
@@ -195,15 +225,15 @@ export const Chosen = forwardRef(function Chosen({
     currentGroup = null;
     groupOptions = [];
   };
-  for (const item of available) {
+  for (const [position, item] of available.entries()) {
     if (item.kind === 'group') {
       flushGroup();
       currentGroup = item;
     } else if (currentGroup && item.groupIndex === currentGroup.index) {
-      groupOptions.push(renderOption(item));
+      groupOptions.push(renderOption(item, position));
     } else {
       flushGroup();
-      renderedResults.push(renderOption(item));
+      renderedResults.push(renderOption(item, position));
     }
   }
   flushGroup();

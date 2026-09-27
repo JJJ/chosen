@@ -63,3 +63,8 @@ jobs:
       run: npm run test:react
       env:
         CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome
+
+    - name: Run React 18 demo checks
+      run: npm run test:react-demo
+      env:
+        CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome

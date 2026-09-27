@@ -96,6 +96,13 @@
   color: var(--chosen-choice-color, #333);
 }
 
+.chosen-react__chip > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .chosen-react__remove,
 .chosen-react__clear {
   border: 0;
@@ -103,6 +110,15 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
+}
+
+.chosen-react__remove {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  block-size: 1.25rem;
+  padding: 0;
+  line-height: 1;
 }
 
 .chosen-react__remove:hover,
@@ -114,8 +130,8 @@
   width: .5rem;
   height: .5rem;
   margin-inline: .25rem;
-  border-inline-end: 1px solid currentColor;
-  border-block-end: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
   transform: rotate(45deg) translateY(-.15rem);
   pointer-events: none;
 }
@@ -127,6 +143,7 @@
   margin-top: var(--chosen-dropdown-offset, .125rem);
   border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-dropdown-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-border-radius, 4px);
+  overflow: hidden;
   background: var(--chosen-dropdown-background, var(--chosen-background, #fff));
   box-shadow: var(--chosen-dropdown-shadow, 0 .3rem .6rem rgba(0, 0, 0, .18));
 }
@@ -151,8 +168,24 @@
   cursor: pointer;
 }
 
-.chosen-react__option--active,
-.chosen-react__option:hover:not(.chosen-react__option--disabled) {
+.chosen-react__option--selected {
+  position: relative;
+  padding-inline-end: calc(var(--chosen-result-padding-inline, .65rem) + 1rem);
+  background: var(--chosen-selected-background, #eef4ff);
+}
+
+.chosen-react__option--selected::after {
+  position: absolute;
+  inset-inline-end: var(--chosen-result-padding-inline, .65rem);
+  content: "✓";
+  font-weight: 700;
+}
+
+.chosen-react__list [role="group"] > .chosen-react__option {
+  padding-inline-start: var(--chosen-group-option-indent, calc(var(--chosen-result-padding-inline, .65rem) + .75rem));
+}
+
+.chosen-react__option--active {
   background: var(--chosen-highlight-background, #3269c6);
   color: var(--chosen-highlight-text-color, #fff);
 }
