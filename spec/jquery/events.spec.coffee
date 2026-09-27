@@ -1,4 +1,16 @@
 describe "Events", ->
+  it "focuses the native search input without jQuery's focus shorthand", ->
+    div = $("<div><select multiple><option>One</option><option>Two</option></select></div>").appendTo('body')
+    select = div.find('select').chosen()
+    chosen = select.data('chosen')
+    chosen.results_show()
+    chosen.search_field.focus = undefined
+    div.find('.active-result').first().trigger($.Event('mouseup', which: 1))
+
+    expect(select.val()).toEqual(['One'])
+    expect(document.activeElement).toBe(chosen.search_field[0])
+    div.remove()
+
   it "refreshes both select types after a native form reset", (done) ->
     form = $("<form><select class='single'><option selected>One</option><option>Two</option></select><select class='multiple' multiple><option selected>Alpha</option><option>Beta</option></select></form>").appendTo('body')
     single = form.find('select.single').chosen()
