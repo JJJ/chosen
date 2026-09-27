@@ -1,4 +1,29 @@
 describe "Searching", ->
+  it "optionally highlights a prefix match before an earlier contains match", ->
+    div = new Element('div').update("<select><option></option><option>React</option><option>Angular</option><option>React Native</option></select>")
+    document.body.insert(div)
+    select = div.down('select')
+    chosen = new Chosen(select, search_contains: true, highlight_prefix_matches: true)
+    chosen.results_show()
+    chosen.search_field.value = 'a'
+    chosen.search_if_value_changed()
+
+    expect(div.select('.active-result').map((item) -> item.textContent)).toEqual(['React', 'Angular', 'React Native'])
+    expect(div.down('.highlighted').textContent).toBe('Angular')
+    chosen.keyup_checker(which: 13, target: chosen.search_field, preventDefault: ->)
+    expect(select.value).toBe('Angular')
+    div.remove()
+
+  it "keeps first-result highlighting by default", ->
+    div = new Element('div').update("<select><option></option><option>React</option><option>Angular</option></select>")
+    document.body.insert(div)
+    chosen = new Chosen(div.down('select'), search_contains: true)
+    chosen.results_show()
+    chosen.search_field.value = 'a'
+    chosen.search_if_value_changed()
+    expect(div.down('.highlighted').textContent).toBe('React')
+    div.remove()
+
   it "lets a custom matcher replace built-in matches without false highlights", ->
     div = new Element('div').update("<select><option value=''></option><optgroup label='Group'><option value='SKU-42'>Alpha</option><option value='other'>Beta</option></optgroup></select>")
     document.body.appendChild(div)

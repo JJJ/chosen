@@ -491,6 +491,7 @@ var ChosenCore = (function() {
         this.group_search = this.options.group_search != null ? this.options.group_search : true;
         this.search_in_values = this.options.search_in_values || false;
         this.search_contains = this.options.search_contains || false;
+        this.highlight_prefix_matches = this.options.highlight_prefix_matches === true;
         this.search_matcher = typeof this.options.search_matcher === "function" ? this.options.search_matcher : null;
         this.search_input_type = this.options.search_input_type === "text" ? "text" : "search";
         this.fixed_dropdown = this.options.dropdown_position === "fixed";
@@ -2078,6 +2079,36 @@ var ChosenCore = (function() {
         return null;
       }
 
+      preferred_prefix_array_index() {
+        var item, j, label, len, normalized_query, query, ref;
+        if (!(this.highlight_prefix_matches && this.search_contains && !this.search_matcher)) {
+          return null;
+        }
+        query = this.get_search_text();
+        if (!query.length) {
+          return null;
+        }
+        normalized_query = String(this.normalize_search_text(query));
+        if (!this.case_sensitive_search) {
+          normalized_query = normalized_query.toLowerCase();
+        }
+        ref = this.results_data;
+        for (j = 0, len = ref.length; j < len; j++) {
+          item = ref[j];
+          if (!(!item.group && !item.empty && item.search_match && !item.pinned_only && !item.disabled && this.include_option_in_results(item))) {
+            continue;
+          }
+          label = String(this.normalize_search_text(item.text));
+          if (!this.case_sensitive_search) {
+            label = label.toLowerCase();
+          }
+          if (label.indexOf(normalized_query) === 0) {
+            return item.data['data-option-array-index'];
+          }
+        }
+        return null;
+      }
+
       clear_typeahead() {
         this.typeahead_search = "";
         if (this.typeahead_timeout) {
@@ -3246,7 +3277,15 @@ var ChosenCore = (function() {
     }
 
     winnow_results_set_highlight() {
-      var do_high, selected_results;
+      var do_high, preferred, preferred_index, selected_results;
+      preferred_index = this.preferred_prefix_array_index();
+      if (preferred_index != null) {
+        preferred = this.result_for_array_index(preferred_index);
+        if (preferred.hasClass('active-result')) {
+          this.result_do_highlight(preferred);
+          return;
+        }
+      }
       selected_results = !this.is_multiple ? this.search_results.find(".result-selected.active-result") : [];
       do_high = selected_results.length ? selected_results.first() : this.search_results.find(".active-result").first();
       if (do_high != null) {

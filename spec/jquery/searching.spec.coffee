@@ -1,4 +1,25 @@
 describe "Searching", ->
+  it "optionally highlights a prefix match before an earlier contains match", ->
+    div = $("<div><select><option></option><option>React</option><option>Angular</option><option>React Native</option></select></div>").appendTo('body')
+    select = div.find('select')
+    chosen = select.chosen(search_contains: true, highlight_prefix_matches: true).data('chosen')
+    chosen.results_show()
+    chosen.search_field.val('a').trigger('input')
+
+    expect(div.find('.active-result').map((i, item) -> item.textContent).get()).toEqual(['React', 'Angular', 'React Native'])
+    expect(div.find('.highlighted').text()).toBe('Angular')
+    chosen.search_field.trigger($.Event('keyup', which: 13, target: chosen.search_field[0], preventDefault: ->))
+    expect(select.val()).toBe('Angular')
+    div.remove()
+
+  it "keeps first-result highlighting by default", ->
+    div = $("<div><select><option></option><option>React</option><option>Angular</option></select></div>").appendTo('body')
+    chosen = div.find('select').chosen(search_contains: true).data('chosen')
+    chosen.results_show()
+    chosen.search_field.val('a').trigger('input')
+    expect(div.find('.highlighted').text()).toBe('React')
+    div.remove()
+
   it "lets a custom matcher replace built-in matches without false highlights", ->
     div = $("<div>").html("<select><option value=''></option><optgroup label='Group'><option value='SKU-42'>Alpha</option><option value='other'>Beta</option></optgroup></select>").appendTo("body")
     seen = []

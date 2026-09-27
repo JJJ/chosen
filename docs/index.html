@@ -1581,6 +1581,27 @@
         </div>
       </div>
 
+      <h2><a name="prefix-highlight" class="anchor" href="#prefix-highlight">Prefer Prefix Matches</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Type “a” in both controls. <code class="language-javascript">search_contains</code> keeps React in the results, while <code class="language-javascript">highlight_prefix_matches</code> makes Angular the initial keyboard choice. The list stays in the original order.</p>
+        <pre><code class="language-javascript">$(".chosen-select-prefix-highlight").chosen({
+  search_contains: true,
+  highlight_prefix_matches: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="prefix-default">Default contains search</label>
+          <select id="prefix-default" class="chosen-select-contains-demo" data-placeholder="Type a">
+            <option value=""></option><option>React</option><option>Angular</option><option>React Native</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="prefix-preferred">Prefer a label prefix</label>
+          <select id="prefix-preferred" class="chosen-select-prefix-highlight" data-placeholder="Type a">
+            <option value=""></option><option>React</option><option>Angular</option><option>React Native</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="create-options" class="anchor" href="#create-options">Create an Option from Search</a></h2>
       <div class="side-by-side clearfix">
         <p>Type a new project name and choose “Add project” to append it to the original multiple select. Existing matches remain available; an exact match does not offer a duplicate.</p>

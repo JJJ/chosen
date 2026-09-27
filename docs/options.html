@@ -181,6 +181,11 @@
           <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. When <code class="language-javascript">enable_split_word_search</code> is false, the match still must start at the beginning of the option text, including punctuation.</td>
         </tr>
         <tr>
+          <td>highlight_prefix_matches</td>
+          <td>false</td>
+          <td>With <code class="language-javascript">search_contains: true</code>, prefer the first rendered, selectable option whose label begins with the search text for keyboard highlighting and Enter selection. The result list and native option order stay unchanged. If no visible prefix match exists, Chosen uses its usual highlight. This setting does not override a custom <code class="language-javascript">search_matcher</code>.</td>
+        </tr>
+        <tr>
           <td>search_matcher</td>
           <td>Built-in matching.</td>
           <td>Optional function called with the current search text and each parsed option or group. Return <code class="language-javascript">true</code> to match. It replaces Chosen's word, value, alternate-text, and group matching rules; the callback also receives an empty search. The usual result visibility and minimum search length still apply. Custom matches are not highlighted because the boolean result has no match position. See the example below for a regex-based rule.</td>
