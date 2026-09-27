@@ -1242,7 +1242,7 @@
 
       <h2><a name="default-text-support" class="anchor" href="#default-text-support">Default Text Support</a></h2>
       <div class="side-by-side clearfix">
-        <p>Chosen automatically sets the default field text ("Choose a country...") by reading the select element's <code>data-placeholder</code> value. If no <code>data-placeholder</code> value is present, Chosen falls back to the select's <code>placeholder</code> attribute, then to "Select an Option" or "Select Some Options" depending on whether the select is single or multiple.</p>
+        <p>Chosen automatically sets the default field text ("Choose a country...") by reading the select element's <code>data-placeholder</code> value. Without that attribute, it uses the select's <code>placeholder</code>, then a type-specific <code>placeholder_text_single</code> or <code>placeholder_text_multiple</code> option, then the shared <code>placeholder_text</code> option. Otherwise it shows "Select an Option" or "Select Some Options".</p>
         <pre><code class="language-markup">&lt;select <strong>data-placeholder="Choose a country..."</strong> multiple class="chosen-select"&gt;</code></pre>
         <p><strong>Note:</strong> on single selects, the first element is assumed to be selected by the browser. To take advantage of the default text support, you will need to include a blank option as the first element of your select list - or include an element with the same label as the placeholder and set the <code class="language-javascript">hidden</code>, <code class="language-javascript">selected</code> and <code class="language-javascript">disabled</code> attributes on it for a more graceful degradation on devices Chosen does not support:</p>
         <pre><code class="language-markup">&lt;option value="" selected disabled hidden&gt;Choose a country...&lt;/option&gt;</code></pre>
@@ -1404,6 +1404,17 @@
       <div class="side-by-side clearfix">
         <p>Using a custom width with Chosen is as easy as passing an option when you create Chosen:</p>
         <pre><code class="language-javascript"> $(".chosen-select").chosen({width: "95%"}); </code></pre>
+        <p>Use <code class="language-javascript">dropdown_width</code> when the results need more room than the closed control:</p>
+        <pre><code class="language-javascript">$("#width-dropdown").chosen({width: "180px", dropdown_width: "300px"});</code></pre>
+        <div>
+          <label class="comparison-label" for="width-dropdown">Open the wider dropdown</label>
+          <select id="width-dropdown" class="chosen-select-dropdown-width">
+            <option value="">Choose a project</option>
+            <option>Atlas Product Design Team</option>
+            <option>Beacon Research Collective</option>
+            <option>Comet Operations Group</option>
+          </select>
+        </div>
         <div>
           <label class="comparison-label" for="width-single">Single Select</label>
           <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="16">
@@ -1464,6 +1475,101 @@
             <option>Sun Bear</option>
             <option>Polar Bear</option>
             <option>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="search-recipes" class="anchor" href="#search-recipes">Search Aliases and Phrases</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Search “espresso” for the Café alias, “cafe” without the accent, or “project blue” with the words out of order. This example also waits for two characters before showing results. See the <a href="options.html#options">options reference</a> for custom matchers, result limits, and search timing.</p>
+        <pre><code class="language-javascript">$("#recipe-search").chosen({
+  split_search_terms: true,
+  min_search_length: 2,
+  normalize_search_text: function(text) {
+    if (text.normalize) {
+      return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    return text.replace(/[éèêë]/g, "e");
+  }
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-search">Try an alias or reordered phrase</label>
+          <select id="recipe-search" class="chosen-select-search-recipe" data-placeholder="Search projects">
+            <option value=""></option>
+            <option value="cafe" data-search-text="coffee espresso">Café</option>
+            <option value="atlas">Blue Atlas Project</option>
+            <option value="beacon">Beacon Studio</option>
+          </select>
+        </div>
+        <p>A custom <code class="language-javascript">search_matcher</code> can replace built-in matching. This one only offers SKU-backed options, even before typing. Custom matches have no automatic text highlighting.</p>
+        <pre><code class="language-javascript">$("#recipe-matcher").chosen({
+  search_matcher: function(query, item) {
+    return !item.group &amp;&amp; item.value.indexOf("SKU-") === 0 &amp;&amp;
+      item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+  }
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-matcher">Only SKU-backed projects appear</label>
+          <select id="recipe-matcher" class="chosen-select-matcher-recipe" data-placeholder="Search eligible projects">
+            <option value=""></option>
+            <option value="SKU-101">Atlas</option>
+            <option value="LEGACY-102">Beacon</option>
+            <option value="SKU-103">Comet</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="create-options" class="anchor" href="#create-options">Create an Option from Search</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Type a new project name and choose “Add project” to append it to the original multiple select. Existing matches remain available; an exact match does not offer a duplicate.</p>
+        <pre><code class="language-javascript">$("#recipe-create").chosen({
+  create_option: true,
+  persistent_create_option: true,
+  skip_no_results: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-create">Try adding a project</label>
+          <select id="recipe-create" class="chosen-select-create-recipe" multiple="" data-placeholder="Choose or add a project" data-create_option_text="Add project:">
+            <option>Atlas</option>
+            <option>Beacon</option>
+            <option>Comet</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="selected-result-actions" class="anchor" href="#selected-result-actions">Review Selected Results</a></h2>
+      <div class="side-by-side clearfix">
+        <p>The closed control can display option values while its dropdown keeps the labels. Open this multiple select and click a selected result to remove it. The underlying select still holds the actual values.</p>
+        <pre><code class="language-javascript">$("#recipe-selected").chosen({
+  display_selected_value: true,
+  deselect_selected_results: true,
+  hide_results_on_select: false
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-selected">Open to remove a selected result</label>
+          <select id="recipe-selected" class="chosen-select-selected-recipe" multiple="">
+            <option value="AT" selected>Atlas Team</option>
+            <option value="BC" selected>Beacon Crew</option>
+            <option value="CP">Comet Project</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="group-and-readonly" class="anchor" href="#group-and-readonly">Group Selection and Readonly</a></h2>
+      <div class="side-by-side clearfix">
+        <p>On a multiple select, <code class="language-html">select-by-group</code> makes each optgroup label select its available options. The separate <code class="language-html">readonly</code> control keeps its value enabled for form submission while preventing changes.</p>
+        <div>
+          <label class="comparison-label" for="recipe-group">Click a group name to select its options</label>
+          <select id="recipe-group" class="chosen-select-group-recipe" multiple="" select-by-group>
+            <optgroup label="Planets"><option>Mercury</option><option>Venus</option><option>Earth</option></optgroup>
+            <optgroup label="Stars"><option>Sun</option><option>Sirius</option></optgroup>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="recipe-readonly">Readonly, with its selected value intact</label>
+          <select id="recipe-readonly" class="chosen-select-readonly-recipe" readonly>
+            <option value="atlas" selected>Atlas</option>
+            <option value="beacon">Beacon</option>
           </select>
         </div>
       </div>

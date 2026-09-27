@@ -130,14 +130,39 @@
            No results for: "Bad Search").</td>
         </tr>
         <tr>
+          <td>create_option</td>
+          <td>false</td>
+          <td>When enabled, offer to add the current search as a selected option when no result matches. Pass <code class="language-javascript">true</code> for Chosen to append it, or a function called with the search text and the Chosen instance as <code class="language-javascript">this</code>. A callback takes responsibility for adding the option; it can call <code class="language-javascript">this.select_append_option({value: text, text: text})</code> after validation.</td>
+        </tr>
+        <tr>
+          <td>create_option_text</td>
+          <td>"Add Option:"</td>
+          <td>Label before the search text in the create-option result. The select's <code class="language-html">data-create_option_text</code> attribute takes precedence.</td>
+        </tr>
+        <tr>
+          <td>persistent_create_option</td>
+          <td>false</td>
+          <td>With <code class="language-javascript">create_option</code> enabled, continue offering to add the search even when other results match, unless an option exactly matches it.</td>
+        </tr>
+        <tr>
+          <td>skip_no_results</td>
+          <td>false</td>
+          <td>With <code class="language-javascript">create_option</code> enabled, hide the no-results message while still offering to add the search.</td>
+        </tr>
+        <tr>
           <td>results_count_text</td>
-          <td><code class="language-javascript">function(count) { return count + " results available"; }</code></td>
+          <td>"1 result available" / "2 results available"</td>
           <td>A callback that returns the localized text announced to assistive technologies when the available result count changes.</td>
         </tr>
         <tr>
           <td>placeholder_text_multiple</td>
           <td>"Select Some Options"</td>
           <td>The text to be displayed as a placeholder when no options are selected for a multiple select.</td>
+        </tr>
+        <tr>
+          <td>placeholder_text</td>
+          <td>Not set; type-specific defaults apply.</td>
+          <td>Fallback placeholder for either select type. A type-specific <code class="language-javascript">placeholder_text_single</code> or <code class="language-javascript">placeholder_text_multiple</code> takes precedence; a native <code class="language-html">placeholder</code> or <code class="language-html">data-placeholder</code> attribute on the select takes precedence over the options.</td>
         </tr>
         <tr>
           <td>placeholder_text_single</td>
@@ -165,6 +190,16 @@
           <td>Keep result rows hidden until the trimmed search text reaches this many characters. The search field remains available, and the default shows results immediately.</td>
         </tr>
         <tr>
+          <td>max_search_length</td>
+          <td>1000</td>
+          <td>Truncate search text to this many characters for matching. The input itself remains editable. The default guards against oversized regular expressions.</td>
+        </tr>
+        <tr>
+          <td>normalize_search_text</td>
+          <td>Identity function.</td>
+          <td>Transform both search text and option labels before built-in matching, for example to remove accents. The callback should return a string. A custom <code class="language-javascript">search_matcher</code> replaces this matching path.</td>
+        </tr>
+        <tr>
           <td>split_search_terms</td>
           <td>false</td>
           <td>When <code class="language-javascript">true</code>, whitespace-separated search terms may match in any order, and every term must match. The default treats the full search text as one phrase.</td>
@@ -183,6 +218,11 @@
           <td>group_search</td>
           <td>true</td>
           <td>By default, Chosen will search group labels as well as options, and filter to show all options below matching groups. Set this to <code class="language-javascript">false</code> to search only in the options.</td>
+        </tr>
+        <tr>
+          <td>parser_config</td>
+          <td><code class="language-javascript">{}</code></td>
+          <td>Advanced parser settings. <code class="language-javascript">{copy_data_attributes: true}</code> copies each option's <code class="language-html">data-*</code> attributes into its parsed result data. Chosen already reads <code class="language-html">data-search-text</code> without this setting.</td>
         </tr>
         <tr>
           <td>backspace_deletes_choices</td>
@@ -276,7 +316,7 @@
   search_matcher: function(query, item) {
     if (item.group) return false;
     return /^SKU-\d+$/i.test(item.value) &amp;&amp;
-      item.text.toLowerCase().includes(query.toLowerCase());
+      item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1;
   }
 });</code></pre>
 
@@ -308,6 +348,18 @@
         <tr>
           <td>data-search-text</td>
           <td>Add alternate words or phrases that may match this option during search without displaying them in the result label. This is useful for synonyms, translations, abbreviations, and legacy names.</td>
+        </tr>
+        <tr>
+          <td>placeholder</td>
+          <td>A native placeholder on the select is used when <code class="language-html">data-placeholder</code> is absent. Both attributes override placeholder options.</td>
+        </tr>
+        <tr>
+          <td>data-no_results_text</td>
+          <td>Overrides <code class="language-javascript">no_results_text</code> for this select.</td>
+        </tr>
+        <tr>
+          <td>data-create_option_text</td>
+          <td>Overrides <code class="language-javascript">create_option_text</code> for this select.</td>
         </tr>
         <tr>
           <td>multiple</td>
@@ -474,6 +526,10 @@
           <td>The multiple-select control and each selected choice.</td>
         </tr>
         <tr>
+          <td><code>.chosen-choice-summary</code></td>
+          <td>The opt-in Show more / Show fewer button among selected multiple choices.</td>
+        </tr>
+        <tr>
           <td><code>.chosen-drop</code> and <code>.chosen-results</code></td>
           <td>The dropdown and its result list.</td>
         </tr>
@@ -486,8 +542,16 @@
           <td>Result availability, keyboard or pointer highlight, selection, and disabled states.</td>
         </tr>
         <tr>
-          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-rtl</code>, and <code>.chosen-dropup</code></td>
-          <td>Open, active, disabled, right-to-left, and upward-opening container states.</td>
+          <td><code>.chosen-result-deselectable</code> and <code>[data-chosen-action]</code></td>
+          <td>Opt-in selected-result removal and bulk action rows.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-results-status</code></td>
+          <td>Visually hidden live status text that announces the available result count.</td>
+        </tr>
+        <tr>
+          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-readonly</code>, <code>.chosen-rtl</code>, and <code>.chosen-dropup</code></td>
+          <td>Open, active, disabled, readonly, right-to-left, and upward-opening container states.</td>
         </tr>
       </tbody></table>
 

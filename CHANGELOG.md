@@ -40,6 +40,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
 ### Maintenance
+- Complete the options reference and add matching jQuery, Prototype, and wiki recipes for search, option creation, selection, group actions, readonly controls, and dropdown sizing.
 - Remove unused Prototype markup templates; both adapters already render their controls through the shared markup methods.
 - Add operating-system dark-mode support and a persistent theme switch to the jQuery, Prototype, and Options example pages.
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
