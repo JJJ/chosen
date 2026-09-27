@@ -332,6 +332,7 @@ class @Chosen extends AbstractChosen
         @container.removeClassName "chosen-container-single-nosearch"
 
     this.update_results_content this.results_option_build({ first: true })
+    this.update_choice_visibility()
 
     this.search_field_disabled()
     this.show_search_field_default()
@@ -487,6 +488,7 @@ class @Chosen extends AbstractChosen
         choice.addClassName class_name
 
     @search_container.insert { before: choice }
+    this.update_choice_visibility()
 
   choice_destroy_link_click: (evt) ->
     evt.preventDefault()
@@ -503,6 +505,7 @@ class @Chosen extends AbstractChosen
       this.results_hide() if @is_multiple and this.hide_results_on_select and this.choices_count() > 0 and this.get_search_field_value().length < 1
 
       link.up('li').remove()
+      this.update_choice_visibility()
 
       do @set_search_field_placeholder
       this.search_field_scale()

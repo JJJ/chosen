@@ -76,6 +76,37 @@ async function main() {
         }
         console.log(`${adapter.name}: iPad WebKit search input styling and filtering passed`);
 
+        await page.evaluate((name) => {
+          const select = document.createElement('select');
+          select.id = 'limited-choices';
+          select.style.width = '300px';
+          select.multiple = true;
+          select.innerHTML = '<option selected>One</option><option selected>Two</option><option selected>Three</option>';
+          document.body.appendChild(select);
+          if (name === 'jQuery') window.jQuery(select).chosen({ max_items_shown: 1 });
+          else new window.Chosen(select, { max_items_shown: 1 });
+        }, adapter.name);
+        const summary = page.locator('#limited_choices_chosen .chosen-choice-summary button');
+        if (await summary.textContent() !== 'Show 2 more...') {
+          throw new Error(`${adapter.name}: collapsed summary text is incorrect`);
+        }
+        if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 1) {
+          throw new Error(`${adapter.name}: collapsed choices did not hide the excess chips`);
+        }
+        await summary.tap();
+        if (await summary.textContent() !== 'Show fewer...') {
+          throw new Error(`${adapter.name}: expanded summary text is incorrect`);
+        }
+        if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 3) {
+          throw new Error(`${adapter.name}: tapping the summary did not reveal the selected chips`);
+        }
+        await summary.tap();
+        if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 1) {
+          throw new Error(`${adapter.name}: tapping Show fewer did not collapse the selected chips`);
+        }
+        if (errors.length) throw new Error(`${adapter.name}: ${errors.join('; ')}`);
+        console.log(`${adapter.name}: iPad WebKit selected-choice summary passed`);
+
         const retapPage = await context.newPage();
         retapPage.setDefaultTimeout(5000);
         const retapErrors = [];

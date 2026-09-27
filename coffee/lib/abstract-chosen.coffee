@@ -57,6 +57,10 @@ class AbstractChosen
     @deselect_all_text = @options.deselect_all_text || AbstractChosen.default_deselect_all_text
     @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
     @max_selected_options = @options.max_selected_options || Infinity
+    @max_items_shown = if typeof @options.max_items_shown is 'number' and isFinite(@options.max_items_shown) and @options.max_items_shown > 0 and Math.floor(@options.max_items_shown) is @options.max_items_shown then @options.max_items_shown else Infinity
+    @more_items_text = @options.more_items_text || (count) -> "Show #{count} more..."
+    @show_fewer_items_text = @options.show_fewer_items_text || "Show fewer..."
+    @choices_expanded = false
     @inherit_select_classes = @options.inherit_select_classes || false
     @inherit_option_classes = @options.inherit_option_classes || false
     @display_selected_options = if @options.display_selected_options? then @options.display_selected_options else true
@@ -99,6 +103,42 @@ class AbstractChosen
       "<b class='group-name'>#{this.escape_html(item.group_label)}</b>#{label}"
     else
       label
+
+  update_choice_visibility: ->
+    return unless @is_multiple and @max_items_shown < Infinity
+
+    choices = @search_choices[0] or @search_choices
+    search = @search_container[0] or @search_container
+    items = choices.querySelectorAll('li.search-choice')
+    hidden_count = Math.max(0, items.length - @max_items_shown)
+    @choices_expanded = false unless hidden_count
+
+    for item, index in items
+      if hidden_count > 0 and not @choices_expanded and index >= @max_items_shown
+        item.setAttribute('hidden', 'hidden')
+      else
+        item.removeAttribute('hidden')
+
+    if hidden_count
+      unless @choice_summary?
+        @choice_summary = document.createElement('li')
+        @choice_summary.className = 'chosen-choice-summary'
+        @choice_summary_button = document.createElement('button')
+        @choice_summary_button.type = 'button'
+        @choice_summary.appendChild(@choice_summary_button)
+        @choice_summary_button.addEventListener 'mousedown', (evt) -> evt.stopPropagation()
+        @choice_summary_button.addEventListener 'touchstart', (evt) -> evt.stopPropagation()
+        @choice_summary_button.addEventListener 'click', (evt) =>
+          evt.preventDefault()
+          evt.stopPropagation()
+          @choices_expanded = not @choices_expanded
+          this.update_choice_visibility()
+          @choice_summary_button.focus()
+      @choice_summary_button.textContent = if @choices_expanded then @show_fewer_items_text else @more_items_text(hidden_count)
+      @choice_summary_button.setAttribute('aria-expanded', String(@choices_expanded))
+      choices.insertBefore(@choice_summary, search)
+    else if @choice_summary?.parentNode
+      @choice_summary.parentNode.removeChild(@choice_summary)
 
   mouse_enter: -> @mouse_on_container = true
   mouse_leave: -> @mouse_on_container = false

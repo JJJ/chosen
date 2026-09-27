@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `max_items_shown` for collapsing selected multiple-choice chips into an expandable summary without limiting selection.
 - Add an opt-in `search_matcher(query, item)` callback for custom result filtering, including regex-based rules. It replaces built-in search matching and leaves custom matches unhighlighted because a boolean result has no match position.
 - Use `type="search"` for generated search inputs by default and allow `search_input_type: "text"` for integrations that need the previous markup.
 - Add opt-in removal of individual multiple selections from their dropdown results by pointer or Enter, with a visible remove mark.
@@ -44,6 +45,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Enabling `max_items_shown` hides excess selected `.search-choice` elements and adds a `.chosen-choice-summary` list item with a button before the search field. The selected options and hidden choice elements remain in the DOM.
 - Generated `.chosen-search-input` elements now use `type="search"` by default instead of `type="text"`. Integrations with CSS or DOM checks tied to the old attribute can set `search_input_type: "text"`. Chosen's CSS targets the class for either type and suppresses the browser's native search clear control. The input type does not guarantee suppression of browser autofill suggestions.
 - Enabling `deselect_selected_results` adds `active-result chosen-result-deselectable` to enabled selected option rows. The remove mark is CSS generated, so the result-row markup does not gain another child element.
 - Enabling `allow_select_all` or `allow_deselect_all` adds action rows with `data-chosen-action` to the generated results list. Integrations that inspect result-list children should allow these opt-in rows.
