@@ -318,7 +318,7 @@ class @Chosen extends AbstractChosen
   test_active_click: (evt) ->
     active_label = @form_field_label? and (evt.target is @form_field_label or @form_field_label.contains(evt.target))
     active_form_field = evt.target is @form_field
-    if active_label or active_form_field or (this.mousedown_checker(evt) == 'left' and evt.target.up('.chosen-container') is @container)
+    if active_label or active_form_field or (this.mousedown_checker(evt) == 'left' and (evt.target is @container or evt.target.up('.chosen-container') is @container))
       @active_field = true
     else
       this.close_field()

@@ -2574,7 +2574,7 @@ var ChosenCore = (function() {
         var active_form_field, active_label;
         active_label = (this.form_field_label != null) && (evt.target === this.form_field_label || this.form_field_label.contains(evt.target));
         active_form_field = evt.target === this.form_field;
-        if (active_label || active_form_field || (this.mousedown_checker(evt) === 'left' && evt.target.up('.chosen-container') === this.container)) {
+        if (active_label || active_form_field || (this.mousedown_checker(evt) === 'left' && (evt.target === this.container || evt.target.up('.chosen-container') === this.container))) {
           return this.active_field = true;
         } else {
           return this.close_field();
