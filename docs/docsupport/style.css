@@ -355,6 +355,22 @@ li > p {
   text-transform: uppercase;
 }
 
+.other-country-input {
+  max-width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #aab0b8;
+  border-radius: 3px;
+  background: #fff;
+  color: #30343b;
+  font: inherit;
+}
+
+:root[data-theme="dark"] .other-country-input {
+  border-color: #8992a0;
+  background: #20252e;
+  color: #f0f3f6;
+}
+
 .comparison-label:hover {
   color: #b84f16;
 }

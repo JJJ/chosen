@@ -1536,6 +1536,17 @@
             <option value="inside">X&lt;01M Fund</option>
           </select>
         </div>
+        <p>An option marked <code class="language-html">data-chosen-always-visible</code> remains available when a search has no match. Search for “France” here, choose “Other”, then enter a country name. The original select still holds the submitted choice.</p>
+        <div>
+          <label class="comparison-label" for="recipe-other">Choose a country or Other</label>
+          <select id="recipe-other" class="chosen-select-other-recipe" data-placeholder="Choose a country">
+            <option value=""></option>
+            <option value="au">Australia</option>
+            <option value="de">Germany</option>
+            <option value="other" data-chosen-always-visible>Other</option>
+          </select>
+          <p id="other-detail" hidden><label for="other-country">Country name</label><br><input id="other-country" class="other-country-input" type="text"></p>
+        </div>
         <p>A custom <code class="language-javascript">search_matcher</code> can replace built-in matching. This one only offers SKU-backed options, even before typing. Custom matches have no automatic text highlighting.</p>
         <pre><code class="language-javascript">$("#recipe-matcher").chosen({
   search_matcher: function(query, item) {

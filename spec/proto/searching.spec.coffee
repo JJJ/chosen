@@ -255,6 +255,45 @@ describe "Searching", ->
     expect(div.down('.active-result').textContent).toBe('<01M Fund')
     div.remove()
 
+  it "keeps an opt-in Other option selectable when the search has no match", ->
+    div = new Element('div').update("<select><option value=''></option><option value='fr'>France</option><option value='other' data-chosen-always-visible>Other</option><option value='hidden' hidden data-chosen-always-visible>Hidden</option><option value='disabled' disabled data-chosen-always-visible>Disabled</option></select>")
+    document.body.insert(div)
+    select = div.down('select')
+    chosen = new Chosen(select, display_disabled_options: false)
+    chosen.results_show()
+    chosen.search_field.value = 'Atlantis'
+    chosen.winnow_results()
+
+    result = div.down('.active-result')
+    expect(div.select('.active-result').length).toBe(1)
+    expect(result.textContent).toBe('Other')
+    expect(div.select('.no-results').length).toBe(0)
+    chosen.result_select(target: result, preventDefault: ->)
+    expect(select.value).toBe('other')
+
+    select.down('option[value=other]').removeAttribute('data-chosen-always-visible')
+    select.fire('chosen:updated')
+    chosen.results_show()
+    chosen.search_field.value = 'Atlantis'
+    chosen.winnow_results()
+    expect(div.select('.active-result').length).toBe(0)
+    div.remove()
+
+  it "keeps a pinned group visible beyond the result limit without bulk-selecting its nonmatch", ->
+    div = new Element('div').update("<select multiple><option value='fr-a'>France A</option><option value='fr-b'>France B</option><optgroup label='Alternatives'><option value='other' data-chosen-always-visible>Other</option></optgroup></select>")
+    document.body.insert(div)
+    select = div.down('select')
+    chosen = new Chosen(select, allow_select_all: true, max_shown_results: 1)
+    chosen.results_show()
+    chosen.search_field.value = 'France'
+    chosen.winnow_results()
+
+    expect(div.select('.active-result[data-option-array-index]').map((item) -> item.textContent)).toEqual(['France A', 'Other'])
+    expect(div.down('.group-result').textContent).toBe('Alternatives')
+    chosen.select_all_results()
+    expect($A(select.selectedOptions).pluck('value')).toEqual(['fr-a', 'fr-b'])
+    div.remove()
+
   it "renders options correctly when they contain characters that require HTML encoding", ->
     div = new Element("div")
     div.update("""

@@ -35,6 +35,7 @@ class SelectParser
           value: option.value
           text: option.text
           search_text: option.getAttribute('data-search-text') || ''
+          always_visible: option.hasAttribute('data-chosen-always-visible')
           html: option.innerHTML.replace(/^\s+|\s+$/g, '')
           title: option.title if option.title
           selected: option.selected
