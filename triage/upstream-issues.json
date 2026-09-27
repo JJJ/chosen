@@ -905,7 +905,8 @@
   {
     "number": 2788,
     "status": "fixed-in-fork",
-    "note": "Opt-in highlight_prefix_matches prefers the first rendered, selectable label-prefix match during search_contains, so Enter chooses Angular before earlier infix matches while the result list and native select retain their order."
+    "note": "Opt-in highlight_prefix_matches prefers the first rendered, selectable label-prefix match during search_contains, so Enter chooses Angular before earlier infix matches while the result list and native select retain their order.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/174"
   },
   {
     "number": 2787,
