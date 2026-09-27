@@ -7,6 +7,8 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-paste'     : { paste_multiple_values: true, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
+    '.chosen-select-contains-demo': { search_contains: true, width: '100%' },
+    '.chosen-select-prefix-highlight': { search_contains: true, highlight_prefix_matches: true, width: '100%' },
     '.chosen-select-other-recipe': { width: '100%' },
     '.chosen-select-matcher-recipe': { search_matcher: function(query, item) { return !item.group && item.value.indexOf('SKU-') === 0 && item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1; }, width: '100%' },
     '.chosen-select-create-recipe': { create_option: true, persistent_create_option: true, skip_no_results: true, width: '100%' },

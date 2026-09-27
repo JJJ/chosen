@@ -722,6 +722,13 @@ class Chosen extends AbstractChosen
         .replace(/&#x27;/g, "'")
 
   winnow_results_set_highlight: ->
+    preferred_index = this.preferred_prefix_array_index()
+    if preferred_index?
+      preferred = this.result_for_array_index(preferred_index)
+      if preferred.hasClass('active-result')
+        this.result_do_highlight(preferred)
+        return
+
     selected_results = if not @is_multiple then @search_results.find(".result-selected.active-result") else []
     do_high = if selected_results.length then selected_results.first() else @search_results.find(".active-result").first()
 

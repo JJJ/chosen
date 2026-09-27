@@ -44,6 +44,7 @@ class AbstractChosen
     @group_search = if @options.group_search? then @options.group_search else true
     @search_in_values = @options.search_in_values || false
     @search_contains = @options.search_contains || false
+    @highlight_prefix_matches = @options.highlight_prefix_matches is true
     @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
     @fixed_dropdown = @options.dropdown_position is "fixed"
@@ -989,6 +990,20 @@ class AbstractChosen
       text = @normalize_search_text(item.text)
       text = text.toLowerCase() unless @case_sensitive_search
       return this.result_for_array_index(item.data["data-option-array-index"]) if text.indexOf(normalized_query) is 0
+    null
+
+  preferred_prefix_array_index: ->
+    return null unless @highlight_prefix_matches and @search_contains and not @search_matcher
+    query = this.get_search_text()
+    return null unless query.length
+
+    normalized_query = String(@normalize_search_text(query))
+    normalized_query = normalized_query.toLowerCase() unless @case_sensitive_search
+
+    for item in @results_data when not item.group and not item.empty and item.search_match and not item.pinned_only and not item.disabled and this.include_option_in_results(item)
+      label = String(@normalize_search_text(item.text))
+      label = label.toLowerCase() unless @case_sensitive_search
+      return item.data['data-option-array-index'] if label.indexOf(normalized_query) is 0
     null
 
   clear_typeahead: ->
