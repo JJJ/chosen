@@ -941,8 +941,9 @@
   },
   {
     "number": 2776,
-    "status": "candidate",
-    "note": "Assess a conventional jQuery noConflict/constructor interface while keeping existing plugin calls stable."
+    "status": "fixed-in-fork",
+    "note": "The jQuery adapter exposes Constructor and AbstractConstructor and provides noConflict() to restore a previously registered chosen plugin without changing existing plugin calls or defaults.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/175"
   },
   {
     "number": 2775,

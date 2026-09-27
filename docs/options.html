@@ -331,6 +331,13 @@
         </tr>
       </tbody></table>
 
+      <h3>jQuery plugin interface</h3>
+      <p>The jQuery adapter exposes <code>$.fn.chosen.Constructor</code> and <code>$.fn.chosen.AbstractConstructor</code> for integrations that extend Chosen. <code>$.fn.chosen.noConflict()</code> restores the plugin previously registered as <code>$.fn.chosen</code> and returns Chosen's plugin function. Save that function to continue using Chosen under another name:</p>
+<pre><code class="language-javascript">var chosenPlugin = $.fn.chosen.noConflict();
+$.fn.myChosen = chosenPlugin;
+$(".my-select").myChosen();</code></pre>
+      <p>Ordinary <code>$(".my-select").chosen()</code> calls and per-control options remain unchanged. Extending a constructor's prototype affects every instance, so prefer options when configuring an individual control.</p>
+
       <h3>Custom search matcher</h3>
       <p>This example searches only options with SKU values. Group records have <code>group: true</code>; option records provide <code>text</code>, <code>value</code>, and the original <code>option_element</code>.</p>
 <pre><code class="language-javascript">$(".my_select_box").chosen({

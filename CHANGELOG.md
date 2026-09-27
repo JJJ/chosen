@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Expose the jQuery plugin's `Constructor`, `AbstractConstructor`, and `noConflict()` interface without changing existing `.chosen()` calls (harvesthq/chosen#2776).
 - Add opt-in `highlight_prefix_matches` so contains searches initially highlight a visible label-prefix match without changing result or native option order (harvesthq/chosen#2788).
 - Add opt-in `paste_multiple_values` for selecting existing, enabled multiple-select options from delimited pasted text, while preserving unmatched entries and native select events (harvesthq/chosen#2845).
 - Ship editable SVG source files for Chosen's four embedded control icons; the build now derives Sass data URLs from those files (harvesthq/chosen#2959).

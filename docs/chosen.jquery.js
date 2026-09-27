@@ -324,7 +324,7 @@ var ChosenCore = (function() {
 })();
 
 (function() {
-  var $, AbstractChosen, Chosen, SelectParser,
+  var $, AbstractChosen, Chosen, SelectParser, chosen_interface, previous_chosen,
     indexOf = [].indexOf;
 
   SelectParser = class SelectParser {
@@ -2297,31 +2297,40 @@ var ChosenCore = (function() {
 
   $ = jQuery;
 
-  $.fn.extend({
-    chosen: function(options) {
-      if (!AbstractChosen.browser_is_supported()) {
-        // Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
-        // Continue on if running IE document type but in compatibility mode
-        return this;
-      }
-      return this.each(function(input_field) {
-        var $this, chosen;
-        $this = $(this);
-        chosen = $this.data('chosen');
-        if (options === 'destroy') {
-          if (chosen instanceof Chosen) {
-            chosen.destroy();
-          }
-          return;
-        }
-        if (!(chosen instanceof Chosen)) {
-          $this.data('chosen', new Chosen(this, options));
-        }
-      });
-    }
-  });
+  previous_chosen = $.fn.chosen;
 
-  $.fn.chosen.browser_is_supported = AbstractChosen.browser_is_supported;
+  chosen_interface = function(options) {
+    if (!AbstractChosen.browser_is_supported()) {
+      // Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
+      // Continue on if running IE document type but in compatibility mode
+      return this;
+    }
+    return this.each(function(input_field) {
+      var $this, chosen;
+      $this = $(this);
+      chosen = $this.data('chosen');
+      if (options === 'destroy') {
+        if (chosen instanceof Chosen) {
+          chosen.destroy();
+        }
+        return;
+      }
+      if (!(chosen instanceof Chosen)) {
+        $this.data('chosen', new Chosen(this, options));
+      }
+    });
+  };
+
+  $.fn.chosen = chosen_interface;
+
+  chosen_interface.browser_is_supported = AbstractChosen.browser_is_supported;
+
+  chosen_interface.noConflict = function() {
+    if ($.fn.chosen === chosen_interface) {
+      $.fn.chosen = previous_chosen;
+    }
+    return chosen_interface;
+  };
 
   Chosen = class Chosen extends AbstractChosen {
     setup() {
@@ -3486,5 +3495,9 @@ var ChosenCore = (function() {
     }
 
   };
+
+  chosen_interface.Constructor = Chosen;
+
+  chosen_interface.AbstractConstructor = AbstractChosen;
 
 }).call(this);

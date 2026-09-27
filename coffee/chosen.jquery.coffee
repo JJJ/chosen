@@ -1,25 +1,27 @@
 $ = jQuery
+previous_chosen = $.fn.chosen
 
-$.fn.extend({
-  chosen: (options) ->
-    # Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
-    # Continue on if running IE document type but in compatibility mode
-    return this unless AbstractChosen.browser_is_supported()
-    this.each (input_field) ->
-      $this = $ this
-      chosen = $this.data('chosen')
-      if options is 'destroy'
-        if chosen instanceof Chosen
-          chosen.destroy()
-        return
-      unless chosen instanceof Chosen
-        $this.data('chosen', new Chosen(this, options))
-
+chosen_interface = (options) ->
+  # Do no harm and return as soon as possible for unsupported browsers, namely IE6 and IE7
+  # Continue on if running IE document type but in compatibility mode
+  return this unless AbstractChosen.browser_is_supported()
+  this.each (input_field) ->
+    $this = $ this
+    chosen = $this.data('chosen')
+    if options is 'destroy'
+      if chosen instanceof Chosen
+        chosen.destroy()
       return
+    unless chosen instanceof Chosen
+      $this.data('chosen', new Chosen(this, options))
 
-})
+    return
 
-$.fn.chosen.browser_is_supported = AbstractChosen.browser_is_supported
+$.fn.chosen = chosen_interface
+chosen_interface.browser_is_supported = AbstractChosen.browser_is_supported
+chosen_interface.noConflict = ->
+  $.fn.chosen = previous_chosen if $.fn.chosen is chosen_interface
+  chosen_interface
 
 class Chosen extends AbstractChosen
 
@@ -865,3 +867,6 @@ class Chosen extends AbstractChosen
   trigger_form_field_change: (extra) ->
     @form_field_jq.trigger "input", extra
     @form_field_jq.trigger "change", extra
+
+chosen_interface.Constructor = Chosen
+chosen_interface.AbstractConstructor = AbstractChosen

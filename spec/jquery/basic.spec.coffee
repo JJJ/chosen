@@ -805,6 +805,20 @@ describe "Basic setup", ->
   it "should add chosen to jQuery object", ->
     expect(jQuery.fn.chosen).toBeDefined()
 
+  it "exposes the constructors through the jQuery interface", ->
+    div = $("<div><select><option>One</option></select></div>")
+    chosen = div.find("select").chosen().data("chosen")
+    expect(chosen instanceof $.fn.chosen.Constructor).toBe(true)
+    expect(chosen instanceof $.fn.chosen.AbstractConstructor).toBe(true)
+    expect($.fn.chosen.browser_is_supported()).toBe(true)
+
+  it "returns the jQuery interface and restores the previous plugin on noConflict", ->
+    chosen_interface = $.fn.chosen
+    restored_interface = chosen_interface.noConflict()
+    expect(restored_interface).toBe(chosen_interface)
+    expect($.fn.chosen).not.toBe(chosen_interface)
+    $.fn.chosen = chosen_interface
+
   it "should create very basic chosen", ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>
