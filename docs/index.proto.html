@@ -1290,6 +1290,23 @@
         <pre><code class="language-javascript">$("chosen_select_field").observe("chosen:maxselected", function(evt) { ... }); </code></pre>
       </div>
 
+      <h2><a name="summarize-selected-choices" class="anchor" href="#summarize-selected-choices">Summarize Selected Choices</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Use <code class="language-javascript">max_items_shown</code> to keep a long multiple selection compact. The remaining choices are still selected; the summary button reveals them without changing the underlying select. This is separate from <code class="language-javascript">max_selected_options</code>, which limits how many choices can be selected.</p>
+        <pre><code class="language-javascript">new Chosen($("summary-select"), {max_items_shown: 2});</code></pre>
+        <div>
+          <label class="comparison-label" for="summary-select">Try showing and hiding selected choices</label>
+          <select id="summary-select" data-placeholder="Choose projects" class="chosen-select-summary" multiple="">
+            <option selected>Atlas</option>
+            <option selected>Beacon</option>
+            <option selected>Comet</option>
+            <option selected>Delta</option>
+            <option>Echo</option>
+            <option>Fable</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="select-all-actions" class="anchor" href="#select-all-actions">Select All and Deselect All</a></h2>
       <div class="side-by-side clearfix">
         <p>Multiple selects can add opt-in bulk actions. Select all applies to the currently filtered enabled options; Deselect all clears every enabled choice. With an empty search, use Command/Ctrl+A to select all or Command/Ctrl+Shift+A to deselect all.</p>

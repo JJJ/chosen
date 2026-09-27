@@ -13,7 +13,8 @@ and library versions when reporting a compatibility issue.
 For **documentation**, usage, and examples, see the
 [jQuery demo](https://jjj.github.io/chosen/),
 [Prototype demo](https://jjj.github.io/chosen/index.proto.html), and
-[options reference](https://jjj.github.io/chosen/options.html).
+[options reference](https://jjj.github.io/chosen/options.html). The
+[wiki](https://github.com/JJJ/chosen/wiki) covers setup and common workflows.
 
 For **downloads**, see the [GitHub releases](https://github.com/JJJ/chosen/releases/).
 
@@ -52,6 +53,10 @@ We welcome all to participate in making Chosen the best software it can be. The 
 * [Bug reports](contributing.md#bugs)
 * [Feature requests](contributing.md#features)
 * [Pull requests](contributing.md#pull-requests)
+
+Before opening an issue, see [support and discussion routes](SUPPORT.md). Please
+follow our [Code of Conduct](CODE_OF_CONDUCT.md). For a potential security issue,
+use the [private reporting instructions](SECURITY.md) instead of a public issue.
 
 ### Chosen Credits
 

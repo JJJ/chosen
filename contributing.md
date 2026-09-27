@@ -20,10 +20,11 @@ preferred channel for [bug reports](#bugs), [features requests](#features)
 and [submitting pull requests](#pull-requests), but please respect the
 following restrictions:
 
-* Support issues or usage question that are not bugs should be posted on
-[Stack Overflow, using the `chosen.js`](http://stackoverflow.com/questions/tagged/chosen.js) tag
-(related tags: [`jquery-chosen`](http://stackoverflow.com/questions/tagged/jquery-chosen),
-[`prototype-chosen`](http://stackoverflow.com/questions/tagged/prototype-chosen)).
+* Support and usage questions belong in [GitHub Discussions](https://github.com/JJJ/chosen/discussions).
+  See [SUPPORT.md](SUPPORT.md) for the right reporting route.
+
+* Suspected vulnerabilities belong in [private security reports](SECURITY.md),
+  not public issues. All participants should follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 * Please **do not** derail or troll issues. Keep the discussion on topic and
   respect the opinions of others.
@@ -174,6 +175,8 @@ license your work under the [MIT License](http://en.wikipedia.org/wiki/MIT_Licen
 2. Use [Grunt](#grunt) to build the JavaScript files.
 3. For feature changes, update both jQuery *and* Prototype versions
 4. Change `package.json` and `package-lock.json` together when preparing a release.
+5. For user-facing changes, update the options reference, live demos, wiki, and
+   changelog as relevant. Document changes to generated markup for developers.
 
 <a name="grunt"></a>
 #### Grunt tasks: Running Tests and building Chosen
