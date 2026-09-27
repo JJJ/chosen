@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `paste_multiple_values` for selecting existing, enabled multiple-select options from delimited pasted text, while preserving unmatched entries and native select events (harvesthq/chosen#2845).
 - Ship editable SVG source files for Chosen's four embedded control icons; the build now derives Sass data URLs from those files (harvesthq/chosen#2959).
 - Let an opt-in `data-chosen-always-visible` attribute keep an option such as “Other” available during searches, including when no ordinary result matches (harvesthq/chosen#2963).
 - Add opt-in `recalculate_width_on_update` to resize Chosen when a native select gains longer options (harvesthq/chosen#2884).

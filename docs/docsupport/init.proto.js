@@ -4,6 +4,7 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-deselect'  : { allow_single_deselect: true },
     '.chosen-select-bulk'      : { allow_select_all: true, allow_deselect_all: true, hide_results_on_select: false, width: '100%' },
     '.chosen-select-summary'   : { max_items_shown: 2, width: '100%' },
+    '.chosen-select-paste'     : { paste_multiple_values: true, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
     '.chosen-select-other-recipe': { width: '100%' },

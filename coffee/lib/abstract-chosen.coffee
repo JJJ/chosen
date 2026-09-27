@@ -49,6 +49,7 @@ class AbstractChosen
     @fixed_dropdown = @options.dropdown_position is "fixed"
     @recalculate_width_on_update = @options.recalculate_width_on_update || false
     @split_search_terms = @options.split_search_terms || false
+    @paste_multiple_values = @options.paste_multiple_values is true
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
     @multiselect_allow_tab_to_select = @options.multiselect_allow_tab_to_select || false
@@ -897,7 +898,69 @@ class AbstractChosen
 
   clipboard_event_checker: (evt) ->
     return if @is_disabled
+    return if this.paste_multiple_selection(evt)
     setTimeout (=> this.search_if_value_changed()), 50
+
+  paste_multiple_selection: (evt) ->
+    return false unless @is_multiple and @paste_multiple_values and evt.type is 'paste' and not @composing
+
+    input = @search_field[0] or @search_field
+    clipboard = evt.originalEvent?.clipboardData or evt.clipboardData
+    return false unless clipboard?.getData
+    pasted = clipboard.getData('text/plain') or clipboard.getData('Text')
+    text = if typeof input.selectionStart is 'number' and typeof input.selectionEnd is 'number' then input.value.slice(0, input.selectionStart) + pasted + input.value.slice(input.selectionEnd) else pasted
+    return false unless /[,;\t\r\n]/.test(text)
+
+    tokens = (token.trim() for token in text.split(/[,;\t\r\n]/) when token.trim().length)
+    return false unless tokens.length
+
+    remaining = []
+    consumed = false
+    changed = false
+    limit_reached = false
+    selected_count = this.choices_count()
+
+    for token in tokens
+      matches = (item for item in @results_data when this.paste_item_eligible(item) and item.value is token)
+      unless matches.length
+        matches = (item for item in @results_data when this.paste_item_eligible(item) and item.text.toLowerCase() is token.toLowerCase())
+
+      if matches.length isnt 1
+        remaining.push(token)
+        continue
+
+      item = matches[0]
+      if item.selected
+        consumed = true
+      else if ChosenCore.selectionLimitReached(selected_count, @max_selected_options)
+        remaining.push(token)
+        limit_reached = true
+      else
+        option = this.current_option_for(item)
+        option.selected = true
+        item.selected = true
+        selected_count++
+        consumed = true
+        changed = true
+
+    return false unless consumed or limit_reached
+    evt.preventDefault()
+    input.value = remaining.join(', ')
+    if changed
+      @selected_option_count = null
+      this.results_update_field()
+      this.trigger_form_field_change()
+    input.value = remaining.join(', ')
+    this.trigger_max_selected() if limit_reached
+    this.search_if_value_changed() unless limit_reached and not @results_showing
+    this.search_field_scale()
+    true
+
+  paste_item_eligible: (item) ->
+    return false if item.group or item.empty or item.disabled or item.hidden
+    return false if item.group_array_index? and @results_data[item.group_array_index].hidden
+    option = this.current_option_for(item)
+    option? and not option.disabled and not option.hidden
 
   typeahead_search_results: (evt) ->
     return false if evt.altKey or evt.ctrlKey or evt.metaKey
