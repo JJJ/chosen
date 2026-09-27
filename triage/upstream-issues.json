@@ -1271,8 +1271,8 @@
   },
   {
     "number": 858,
-    "status": "candidate",
-    "note": "Verify multiword partial matching on current fork; request may now be covered by split-word search."
+    "status": "covered-in-fork",
+    "note": "The opt-in split_search_terms setting matches partial words in any order; search_contains can also match within a word. Both adapters have multi-term highlighting specs."
   },
   {
     "number": 841,
@@ -1286,8 +1286,8 @@
   },
   {
     "number": 677,
-    "status": "candidate",
-    "note": "Verify multiword token matching on the current fork, then decide if the request is already covered."
+    "status": "covered-in-fork",
+    "note": "The opt-in split_search_terms setting matches all query terms in any order and highlights each match in both adapters; regression specs cover reversed-term searches."
   },
   {
     "number": 625,
