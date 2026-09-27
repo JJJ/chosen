@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Let an opt-in `data-chosen-always-visible` attribute keep an option such as “Other” available during searches, including when no ordinary result matches (harvesthq/chosen#2963).
 - Add opt-in `recalculate_width_on_update` to resize Chosen when a native select gains longer options (harvesthq/chosen#2884).
 - Add opt-in `dropdown_position: "fixed"` to show results outside an `overflow: hidden` ancestor while tracking scroll and resize (harvesthq/chosen#86).
 - Add an opt-in invalid border for explicitly invalid legacy and React controls, with a shared `--chosen-invalid-border-color` token and repeatable visual fixtures for the default, Tailwind light/dark, and custom-palette themes. React also uses the shared hover and open border tokens.

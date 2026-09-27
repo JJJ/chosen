@@ -200,6 +200,7 @@ class AbstractChosen
     rendered_results = 0
     result_index = 0
     first_result = 0
+    keep_scanning_for_pinned = this.get_search_field_value().length > 0 and @results_data.some((data) -> data.always_visible)
 
     if not @is_multiple and @max_shown_results < Number.POSITIVE_INFINITY and this.get_search_field_value().length is 0
       selected_result_index = 0
@@ -211,10 +212,10 @@ class AbstractChosen
 
     for data in @results_data
       if this.result_is_visible(data)
-        if result_index >= first_result and rendered_results < @max_shown_results
+        if (result_index >= first_result and rendered_results < @max_shown_results) or data.pinned_visible
           data_content = if data.group then this.result_add_group(data) else this.result_add_option(data)
           if data_content != ''
-            rendered_results++
+            rendered_results++ unless data.pinned_visible
             content += data_content
         result_index++
 
@@ -226,7 +227,7 @@ class AbstractChosen
         else if data.selected and not @is_multiple
           this.single_set_selected_text(this.choice_label(data))
 
-      if rendered_results >= @max_shown_results and not (options?.first and @is_multiple)
+      if rendered_results >= @max_shown_results and not (options?.first and @is_multiple) and not keep_scanning_for_pinned
         break
 
     if @is_multiple
@@ -255,7 +256,7 @@ class AbstractChosen
     this.outerHTML(action_el)
 
   has_selectable_results: ->
-    for item in @results_data when not item.group and item.search_match and not item.selected and not item.disabled and this.include_option_in_results(item)
+    for item in @results_data when not item.group and item.search_match and not item.pinned_only and not item.selected and not item.disabled and this.include_option_in_results(item)
       return true if this.current_option_for(item)?
     false
 
@@ -269,7 +270,7 @@ class AbstractChosen
     limit_reached = false
     selected_count = this.choices_count()
 
-    for item in @results_data when not item.group and item.search_match and not item.selected and not item.disabled and this.include_option_in_results(item)
+    for item in @results_data when not item.group and item.search_match and not item.pinned_only and not item.selected and not item.disabled and this.include_option_in_results(item)
       option = this.current_option_for(item)
       continue unless option?
       if ChosenCore.selectionLimitReached(selected_count, @max_selected_options)
@@ -486,6 +487,8 @@ class AbstractChosen
     for option in @results_data
 
       option.search_match = false
+      option.pinned_visible = Boolean(query.length and option.always_visible)
+      option.pinned_only = false
       results_group = null
       search_match = null
       match_alternate_text = false
@@ -496,6 +499,7 @@ class AbstractChosen
         if option.group
           option.group_match = false
           option.active_options = 0
+          option.pinned_visible = false
 
         if option.group_array_index? and @results_data[option.group_array_index]
           results_group = @results_data[option.group_array_index]
@@ -520,6 +524,11 @@ class AbstractChosen
             option.search_match = match.matched
             match_alternate_text = match.alternate
 
+          matched_query = option.search_match
+          option.pinned_only = option.pinned_visible and not matched_query
+          option.search_match = matched_query or option.pinned_visible
+          results_group.pinned_visible = true if results_group? and option.pinned_visible
+
           results += 1 if option.search_match and not option.group
 
           if @search_matcher
@@ -528,9 +537,9 @@ class AbstractChosen
             exact_result = exact_result || match.exact
 
           if option.search_match
-            if not @search_matcher and query.length and not match_alternate_text and normalized_terms.length > 1
+            if matched_query and not @search_matcher and query.length and not match_alternate_text and normalized_terms.length > 1
               option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms)
-            else if not @search_matcher and query.length and not match_alternate_text
+            else if matched_query and not @search_matcher and query.length and not match_alternate_text
               startpos = search_match.index
 
               # If normalization changed the text, we need to find the correct

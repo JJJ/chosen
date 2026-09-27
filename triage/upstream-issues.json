@@ -707,8 +707,8 @@
   },
   {
     "number": 2963,
-    "status": "candidate",
-    "note": "Consider opt-in pinned options during search; ordinary filtering currently hides nonmatches."
+    "status": "fixed-in-fork",
+    "note": "An opt-in data-chosen-always-visible attribute keeps a native option such as Other available during unmatched searches in both adapters, without adding it to Select all when it does not match."
   },
   {
     "number": 2959,

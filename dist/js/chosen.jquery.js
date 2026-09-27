@@ -376,6 +376,7 @@ var ChosenCore = (function() {
             value: option.value,
             text: option.text,
             search_text: option.getAttribute('data-search-text') || '',
+            always_visible: option.hasAttribute('data-chosen-always-visible'),
             html: option.innerHTML.replace(/^\s+|\s+$/g, ''),
             title: option.title ? option.title : void 0,
             selected: option.selected,
@@ -700,11 +701,14 @@ var ChosenCore = (function() {
       }
 
       results_option_build(options) {
-        var content, data, data_content, first_result, j, k, len, len1, ref, ref1, rendered_results, result_index, selected_result_index;
+        var content, data, data_content, first_result, j, k, keep_scanning_for_pinned, len, len1, ref, ref1, rendered_results, result_index, selected_result_index;
         content = '';
         rendered_results = 0;
         result_index = 0;
         first_result = 0;
+        keep_scanning_for_pinned = this.get_search_field_value().length > 0 && this.results_data.some(function(data) {
+          return data.always_visible;
+        });
         if (!this.is_multiple && this.max_shown_results < Number.POSITIVE_INFINITY && this.get_search_field_value().length === 0) {
           selected_result_index = 0;
           ref = this.results_data;
@@ -724,10 +728,12 @@ var ChosenCore = (function() {
         for (k = 0, len1 = ref1.length; k < len1; k++) {
           data = ref1[k];
           if (this.result_is_visible(data)) {
-            if (result_index >= first_result && rendered_results < this.max_shown_results) {
+            if ((result_index >= first_result && rendered_results < this.max_shown_results) || data.pinned_visible) {
               data_content = data.group ? this.result_add_group(data) : this.result_add_option(data);
               if (data_content !== '') {
-                rendered_results++;
+                if (!data.pinned_visible) {
+                  rendered_results++;
+                }
                 content += data_content;
               }
             }
@@ -742,7 +748,7 @@ var ChosenCore = (function() {
               this.single_set_selected_text(this.choice_label(data));
             }
           }
-          if (rendered_results >= this.max_shown_results && !((options != null ? options.first : void 0) && this.is_multiple)) {
+          if (rendered_results >= this.max_shown_results && !((options != null ? options.first : void 0) && this.is_multiple) && !keep_scanning_for_pinned) {
             break;
           }
         }
@@ -789,7 +795,7 @@ var ChosenCore = (function() {
         ref = this.results_data;
         for (j = 0, len = ref.length; j < len; j++) {
           item = ref[j];
-          if (!item.group && item.search_match && !item.selected && !item.disabled && this.include_option_in_results(item)) {
+          if (!item.group && item.search_match && !item.pinned_only && !item.selected && !item.disabled && this.include_option_in_results(item)) {
             if (this.current_option_for(item) != null) {
               return true;
             }
@@ -820,7 +826,7 @@ var ChosenCore = (function() {
         ref = this.results_data;
         for (j = 0, len = ref.length; j < len; j++) {
           item = ref[j];
-          if (!(!item.group && item.search_match && !item.selected && !item.disabled && this.include_option_in_results(item))) {
+          if (!(!item.group && item.search_match && !item.pinned_only && !item.selected && !item.disabled && this.include_option_in_results(item))) {
             continue;
           }
           option = this.current_option_for(item);
@@ -1139,7 +1145,7 @@ var ChosenCore = (function() {
       }
 
       winnow_results(options) {
-        var escaped_query, exact_regex, exact_result, fix, i, j, k, l, len, match, match_alternate_text, match_length, matched_length_in_normalized, matcher, normalized_terms, normalized_text, option, prefix, prefix_normalized, query, ref, ref1, ref2, ref3, results, results_group, search_match, search_matches, startpos, substr_normalized, suffix, text;
+        var escaped_query, exact_regex, exact_result, fix, i, j, k, l, len, match, match_alternate_text, match_length, matched_length_in_normalized, matched_query, matcher, normalized_terms, normalized_text, option, prefix, prefix_normalized, query, ref, ref1, ref2, ref3, results, results_group, search_match, search_matches, startpos, substr_normalized, suffix, text;
         this.no_results_clear();
         results = 0;
         exact_result = false;
@@ -1183,6 +1189,8 @@ var ChosenCore = (function() {
         for (j = 0, len = ref.length; j < len; j++) {
           option = ref[j];
           option.search_match = false;
+          option.pinned_visible = Boolean(query.length && option.always_visible);
+          option.pinned_only = false;
           results_group = null;
           search_match = null;
           match_alternate_text = false;
@@ -1191,6 +1199,7 @@ var ChosenCore = (function() {
             if (option.group) {
               option.group_match = false;
               option.active_options = 0;
+              option.pinned_visible = false;
             }
             if ((option.group_array_index != null) && this.results_data[option.group_array_index]) {
               results_group = this.results_data[option.group_array_index];
@@ -1216,6 +1225,12 @@ var ChosenCore = (function() {
                 option.search_match = match.matched;
                 match_alternate_text = match.alternate;
               }
+              matched_query = option.search_match;
+              option.pinned_only = option.pinned_visible && !matched_query;
+              option.search_match = matched_query || option.pinned_visible;
+              if ((results_group != null) && option.pinned_visible) {
+                results_group.pinned_visible = true;
+              }
               if (option.search_match && !option.group) {
                 results += 1;
               }
@@ -1225,9 +1240,9 @@ var ChosenCore = (function() {
                 exact_result = exact_result || match.exact;
               }
               if (option.search_match) {
-                if (!this.search_matcher && query.length && !match_alternate_text && normalized_terms.length > 1) {
+                if (matched_query && !this.search_matcher && query.length && !match_alternate_text && normalized_terms.length > 1) {
                   option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms);
-                } else if (!this.search_matcher && query.length && !match_alternate_text) {
+                } else if (matched_query && !this.search_matcher && query.length && !match_alternate_text) {
                   startpos = search_match.index;
                   // If normalization changed the text, we need to find the correct
                   // highlighting boundaries in the original (non-normalized) text.

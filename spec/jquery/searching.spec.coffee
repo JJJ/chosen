@@ -221,6 +221,40 @@ describe "Searching", ->
     expect(div.find(".active-result").text()).toBe("<01M Fund")
     div.remove()
 
+  it "keeps an opt-in Other option selectable when the search has no match", ->
+    div = $("<div><select><option value=''></option><option value='fr'>France</option><option value='other' data-chosen-always-visible>Other</option><option value='hidden' hidden data-chosen-always-visible>Hidden</option><option value='disabled' disabled data-chosen-always-visible>Disabled</option></select></div>").appendTo("body")
+    select = div.find("select").chosen(display_disabled_options: false)
+    chosen = select.data("chosen")
+    chosen.results_show()
+    chosen.search_field.val("Atlantis").trigger("keyup")
+
+    result = div.find(".active-result")
+    expect(result.length).toBe(1)
+    expect(result.text()).toBe("Other")
+    expect(div.find(".no-results").length).toBe(0)
+    chosen.result_select(target: result[0], preventDefault: ->)
+    expect(select.val()).toBe("other")
+
+    select.find("option[value=other]").removeAttr("data-chosen-always-visible")
+    select.trigger("chosen:updated")
+    chosen.results_show()
+    chosen.search_field.val("Atlantis").trigger("keyup")
+    expect(div.find(".active-result").length).toBe(0)
+    div.remove()
+
+  it "keeps a pinned group visible beyond the result limit without bulk-selecting its nonmatch", ->
+    div = $("<div><select multiple><option value='fr-a'>France A</option><option value='fr-b'>France B</option><optgroup label='Alternatives'><option value='other' data-chosen-always-visible>Other</option></optgroup></select></div>").appendTo("body")
+    select = div.find("select").chosen(allow_select_all: true, max_shown_results: 1)
+    chosen = select.data("chosen")
+    chosen.results_show()
+    chosen.search_field.val("France").trigger("keyup")
+
+    expect(div.find(".active-result[data-option-array-index]").map((_, item) -> item.textContent).get()).toEqual(["France A", "Other"])
+    expect(div.find(".group-result").text()).toBe("Alternatives")
+    chosen.select_all_results()
+    expect(select.val()).toEqual(["fr-a", "fr-b"])
+    div.remove()
+
   it "renders options correctly when they contain characters that require HTML encoding", ->
     div = $("<div>").html("""
       <select>

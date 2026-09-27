@@ -361,6 +361,10 @@
           <td>Add alternate words or phrases that may match this option during search without displaying them in the result label. This is useful for synonyms, translations, abbreviations, and legacy names.</td>
         </tr>
         <tr>
+          <td>data-chosen-always-visible</td>
+          <td>Add this attribute to an <code class="language-html">option</code> that should remain in the results when its text does not match the search, such as “Other”. It stays in native option order, is selectable normally, and does not count as a search match for Select all. Hidden options and <code class="language-javascript">display_disabled_options: false</code> still take precedence. Marked options remain visible beyond <code class="language-javascript">max_shown_results</code>; trigger <code class="language-javascript">chosen:updated</code> after changing the attribute.</td>
+        </tr>
+        <tr>
           <td>placeholder</td>
           <td>A native placeholder on the select is used when <code class="language-html">data-placeholder</code> is absent. Both attributes override placeholder options.</td>
         </tr>

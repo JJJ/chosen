@@ -6,6 +6,7 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-summary'   : { max_items_shown: 2, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
+    '.chosen-select-other-recipe': { width: '100%' },
     '.chosen-select-matcher-recipe': { search_matcher: function(query, item) { return !item.group && item.value.indexOf('SKU-') === 0 && item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1; }, width: '100%' },
     '.chosen-select-create-recipe': { create_option: true, persistent_create_option: true, skip_no_results: true, width: '100%' },
     '.chosen-select-selected-recipe': { display_selected_value: true, deselect_selected_results: true, hide_results_on_select: false, width: '100%' },
@@ -33,5 +34,10 @@ document.observe('dom:loaded', function(evt) {
       select.insert(new Element('option', { value: 'long' }).update('A longer project name'));
     }
     select.fire('chosen:updated');
+  });
+  $('recipe-other').observe('change', function() {
+    var isOther = this.value === 'other';
+    $('other-detail').hidden = !isOther;
+    if (!isOther) $('other-country').value = '';
   });
 });
