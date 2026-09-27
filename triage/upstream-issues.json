@@ -873,8 +873,8 @@
   },
   {
     "number": 2799,
-    "status": "candidate",
-    "note": "Benchmark 100 small selects and inspect layout-read costs before optimizing initialization."
+    "status": "covered-in-fork",
+    "note": "Current Chrome fixture initialized 100 selects with 5 options in 36ms (jQuery) and 45ms (Prototype), and 700 selects with 22 options in 794ms and 1049ms respectively. This does not guarantee the same result on every integration or device."
   },
   {
     "number": 2794,
@@ -1053,8 +1053,8 @@
   },
   {
     "number": 2580,
-    "status": "candidate",
-    "note": "Benchmark search responsiveness with a very large native select before considering virtualization."
+    "status": "covered-in-fork",
+    "note": "Current Chrome 20,000-option fixture with max_shown_results: 50 initialized in about 75ms, opened in 20ms, and filtered in 68ms (jQuery) or 270ms (Prototype). Opt-in search_delay is available. Larger sets and other devices may still warrant profiling."
   },
   {
     "number": 2575,
