@@ -779,7 +779,8 @@
   {
     "number": 2884,
     "status": "fixed-in-fork",
-    "note": "Opt-in recalculate_width_on_update measures the native select again after option updates and resizes the control; explicit width and existing default sizing remain unchanged."
+    "note": "Opt-in recalculate_width_on_update measures the native select again after option updates and resizes the control; explicit width and existing default sizing remain unchanged.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/169"
   },
   {
     "number": 2871,
