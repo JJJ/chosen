@@ -13,6 +13,7 @@ available. Explicit entries make new integrations easier to identify:
 | `chosen-jjj/react/styles.css` | Standalone React theme using the shared `--chosen-*` tokens. |
 | `chosen-jjj/styles.css` | Standalone default CSS and shared theme variables. |
 | `chosen-jjj/scss` | Customizable Sass source. |
+| `chosen-jjj/sass/icons/*.svg` | Editable sources for the four control icons embedded in the default CSS. |
 
 The core accepts plain option/group data. It normalizes groups and inherited
 disabled/hidden state, filters results with Chosen's search rules, and computes

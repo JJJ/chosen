@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Ship editable SVG source files for Chosen's four embedded control icons; the build now derives Sass data URLs from those files (harvesthq/chosen#2959).
 - Let an opt-in `data-chosen-always-visible` attribute keep an option such as “Other” available during searches, including when no ordinary result matches (harvesthq/chosen#2963).
 - Add opt-in `recalculate_width_on_update` to resize Chosen when a native select gains longer options (harvesthq/chosen#2884).
 - Add opt-in `dropdown_position: "fixed"` to show results outside an `overflow: hidden` ancestor while tracking scroll and resize (harvesthq/chosen#86).
