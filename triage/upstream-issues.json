@@ -708,7 +708,8 @@
   {
     "number": 2963,
     "status": "fixed-in-fork",
-    "note": "An opt-in data-chosen-always-visible attribute keeps a native option such as Other available during unmatched searches in both adapters, without adding it to Select all when it does not match."
+    "note": "An opt-in data-chosen-always-visible attribute keeps a native option such as Other available during unmatched searches in both adapters, without adding it to Select all when it does not match.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/171"
   },
   {
     "number": 2959,
