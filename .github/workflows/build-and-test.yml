@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feature/chosen-react ]
   pull_request:
     branches: [ master ]
 
@@ -24,14 +24,42 @@ jobs:
     
     - name: Build
       run: npm run build
+
+    - name: Install WebKit for browser tests
+      run: npx playwright-core install --with-deps webkit
     
     - name: Run tests
       run: npm test
       env:
         CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome
 
-    - name: Install WebKit for touch tests
-      run: npx playwright-core install --with-deps webkit
+    - name: Report React bundle and package size
+      run: npm run size:react
 
     - name: Run iPad WebKit touch tests
       run: node scripts/run-mobile-webkit.js
+
+  react-18:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Use Node.js (from .nvmrc)
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: .nvmrc
+        cache: npm
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Use React 18 for compatibility checks
+      run: npm install --no-save --package-lock=false --legacy-peer-deps react@18.3.1 react-dom@18.3.1 @types/react@18 @types/react-dom@18 @testing-library/dom@^10
+
+    - name: Install WebKit
+      run: npx playwright-core install --with-deps webkit
+
+    - name: Run React 18 tests
+      run: npm run test:react
+      env:
+        CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome

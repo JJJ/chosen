@@ -5,6 +5,16 @@
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
   "main": "dist/js/chosen.jquery.js",
   "style": "dist/css/chosen.css",
+  "sideEffects": [
+    "./dist/js/**",
+    "./dist/core/index.iife.js",
+    "./dist/css/**",
+    "./dist/scss/**",
+    "./docs/**",
+    "./coffee/**",
+    "./sass/**",
+    "./dist/react/chosen.css"
+  ],
   "exports": {
     ".": "./dist/js/chosen.jquery.js",
     "./jquery": "./dist/js/chosen.jquery.js",
@@ -14,6 +24,11 @@
       "import": "./dist/core/index.mjs",
       "require": "./dist/core/index.cjs"
     },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.mjs"
+    },
+    "./react/styles.css": "./dist/react/chosen.css",
     "./styles.css": "./dist/css/chosen.css",
     "./scss": "./dist/scss/chosen.scss",
     "./dist/*": "./dist/*",
@@ -51,18 +66,26 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "grunt test && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js",
+    "test": "grunt test && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react",
     "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
     "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
+    "test:react": "node scripts/build-react.js && node --test spec/react/*.test.mjs && tsc -p spec/react/tsconfig.json && node scripts/run-react-browser-specs.js",
+    "size:react": "node scripts/report-react-size.js",
     "triage:upstream": "node scripts/upstream-issues.js",
-    "build": "grunt build",
+    "build": "grunt build && node scripts/build-react.js",
     "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.6.1",
     "axe-core": "^4.13.0",
     "coffee-script": "^1.12.7",
@@ -78,9 +101,12 @@
     "grunt-zip": "^1.0.0",
     "jasmine-core": "^7.0.2",
     "jquery": "^4.0.0",
+    "jsdom": "^30.1.1",
     "load-grunt-tasks": "^5.1.0",
     "playwright-core": "^1.63.0",
     "postcss": "^8.5.28",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "sass": "^1.104.1",
     "simulant": "^0.2.2",
     "tailwindcss": "^4.3.3",

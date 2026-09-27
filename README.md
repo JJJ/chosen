@@ -41,7 +41,8 @@ npm install chosen-jjj
 The default package entry still loads the jQuery adapter. Explicit entries for
 the Prototype adapter, shared CSS, Sass, and the experimental framework-neutral
 ESM/CommonJS core are described in the
-[package boundaries](docs/package-boundaries.md).
+[package boundaries](docs/package-boundaries.md). The experimental native React
+component is described in the [React guide](docs/react.md).
 
 To install with Composer:
 
