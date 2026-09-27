@@ -1,23 +1,18 @@
-<!---
-Good pull requests — patches, improvements, new features — are a fantastic help.  They should remain focused in scope and avoid containing unrelated commits.
+## Summary
 
-Please review the Pull Requests section of our Contributing Guidelines before submitting your work: https://github.com/jjj/chosen/blob/master/contributing.md#pull-requests
--->
+Describe the behavior changed and link the related issue, if any.
 
-### Summary
+## Verification
 
-Provide a general description of the code changes in your pull request.
+List the commands, browsers, and adapters you tested. Include any testing you
+couldn't do.
 
-Please double-check that:
+## Checklist
 
-  - [ ] All changes were made in CoffeeScript files, **not** JavaScript files.
-  - [ ] You used [Grunt](https://github.com/jjj/chosen/blob/master/contributing.md#grunt) to build the JavaScript files and tested them locally.
-  - [ ] You've updated both the jQuery *and* Prototype versions.
-  - [ ] You haven't manually updated the version number in `package.json`.
-  - [ ] If necessary, you've updated [the documentation](https://github.com/jjj/chosen/blob/master/docs/options.html).
+- [ ] I checked compatibility with the native select and existing defaults.
+- [ ] I updated both jQuery and Prototype implementations where behavior is shared.
+- [ ] I rebuilt generated `dist/` and `docs/` assets when source files changed.
+- [ ] I updated the site examples, options reference, wiki, and changelog where relevant.
+- [ ] I added a developer note for any generated markup, selector, role, or attribute change.
 
-See the [Pull Requests section of our Contributing Guidelines](https://github.com/jjj/chosen/blob/master/contributing.md#pull-requests) for more details.
-
-### References
-
-If your pull request is in reference to one or more open GitHub issues, please mention them here to keep the conversations linked together.
+See the [contribution guide](https://github.com/JJJ/chosen/blob/master/contributing.md) for build and test instructions.
