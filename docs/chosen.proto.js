@@ -221,7 +221,7 @@ var ChosenCore = (function() {
     var flags = config.caseSensitiveSearch ? "" : "i";
     function expression(value) {
       var pattern = config.searchContains ? value : "(^|\\s|\\b)" + value + "[^\\s]*";
-      if (config.enableSplitWordSearch === false && !config.searchContains) pattern = "^" + pattern;
+      if (config.enableSplitWordSearch === false) pattern = "^" + pattern;
       return new RegExp(pattern, flags);
     }
     var makeRegex = config.createSearchRegex || expression;
@@ -1321,7 +1321,7 @@ var ChosenCore = (function() {
       get_search_regex(escaped_search_string) {
         var regex_flag, regex_string;
         regex_string = this.search_contains ? escaped_search_string : `(^|\\s|\\b)${escaped_search_string}[^\\s]*`;
-        if (!(this.enable_split_word_search || this.search_contains)) {
+        if (!this.enable_split_word_search) {
           regex_string = `^${regex_string}`;
         }
         regex_flag = this.case_sensitive_search ? "" : "i";

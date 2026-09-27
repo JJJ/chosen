@@ -243,6 +243,18 @@ describe "Searching", ->
     results = div.select(".active-result")
     expect(results.length).toBe(0)
 
+  it "anchors contains searches when split word search is disabled", ->
+    div = new Element('div').update("<select><option value=''></option><option value='start'>&lt;01M Fund</option><option value='middle'>Other &lt;01M Fund</option><option value='inside'>X&lt;01M Fund</option></select>")
+    document.body.insert(div)
+    chosen = new Chosen(div.down('select'), search_contains: true, enable_split_word_search: false)
+    chosen.results_show()
+    chosen.search_field.value = '<01M'
+    chosen.winnow_results()
+
+    expect(div.select('.active-result').length).toBe(1)
+    expect(div.down('.active-result').textContent).toBe('<01M Fund')
+    div.remove()
+
   it "renders options correctly when they contain characters that require HTML encoding", ->
     div = new Element("div")
     div.update("""

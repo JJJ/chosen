@@ -212,7 +212,7 @@ var ChosenCore = (function() {
     var flags = config.caseSensitiveSearch ? "" : "i";
     function expression(value) {
       var pattern = config.searchContains ? value : "(^|\\s|\\b)" + value + "[^\\s]*";
-      if (config.enableSplitWordSearch === false && !config.searchContains) pattern = "^" + pattern;
+      if (config.enableSplitWordSearch === false) pattern = "^" + pattern;
       return new RegExp(pattern, flags);
     }
     var makeRegex = config.createSearchRegex || expression;

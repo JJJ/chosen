@@ -29,6 +29,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Honor `enable_split_word_search: false` even with `search_contains: true`, so punctuation-prefixed option text can match from the beginning without matching the same text later in an option (harvesthq/chosen#2862).
 - Highlight partly visible results on pointer hover without moving the result list; keyboard navigation still scrolls the active result into view (harvesthq/chosen#2771).
 - Use native element focus after selecting a jQuery result, avoiding the deprecated jQuery event shorthand (harvesthq/chosen#2931).
 - Keep the Prototype dropdown open when a bottom-edge click lands on its container after mouse-down (harvesthq/chosen#2156).
