@@ -132,6 +132,28 @@ describe "Basic setup", ->
     expect(intrinsic.dropdown.getBoundingClientRect().width).toBeGreaterThan(intrinsic.container.getBoundingClientRect().width)
     div.remove()
 
+  it "optionally refreshes the control width after options change", ->
+    div = new Element('div').update("<select class='dynamic'><option>Short</option></select><select class='default'><option>Short</option></select><select class='fixed'><option>Short</option></select>")
+    document.body.insert(div)
+    dynamic = new Chosen(div.down('select.dynamic'), recalculate_width_on_update: true)
+    unchanged = new Chosen(div.down('select.default'))
+    fixed = new Chosen(div.down('select.fixed'), recalculate_width_on_update: true, width: '120px')
+    initial_width = dynamic.container.getWidth()
+    unchanged_width = unchanged.container.getWidth()
+
+    for select in div.select('select')
+      select.insert(new Element('option').update('A much longer option added after Chosen initialization'))
+      select.fire('chosen:updated')
+
+    expect(dynamic.container.getWidth()).toBeGreaterThan(initial_width)
+    expect(unchanged.container.getWidth()).toBe(unchanged_width)
+    expect(fixed.container.getWidth()).toBe(120)
+    expect(dynamic.form_field.style.display).toBe('none')
+    dynamic.form_field.down('option:last-child').remove()
+    dynamic.form_field.fire('chosen:updated')
+    expect(dynamic.container.getWidth()).toBe(initial_width)
+    div.remove()
+
   it "positions an opt-in fixed dropdown outside its clipping ancestor", ->
     div = new Element('div', style: 'height:60px;overflow:hidden').update("<select style='width:200px'><option></option><option>One</option><option>Two</option><option>Three</option></select>")
     document.body.insert(div)

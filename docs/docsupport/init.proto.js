@@ -12,6 +12,7 @@ document.observe('dom:loaded', function(evt) {
   '.chosen-select-readonly-recipe': { width: '100%' },
   '.chosen-select-invalid-recipe': { width: '100%' },
     '.chosen-select-dropdown-width': { width: '180px', dropdown_width: '300px' },
+    '.chosen-select-update-width': { recalculate_width_on_update: true },
     '.chosen-select-fixed-dropdown': { width: '240px', dropdown_position: 'fixed' },
     '.chosen-select-no-single' : { disable_search_threshold: 10 },
     '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
@@ -25,4 +26,11 @@ document.observe('dom:loaded', function(evt) {
       new Chosen(element, config[selector]);
     });
   }
+  $('width-update-add').observe('click', function() {
+    var select = $('width-update');
+    if (!select.select('option[value="long"]').length) {
+      select.insert(new Element('option', { value: 'long' }).update('A longer project name'));
+    }
+    select.fire('chosen:updated');
+  });
 });

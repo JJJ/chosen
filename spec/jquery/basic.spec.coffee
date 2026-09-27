@@ -139,6 +139,26 @@ describe "Basic setup", ->
     expect(intrinsic.dropdown[0].getBoundingClientRect().width).toBeGreaterThan(intrinsic.container[0].getBoundingClientRect().width)
     div.remove()
 
+  it "optionally refreshes the control width after options change", ->
+    div = $("<div><select class='dynamic'><option>Short</option></select><select class='default'><option>Short</option></select><select class='fixed'><option>Short</option></select></div>").appendTo("body")
+    dynamic = div.find("select.dynamic").chosen(recalculate_width_on_update: true).data("chosen")
+    unchanged = div.find("select.default").chosen().data("chosen")
+    fixed = div.find("select.fixed").chosen(recalculate_width_on_update: true, width: "120px").data("chosen")
+    initial_width = dynamic.container.outerWidth()
+    unchanged_width = unchanged.container.outerWidth()
+
+    for select in div.find("select")
+      $(select).append("<option>A much longer option added after Chosen initialization</option>").trigger("chosen:updated")
+
+    expect(dynamic.container.outerWidth()).toBeGreaterThan(initial_width)
+    expect(unchanged.container.outerWidth()).toBe(unchanged_width)
+    expect(fixed.container.outerWidth()).toBe(120)
+    expect(dynamic.form_field.style.display).toBe("none")
+    dynamic.form_field_jq.find("option").last().remove()
+    dynamic.form_field_jq.trigger("chosen:updated")
+    expect(dynamic.container.outerWidth()).toBe(initial_width)
+    div.remove()
+
   it "positions an opt-in fixed dropdown outside its clipping ancestor", ->
     div = $("<div style='height:60px;overflow:hidden'><select style='width:200px'><option></option><option>One</option><option>Two</option><option>Three</option></select></div>").appendTo("body")
     chosen = div.find("select").chosen(dropdown_position: "fixed", dropdown_width: "150%").data("chosen")

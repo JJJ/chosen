@@ -1418,6 +1418,14 @@ chosen.destroy();</code></pre>
             <option>Comet Operations Group</option>
           </select>
         </div>
+        <p>For options loaded later, enable <code class="language-javascript">recalculate_width_on_update</code> so <code class="language-javascript">chosen:updated</code> can resize the control.</p>
+        <div>
+          <label class="comparison-label" for="width-update">Width after an option update</label>
+          <select id="width-update" class="chosen-select-update-width">
+            <option>Short</option>
+          </select>
+          <button type="button" id="width-update-add">Add a longer option</button>
+        </div>
         <div>
           <label class="comparison-label" for="width-single">Single Select</label>
           <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="16">

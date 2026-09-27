@@ -256,6 +256,11 @@
           <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing.</td>
         </tr>
         <tr>
+          <td>recalculate_width_on_update</td>
+          <td>false</td>
+          <td>When <code class="language-javascript">true</code>, measure the native select again when Chosen updates after options change, and resize the control to match. Explicit <code class="language-javascript">width</code> always takes precedence. If the select's parent is hidden, Chosen keeps its previous width until a later update can measure it.</td>
+        </tr>
+        <tr>
           <td>dropdown_position</td>
           <td>"absolute"</td>
           <td>Set to <code class="language-javascript">"fixed"</code> when an ancestor with <code class="language-css">overflow: hidden</code> clips the results. Chosen keeps the dropdown aligned while the page or a containing element scrolls and on window resize. Percentage <code class="language-javascript">dropdown_width</code> values stay relative to the Chosen control. A transformed or paint-contained ancestor can still establish a clipping containing block; remove that ancestor style or use a different layout in that case.</td>

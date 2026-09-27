@@ -47,6 +47,7 @@ class AbstractChosen
     @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
     @fixed_dropdown = @options.dropdown_position is "fixed"
+    @recalculate_width_on_update = @options.recalculate_width_on_update || false
     @split_search_terms = @options.split_search_terms || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true
@@ -367,6 +368,7 @@ class AbstractChosen
       search_input = @search_field[0] or @search_field
       search_input.value = active_query
       this.winnow_results()
+    this.recalculate_container_width() if @recalculate_width_on_update
 
   update_allow_single_deselect: ->
     first_option = @form_field.options[0]
@@ -929,6 +931,19 @@ class AbstractChosen
       computed_width = window.getComputedStyle(@form_field).width
       return computed_width if computed_width? and computed_width isnt "auto" and computed_width isnt "0px"
     return "auto"
+
+  recalculate_container_width: ->
+    return if @options.width?
+
+    original_display = @form_field.style.display
+    @form_field.style.display = "inline-block"
+    width = @form_field.offsetWidth
+    @form_field.style.display = original_display
+    return unless width > 0
+
+    container = @container[0] or @container
+    container.style.width = "#{width}px"
+    this.update_dropup_position() if @results_showing
 
   include_option_in_results: (option) ->
     group_hidden = option.group_array_index? and @results_data[option.group_array_index].hidden

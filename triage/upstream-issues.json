@@ -778,8 +778,8 @@
   },
   {
     "number": 2884,
-    "status": "candidate",
-    "note": "The control retains its initial width when AJAX adds longer options. Automatic width recomputation would change a long-standing default; consider an opt-in setting. dropdown_width: max-content already sizes the result menu to content."
+    "status": "fixed-in-fork",
+    "note": "Opt-in recalculate_width_on_update measures the native select again after option updates and resizes the control; explicit width and existing default sizing remain unchanged."
   },
   {
     "number": 2871,

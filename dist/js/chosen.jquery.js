@@ -493,6 +493,7 @@ var ChosenCore = (function() {
         this.search_matcher = typeof this.options.search_matcher === "function" ? this.options.search_matcher : null;
         this.search_input_type = this.options.search_input_type === "text" ? "text" : "search";
         this.fixed_dropdown = this.options.dropdown_position === "fixed";
+        this.recalculate_width_on_update = this.options.recalculate_width_on_update || false;
         this.split_search_terms = this.options.split_search_terms || false;
         this.backspace_deletes_choices = this.options.backspace_deletes_choices != null ? this.options.backspace_deletes_choices : true;
         this.single_backstroke_delete = this.options.single_backstroke_delete != null ? this.options.single_backstroke_delete : true;
@@ -975,7 +976,10 @@ var ChosenCore = (function() {
         if (this.results_showing) {
           search_input = this.search_field[0] || this.search_field;
           search_input.value = active_query;
-          return this.winnow_results();
+          this.winnow_results();
+        }
+        if (this.recalculate_width_on_update) {
+          return this.recalculate_container_width();
         }
       }
 
@@ -1963,6 +1967,25 @@ var ChosenCore = (function() {
           }
         }
         return "auto";
+      }
+
+      recalculate_container_width() {
+        var container, original_display, width;
+        if (this.options.width != null) {
+          return;
+        }
+        original_display = this.form_field.style.display;
+        this.form_field.style.display = "inline-block";
+        width = this.form_field.offsetWidth;
+        this.form_field.style.display = original_display;
+        if (!(width > 0)) {
+          return;
+        }
+        container = this.container[0] || this.container;
+        container.style.width = `${width}px`;
+        if (this.results_showing) {
+          return this.update_dropup_position();
+        }
       }
 
       include_option_in_results(option) {
