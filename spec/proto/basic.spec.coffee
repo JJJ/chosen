@@ -97,7 +97,7 @@ describe "Basic setup", ->
     div.remove()
 
   it "collapses extra selected choices without changing selected values", ->
-    div = new Element('div').update("<select multiple><option selected>One</option><option selected>Two</option><option selected>Three</option></select>")
+    div = new Element('div').update("<select multiple style='width:300px'><option selected>One</option><option selected>Two</option><option selected>Three</option></select>")
     document.body.appendChild(div)
     select = div.down('select')
     new Chosen(select,
@@ -110,6 +110,7 @@ describe "Basic setup", ->
     expect(choices.length).toBe(3)
     expect(choices.filter((choice) -> choice.hidden).length).toBe(2)
     expect(summary.textContent).toBe("2 hidden")
+    expect(Math.abs(choices[0].getBoundingClientRect().height - summary.getBoundingClientRect().height)).toBeLessThan(1)
     expect($A(select.selectedOptions).pluck('value')).toEqual(["One", "Two", "Three"])
 
     summary.click()

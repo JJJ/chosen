@@ -498,12 +498,15 @@ $chosen-highlight-text-decoration: underline !default;
 			margin: 3px var(--chosen-choice-gap, #{$chosen-choice-gap}) 3px 0;
 
 			button {
+				display: block;
 				padding: var(--chosen-choice-padding-block, #{$chosen-choice-padding-block}) var(--chosen-choice-padding-inline-start, #{$chosen-choice-padding-inline-start});
 				border: var(--chosen-border-width, #{$chosen-border-width}) var(--chosen-border-style, #{$chosen-border-style}) var(--chosen-choice-border-color, var(--chosen-border-color, #{$chosen-border-color}));
 				border-radius: var(--chosen-choice-border-radius, #{$chosen-choice-border-radius});
 				background: var(--chosen-choice-background, #{$chosen-choice-background-color});
 				color: var(--chosen-choice-color, #{$chosen-choice-color});
 				font: inherit;
+				font-size: 95%;
+				line-height: var(--chosen-choice-line-height, #{$chosen-choice-line-height});
 				cursor: pointer;
 			}
 		}

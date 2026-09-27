@@ -107,7 +107,7 @@ describe "Basic setup", ->
     expect(select.val()).toBe(" ")
 
   it "collapses extra selected choices without changing selected values", ->
-    div = $("<div><select multiple><option selected>One</option><option selected>Two</option><option selected>Three</option></select></div>").appendTo("body")
+    div = $("<div><select multiple style='width:300px'><option selected>One</option><option selected>Two</option><option selected>Three</option></select></div>").appendTo("body")
     select = div.find("select")
     select.chosen
       max_items_shown: 1
@@ -119,6 +119,7 @@ describe "Basic setup", ->
     expect(choices.length).toBe(3)
     expect(choices.filter(':hidden').length).toBe(2)
     expect(summary.textContent).toBe("2 hidden")
+    expect(Math.abs(choices[0].getBoundingClientRect().height - summary.getBoundingClientRect().height)).toBeLessThan(1)
     expect(select.val()).toEqual(["One", "Two", "Three"])
 
     summary.click()

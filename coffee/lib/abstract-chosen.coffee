@@ -58,8 +58,8 @@ class AbstractChosen
     @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
     @max_selected_options = @options.max_selected_options || Infinity
     @max_items_shown = if typeof @options.max_items_shown is 'number' and isFinite(@options.max_items_shown) and @options.max_items_shown > 0 and Math.floor(@options.max_items_shown) is @options.max_items_shown then @options.max_items_shown else Infinity
-    @more_items_text = @options.more_items_text || (count) -> "and #{count} more selected"
-    @show_fewer_items_text = @options.show_fewer_items_text || "Show fewer"
+    @more_items_text = @options.more_items_text || (count) -> "Show #{count} more..."
+    @show_fewer_items_text = @options.show_fewer_items_text || "Collapse"
     @choices_expanded = false
     @inherit_select_classes = @options.inherit_select_classes || false
     @inherit_option_classes = @options.inherit_option_classes || false

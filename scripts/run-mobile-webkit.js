@@ -87,10 +87,16 @@ async function main() {
           else new window.Chosen(select, { max_items_shown: 1 });
         }, adapter.name);
         const summary = page.locator('#limited_choices_chosen .chosen-choice-summary button');
+        if (await summary.textContent() !== 'Show 2 more...') {
+          throw new Error(`${adapter.name}: collapsed summary text is incorrect`);
+        }
         if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 1) {
           throw new Error(`${adapter.name}: collapsed choices did not hide the excess chips`);
         }
         await summary.tap();
+        if (await summary.textContent() !== 'Collapse') {
+          throw new Error(`${adapter.name}: expanded summary text is incorrect`);
+        }
         if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 3) {
           throw new Error(`${adapter.name}: tapping the summary did not reveal the selected chips`);
         }
