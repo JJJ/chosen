@@ -92,7 +92,7 @@
         <tr>
           <td>enable_split_word_search</td>
           <td>true</td>
-          <td>By default, searching will match on any word within an option tag. Set this option to <code class="language-javascript">false</code> if you want to only match on the entire text of an option tag.</td>
+          <td>By default, searching can match any word within an option tag. Set this option to <code class="language-javascript">false</code> to require a match at the start of the option text. This start anchor also applies when <code class="language-javascript">search_contains</code> is true.</td>
         </tr>
         <tr>
           <td>inherit_select_classes</td>
@@ -173,7 +173,7 @@
         <tr>
           <td>search_contains</td>
           <td>false</td>
-          <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. This is especially useful for options that include a lot of special characters or phrases in ()s and []s.</td>
+          <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. When <code class="language-javascript">enable_split_word_search</code> is false, the match still must start at the beginning of the option text, including punctuation.</td>
         </tr>
         <tr>
           <td>search_matcher</td>

@@ -794,8 +794,8 @@
   },
   {
     "number": 2862,
-    "status": "candidate",
-    "note": "Assess the interaction between search_contains and enable_split_word_search; current regex branch still combines them."
+    "status": "fixed-in-fork",
+    "note": "The combined search_contains and enable_split_word_search: false settings now anchor at the option start while permitting punctuation-prefixed queries; the default search behavior is unchanged."
   },
   {
     "number": 2855,

@@ -152,7 +152,7 @@ export function createMatcher(query, settings) {
 
   function expression(value) {
     var pattern = config.searchContains ? value : '(^|\\s|\\b)' + value + '[^\\s]*';
-    if (config.enableSplitWordSearch === false && !config.searchContains) pattern = '^' + pattern;
+    if (config.enableSplitWordSearch === false) pattern = '^' + pattern;
     return new RegExp(pattern, flags);
   }
 

@@ -54,6 +54,14 @@ test('matcher reports primary, alternate, exact, and split-term results', () => 
   assert.equal(core.createMatcher('Cat')({ label: 'Cat', exactText: 'Cat' }).exact, true);
 });
 
+test('contains search still starts at the option beginning when split word search is disabled', () => {
+  const prefix = core.createMatcher('<01M', { enableSplitWordSearch: false, searchContains: true });
+  assert.equal(prefix({ label: '<01M Fund' }).matched, true);
+  assert.equal(prefix({ label: 'Other <01M Fund' }).matched, false);
+  assert.equal(prefix({ label: 'X<01M Fund' }).matched, false);
+  assert.equal(core.createMatcher('<01M', { searchContains: true })({ label: 'Other <01M Fund' }).matched, true);
+});
+
 for (const fixture of cases.selectionCases) {
   test(`shared selection fixture: ${fixture.name}`, () => {
     let values = fixture.initial;

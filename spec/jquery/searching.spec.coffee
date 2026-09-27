@@ -210,6 +210,17 @@ describe "Searching", ->
     results = div.find(".active-result")
     expect(results.length).toBe(0)
 
+  it "anchors contains searches when split word search is disabled", ->
+    div = $("<div><select><option value=''></option><option value='start'>&lt;01M Fund</option><option value='middle'>Other &lt;01M Fund</option><option value='inside'>X&lt;01M Fund</option></select></div>").appendTo("body")
+    select = div.find("select").chosen(search_contains: true, enable_split_word_search: false)
+    chosen = select.data("chosen")
+    chosen.results_show()
+    chosen.search_field.val("<01M").trigger("keyup")
+
+    expect(div.find(".active-result").length).toBe(1)
+    expect(div.find(".active-result").text()).toBe("<01M Fund")
+    div.remove()
+
   it "renders options correctly when they contain characters that require HTML encoding", ->
     div = $("<div>").html("""
       <select>
