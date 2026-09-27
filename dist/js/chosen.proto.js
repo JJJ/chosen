@@ -535,19 +535,52 @@ var ChosenCore = (function() {
       }
 
       set_default_text() {
-        if (this.form_field.getAttribute("data-placeholder")) {
-          this.default_text = this.form_field.getAttribute("data-placeholder");
-        } else if (this.form_field.getAttribute("placeholder")) {
-          this.default_text = this.form_field.getAttribute("placeholder");
+        var data_placeholder, placeholder;
+        data_placeholder = this.form_field.getAttribute("data-placeholder");
+        placeholder = this.form_field.getAttribute("placeholder");
+        if (data_placeholder != null) {
+          this.default_text = data_placeholder;
+        } else if (placeholder != null) {
+          this.default_text = placeholder;
         } else if (this.is_multiple) {
-          this.default_text = this.options.placeholder_text_multiple || this.options.placeholder_text || AbstractChosen.default_multiple_text;
+          if (this.options.placeholder_text_multiple != null) {
+            this.default_text = this.options.placeholder_text_multiple;
+          } else if (this.options.placeholder_text != null) {
+            this.default_text = this.options.placeholder_text;
+          } else {
+            this.default_text = AbstractChosen.default_multiple_text;
+          }
         } else {
-          this.default_text = this.options.placeholder_text_single || this.options.placeholder_text || AbstractChosen.default_single_text;
+          if (this.options.placeholder_text_single != null) {
+            this.default_text = this.options.placeholder_text_single;
+          } else if (this.options.placeholder_text != null) {
+            this.default_text = this.options.placeholder_text;
+          } else {
+            this.default_text = AbstractChosen.default_single_text;
+          }
         }
         // Unescape any HTML entities that might have been incorrectly included
         this.default_text = this.unescape_html(this.default_text);
         this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || AbstractChosen.default_no_result_text;
         return this.create_option_text = this.form_field.getAttribute("data-create_option_text") || this.options.create_option_text || AbstractChosen.default_create_option_text;
+      }
+
+      open_field() {
+        if (this.is_disabled || this.results_showing) {
+          return;
+        }
+        this.activate_field();
+        return this.results_show();
+      }
+
+      handle_form_reset() {
+        if (this.form_reset_timeout != null) {
+          clearTimeout(this.form_reset_timeout);
+        }
+        return this.form_reset_timeout = setTimeout((() => {
+          this.form_reset_timeout = null;
+          return this.results_update_field();
+        }), 0);
       }
 
       choice_label(item) {
@@ -1649,7 +1682,7 @@ var ChosenCore = (function() {
       }
 
       selected_item_keydown(evt) {
-        var ref, stroke;
+        var character, ref, search_field, stroke;
         if (this.is_disabled) {
           return;
         }
@@ -1676,6 +1709,19 @@ var ChosenCore = (function() {
             case 36:
               return this.keyhome();
           }
+        } else if (!evt.altKey && !evt.ctrlKey && !evt.metaKey) {
+          search_field = this.search_field[0] || this.search_field;
+          if (search_field.readOnly) {
+            return;
+          }
+          character = evt.key != null ? (evt.key.length === 1 ? evt.key : "") : (48 <= stroke && stroke <= 90) ? String.fromCharCode(stroke) : "";
+          if (!(character.length && /\S/.test(character))) {
+            return;
+          }
+          evt.preventDefault();
+          this.results_show();
+          search_field.value = character;
+          return this.search_if_value_changed();
         }
       }
 
@@ -1895,11 +1941,18 @@ var ChosenCore = (function() {
       }
 
       container_width() {
+        var computed_width;
         if (this.options.width != null) {
           return this.options.width;
         }
         if (this.form_field.offsetWidth > 0) {
           return `${this.form_field.offsetWidth}px`;
+        }
+        if (window.getComputedStyle != null) {
+          computed_width = window.getComputedStyle(this.form_field).width;
+          if ((computed_width != null) && computed_width !== "auto" && computed_width !== "0px") {
+            return computed_width;
+          }
         }
         return "auto";
       }
@@ -2164,6 +2217,12 @@ var ChosenCore = (function() {
       register_observers() {
         Event.observe(window, 'pageshow', this.pageshow_handler);
         Event.observe(window, 'blur', this.window_blur_handler);
+        if (this.form_field.form != null) {
+          this.form_reset_handler = () => {
+            return this.handle_form_reset();
+          };
+          Event.observe(this.form_field.form, 'reset', this.form_reset_handler);
+        }
         this.container.observe("touchstart", (evt) => {
           return this.container_mousedown(evt);
         });
@@ -2184,6 +2243,13 @@ var ChosenCore = (function() {
         });
         this.search_results.observe("mouseup", (evt) => {
           return this.search_results_mouseup(evt);
+        });
+        this.search_results.observe("mousedown", (evt) => {
+          var target;
+          target = evt.target.nodeName === 'LI' ? evt.target : evt.target.up('li');
+          if ((target != null) && (target.hasClassName('disabled-result') || target.hasClassName('no-results') || (target.hasClassName('result-selected') && !target.hasClassName('active-result')))) {
+            return evt.preventDefault();
+          }
         });
         this.search_results.observe("mouseover", (evt) => {
           return this.search_results_mouseover(evt);
@@ -2216,7 +2282,7 @@ var ChosenCore = (function() {
             return this.activate_field(evt);
           },
           open: (evt) => {
-            return this.container_mousedown(evt);
+            return this.open_field();
           },
           close: (evt) => {
             return this.close_field(evt);
@@ -2269,8 +2335,14 @@ var ChosenCore = (function() {
 
       destroy() {
         this.cancel_pending_search();
+        if (this.form_reset_timeout != null) {
+          clearTimeout(this.form_reset_timeout);
+        }
         Event.stopObserving(window, 'pageshow', this.pageshow_handler);
         Event.stopObserving(window, 'blur', this.window_blur_handler);
+        if (this.form_reset_handler != null) {
+          Event.stopObserving(this.form_field.form, 'reset', this.form_reset_handler);
+        }
         if ((this.container.getRootNode != null)) {
           this.container.getRootNode().stopObserving("click", this.click_test_action);
         } else {

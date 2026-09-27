@@ -85,6 +85,9 @@ class @Chosen extends AbstractChosen
   register_observers: ->
     Event.observe window, 'pageshow', @pageshow_handler
     Event.observe window, 'blur', @window_blur_handler
+    if @form_field.form?
+      @form_reset_handler = => this.handle_form_reset()
+      Event.observe @form_field.form, 'reset', @form_reset_handler
 
     @container.observe "touchstart", (evt) => this.container_mousedown(evt)
     @container.observe "touchend", (evt) => this.container_mouseup(evt)
@@ -95,6 +98,10 @@ class @Chosen extends AbstractChosen
     @container.observe "mouseleave", (evt) => this.mouse_leave(evt)
 
     @search_results.observe "mouseup", (evt) => this.search_results_mouseup(evt)
+    @search_results.observe "mousedown", (evt) =>
+      target = if evt.target.nodeName is 'LI' then evt.target else evt.target.up('li')
+      if target? and (target.hasClassName('disabled-result') or target.hasClassName('no-results') or (target.hasClassName('result-selected') and not target.hasClassName('active-result')))
+        evt.preventDefault()
     @search_results.observe "mouseover", (evt) => this.search_results_mouseover(evt)
     @search_results.observe "mouseout", (evt) => this.search_results_mouseout(evt)
 
@@ -109,7 +116,7 @@ class @Chosen extends AbstractChosen
     @form_field_observers =
       updated: (evt) => this.results_update_field(evt)
       activate: (evt) => this.activate_field(evt)
-      open: (evt) => this.container_mousedown(evt)
+      open: (evt) => this.open_field()
       close: (evt) => this.close_field(evt)
     @form_field.observe "chosen:updated", @form_field_observers.updated
     @form_field.observe "chosen:activate", @form_field_observers.activate
@@ -134,8 +141,10 @@ class @Chosen extends AbstractChosen
 
   destroy: ->
     this.cancel_pending_search()
+    clearTimeout(@form_reset_timeout) if @form_reset_timeout?
     Event.stopObserving window, 'pageshow', @pageshow_handler
     Event.stopObserving window, 'blur', @window_blur_handler
+    Event.stopObserving @form_field.form, 'reset', @form_reset_handler if @form_reset_handler?
     if (@container.getRootNode?)
       @container.getRootNode().stopObserving "click", @click_test_action
     else

@@ -163,7 +163,7 @@
         <tr>
           <td>placeholder_text</td>
           <td>Not set; type-specific defaults apply.</td>
-          <td>Fallback placeholder for either select type. A type-specific <code class="language-javascript">placeholder_text_single</code> or <code class="language-javascript">placeholder_text_multiple</code> takes precedence; a native <code class="language-html">placeholder</code> or <code class="language-html">data-placeholder</code> attribute on the select takes precedence over the options.</td>
+          <td>Fallback placeholder for either select type. A type-specific <code class="language-javascript">placeholder_text_single</code> or <code class="language-javascript">placeholder_text_multiple</code> takes precedence; a native <code class="language-html">placeholder</code> or <code class="language-html">data-placeholder</code> attribute on the select takes precedence over the options. Set any of these to an empty string to omit the placeholder.</td>
         </tr>
         <tr>
           <td>placeholder_text_single</td>
@@ -385,7 +385,7 @@
       </tbody></table>
 
       <h2><a name="keyboard-navigation" class="anchor" href="#keyboard-navigation">Keyboard navigation</a></h2>
-      <p>When the result list is active, Chosen supports the standard select navigation keys:</p>
+      <p>Typing a printable character on a focused single select opens its search and starts filtering. When the result list is active, Chosen supports the standard select navigation keys:</p>
       <table class="docs-table">
         <tbody><tr>
           <th>Key</th><th>Behavior</th>

@@ -27,6 +27,12 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Respect an explicit CSS width when a select starts inside a hidden container (harvesthq/chosen#92).
+- Refresh selected text and chips after a native form reset, without changing native reset or change-event behavior (harvesthq/chosen#2789).
+- Keep keyboard focus on Chosen when a user clicks an already selected, disabled, or no-results row that cannot be selected (harvesthq/chosen#2787).
+- Start searching when a user types a printable key on a focused single select, without requiring an initial click (harvesthq/chosen#3075).
+- Preserve an explicitly empty `data-placeholder`, native `placeholder`, or configured placeholder instead of replacing it with default text (harvesthq/chosen#1076).
+- Let `chosen:open` open an already activated single select, while keeping repeated open calls idempotent in both adapters (harvesthq/chosen#2689).
 - Keep an open React dropdown visible during mouse or touch presses on its associated label, and use the demo's field-specific search placeholders.
 - Keep the React dropdown chevron pointing down in right-to-left controls instead of mirroring sideways.
 - Truncate long React multiple-choice chip labels inside the control while keeping their remove buttons visible.
