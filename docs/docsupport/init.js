@@ -9,6 +9,7 @@ var config = {
   '.chosen-select-selected-recipe': { display_selected_value: true, deselect_selected_results: true, hide_results_on_select: false, width: '100%' },
   '.chosen-select-group-recipe': { width: '100%' },
   '.chosen-select-readonly-recipe': { width: '100%' },
+  '.chosen-select-invalid-recipe': { width: '100%' },
   '.chosen-select-dropdown-width': { width: '180px', dropdown_width: '300px' },
   '.chosen-select-no-single' : { disable_search_threshold: 10 },
   '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },

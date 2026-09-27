@@ -424,9 +424,10 @@
         <tr><td><code>--chosen-background</code></td><td>Fallback surface color when a more specific background is not set.</td></tr>
         <tr><td><code>--chosen-control-background</code>, <code>--chosen-dropdown-background</code>, and <code>--chosen-search-background</code></td><td>Independent closed control, result dropdown, and search field surfaces.</td></tr>
         <tr><td><code>--chosen-border-width</code>, <code>--chosen-border-style</code>, and <code>--chosen-border-color</code></td><td>Shared default border.</td></tr>
+        <tr><td><code>--chosen-invalid-border-color</code></td><td>Border for an explicitly invalid control (<code>#dc2626</code> by default). Set <code>aria-invalid="true"</code> on the original select; native <code>:invalid</code> alone does not change Chosen's existing appearance.</td></tr>
         <tr><td><code>--chosen-dropdown-border-color</code>, <code>--chosen-search-border-color</code>, and <code>--chosen-choice-border-color</code></td><td>Surface-specific borders that fall back to the shared border.</td></tr>
         <tr><td><code>--chosen-active-color</code>, <code>--chosen-active-border-color</code>, and <code>--chosen-hover-border-color</code></td><td>Active result text and interactive control borders.</td></tr>
-        <tr><td><code>--chosen-highlight-color</code> and <code>--chosen-highlight-text-color</code></td><td>Highlighted result colors.</td></tr>
+        <tr><td><code>--chosen-highlight-color</code> (legacy), <code>--chosen-highlight-background</code> (React), and <code>--chosen-highlight-text-color</code></td><td>Highlighted result colors.</td></tr>
         <tr><td><code>--chosen-bulk-action-color</code> and <code>--chosen-divider-color</code></td><td>Bulk action text and the divider below its last row.</td></tr>
         <tr><td><code>--chosen-selected-background</code></td><td>Selected single-result background.</td></tr>
         <tr><td><code>--chosen-muted-color</code> and <code>--chosen-muted-background</code></td><td>No-results message colors.</td></tr>
@@ -468,6 +469,7 @@
     --chosen-active-border-color: var(--color-indigo-500);
     --chosen-hover-border-color: var(--color-slate-400);
     --chosen-highlight-color: var(--color-indigo-600);
+    --chosen-highlight-background: var(--color-indigo-600);
     --chosen-bulk-action-color: var(--color-indigo-600);
     --chosen-divider-color: var(--color-slate-300);
     --chosen-selected-background: var(--color-indigo-50);
@@ -490,6 +492,9 @@
     color-scheme: dark;
     --chosen-text-color: var(--color-slate-100);
     --chosen-placeholder-color: var(--color-slate-400);
+    --chosen-group-color: var(--color-slate-300);
+    --chosen-muted-color: var(--color-slate-300);
+    --chosen-active-color: var(--color-indigo-300);
     --chosen-control-background: var(--color-slate-900);
     --chosen-dropdown-background: var(--color-slate-800);
     --chosen-search-background: var(--color-slate-900);
@@ -504,6 +509,7 @@
     --chosen-choice-color: var(--color-slate-100);
     --chosen-choice-disabled-background: var(--color-slate-800);
     --chosen-disabled-background: var(--color-slate-800);
+    --chosen-disabled-opacity: 1;
     --chosen-dropdown-shadow: var(--shadow-2xl);
   }
 }</code></pre>
