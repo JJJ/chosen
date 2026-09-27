@@ -94,7 +94,7 @@ async function main() {
           throw new Error(`${adapter.name}: collapsed choices did not hide the excess chips`);
         }
         await summary.tap();
-        if (await summary.textContent() !== 'Collapse') {
+        if (await summary.textContent() !== 'Show fewer...') {
           throw new Error(`${adapter.name}: expanded summary text is incorrect`);
         }
         if (await page.locator('#limited_choices_chosen .search-choice:visible').count() !== 3) {
