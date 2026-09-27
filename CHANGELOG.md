@@ -27,6 +27,13 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Keep an open React dropdown visible during mouse or touch presses on its associated label, and use the demo's field-specific search placeholders.
+- Keep the React dropdown chevron pointing down in right-to-left controls instead of mirroring sideways.
+- Truncate long React multiple-choice chip labels inside the control while keeping their remove buttons visible.
+- Remove browser-default padding and extra horizontal width around React multiple-choice chip remove buttons; the chip itself provides the trailing spacing.
+- Let visible, selected React multiple-choice results toggle off by click or Enter, including when the selection limit has been reached.
+- Keep only one React result highlighted when moving between options, distinguish selected results with a check mark, and clip result backgrounds to the dropdown's rounded corners.
+- Indent React options beneath group headings on the inline start side, including right-to-left controls.
 - Keep the React single-select clear button on one line with a long selected label.
 - Keep the dropdown available at the selection limit when Deselect all or individual result deselection is enabled.
 - Stop an Escape key handled by an open Chosen dropdown from also reaching ancestor controls.
@@ -42,6 +49,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
 ### Maintenance
+- Add an interactive React demo with native form submission, validation, multiple selection, selected/disabled result visibility switches, right-to-left layout, and light/dark token themes.
 - Cover bulk actions, selected-choice summaries and removal, single clearing, long labels, and RTL layouts in the visual fixtures. Audit representative dark controls and dropdowns for color contrast.
 - Complete the options reference and add matching jQuery, Prototype, and wiki recipes for search, option creation, selection, group actions, readonly controls, and dropdown sizing.
 - Remove unused Prototype markup templates; both adapters already render their controls through the shared markup methods.
@@ -49,6 +57,8 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- React adds `.chosen-react__option--selected` to selected result rows; its check mark is CSS generated. Pointer entry now updates the active option and `aria-activedescendant`, while the highlighted row remains distinct from selection.
+- The documentation-only `docs/docsupport/react-demo.js` bundles React and ReactDOM for GitHub Pages. The published `chosen-jjj/react` entry still treats React as a peer dependency; regenerate the demo and its copied stylesheet with `npm run build`.
 - React adds `.chosen-react--invalid` when `aria-invalid` is true; legacy Chosen styles the generated sibling container when the original select has `aria-invalid="true"`. Native `:invalid` alone does not activate the new border.
 - Enabling `max_items_shown` hides excess selected `.search-choice` elements and adds a `.chosen-choice-summary` list item with a button before the search field. The selected options and hidden choice elements remain in the DOM.
 - Generated `.chosen-search-input` elements now use `type="search"` by default instead of `type="text"`. Integrations with CSS or DOM checks tied to the old attribute can set `search_input_type: "text"`. Chosen's CSS targets the class for either type and suppresses the browser's native search clear control. The input type does not guarantee suppression of browser autofill suggestions.

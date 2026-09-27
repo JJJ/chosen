@@ -13,6 +13,7 @@ and library versions when reporting a compatibility issue.
 For **documentation**, usage, and examples, see the
 [jQuery demo](https://jjj.github.io/chosen/),
 [Prototype demo](https://jjj.github.io/chosen/index.proto.html), and
+[React demo](https://jjj.github.io/chosen/react.html), plus the
 [options reference](https://jjj.github.io/chosen/options.html). The
 [wiki](https://github.com/JJJ/chosen/wiki) covers setup and common workflows.
 

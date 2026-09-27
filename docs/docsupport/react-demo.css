@@ -1,0 +1,56 @@
+.react-demo-intro { margin-bottom: 1.5rem; }
+.docs-reference main > pre { max-width: 100%; overflow-x: auto; }
+.docs-reference footer { color: #667085; }
+.react-demo-switches { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1rem; }
+.react-demo-switch { display: inline-flex; align-items: center; gap: .5rem; font-size: .9rem; }
+.react-demo-switch input { width: 1rem; height: 1rem; }
+.react-demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.react-demo-card { min-width: 0; padding: 1.4rem; border: 1px solid #dfe3e8; border-radius: 12px; background: #fff; }
+.react-demo-card h2 { margin: 0 0 1.4rem; font-size: 1.35rem; }
+.react-demo-card label { display: block; margin-bottom: .5rem; font-weight: 650; }
+.react-demo-card .react-demo-switch { display: inline-flex; margin-bottom: 0; font-weight: 400; }
+.react-demo-eyebrow { margin-bottom: .35rem; color: #6b7280; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.react-demo-help { margin: .7rem 0 0; color: #596579; font-size: .84rem; }
+.react-demo-card .chosen-react { width: 100%; }
+.react-demo-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin: 1.25rem 0 2rem; }
+.react-demo-actions button { padding: .55rem .85rem; border: 1px solid #667085; border-radius: 6px; background: #fff; color: #222b38; cursor: pointer; font: inherit; font-size: .9rem; }
+.react-demo-actions button[type="submit"] { border-color: #b84f16; background: #b84f16; color: #fff; }
+.react-demo-actions output { flex-basis: 100%; min-height: 1.4rem; font-size: .85rem; }
+.react-demo-tailwind .chosen-react {
+  --chosen-border-color: #cbd5e1;
+  --chosen-hover-border-color: #94a3b8;
+  --chosen-active-border-color: #6366f1;
+  --chosen-control-background: #fff;
+  --chosen-text-color: #0f172a;
+  --chosen-placeholder-color: #64748b;
+  --chosen-choice-background: #e0e7ff;
+  --chosen-choice-color: #312e81;
+  --chosen-selected-background: #eef2ff;
+  --chosen-border-radius: 8px;
+  --chosen-choice-border-radius: 6px;
+  --chosen-highlight-background: #4f46e5;
+  --chosen-focus-ring-color: #6366f1;
+}
+:root[data-theme="dark"] .react-demo-card { border-color: #3d444d; background: #22272e; }
+:root[data-theme="dark"] .react-demo-eyebrow,
+:root[data-theme="dark"] .react-demo-help { color: #cbd5e1; }
+:root[data-theme="dark"] .react-demo-actions button { border-color: #64748b; background: #303744; color: #f1f5f9; }
+:root[data-theme="dark"] .react-demo-actions button[type="submit"] { border-color: #f09961; background: #bd571d; color: #fff; }
+:root[data-theme="dark"] .react-demo-card .chosen-react {
+  color-scheme: dark;
+  --chosen-control-background: #0f172a;
+  --chosen-dropdown-background: #1e293b;
+  --chosen-text-color: #f1f5f9;
+  --chosen-placeholder-color: #cbd5e1;
+  --chosen-group-color: #cbd5e1;
+  --chosen-muted-color: #cbd5e1;
+  --chosen-border-color: #64748b;
+  --chosen-hover-border-color: #94a3b8;
+  --chosen-active-border-color: #a5b4fc;
+  --chosen-choice-background: #334155;
+  --chosen-choice-color: #f1f5f9;
+  --chosen-active-color: #c7d2fe;
+  --chosen-selected-background: #334155;
+  --chosen-disabled-opacity: 1;
+}
+@media (max-width: 760px) { .react-demo-grid { grid-template-columns: 1fr; } }

@@ -60,12 +60,20 @@ async function main() {
       if (controlledReset !== 'banana') throw new Error(`${name}: controlled form reset changed the native value to ${controlledReset}`);
 
       await page.evaluate(() => window.mountChosen({ multiple: true, required: true }));
+      await page.waitForFunction(() => document.querySelector('select')?.multiple);
+      await page.evaluate(() => document.querySelector('form').reset());
+      await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);
       await page.getByRole('combobox', { name: 'Fruit' }).click();
       await page.getByRole('option', { name: 'Apple' }).click();
       await page.getByRole('option', { name: 'Banana' }).click();
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
       if (JSON.stringify(values) !== JSON.stringify(['apple', 'banana'])) {
         throw new Error(`${name}: multiple native form values were ${JSON.stringify(values)}`);
+      }
+      await page.getByRole('option', { name: 'Apple' }).click();
+      const toggledValues = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
+      if (JSON.stringify(toggledValues) !== JSON.stringify(['banana'])) {
+        throw new Error(`${name}: selected result did not toggle off (${JSON.stringify(toggledValues)})`);
       }
       if (name === 'Chromium') {
         await page.addScriptTag({ path: path.join(root, 'node_modules/axe-core/axe.min.js') });
