@@ -683,6 +683,13 @@ var ChosenCore = (function() {
       }
 
       label_click_handler(evt) {
+        var label, selection;
+        selection = typeof window.getSelection === "function" ? window.getSelection() : void 0;
+        label = evt.currentTarget;
+        if ((selection != null ? selection.toString().length : void 0) && ((label != null ? label.contains : void 0) != null) && (label.contains(selection.anchorNode) || label.contains(selection.focusNode))) {
+          evt.preventDefault();
+          return;
+        }
         if (this.open_on_label_click) {
           return this.container_mousedown(evt);
         } else {

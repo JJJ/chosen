@@ -27,6 +27,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Preserve text selection when dragging across an associated label instead of focusing Chosen (harvesthq/chosen#2659).
 - Respect an explicit CSS width when a select starts inside a hidden container (harvesthq/chosen#92).
 - Refresh selected text and chips after a native form reset, without changing native reset or change-event behavior (harvesthq/chosen#2789).
 - Keep keyboard focus on Chosen when a user clicks an already selected, disabled, or no-results row that cannot be selected (harvesthq/chosen#2787).

@@ -1,4 +1,31 @@
 describe "Basic setup", ->
+  it "keeps linked label text selected instead of activating Chosen", ->
+    div = new Element('div').update("<label for='drag-label'>Choose a country by name</label><select id='drag-label'><option>One</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    label = div.down('label')
+    range = document.createRange()
+    range.setStart(label.firstChild, 0)
+    range.setEnd(label.firstChild, 6)
+    selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+    click = new MouseEvent('click', bubbles: true, cancelable: true)
+    label.dispatchEvent(click)
+
+    expect(click.defaultPrevented).toBe(true)
+    expect(selection.toString()).toBe('Choose')
+    expect(chosen.active_field).toBe(false)
+    selection.removeAllRanges()
+    other = new Element('p').update('Unrelated text')
+    div.insert(other)
+    range.selectNodeContents(other)
+    selection.addRange(range)
+    label.dispatchEvent(new MouseEvent('click', bubbles: true, cancelable: true))
+    expect(chosen.active_field).toBe(true)
+    selection.removeAllRanges()
+    div.remove()
+
   it "preserves explicitly empty placeholder text", ->
     div = new Element('div').update("<select class='single' placeholder='Fallback' data-placeholder=''><option></option><option>One</option></select><select class='multiple' multiple><option>Two</option></select>")
     document.body.appendChild(div)

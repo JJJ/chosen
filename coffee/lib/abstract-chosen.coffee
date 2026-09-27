@@ -183,6 +183,11 @@ class AbstractChosen
     setTimeout (=> @mouse_on_label = false), 0
 
   label_click_handler: (evt) =>
+    selection = window.getSelection?()
+    label = evt.currentTarget
+    if selection?.toString().length and label?.contains? and (label.contains(selection.anchorNode) or label.contains(selection.focusNode))
+      evt.preventDefault()
+      return
     if @open_on_label_click
       this.container_mousedown(evt)
     else

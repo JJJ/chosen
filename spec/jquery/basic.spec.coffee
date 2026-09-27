@@ -1,4 +1,29 @@
 describe "Basic setup", ->
+  it "keeps linked label text selected instead of activating Chosen", ->
+    div = $("<div><label for='drag-label'>Choose a country by name</label><select id='drag-label'><option>One</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    label = div.find("label")[0]
+    range = document.createRange()
+    range.setStart(label.firstChild, 0)
+    range.setEnd(label.firstChild, 6)
+    selection = window.getSelection()
+    selection.removeAllRanges()
+    selection.addRange(range)
+    click = new MouseEvent("click", bubbles: true, cancelable: true)
+    label.dispatchEvent(click)
+
+    expect(click.defaultPrevented).toBe(true)
+    expect(selection.toString()).toBe("Choose")
+    expect(chosen.active_field).toBe(false)
+    selection.removeAllRanges()
+    other = $("<p>Unrelated text</p>").appendTo(div)[0]
+    range.selectNodeContents(other)
+    selection.addRange(range)
+    label.dispatchEvent(new MouseEvent("click", bubbles: true, cancelable: true))
+    expect(chosen.active_field).toBe(true)
+    selection.removeAllRanges()
+    div.remove()
+
   it "preserves explicitly empty placeholder text", ->
     div = $("<div><select class='single' placeholder='Fallback' data-placeholder=''><option></option><option>One</option></select><select class='multiple' multiple><option>Two</option></select></div>").appendTo("body")
     single = div.find("select.single").chosen().data("chosen")
