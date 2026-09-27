@@ -1,4 +1,39 @@
 describe "Basic setup", ->
+  it "preserves explicitly empty placeholder text", ->
+    div = new Element('div').update("<select class='single' placeholder='Fallback' data-placeholder=''><option></option><option>One</option></select><select class='multiple' multiple><option>Two</option></select>")
+    document.body.appendChild(div)
+    single = new Chosen(div.down('select.single'))
+    multiple = new Chosen(div.down('select.multiple'), placeholder_text_multiple: "")
+
+    expect(single.default_text).toBe("")
+    expect(div.down('.chosen-single > span').textContent).toBe("")
+    expect(multiple.default_text).toBe("")
+    expect(multiple.search_field.readAttribute('placeholder')).toBe("")
+    div.remove()
+
+  it "starts searching when typing on a focused single select", ->
+    div = new Element('div').update("<select><option></option><option>Apple</option><option>Banana</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    prevented = false
+    chosen.selected_item_keydown(which: 66, key: 'b', preventDefault: -> prevented = true)
+
+    expect(prevented).toBe(true)
+    expect(chosen.results_showing).toBe(true)
+    expect(chosen.search_field.value).toBe('b')
+    expect(div.select('.active-result').pluck('textContent')).toEqual(['Banana'])
+    div.remove()
+
+  it "uses explicit CSS width when initialized in a hidden container", ->
+    div = new Element('div').update("<select style='width:240px'><option>One</option></select>")
+    div.hide()
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    expect(chosen.container.style.width).toBe('240px')
+    div.show()
+    expect(chosen.container.getWidth()).toBe(240)
+    div.remove()
+
   it "uses search inputs by default and supports text inputs for both select types", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""
@@ -644,6 +679,26 @@ describe "Basic setup", ->
     chosen.results_show()
     expect(div.select(".result-selected.active-result").length).toBe(0)
     expect(div.select(".chosen-result-deselectable").length).toBe(0)
+
+  it "keeps focus on the search input when an inert result is pressed", ->
+    div = new Element('div').update("<select multiple><option selected>One</option><option disabled>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+
+    press = (element) ->
+      event = document.createEvent('MouseEvents')
+      event.initMouseEvent('mousedown', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
+      element.dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(true)
+
+    press(div.down('.result-selected'))
+    press(div.down('.disabled-result'))
+    chosen.search_field.value = 'Missing'
+    chosen.winnow_results()
+    press(div.down('.no-results'))
+    expect(document.activeElement).toBe(chosen.search_field)
+    div.remove()
 
   it "opens Deselect all at the selection limit", ->
     div = new Element('div').update("<select multiple><option selected>One</option></select>")

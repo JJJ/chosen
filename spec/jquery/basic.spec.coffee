@@ -1,4 +1,35 @@
 describe "Basic setup", ->
+  it "preserves explicitly empty placeholder text", ->
+    div = $("<div><select class='single' placeholder='Fallback' data-placeholder=''><option></option><option>One</option></select><select class='multiple' multiple><option>Two</option></select></div>").appendTo("body")
+    single = div.find("select.single").chosen().data("chosen")
+    multiple = div.find("select.multiple").chosen(placeholder_text_multiple: "").data("chosen")
+
+    expect(single.default_text).toBe("")
+    expect(div.find(".chosen-single > span").text()).toBe("")
+    expect(multiple.default_text).toBe("")
+    expect(multiple.search_field.attr("placeholder")).toBe("")
+    div.remove()
+
+  it "starts searching when typing on a focused single select", ->
+    div = $("<div><select><option></option><option>Apple</option><option>Banana</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    key = $.Event("keydown", which: 66, key: "b")
+    chosen.selected_item.trigger(key)
+
+    expect(key.isDefaultPrevented()).toBe(true)
+    expect(chosen.results_showing).toBe(true)
+    expect(chosen.search_field.val()).toBe("b")
+    expect(div.find(".active-result").text()).toBe("Banana")
+    div.remove()
+
+  it "uses explicit CSS width when initialized in a hidden container", ->
+    div = $("<div style='display:none'><select style='width:240px'><option>One</option></select></div>").appendTo('body')
+    chosen = div.find('select').chosen().data('chosen')
+    expect(chosen.container[0].style.width).toBe('240px')
+    div.show()
+    expect(chosen.container.outerWidth()).toBe(240)
+    div.remove()
+
   it "uses search inputs by default and supports text inputs for both select types", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""
@@ -566,6 +597,24 @@ describe "Basic setup", ->
     chosen.results_show()
     expect(div.find(".result-selected.active-result").length).toBe(0)
     expect(div.find(".chosen-result-deselectable").length).toBe(0)
+
+  it "keeps focus on the search input when an inert result is pressed", ->
+    div = $("<div><select multiple><option selected>One</option><option disabled>Two</option></select></div>").appendTo('body')
+    chosen = div.find('select').chosen().data('chosen')
+    chosen.results_show()
+
+    for selector in ['.result-selected', '.disabled-result']
+      event = $.Event('mousedown', which: 1)
+      div.find(selector).trigger(event)
+      expect(event.isDefaultPrevented()).toBe(true)
+
+    chosen.search_field.val('Missing')
+    chosen.winnow_results()
+    event = $.Event('mousedown', which: 1)
+    div.find('.no-results').trigger(event)
+    expect(event.isDefaultPrevented()).toBe(true)
+    expect(document.activeElement).toBe(chosen.search_field[0])
+    div.remove()
 
   it "opens Deselect all at the selection limit", ->
     div = $("<div><select multiple><option selected>One</option></select></div>")

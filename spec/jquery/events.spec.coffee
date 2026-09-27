@@ -1,4 +1,37 @@
 describe "Events", ->
+  it "refreshes both select types after a native form reset", (done) ->
+    form = $("<form><select class='single'><option selected>One</option><option>Two</option></select><select class='multiple' multiple><option selected>Alpha</option><option>Beta</option></select></form>").appendTo('body')
+    single = form.find('select.single').chosen()
+    multiple = form.find('select.multiple').chosen()
+    single.val('Two').trigger('chosen:updated')
+    multiple.val(['Beta']).trigger('chosen:updated')
+
+    form[0].reset()
+    setTimeout (->
+      expect(single.val()).toBe('One')
+      expect(form.find('.chosen-single span').text()).toBe('One')
+      expect(multiple.val()).toEqual(['Alpha'])
+      expect(form.find('.search-choice span').first().text()).toBe('Alpha')
+      form.remove()
+      done()
+    ), 10
+
+  it "opens an already activated single or multiple select programmatically", ->
+    for multiple in [false, true]
+      attribute = if multiple then " multiple" else ""
+      div = $("<div><select#{attribute}><option>One</option><option>Two</option></select></div>").appendTo('body')
+      select = div.find('select').chosen()
+      chosen = select.data('chosen')
+
+      select.trigger('chosen:activate')
+      expect(chosen.active_field).toBe true
+      select.trigger('chosen:open')
+      expect(chosen.results_showing).toBe true
+      select.trigger('chosen:open')
+      expect(chosen.results_showing).toBe true
+      select.chosen('destroy')
+      div.remove()
+
   it "chosen should fire the right events", ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>

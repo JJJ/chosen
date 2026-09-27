@@ -1,4 +1,44 @@
 describe "Events", ->
+  it "refreshes both select types after a native form reset", (done) ->
+    form = new Element('form').update("<select class='single'><option selected>One</option><option>Two</option></select><select class='multiple' multiple><option selected>Alpha</option><option>Beta</option></select>")
+    document.body.appendChild(form)
+    single = form.down('select.single')
+    multiple = form.down('select.multiple')
+    new Chosen(single)
+    new Chosen(multiple)
+    single.value = 'Two'
+    single.fire('chosen:updated')
+    multiple.options[0].selected = false
+    multiple.options[1].selected = true
+    multiple.fire('chosen:updated')
+
+    form.reset()
+    setTimeout (->
+      expect(single.value).toBe('One')
+      expect(form.down('.chosen-single span').textContent).toBe('One')
+      expect($A(multiple.selectedOptions).pluck('textContent')).toEqual(['Alpha'])
+      expect(form.down('.search-choice span').textContent).toBe('Alpha')
+      form.remove()
+      done()
+    ), 10
+
+  it "opens an already activated single or multiple select programmatically", ->
+    for multiple in [false, true]
+      attribute = if multiple then " multiple" else ""
+      div = new Element('div').update("<select#{attribute}><option>One</option><option>Two</option></select>")
+      document.body.appendChild(div)
+      select = div.down('select')
+      chosen = new Chosen(select)
+
+      select.fire('chosen:activate')
+      expect(chosen.active_field).toBe true
+      select.fire('chosen:open')
+      expect(chosen.results_showing).toBe true
+      select.fire('chosen:open')
+      expect(chosen.results_showing).toBe true
+      chosen.destroy()
+      div.remove()
+
   it "chosen should fire the right events", ->
     tmpl = "
       <select data-placeholder='Choose a Country...'>

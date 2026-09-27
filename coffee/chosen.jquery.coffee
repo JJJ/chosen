@@ -97,6 +97,9 @@ class Chosen extends AbstractChosen
   register_observers: ->
     $(window).on 'pageshow.chosen', @pageshow_handler
     $(window).on 'blur.chosen', @window_blur_handler
+    if @form_field.form?
+      @form_reset_handler = => this.handle_form_reset()
+      $(@form_field.form).on 'reset.chosen', @form_reset_handler
 
     @container.on 'touchstart.chosen', (evt) => this.container_mousedown(evt); return
     @container.on 'touchend.chosen', (evt) => this.container_mouseup(evt); return
@@ -111,6 +114,9 @@ class Chosen extends AbstractChosen
     @search_groups.bind 'mouseout.chosen', (evt) => this.search_results_mouseout(evt); return
 
     @search_results.on 'mouseup.chosen', (evt) => this.search_results_mouseup(evt); return
+    @search_results.on 'mousedown.chosen', (evt) =>
+      evt.preventDefault() if $(evt.target).closest('.disabled-result, .no-results, .result-selected:not(.active-result)').length
+      return
     @search_results.on 'mouseover.chosen', (evt) => this.search_results_mouseover(evt); return
     @search_results.on 'mouseout.chosen', (evt) => this.search_results_mouseout(evt); return
 
@@ -125,7 +131,7 @@ class Chosen extends AbstractChosen
     @form_field_observers =
       updated: (evt) => this.results_update_field(evt)
       activate: (evt) => this.activate_field(evt)
-      open: (evt) => this.container_mousedown(evt)
+      open: (evt) => this.open_field()
       close: (evt) => this.close_field(evt)
     @form_field_jq.on "chosen:updated.chosen", @form_field_observers.updated
     @form_field_jq.on "chosen:activate.chosen", @form_field_observers.activate
@@ -150,8 +156,10 @@ class Chosen extends AbstractChosen
 
   destroy: ->
     this.cancel_pending_search()
+    clearTimeout(@form_reset_timeout) if @form_reset_timeout?
     $(window).off 'pageshow.chosen', @pageshow_handler
     $(window).off 'blur.chosen', @window_blur_handler
+    $(@form_field.form).off 'reset.chosen', @form_reset_handler if @form_reset_handler?
     $(if @container[0].getRootNode? then @container[0].getRootNode() else @container[0].ownerDocument).off 'click.chosen', @click_test_action
     if @form_field_label.length > 0
       @form_field_label.off 'mousedown.chosen', this.label_mousedown_handler

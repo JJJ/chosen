@@ -82,20 +82,44 @@ class AbstractChosen
     @results_count_text = @options.results_count_text || (count) -> "#{count} #{if count is 1 then 'result' else 'results'} available"
 
   set_default_text: ->
-    if @form_field.getAttribute("data-placeholder")
-      @default_text = @form_field.getAttribute("data-placeholder")
-    else if @form_field.getAttribute("placeholder")
-      @default_text = @form_field.getAttribute("placeholder")
+    data_placeholder = @form_field.getAttribute("data-placeholder")
+    placeholder = @form_field.getAttribute("placeholder")
+    if data_placeholder?
+      @default_text = data_placeholder
+    else if placeholder?
+      @default_text = placeholder
     else if @is_multiple
-      @default_text = @options.placeholder_text_multiple || @options.placeholder_text || AbstractChosen.default_multiple_text
+      if @options.placeholder_text_multiple?
+        @default_text = @options.placeholder_text_multiple
+      else if @options.placeholder_text?
+        @default_text = @options.placeholder_text
+      else
+        @default_text = AbstractChosen.default_multiple_text
     else
-      @default_text = @options.placeholder_text_single || @options.placeholder_text || AbstractChosen.default_single_text
+      if @options.placeholder_text_single?
+        @default_text = @options.placeholder_text_single
+      else if @options.placeholder_text?
+        @default_text = @options.placeholder_text
+      else
+        @default_text = AbstractChosen.default_single_text
 
     # Unescape any HTML entities that might have been incorrectly included
     @default_text = this.unescape_html(@default_text)
 
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
     @create_option_text = @form_field.getAttribute("data-create_option_text") || @options.create_option_text || AbstractChosen.default_create_option_text
+
+  open_field: ->
+    return if @is_disabled or @results_showing
+    this.activate_field()
+    this.results_show()
+
+  handle_form_reset: ->
+    clearTimeout(@form_reset_timeout) if @form_reset_timeout?
+    @form_reset_timeout = setTimeout((=>
+      @form_reset_timeout = null
+      this.results_update_field()
+    ), 0)
 
   choice_label: (item) ->
     label = if @display_selected_value then this.escape_html(item.value) else item.html
@@ -744,6 +768,15 @@ class AbstractChosen
         when 34 then this.keypage(1)
         when 35 then this.keyend()
         when 36 then this.keyhome()
+    else if not evt.altKey and not evt.ctrlKey and not evt.metaKey
+      search_field = @search_field[0] or @search_field
+      return if search_field.readOnly
+      character = if evt.key? then (if evt.key.length is 1 then evt.key else "") else if 48 <= stroke <= 90 then String.fromCharCode(stroke) else ""
+      return unless character.length and /\S/.test(character)
+      evt.preventDefault()
+      this.results_show()
+      search_field.value = character
+      this.search_if_value_changed()
 
   keydown_checker: (evt) ->
     stroke = evt.which ? evt.keyCode
@@ -886,6 +919,9 @@ class AbstractChosen
   container_width: ->
     return @options.width if @options.width?
     return "#{@form_field.offsetWidth}px" if @form_field.offsetWidth > 0
+    if window.getComputedStyle?
+      computed_width = window.getComputedStyle(@form_field).width
+      return computed_width if computed_width? and computed_width isnt "auto" and computed_width isnt "0px"
     return "auto"
 
   include_option_in_results: (option) ->
