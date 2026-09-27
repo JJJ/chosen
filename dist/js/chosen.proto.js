@@ -2607,12 +2607,15 @@ var ChosenCore = (function() {
         return this.parsing = false;
       }
 
-      result_do_highlight(el) {
+      result_do_highlight(el, scroll_into_view = true) {
         var high_bottom, high_top, maxHeight, visible_bottom, visible_top;
         this.result_clear_highlight();
         this.result_highlight = el;
         this.result_highlight.addClassName("highlighted");
         this.search_field.writeAttribute("aria-activedescendant", this.result_highlight.readAttribute("id"));
+        if (!scroll_into_view) {
+          return;
+        }
         maxHeight = parseInt(this.search_results.getStyle('maxHeight'), 10);
         visible_top = this.search_results.scrollTop;
         visible_bottom = maxHeight + visible_top;
@@ -2780,7 +2783,7 @@ var ChosenCore = (function() {
         var target;
         target = evt.target.hasClassName("active-result") ? evt.target : evt.target.up(".active-result");
         if (target) {
-          return this.result_do_highlight(target);
+          return this.result_do_highlight(target, false);
         }
       }
 

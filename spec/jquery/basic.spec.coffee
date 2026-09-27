@@ -656,6 +656,23 @@ describe "Basic setup", ->
     chosen.search_results_mouseout(target: $("<span>")[0])
     expect(chosen.result_clear_highlight).not.toHaveBeenCalled()
 
+  it "highlights pointer results without scrolling while keyboard highlight scrolls", ->
+    div = $("<div><select></select></div>").appendTo("body")
+    select = div.find("select")
+    select.append($("<option>").text("Option #{index}")) for index in [1..30]
+    chosen = select.chosen().data("chosen")
+    chosen.results_show()
+    result = chosen.search_results.find(".active-result").last()
+    chosen.search_results.scrollTop(0)
+
+    chosen.search_results_mouseover(target: result[0])
+    expect(chosen.result_highlight[0]).toBe(result[0])
+    expect(chosen.search_results.scrollTop()).toBe(0)
+
+    chosen.result_do_highlight(result)
+    expect(chosen.search_results.scrollTop()).toBeGreaterThan(0)
+    div.remove()
+
   it "uses the single select as the accessible dropdown control", ->
     div = $("<div>").html("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>").appendTo("body")
     div.find("select").chosen()
