@@ -349,13 +349,15 @@ class @Chosen extends AbstractChosen
 
     @parsing = false
 
-  result_do_highlight: (el) ->
+  result_do_highlight: (el, scroll_into_view = true) ->
     this.result_clear_highlight()
 
     @result_highlight = el
     @result_highlight.addClassName "highlighted"
 
     @search_field.writeAttribute("aria-activedescendant", @result_highlight.readAttribute("id"))
+
+    return unless scroll_into_view
 
     maxHeight = parseInt @search_results.getStyle('maxHeight'), 10
     visible_top = @search_results.scrollTop
@@ -477,7 +479,7 @@ class @Chosen extends AbstractChosen
 
   search_results_mouseover: (evt) ->
     target = if evt.target.hasClassName("active-result") then evt.target else evt.target.up(".active-result")
-    this.result_do_highlight(target) if target
+    this.result_do_highlight(target, false) if target
 
   search_results_mouseout: (evt) ->
     this.result_clear_highlight() if evt.target.hasClassName('active-result') or evt.target.up('.active-result')

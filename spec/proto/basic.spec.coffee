@@ -735,6 +735,24 @@ describe "Basic setup", ->
     chosen.search_results_mouseup(target: div.down(".chosen-deselect-all"), which: 1, preventDefault: ->)
     expect(div.down('option').selected).toBe(false)
 
+  it "highlights pointer results without scrolling while keyboard highlight scrolls", ->
+    div = new Element("div").update("<select></select>")
+    document.body.appendChild(div)
+    select = div.down("select")
+    select.insert(new Element("option").update("Option #{index}")) for index in [1..30]
+    chosen = new Chosen(select)
+    chosen.results_show()
+    result = chosen.search_results.select(".active-result").last()
+    chosen.search_results.scrollTop = 0
+
+    chosen.search_results_mouseover(target: result)
+    expect(chosen.result_highlight).toBe(result)
+    expect(chosen.search_results.scrollTop).toBe(0)
+
+    chosen.result_do_highlight(result)
+    expect(chosen.search_results.scrollTop).toBeGreaterThan(0)
+    div.remove()
+
   it "uses the single select as the accessible dropdown control", ->
     div = new Element("div")
     div.update("<label for='accessible-single'>Choices</label><select id='accessible-single'><option>One</option><option>Two</option></select>")
