@@ -43,6 +43,7 @@ class Chosen extends AbstractChosen
     @inherited_select_classes = if @inherit_select_classes then this.select_class_names() else []
     container_classes = container_classes.concat(@inherited_select_classes)
     container_classes.push "chosen-rtl" if @is_rtl
+    container_classes.push "chosen-fixed-dropdown" if @fixed_dropdown
 
     container_props =
       'class': container_classes.join ' '
@@ -171,7 +172,7 @@ class Chosen extends AbstractChosen
 
     # Clean up scroll handler and pending timeout if dropdown is open
     if @results_showing
-      $(window).off 'scroll.chosen', @scroll_handler
+      this.unbind_dropdown_position_listeners()
       clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
     if @original_tab_index?
@@ -293,6 +294,33 @@ class Chosen extends AbstractChosen
     else
       @container.removeClass "chosen-dropup"
 
+    this.position_fixed_dropdown() if @fixed_dropdown
+
+  position_fixed_dropdown: ->
+    rect = @container[0].getBoundingClientRect()
+    top = if @container.hasClass("chosen-dropup") then rect.top - @dropdown.outerHeight() + 1.5 else rect.bottom
+    width = @options.dropdown_width or "#{rect.width}px"
+    if typeof width is "string" and /^\s*\d+(?:\.\d+)?%\s*$/.test(width)
+      width = "#{rect.width * parseFloat(width) / 100}px"
+    @dropdown.css
+      top: "#{top}px"
+      left: "#{rect.left}px"
+      width: width
+
+  bind_dropdown_position_listeners: ->
+    if @fixed_dropdown
+      window.addEventListener 'scroll', @scroll_handler, true
+      window.addEventListener 'resize', @scroll_handler
+    else
+      $(window).on 'scroll.chosen', @scroll_handler
+
+  unbind_dropdown_position_listeners: ->
+    if @fixed_dropdown
+      window.removeEventListener 'scroll', @scroll_handler, true
+      window.removeEventListener 'resize', @scroll_handler
+    else
+      $(window).off 'scroll.chosen', @scroll_handler
+
 
   activate_field: ->
     return if @is_disabled
@@ -392,13 +420,15 @@ class Chosen extends AbstractChosen
     @search_field.val this.get_search_field_value()
 
     this.winnow_results()
+    this.update_dropup_position() if @fixed_dropdown
     @form_field_jq.trigger("chosen:showing_dropdown", {chosen: this})
 
     # Register scroll handler to dynamically adjust dropdown position
-    $(window).on 'scroll.chosen', @scroll_handler
+    this.bind_dropdown_position_listeners()
 
   update_results_content: (content) ->
     @search_results.html content
+    this.update_dropup_position() if @fixed_dropdown and @results_showing
 
   update_empty_results_state: ->
     @container.toggleClass 'chosen-empty-results', @is_multiple and not @create_option and @search_results.children().length is 0
@@ -425,7 +455,7 @@ class Chosen extends AbstractChosen
     @results_showing = false
 
     # Unregister scroll handler and clear any pending timeout
-    $(window).off 'scroll.chosen', @scroll_handler
+    this.unbind_dropdown_position_listeners()
     clearTimeout(@scroll_throttle_timeout) if @scroll_throttle_timeout
 
 

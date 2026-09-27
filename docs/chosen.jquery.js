@@ -492,6 +492,7 @@ var ChosenCore = (function() {
         this.search_contains = this.options.search_contains || false;
         this.search_matcher = typeof this.options.search_matcher === "function" ? this.options.search_matcher : null;
         this.search_input_type = this.options.search_input_type === "text" ? "text" : "search";
+        this.fixed_dropdown = this.options.dropdown_position === "fixed";
         this.split_search_terms = this.options.split_search_terms || false;
         this.backspace_deletes_choices = this.options.backspace_deletes_choices != null ? this.options.backspace_deletes_choices : true;
         this.single_backstroke_delete = this.options.single_backstroke_delete != null ? this.options.single_backstroke_delete : true;
@@ -2168,6 +2169,9 @@ var ChosenCore = (function() {
       if (this.is_rtl) {
         container_classes.push("chosen-rtl");
       }
+      if (this.fixed_dropdown) {
+        container_classes.push("chosen-fixed-dropdown");
+      }
       container_props = {
         'class': container_classes.join(' '),
         'title': this.form_field.title
@@ -2370,7 +2374,7 @@ var ChosenCore = (function() {
       this.form_field_jq.off("chosen:close.chosen", this.form_field_observers.close);
       // Clean up scroll handler and pending timeout if dropdown is open
       if (this.results_showing) {
-        $(window).off('scroll.chosen', this.scroll_handler);
+        this.unbind_dropdown_position_listeners();
         if (this.scroll_throttle_timeout) {
           clearTimeout(this.scroll_throttle_timeout);
         }
@@ -2534,9 +2538,45 @@ var ChosenCore = (function() {
         return;
       }
       if (this.should_dropup()) {
-        return this.container.addClass("chosen-dropup");
+        this.container.addClass("chosen-dropup");
       } else {
-        return this.container.removeClass("chosen-dropup");
+        this.container.removeClass("chosen-dropup");
+      }
+      if (this.fixed_dropdown) {
+        return this.position_fixed_dropdown();
+      }
+    }
+
+    position_fixed_dropdown() {
+      var rect, top, width;
+      rect = this.container[0].getBoundingClientRect();
+      top = this.container.hasClass("chosen-dropup") ? rect.top - this.dropdown.outerHeight() + 1.5 : rect.bottom;
+      width = this.options.dropdown_width || `${rect.width}px`;
+      if (typeof width === "string" && /^\s*\d+(?:\.\d+)?%\s*$/.test(width)) {
+        width = `${rect.width * parseFloat(width) / 100}px`;
+      }
+      return this.dropdown.css({
+        top: `${top}px`,
+        left: `${rect.left}px`,
+        width: width
+      });
+    }
+
+    bind_dropdown_position_listeners() {
+      if (this.fixed_dropdown) {
+        window.addEventListener('scroll', this.scroll_handler, true);
+        return window.addEventListener('resize', this.scroll_handler);
+      } else {
+        return $(window).on('scroll.chosen', this.scroll_handler);
+      }
+    }
+
+    unbind_dropdown_position_listeners() {
+      if (this.fixed_dropdown) {
+        window.removeEventListener('scroll', this.scroll_handler, true);
+        return window.removeEventListener('resize', this.scroll_handler);
+      } else {
+        return $(window).off('scroll.chosen', this.scroll_handler);
       }
     }
 
@@ -2649,15 +2689,21 @@ var ChosenCore = (function() {
       }
       this.search_field.val(this.get_search_field_value());
       this.winnow_results();
+      if (this.fixed_dropdown) {
+        this.update_dropup_position();
+      }
       this.form_field_jq.trigger("chosen:showing_dropdown", {
         chosen: this
       });
       // Register scroll handler to dynamically adjust dropdown position
-      return $(window).on('scroll.chosen', this.scroll_handler);
+      return this.bind_dropdown_position_listeners();
     }
 
     update_results_content(content) {
-      return this.search_results.html(content);
+      this.search_results.html(content);
+      if (this.fixed_dropdown && this.results_showing) {
+        return this.update_dropup_position();
+      }
     }
 
     update_empty_results_state() {
@@ -2696,7 +2742,7 @@ var ChosenCore = (function() {
       this.clear_results_count();
       this.results_showing = false;
       // Unregister scroll handler and clear any pending timeout
-      $(window).off('scroll.chosen', this.scroll_handler);
+      this.unbind_dropdown_position_listeners();
       if (this.scroll_throttle_timeout) {
         return clearTimeout(this.scroll_throttle_timeout);
       }

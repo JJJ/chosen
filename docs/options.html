@@ -256,6 +256,11 @@
           <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing.</td>
         </tr>
         <tr>
+          <td>dropdown_position</td>
+          <td>"absolute"</td>
+          <td>Set to <code class="language-javascript">"fixed"</code> when an ancestor with <code class="language-css">overflow: hidden</code> clips the results. Chosen keeps the dropdown aligned while the page or a containing element scrolls and on window resize. Percentage <code class="language-javascript">dropdown_width</code> values stay relative to the Chosen control. A transformed or paint-contained ancestor can still establish a clipping containing block; remove that ancestor style or use a different layout in that case.</td>
+        </tr>
+        <tr>
           <td>display_disabled_options</td>
           <td>true</td>
           <td>By default, Chosen includes disabled options in search results with a special styling. Setting this option to false will hide disabled results and exclude them from searches.</td>

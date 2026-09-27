@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `dropdown_position: "fixed"` to show results outside an `overflow: hidden` ancestor while tracking scroll and resize (harvesthq/chosen#86).
 - Add an opt-in invalid border for explicitly invalid legacy and React controls, with a shared `--chosen-invalid-border-color` token and repeatable visual fixtures for the default, Tailwind light/dark, and custom-palette themes. React also uses the shared hover and open border tokens.
 - Add opt-in `max_items_shown` for collapsing selected multiple-choice chips into an expandable summary without limiting selection.
 - Add an opt-in `search_matcher(query, item)` callback for custom result filtering, including regex-based rules. It replaces built-in search matching and leaves custom matches unhighlighted because a boolean result has no match position.
@@ -67,6 +68,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Opting into `dropdown_position: "fixed"` adds `chosen-fixed-dropdown` to the generated container and positions its existing `.chosen-drop` relative to the viewport. The dropdown stays inside the container in the DOM; integrations that inspect container classes should allow this opt-in state.
 - React adds `.chosen-react__option--selected` to selected result rows; its check mark is CSS generated. Pointer entry now updates the active option and `aria-activedescendant`, while the highlighted row remains distinct from selection.
 - The documentation-only `docs/docsupport/react-demo.js` bundles React and ReactDOM for GitHub Pages. The published `chosen-jjj/react` entry still treats React as a peer dependency; regenerate the demo and its copied stylesheet with `npm run build`.
 - React adds `.chosen-react--invalid` when `aria-invalid` is true; legacy Chosen styles the generated sibling container when the original select has `aria-invalid="true"`. Native `:invalid` alone does not activate the new border.

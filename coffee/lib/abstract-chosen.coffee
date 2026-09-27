@@ -46,6 +46,7 @@ class AbstractChosen
     @search_contains = @options.search_contains || false
     @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
+    @fixed_dropdown = @options.dropdown_position is "fixed"
     @split_search_terms = @options.split_search_terms || false
     @backspace_deletes_choices = if @options.backspace_deletes_choices? then @options.backspace_deletes_choices else true
     @single_backstroke_delete = if @options.single_backstroke_delete? then @options.single_backstroke_delete else true

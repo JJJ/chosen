@@ -139,6 +139,19 @@ describe "Basic setup", ->
     expect(intrinsic.dropdown[0].getBoundingClientRect().width).toBeGreaterThan(intrinsic.container[0].getBoundingClientRect().width)
     div.remove()
 
+  it "positions an opt-in fixed dropdown outside its clipping ancestor", ->
+    div = $("<div style='height:60px;overflow:hidden'><select style='width:200px'><option></option><option>One</option><option>Two</option><option>Three</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(dropdown_position: "fixed", dropdown_width: "150%").data("chosen")
+    chosen.results_show()
+
+    expect(chosen.container.hasClass("chosen-fixed-dropdown")).toBe(true)
+    expect(getComputedStyle(chosen.dropdown[0]).position).toBe("fixed")
+    expect(chosen.dropdown.outerWidth()).toBeCloseTo(chosen.container.outerWidth() * 1.5, 0)
+    expect(chosen.dropdown[0].getBoundingClientRect().bottom).toBeGreaterThan(div[0].getBoundingClientRect().bottom)
+    chosen.results_hide()
+    chosen.destroy()
+    div.remove()
+
   it "transfers native autofocus to the generated control", ->
     for multiple in [false, true]
       multiple_attribute = if multiple then " multiple" else ""
