@@ -4,6 +4,25 @@
   "version": "3.0.4",
   "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
   "main": "dist/js/chosen.jquery.js",
+  "style": "dist/css/chosen.css",
+  "exports": {
+    ".": "./dist/js/chosen.jquery.js",
+    "./jquery": "./dist/js/chosen.jquery.js",
+    "./prototype": "./dist/js/chosen.proto.js",
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.mjs",
+      "require": "./dist/core/index.cjs"
+    },
+    "./styles.css": "./dist/css/chosen.css",
+    "./scss": "./dist/scss/chosen.scss",
+    "./dist/*": "./dist/*",
+    "./docs/*": "./docs/*",
+    "./coffee/*": "./coffee/*",
+    "./sass/*": "./sass/*",
+    "./package.json": "./package.json",
+    "./*": "./*"
+  },
   "files": [
     "dist/",
     "docs/",
@@ -32,7 +51,8 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "grunt test && node scripts/run-browser-specs.js",
+    "test": "grunt test && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js",
+    "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
     "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
@@ -46,6 +66,7 @@
     "autoprefixer": "^10.6.1",
     "axe-core": "^4.13.0",
     "coffee-script": "^1.12.7",
+    "esbuild": "^0.28.2",
     "grunt": "^1.6.3",
     "grunt-contrib-coffee": "^2.1.0",
     "grunt-contrib-concat": "^2.1.0",
@@ -62,7 +83,8 @@
     "postcss": "^8.5.28",
     "sass": "^1.104.1",
     "simulant": "^0.2.2",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "tar-fs": "^3.0.4",

@@ -241,7 +241,7 @@ class AbstractChosen
     for item in @results_data when not item.group and item.search_match and not item.selected and not item.disabled and this.include_option_in_results(item)
       option = this.current_option_for(item)
       continue unless option?
-      if selected_count >= @max_selected_options
+      if ChosenCore.selectionLimitReached(selected_count, @max_selected_options)
         limit_reached = true
         break
       item.selected = true
@@ -435,13 +435,21 @@ class AbstractChosen
       this.clear_results_count()
       return
 
-    normalized_query = if @search_matcher then query else this.normalize_search_text(query)
-    escaped_query = normalized_query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-    unless @search_matcher
-      regex = this.get_search_regex(escaped_query)
-      normalized_terms = if @split_search_terms then normalized_query.split(/\s+/) else []
-      term_regexes = (this.get_search_regex(term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")) for term in normalized_terms)
-    exact_regex = new RegExp("^#{escaped_query}$")
+    if @search_matcher
+      escaped_query = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+      exact_regex = new RegExp("^#{escaped_query}$")
+    else
+      matcher = ChosenCore.createMatcher(query,
+        normalizeSearchText: (text) => this.normalize_search_text(text)
+        createSearchRegex: (escaped) => this.get_search_regex(escaped)
+        searchStringMatch: (text, regex) => this.search_string_match(text, regex)
+        caseSensitiveSearch: @case_sensitive_search
+        enableSplitWordSearch: @enable_split_word_search
+        searchContains: @search_contains
+        searchInValues: @search_in_values
+        splitSearchTerms: @split_search_terms
+      )
+      normalized_terms = matcher.terms
 
     for option in @results_data
 
@@ -465,40 +473,30 @@ class AbstractChosen
         text = if option.group then option.label else option.text
 
         unless option.group and not @group_search and not @search_matcher
-          normalized_text = this.normalize_search_text(text) unless @search_matcher
           if @search_matcher
             option.search_match = Boolean(@search_matcher(query, option))
-          else if term_regexes.length > 1
-            search_matches = (this.search_string_match(normalized_text, term_regex) for term_regex in term_regexes)
-            option.search_match = search_matches.every (match) -> match?
-            search_match = search_matches[0]
           else
-            search_match = this.search_string_match(normalized_text, regex)
-            option.search_match = search_match?
-
-          if not @search_matcher and not option.search_match and option.search_text
-            normalized_search_text = this.normalize_search_text(option.search_text)
-            if term_regexes.length > 1
-              alternate_matches = (this.search_string_match(normalized_search_text, term_regex) for term_regex in term_regexes)
-              option.search_match = alternate_matches.every (match) -> match?
-            else
-              option.search_match = this.search_string_match(normalized_search_text, regex)
-            match_alternate_text = option.search_match
-
-          if not @search_matcher and not option.search_match and @search_in_values
-            if term_regexes.length > 1
-              value_matches = (this.search_string_match(option.value, term_regex) for term_regex in term_regexes)
-              option.search_match = value_matches.every (match) -> match?
-            else
-              option.search_match = this.search_string_match(option.value, regex)
-            match_alternate_text = option.search_match
+            match = matcher(
+              label: text
+              searchText: option.search_text
+              value: option.value
+              exactText: if option.group then '' else option.html
+            )
+            normalized_text = match.normalizedText
+            search_matches = match.termMatches
+            search_match = match.primaryMatch
+            option.search_match = match.matched
+            match_alternate_text = match.alternate
 
           results += 1 if option.search_match and not option.group
 
-          exact_result = exact_result || exact_regex.test option.html
+          if @search_matcher
+            exact_result = exact_result || exact_regex.test option.html
+          else
+            exact_result = exact_result || match.exact
 
           if option.search_match
-            if not @search_matcher and query.length and not match_alternate_text and term_regexes.length > 1
+            if not @search_matcher and query.length and not match_alternate_text and normalized_terms.length > 1
               option.highlighted_html = this.highlight_search_terms(text, normalized_text, search_matches, normalized_terms)
             else if not @search_matcher and query.length and not match_alternate_text
               startpos = search_match.index
@@ -891,13 +889,13 @@ class AbstractChosen
     return "auto"
 
   include_option_in_results: (option) ->
-    return false if @is_multiple and (not @display_selected_options and option.selected)
-    return false if not @display_disabled_options and option.disabled
-    return false if option.empty
-    return false if option.hidden
-    return false if option.group_array_index? and @results_data[option.group_array_index].hidden
-
-    return true
+    group_hidden = option.group_array_index? and @results_data[option.group_array_index].hidden
+    ChosenCore.includeOptionInResults(option,
+      multiple: @is_multiple
+      displaySelectedOptions: @display_selected_options
+      displayDisabledOptions: @display_disabled_options
+      groupHidden: group_hidden
+    )
 
   search_results_touchstart: (evt) ->
     @touch_started = true
