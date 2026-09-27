@@ -713,8 +713,9 @@
   },
   {
     "number": 2959,
-    "status": "candidate",
-    "note": "Check whether source SVGs for existing icons should be shipped for theme customization."
+    "status": "fixed-in-fork",
+    "note": "Editable source SVGs for the four existing control icons ship in sass/icons and dist/scss/icons; the build embeds them into the same Sass/CSS defaults, with no extra image requests or visual change.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/172"
   },
   {
     "number": 2956,

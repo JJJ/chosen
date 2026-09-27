@@ -467,6 +467,9 @@
         <tr><td><code>--chosen-icon-chevrons</code>, <code>--chosen-icon-search</code>, <code>--chosen-icon-clear</code>, and <code>--chosen-icon-clear-active</code></td><td>Control icons as CSS images.</td></tr>
       </tbody></table>
 
+      <h3>Editing the control icons</h3>
+      <p>The four <a href="https://github.com/JJJ/chosen/tree/master/sass/icons">source SVG icons</a> are included in the repository and npm package. Edit an SVG in <code>sass/icons/</code>, then run <code>npm run build</code> to embed it in the Sass defaults and generated CSS. The stylesheet still needs no separate image request. To customize one project without rebuilding Chosen, set the matching <code>--chosen-icon-*</code> CSS variable to a <code>url(...)</code> image.</p>
+
       <h3>Tailwind CSS</h3>
       <p>Tailwind projects can map Chosen directly to their theme in the components layer. Load <code>chosen.css</code> before this application stylesheet. Chosen does not require Tailwind at runtime. The example also enables Tailwind's optional forms reset; Chosen's own selectors and variables keep the generated controls consistent under either forms-plugin strategy.</p>
 <pre><code class="language-css">@import "tailwindcss";
