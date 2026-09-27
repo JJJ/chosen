@@ -2753,7 +2753,7 @@ var ChosenCore = (function() {
           this.result_highlight = target;
           this.result_select(evt);
           if (this.is_multiple || this.results_showing) {
-            return this.search_field.focus();
+            return this.search_field[0].focus();
           }
         }
       }

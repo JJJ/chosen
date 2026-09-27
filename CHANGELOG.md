@@ -27,6 +27,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Use native element focus after selecting a jQuery result, avoiding the deprecated jQuery event shorthand (harvesthq/chosen#2931).
 - Keep the Prototype dropdown open when a bottom-edge click lands on its container after mouse-down (harvesthq/chosen#2156).
 - Preserve text selection when dragging across an associated label instead of focusing Chosen (harvesthq/chosen#2659).
 - Respect an explicit CSS width when a select starts inside a hidden container (harvesthq/chosen#92).
