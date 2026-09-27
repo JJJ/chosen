@@ -822,8 +822,9 @@
   },
   {
     "number": 2845,
-    "status": "candidate",
-    "note": "Consider opt-in paste of delimited, already-existing option values; never create values silently."
+    "status": "fixed-in-fork",
+    "note": "Opt-in paste_multiple_values selects unique existing enabled options by exact value or case-insensitive label, leaves unmatched and over-limit entries in the search field, and preserves native select events in both adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/173"
   },
   {
     "number": 2836,

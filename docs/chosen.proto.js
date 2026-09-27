@@ -496,6 +496,7 @@ var ChosenCore = (function() {
         this.fixed_dropdown = this.options.dropdown_position === "fixed";
         this.recalculate_width_on_update = this.options.recalculate_width_on_update || false;
         this.split_search_terms = this.options.split_search_terms || false;
+        this.paste_multiple_values = this.options.paste_multiple_values === true;
         this.backspace_deletes_choices = this.options.backspace_deletes_choices != null ? this.options.backspace_deletes_choices : true;
         this.single_backstroke_delete = this.options.single_backstroke_delete != null ? this.options.single_backstroke_delete : true;
         this.multiselect_allow_tab_to_select = this.options.multiselect_allow_tab_to_select || false;
@@ -1902,9 +1903,127 @@ var ChosenCore = (function() {
         if (this.is_disabled) {
           return;
         }
+        if (this.paste_multiple_selection(evt)) {
+          return;
+        }
         return setTimeout((() => {
           return this.search_if_value_changed();
         }), 50);
+      }
+
+      paste_multiple_selection(evt) {
+        var changed, clipboard, consumed, input, item, j, len, limit_reached, matches, option, pasted, ref, remaining, selected_count, text, token, tokens;
+        if (!(this.is_multiple && this.paste_multiple_values && evt.type === 'paste' && !this.composing)) {
+          return false;
+        }
+        input = this.search_field[0] || this.search_field;
+        clipboard = ((ref = evt.originalEvent) != null ? ref.clipboardData : void 0) || evt.clipboardData;
+        if (!(clipboard != null ? clipboard.getData : void 0)) {
+          return false;
+        }
+        pasted = clipboard.getData('text/plain') || clipboard.getData('Text');
+        text = typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number' ? input.value.slice(0, input.selectionStart) + pasted + input.value.slice(input.selectionEnd) : pasted;
+        if (!/[,;\t\r\n]/.test(text)) {
+          return false;
+        }
+        tokens = (function() {
+          var j, len, ref1, results1;
+          ref1 = text.split(/[,;\t\r\n]/);
+          results1 = [];
+          for (j = 0, len = ref1.length; j < len; j++) {
+            token = ref1[j];
+            if (token.trim().length) {
+              results1.push(token.trim());
+            }
+          }
+          return results1;
+        })();
+        if (!tokens.length) {
+          return false;
+        }
+        remaining = [];
+        consumed = false;
+        changed = false;
+        limit_reached = false;
+        selected_count = this.choices_count();
+        for (j = 0, len = tokens.length; j < len; j++) {
+          token = tokens[j];
+          matches = (function() {
+            var k, len1, ref1, results1;
+            ref1 = this.results_data;
+            results1 = [];
+            for (k = 0, len1 = ref1.length; k < len1; k++) {
+              item = ref1[k];
+              if (this.paste_item_eligible(item) && item.value === token) {
+                results1.push(item);
+              }
+            }
+            return results1;
+          }).call(this);
+          if (!matches.length) {
+            matches = (function() {
+              var k, len1, ref1, results1;
+              ref1 = this.results_data;
+              results1 = [];
+              for (k = 0, len1 = ref1.length; k < len1; k++) {
+                item = ref1[k];
+                if (this.paste_item_eligible(item) && item.text.toLowerCase() === token.toLowerCase()) {
+                  results1.push(item);
+                }
+              }
+              return results1;
+            }).call(this);
+          }
+          if (matches.length !== 1) {
+            remaining.push(token);
+            continue;
+          }
+          item = matches[0];
+          if (item.selected) {
+            consumed = true;
+          } else if (ChosenCore.selectionLimitReached(selected_count, this.max_selected_options)) {
+            remaining.push(token);
+            limit_reached = true;
+          } else {
+            option = this.current_option_for(item);
+            option.selected = true;
+            item.selected = true;
+            selected_count++;
+            consumed = true;
+            changed = true;
+          }
+        }
+        if (!(consumed || limit_reached)) {
+          return false;
+        }
+        evt.preventDefault();
+        input.value = remaining.join(', ');
+        if (changed) {
+          this.selected_option_count = null;
+          this.results_update_field();
+          this.trigger_form_field_change();
+        }
+        input.value = remaining.join(', ');
+        if (limit_reached) {
+          this.trigger_max_selected();
+        }
+        if (!(limit_reached && !this.results_showing)) {
+          this.search_if_value_changed();
+        }
+        this.search_field_scale();
+        return true;
+      }
+
+      paste_item_eligible(item) {
+        var option;
+        if (item.group || item.empty || item.disabled || item.hidden) {
+          return false;
+        }
+        if ((item.group_array_index != null) && this.results_data[item.group_array_index].hidden) {
+          return false;
+        }
+        option = this.current_option_for(item);
+        return (option != null) && !option.disabled && !option.hidden;
       }
 
       typeahead_search_results(evt) {

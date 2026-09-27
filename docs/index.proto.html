@@ -1308,6 +1308,22 @@
         </div>
       </div>
 
+      <h2><a name="paste-multiple-values" class="anchor" href="#paste-multiple-values">Paste Multiple Choices</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Copy <code>Atlas, Beacon; Comet</code>, click the search area below, and paste. Chosen selects those existing options. Try adding <code>Unknown</code> to see unmatched text stay available for editing.</p>
+        <pre><code class="language-javascript">new Chosen($("paste-select"), {paste_multiple_values: true});</code></pre>
+        <div>
+          <label class="comparison-label" for="paste-select">Paste project names or values</label>
+          <select id="paste-select" class="chosen-select-paste" multiple data-placeholder="Paste Atlas, Beacon; Comet">
+            <option value="atlas">Atlas</option>
+            <option value="beacon">Beacon</option>
+            <option value="comet">Comet</option>
+            <option value="delta">Delta</option>
+            <option value="echo" disabled>Echo (disabled)</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="select-all-actions" class="anchor" href="#select-all-actions">Select All and Deselect All</a></h2>
       <div class="side-by-side clearfix">
         <p>Multiple selects can add opt-in bulk actions. Select all applies to the currently filtered enabled options; Deselect all clears every enabled choice. With an empty search, use Command/Ctrl+A to select all or Command/Ctrl+Shift+A to deselect all.</p>

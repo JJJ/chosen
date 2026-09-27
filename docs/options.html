@@ -115,6 +115,11 @@
           <td>On multiple selects, show at most this many selected choices while collapsed. A summary button reveals the rest for review or removal. This does not limit how many options can be selected. Use a positive integer; omit it to keep every choice visible.</td>
         </tr>
         <tr>
+          <td>paste_multiple_values</td>
+          <td>false</td>
+          <td>On multiple selects, paste comma-, semicolon-, tab-, or line-separated values or labels to select existing enabled options. Values match exactly; labels match without case sensitivity only when unique. Unknown, disabled, hidden, ambiguous, and over-limit entries remain in the search field for editing. No options are created; the native select fires one input and change event if selections change.</td>
+        </tr>
+        <tr>
           <td>more_items_text</td>
           <td><code class="language-javascript">function(count) { return "Show " + count + " more..."; }</code></td>
           <td>Returns the summary button text for selected choices hidden by <code class="language-javascript">max_items_shown</code>. The count is the number of hidden choices. Override it for localization.</td>
