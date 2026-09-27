@@ -1,4 +1,15 @@
 describe "Events", ->
+  it "keeps an open dropdown active when a click lands on its container", ->
+    div = new Element('div').update("<select><option></option><option>One</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    chosen.test_active_click(target: chosen.container, which: 1)
+
+    expect(chosen.active_field).toBe(true)
+    expect(chosen.results_showing).toBe(true)
+    div.remove()
+
   it "refreshes both select types after a native form reset", (done) ->
     form = new Element('form').update("<select class='single'><option selected>One</option><option>Two</option></select><select class='multiple' multiple><option selected>Alpha</option><option>Beta</option></select>")
     document.body.appendChild(form)
