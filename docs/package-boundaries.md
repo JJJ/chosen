@@ -9,6 +9,8 @@ available. Explicit entries make new integrations easier to identify:
 | `chosen-jjj` or `chosen-jjj/jquery` | Classic jQuery adapter and its DOM lifecycle. |
 | `chosen-jjj/prototype` | Classic Prototype adapter and its DOM lifecycle. |
 | `chosen-jjj/core` | Framework-neutral option, search, and selection functions; ESM and CommonJS builds with TypeScript declarations. |
+| `chosen-jjj/react` | Native React component; ESM build and TypeScript declarations with React as a peer dependency. |
+| `chosen-jjj/react/styles.css` | Standalone React theme using the shared `--chosen-*` tokens. |
 | `chosen-jjj/styles.css` | Standalone default CSS and shared theme variables. |
 | `chosen-jjj/scss` | Customizable Sass source. |
 
@@ -38,4 +40,5 @@ const next = updateSelection([], { value: 'cat' }, { multiple: true });
 The data API is experimental while the native React MVP is being exercised.
 Its exported names and types are explicit, but extension points beyond these
 documented functions are not yet promised. Rendering stays in each adapter;
-React will not instantiate a jQuery or Prototype control.
+React does not instantiate a jQuery or Prototype control. Its ESM entry bundles
+the core rules but leaves React external, and its stylesheet is opt-in.

@@ -28,6 +28,7 @@ jobs:
           package_version=$(node -p "require('./package.json').version")
           test "${RELEASE_TAG#v}" = "$package_version"
       - run: npm ci
+      - run: npx playwright-core install --with-deps webkit
       - run: npm test
         env:
           CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome

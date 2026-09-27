@@ -1,0 +1,151 @@
+.chosen-react {
+  position: relative;
+  width: 100%;
+  min-width: 12rem;
+  font: var(--chosen-font-size, 14px) var(--chosen-font-family, sans-serif);
+  color: var(--chosen-text-color, #444);
+}
+
+.chosen-react__native,
+.chosen-react__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.chosen-react__control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .25rem;
+  min-height: var(--chosen-control-height, 2.25rem);
+  padding-block: var(--chosen-control-padding-block, .25rem);
+  padding-inline: var(--chosen-control-padding-inline-start, .5rem) var(--chosen-control-padding-inline-end, .5rem);
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-border-color, #aaa);
+  border-radius: var(--chosen-border-radius, 4px);
+  background: var(--chosen-control-background, var(--chosen-background, #fff));
+  box-shadow: var(--chosen-control-shadow, none);
+  cursor: text;
+}
+
+.chosen-react:focus-within .chosen-react__control {
+  outline: var(--chosen-focus-outline, var(--chosen-focus-ring-width, 2px) solid var(--chosen-focus-ring-color, #5897fb));
+  outline-offset: var(--chosen-focus-outline-offset, 1px);
+}
+
+.chosen-react__input {
+  flex: 1 1 5rem;
+  min-width: 4rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.chosen-react__input--has-value {
+  flex-basis: 1rem;
+  min-width: 1rem;
+}
+
+.chosen-react__value {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--chosen-text-color, #444);
+}
+
+.chosen-react__input::placeholder {
+  color: var(--chosen-placeholder-color, #666);
+  opacity: 1;
+}
+
+.chosen-react__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+  max-width: 100%;
+  padding: .125rem .35rem;
+  border-radius: var(--chosen-choice-border-radius, 3px);
+  background: var(--chosen-choice-background, #eee);
+  color: var(--chosen-choice-color, #333);
+}
+
+.chosen-react__remove,
+.chosen-react__clear {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.chosen-react__remove:hover,
+.chosen-react__clear:hover {
+  color: var(--chosen-hover-color, #3875d7);
+}
+
+.chosen-react__chevron {
+  width: .5rem;
+  height: .5rem;
+  margin-inline: .25rem;
+  border-inline-end: 1px solid currentColor;
+  border-block-end: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-.15rem);
+  pointer-events: none;
+}
+
+.chosen-react__popup {
+  position: absolute;
+  z-index: var(--chosen-dropdown-z-index, 1000);
+  inset-inline: 0;
+  margin-top: var(--chosen-dropdown-offset, .125rem);
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-dropdown-border-color, var(--chosen-border-color, #aaa));
+  border-radius: var(--chosen-border-radius, 4px);
+  background: var(--chosen-dropdown-background, var(--chosen-background, #fff));
+  box-shadow: var(--chosen-dropdown-shadow, 0 .3rem .6rem rgba(0, 0, 0, .18));
+}
+
+.chosen-react__list {
+  max-height: var(--chosen-results-max-height, 15rem);
+  overflow-y: auto;
+}
+
+.chosen-react__group,
+.chosen-react__option,
+.chosen-react__empty {
+  padding: var(--chosen-result-padding-block, .4rem) var(--chosen-result-padding-inline, .65rem);
+}
+
+.chosen-react__group {
+  color: var(--chosen-group-color, #666);
+  font-weight: 600;
+}
+
+.chosen-react__option {
+  cursor: pointer;
+}
+
+.chosen-react__option--active,
+.chosen-react__option:hover:not(.chosen-react__option--disabled) {
+  background: var(--chosen-highlight-background, #3269c6);
+  color: var(--chosen-highlight-text-color, #fff);
+}
+
+.chosen-react__option--disabled,
+.chosen-react--disabled {
+  opacity: var(--chosen-disabled-opacity, .55);
+  cursor: not-allowed;
+}
+
+.chosen-react__empty {
+  color: var(--chosen-muted-color, #777);
+}
