@@ -52,7 +52,9 @@ cover common form behavior without framework-specific markup hooks.
 The visible input is a combobox with a listbox popup. Give it a label using a
 native `<label htmlFor>` and a matching `id`, or `aria-label` /
 `aria-labelledby`. `aria-describedby` connects help or error text; use
-`aria-invalid` for an invalid state. Focus remains on the input while arrow keys
+`aria-invalid={true}` for an invalid state. The opt-in invalid border uses
+`--chosen-invalid-border-color` (`#dc2626` by default); native validation alone
+does not change the default theme. Focus remains on the input while arrow keys
 move the active result; Enter selects and Escape closes. Multiple selections
 have named remove buttons. Results are announced through a polite status node.
 
@@ -88,9 +90,13 @@ dependency is loaded by the component.
 export function TailwindTheme() {
   return <div className="max-w-sm [--chosen-border-color:#cbd5e1]
     [--chosen-control-background:#fff] [--chosen-focus-ring-color:#4f46e5]
+    [--chosen-highlight-background:#4f46e5]
     dark:[--chosen-border-color:#475569]
     dark:[--chosen-control-background:#0f172a]
-    dark:[--chosen-text-color:#f1f5f9]">
+    dark:[--chosen-text-color:#f1f5f9]
+    dark:[--chosen-group-color:#cbd5e1]
+    dark:[--chosen-muted-color:#cbd5e1]
+    dark:[--chosen-disabled-opacity:1]">
     <Chosen options={options} multiple aria-label="Fruit" />
   </div>;
 }

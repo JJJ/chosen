@@ -2,7 +2,8 @@
 @plugin "@tailwindcss/forms";
 
 @layer components {
-  .chosen-container {
+  .chosen-container,
+  .chosen-react {
     --chosen-font-family: var(--font-sans);
     --chosen-font-size: var(--text-sm);
     --chosen-text-color: var(--color-slate-900);
@@ -14,6 +15,7 @@
     --chosen-active-border-color: var(--color-indigo-500);
     --chosen-hover-border-color: var(--color-slate-400);
     --chosen-highlight-color: var(--color-indigo-600);
+    --chosen-highlight-background: var(--color-indigo-600);
     --chosen-bulk-action-color: var(--color-indigo-600);
     --chosen-divider-color: var(--color-slate-300);
     --chosen-selected-background: var(--color-indigo-50);
@@ -32,10 +34,14 @@
     --chosen-transition-timing: var(--ease-out);
   }
 
-  .dark .chosen-container {
+  .dark .chosen-container,
+  .dark .chosen-react {
     color-scheme: dark;
     --chosen-text-color: var(--color-slate-100);
     --chosen-placeholder-color: var(--color-slate-400);
+    --chosen-group-color: var(--color-slate-300);
+    --chosen-muted-color: var(--color-slate-300);
+    --chosen-active-color: var(--color-indigo-300);
     --chosen-control-background: var(--color-slate-900);
     --chosen-dropdown-background: var(--color-slate-800);
     --chosen-search-background: var(--color-slate-900);
@@ -50,6 +56,7 @@
     --chosen-choice-color: var(--color-slate-100);
     --chosen-choice-disabled-background: var(--color-slate-800);
     --chosen-disabled-background: var(--color-slate-800);
+    --chosen-disabled-opacity: 1;
     --chosen-dropdown-shadow: var(--shadow-2xl);
   }
 }

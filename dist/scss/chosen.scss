@@ -8,6 +8,7 @@ $chosen-active-color: #5897fb !default;
 $chosen-hover-color: #3875d7 !default;
 $chosen-highlight-text-color: #fff !default;
 $chosen-border-color: #aaa !default;
+$chosen-invalid-border-color: #dc2626 !default;
 $chosen-search-border-color: #ccc !default;
 $chosen-group-color: #999 !default;
 $chosen-background-color: #fff !default;
@@ -176,6 +177,15 @@ $chosen-highlight-text-decoration: underline !default;
 	}
 }
 /* @end */
+
+/* Explicit invalid state; native :invalid alone does not change existing defaults. */
+select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
+	.chosen-single,
+	.chosen-choices,
+	.chosen-drop {
+		border-color: var(--chosen-invalid-border-color, #{$chosen-invalid-border-color});
+	}
+}
 
 /* @group Single Chosen */
 .chosen-container-single {

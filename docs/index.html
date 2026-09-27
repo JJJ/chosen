@@ -1574,6 +1574,25 @@
         </div>
       </div>
 
+      <h2><a name="validation-styling" class="anchor" href="#validation-styling">Validation Styling</a></h2>
+      <p>Set <code>aria-invalid="true"</code> on the original select when your application reports an error. The red border is opt-in; a native <code>required</code> field does not change Chosen's default appearance on its own.</p>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="recipe-invalid-single">Single choice with an error</label>
+          <select id="recipe-invalid-single" class="chosen-select-invalid-recipe" required aria-invalid="true" aria-describedby="recipe-invalid-single-error">
+            <option value="" selected>Choose a fruit</option><option>Apple</option><option>Banana</option>
+          </select>
+          <p id="recipe-invalid-single-error">Choose one fruit before continuing.</p>
+        </div>
+        <div>
+          <label class="comparison-label" for="recipe-invalid-multiple">Multiple choices with an error</label>
+          <select id="recipe-invalid-multiple" class="chosen-select-invalid-recipe" multiple required aria-invalid="true" aria-describedby="recipe-invalid-multiple-error">
+            <option>Apple</option><option>Banana</option><option>Orange</option>
+          </select>
+          <p id="recipe-invalid-multiple-error">Choose at least one fruit.</p>
+        </div>
+      </div>
+
       <h2><a name="setup" class="anchor" href="#setup">Setup</a></h2>
       <p>Using Chosen is easy as can be.</p>
       <ol>

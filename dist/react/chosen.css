@@ -32,9 +32,26 @@
   cursor: text;
 }
 
+.chosen-react:not(.chosen-react--multiple) .chosen-react__control {
+  flex-wrap: nowrap;
+}
+
+.chosen-react:not(.chosen-react--disabled) .chosen-react__control:hover {
+  border-color: var(--chosen-hover-border-color, var(--chosen-border-color, #aaa));
+}
+
+.chosen-react--open:not(.chosen-react--disabled) .chosen-react__control {
+  border-color: var(--chosen-active-border-color, #5897fb);
+}
+
 .chosen-react:focus-within .chosen-react__control {
   outline: var(--chosen-focus-outline, var(--chosen-focus-ring-width, 2px) solid var(--chosen-focus-ring-color, #5897fb));
   outline-offset: var(--chosen-focus-outline-offset, 1px);
+}
+
+.chosen-react.chosen-react--invalid:not(.chosen-react--disabled) .chosen-react__control,
+.chosen-react.chosen-react--invalid:not(.chosen-react--disabled) .chosen-react__popup {
+  border-color: var(--chosen-invalid-border-color, #dc2626);
 }
 
 .chosen-react__input {

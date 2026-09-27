@@ -208,7 +208,7 @@ export const Chosen = forwardRef(function Chosen({
   }
   flushGroup();
 
-  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${disabled ? ' chosen-react--disabled' : ''} ${className}`.trim()} dir={dir} style={style}>
+  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={style}>
     <select ref={attachNativeSelect} className="chosen-react__native" tabIndex={-1} aria-hidden="true"
       name={name} form={form} required={required} disabled={disabled} multiple={multiple}
       value={multiple ? selectedValues : selectedValues[0] ?? ''} onChange={() => {}}

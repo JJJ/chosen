@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an opt-in invalid border for explicitly invalid legacy and React controls, with a shared `--chosen-invalid-border-color` token and repeatable visual fixtures for the default, Tailwind light/dark, and custom-palette themes. React also uses the shared hover and open border tokens.
 - Add opt-in `max_items_shown` for collapsing selected multiple-choice chips into an expandable summary without limiting selection.
 - Add an opt-in `search_matcher(query, item)` callback for custom result filtering, including regex-based rules. It replaces built-in search matching and leaves custom matches unhighlighted because a boolean result has no match position.
 - Use `type="search"` for generated search inputs by default and allow `search_input_type: "text"` for integrations that need the previous markup.
@@ -26,6 +27,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Keep the React single-select clear button on one line with a long selected label.
 - Keep the dropdown available at the selection limit when Deselect all or individual result deselection is enabled.
 - Stop an Escape key handled by an open Chosen dropdown from also reaching ancestor controls.
 - Copy an option's `title` to its selected multiple-choice element.
@@ -40,12 +42,14 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
 ### Maintenance
+- Cover bulk actions, selected-choice summaries and removal, single clearing, long labels, and RTL layouts in the visual fixtures. Audit representative dark controls and dropdowns for color contrast.
 - Complete the options reference and add matching jQuery, Prototype, and wiki recipes for search, option creation, selection, group actions, readonly controls, and dropdown sizing.
 - Remove unused Prototype markup templates; both adapters already render their controls through the shared markup methods.
 - Add operating-system dark-mode support and a persistent theme switch to the jQuery, Prototype, and Options example pages.
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- React adds `.chosen-react--invalid` when `aria-invalid` is true; legacy Chosen styles the generated sibling container when the original select has `aria-invalid="true"`. Native `:invalid` alone does not activate the new border.
 - Enabling `max_items_shown` hides excess selected `.search-choice` elements and adds a `.chosen-choice-summary` list item with a button before the search field. The selected options and hidden choice elements remain in the DOM.
 - Generated `.chosen-search-input` elements now use `type="search"` by default instead of `type="text"`. Integrations with CSS or DOM checks tied to the old attribute can set `search_input_type: "text"`. Chosen's CSS targets the class for either type and suppresses the browser's native search clear control. The input type does not guarantee suppression of browser autofill suggestions.
 - Enabling `deselect_selected_results` adds `active-result chosen-result-deselectable` to enabled selected option rows. The remove mark is CSS generated, so the result-row markup does not gain another child element.
