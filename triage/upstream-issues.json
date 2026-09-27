@@ -443,5 +443,911 @@
     "status": "fixed-in-fork",
     "note": "The options page now explains how to override Chosen styles and maps the main control, result, and state selectors.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/142"
+  },
+  {
+    "number": 3156,
+    "status": "invalid",
+    "note": "Off-topic promotional HTML; no Chosen question or defect."
+  },
+  {
+    "number": 3151,
+    "status": "blocked",
+    "note": "The report says H5 and reload but omits the device/browser and a failing select fixture. Needs a reproducible environment."
+  },
+  {
+    "number": 3150,
+    "status": "invalid",
+    "note": "Thank-you note with no requested change."
+  },
+  {
+    "number": 3148,
+    "status": "invalid",
+    "note": "Unfilled issue template; no actual reproduction or behavior described."
+  },
+  {
+    "number": 3140,
+    "status": "support-question",
+    "note": "Nested HTML inside native option elements is outside the native select text contract; use text or application markup outside Chosen."
+  },
+  {
+    "number": 3135,
+    "status": "blocked",
+    "note": "The Chrome 105 report omits code or steps for the claimed native/Chosen desync; current adapter tests cover value synchronization."
+  },
+  {
+    "number": 3131,
+    "status": "support-question",
+    "note": "Reported overlap uses application z-index and old .chzn-container styling; no isolated Chosen defect."
+  },
+  {
+    "number": 3130,
+    "status": "support-question",
+    "note": "Chosen is a JavaScript plugin, not a WordPress plugin; the report asks for WordPress setup help."
+  },
+  {
+    "number": 3126,
+    "status": "support-question",
+    "note": "ASP.NET must render selected option state into the native select before Chosen initializes."
+  },
+  {
+    "number": 3124,
+    "status": "support-question",
+    "note": "Control height is an application CSS customization question."
+  },
+  {
+    "number": 3121,
+    "status": "duplicate",
+    "note": "Same closed-dropdown hit-area behavior as #3019; investigate under that report."
+  },
+  {
+    "number": 3118,
+    "status": "support-question",
+    "note": "Asks for successor recommendations; a commenter already links this fork."
+  },
+  {
+    "number": 3110,
+    "status": "support-question",
+    "note": "Laravel form values come from the native multiple select; answered in the discussion."
+  },
+  {
+    "number": 3109,
+    "status": "support-question",
+    "note": "Initialization help for a third-party tutorial without a reproducible Chosen defect."
+  },
+  {
+    "number": 3104,
+    "status": "support-question",
+    "note": "The shown React handler passes non-event values to jQuery.trigger; integration code causes the exception."
+  },
+  {
+    "number": 3103,
+    "status": "support-question",
+    "note": "Read selected options or values from the native select; count and validation are application logic."
+  },
+  {
+    "number": 3100,
+    "status": "covered-in-fork",
+    "note": "Multiple selects already expose a searchable input."
+  },
+  {
+    "number": 3099,
+    "status": "blocked",
+    "note": "Third-party intranet screenshot only; no runnable case, version, or accessible reproduction."
+  },
+  {
+    "number": 3095,
+    "status": "support-question",
+    "note": "Database serialization and edit-form hydration belong to the application; no Chosen defect stated."
+  },
+  {
+    "number": 3093,
+    "status": "support-question",
+    "note": "Event propagation in the surrounding application container is an integration question."
+  },
+  {
+    "number": 3092,
+    "status": "covered-in-fork",
+    "note": "Both adapters emit chosen:search_updated with the search term, allowing AJAX-backed native option updates."
+  },
+  {
+    "number": 3088,
+    "status": "support-question",
+    "note": "Textbox background color is an application CSS customization."
+  },
+  {
+    "number": 3086,
+    "status": "support-question",
+    "note": "Bootstrap 4 integration request has no isolated Chosen defect or design contract."
+  },
+  {
+    "number": 3084,
+    "status": "covered-in-fork",
+    "note": "A required native select blocks form submission, receives focus, and shows the browser validation message in Chrome with both adapters; adapter specs cover reportValidity. Custom framework error styling remains an integration choice."
+  },
+  {
+    "number": 3081,
+    "status": "support-question",
+    "note": "Filter native optgroups/options in application code, then trigger chosen:updated."
+  },
+  {
+    "number": 3080,
+    "status": "duplicate",
+    "note": "Scrollable ancestor clips or scrolls the dropdown; same underlying overflow issue as #86."
+  },
+  {
+    "number": 3077,
+    "status": "support-question",
+    "note": "Asks how to avoid opening on focus; use the documented focus/label behavior setting."
+  },
+  {
+    "number": 3075,
+    "status": "fixed-in-fork",
+    "note": "Typing on a focused single select opens and filters it; verified with real keyboard input and both adapter specs.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 3070,
+    "status": "support-question",
+    "note": "Rails asset-pipeline packaging of chosen-js is separate from the fork package; upstream discussion explains asset location."
+  },
+  {
+    "number": 3065,
+    "status": "blocked",
+    "note": "The report uses an external contenteditable/textarea key handler but omits a reproducible event sequence."
+  },
+  {
+    "number": 3061,
+    "status": "declined",
+    "note": "Treating separate native option elements with equal values as one selection would change select semantics."
+  },
+  {
+    "number": 3058,
+    "status": "invalid",
+    "note": "Unfilled issue template; no placeholder problem described."
+  },
+  {
+    "number": 3057,
+    "status": "covered-in-fork",
+    "note": "The current fork with jQuery 1.12.4 retained native option order."
+  },
+  {
+    "number": 3055,
+    "status": "blocked",
+    "note": "Old icon screenshot URL and no current asset path or runnable case; cannot identify a fork defect."
+  },
+  {
+    "number": 3052,
+    "status": "covered-in-fork",
+    "note": "A browser probe added a native option and triggered chosen:updated while the dropdown was open; both adapters kept it open, rendered the new option, and retained search focus."
+  },
+  {
+    "number": 3045,
+    "status": "declined",
+    "note": "Retina asset for the old Harvest badge is obsolete for this fork site."
+  },
+  {
+    "number": 3043,
+    "status": "support-question",
+    "note": "An application-specific All sentinel option needs application selection logic; separate opt-in Select all action exists."
+  },
+  {
+    "number": 3042,
+    "status": "support-question",
+    "note": "Absolutely positioned SharePoint/Nintex panels cover the dropdown; application stacking context needs adjustment."
+  },
+  {
+    "number": 3041,
+    "status": "blocked",
+    "note": "IE11-only visual report; no supported IE11 test environment."
+  },
+  {
+    "number": 3040,
+    "status": "declined",
+    "note": "This concerns the historical Harvest 1.8.7 source archive, not the fork package or release process."
+  },
+  {
+    "number": 3037,
+    "status": "covered-in-fork",
+    "note": "Opt-in search_matcher callback provides custom result filtering (#155)."
+  },
+  {
+    "number": 3019,
+    "status": "blocked",
+    "note": "IE9/IE11 closed-dropdown hit-area defect; a supported browser reproduction or IE test environment is needed."
+  },
+  {
+    "number": 3016,
+    "status": "support-question",
+    "note": "Programmatic value changes do not automatically emit change; explicitly trigger change after chosen:updated."
+  },
+  {
+    "number": 3009,
+    "status": "blocked",
+    "note": "IE11-only incorrect-selection report; no supported IE11 test environment."
+  },
+  {
+    "number": 3008,
+    "status": "duplicate",
+    "note": "Required-select validation is covered by the better-described #3084."
+  },
+  {
+    "number": 2994,
+    "status": "covered-in-fork",
+    "note": "A real pointer click on a search-disabled Chosen inside a horizontally scrolled container preserved scrollLeft in both adapters."
+  },
+  {
+    "number": 2987,
+    "status": "covered-in-fork",
+    "note": "Twenty repeated chosen:updated calls rendered all 21 native options in current jQuery and Prototype browser fixtures."
+  },
+  {
+    "number": 2981,
+    "status": "blocked",
+    "note": "The report omits the AJAX replacement sequence. Repeated native option updates work in both current adapters; a failing fixture is needed."
+  },
+  {
+    "number": 2979,
+    "status": "support-question",
+    "note": "Custom Enter-driven form workflow; no Chosen defect or general API gap isolated."
+  },
+  {
+    "number": 2977,
+    "status": "covered-in-fork",
+    "note": "The old vulnerable hoek development dependency is absent from the current package and lockfile."
+  },
+  {
+    "number": 2976,
+    "status": "blocked",
+    "note": "External page and screenshot are unavailable; no code or reproduction supplied."
+  },
+  {
+    "number": 2969,
+    "status": "support-question",
+    "note": "General Angular 5 integration question."
+  },
+  {
+    "number": 2963,
+    "status": "candidate",
+    "note": "Consider opt-in pinned options during search; ordinary filtering currently hides nonmatches."
+  },
+  {
+    "number": 2959,
+    "status": "candidate",
+    "note": "Check whether source SVGs for existing icons should be shipped for theme customization."
+  },
+  {
+    "number": 2956,
+    "status": "declined",
+    "note": "Two linked category/product values in one select are application data and form logic."
+  },
+  {
+    "number": 2955,
+    "status": "covered-in-fork",
+    "note": "Wheel propagation and delta handling were corrected in #115 and #118."
+  },
+  {
+    "number": 2947,
+    "status": "duplicate",
+    "note": "Responsive table clips the dropdown; same CSS overflow problem as #86."
+  },
+  {
+    "number": 2941,
+    "status": "covered-in-fork",
+    "note": "This fork publishes through npm and no longer maintains the separate Bower package workflow."
+  },
+  {
+    "number": 2937,
+    "status": "covered-in-fork",
+    "note": "The opt-in inherit_select_classes setting copies source-select classes to the Chosen container on initialization and chosen:updated, with both adapter specs; integrations changing classes can trigger chosen:updated."
+  },
+  {
+    "number": 2934,
+    "status": "declined",
+    "note": "Moving selected chips outside the control changes established markup for a layout preference; use scoped CSS or a separate component."
+  },
+  {
+    "number": 2933,
+    "status": "declined",
+    "note": "Bundling Bootstrap 3-specific appearance rules would couple the default stylesheet to an obsolete framework."
+  },
+  {
+    "number": 2932,
+    "status": "blocked",
+    "note": "Chrome device emulation reload changes the mobile fallback, but no actual device, missing-asset URL, or current-version reproduction is supplied."
+  },
+  {
+    "number": 2931,
+    "status": "fixed-in-fork",
+    "note": "Native input focus after jQuery result selection avoids the deprecated .focus() shorthand; all supported jQuery adapter versions have regression coverage.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/165"
+  },
+  {
+    "number": 2929,
+    "status": "covered-in-fork",
+    "note": "Selecting a filtered single result emitted one native change event in current browser fixtures for both adapters."
+  },
+  {
+    "number": 2895,
+    "status": "duplicate",
+    "note": "Custom values absent from the select are the request in #5."
+  },
+  {
+    "number": 2893,
+    "status": "duplicate",
+    "note": "Single-row selected chips request is also tracked in #918."
+  },
+  {
+    "number": 2884,
+    "status": "candidate",
+    "note": "The control retains its initial width when AJAX adds longer options. Automatic width recomputation would change a long-standing default; consider an opt-in setting. dropdown_width: max-content already sizes the result menu to content."
+  },
+  {
+    "number": 2871,
+    "status": "support-question",
+    "note": "AngularJS ng-change with IE10 and an unspecified chosen directive is integration-specific."
+  },
+  {
+    "number": 2868,
+    "status": "support-question",
+    "note": "TinyMCE link-list integration is a third-party application question."
+  },
+  {
+    "number": 2862,
+    "status": "candidate",
+    "note": "Assess the interaction between search_contains and enable_split_word_search; current regex branch still combines them."
+  },
+  {
+    "number": 2855,
+    "status": "declined",
+    "note": "Checkboxes inside option rows add a second control model and conflict with the existing combobox/listbox interaction."
+  },
+  {
+    "number": 2852,
+    "status": "covered-in-fork",
+    "note": "The opt-in dropdown_width: max-content expanded a 24px-font menu for the longest option in current browser fixtures for both adapters."
+  },
+  {
+    "number": 2849,
+    "status": "support-question",
+    "note": "Angular model updates need its directive to update the native select and notify Chosen."
+  },
+  {
+    "number": 2847,
+    "status": "support-question",
+    "note": "Bootstrap .section layout conflict without an isolated Chosen case."
+  },
+  {
+    "number": 2845,
+    "status": "candidate",
+    "note": "Consider opt-in paste of delimited, already-existing option values; never create values silently."
+  },
+  {
+    "number": 2836,
+    "status": "blocked",
+    "note": "Old Internet Explorer screenshot without a current supported-browser reproduction."
+  },
+  {
+    "number": 2832,
+    "status": "covered-in-fork",
+    "note": "Both adapters emit chosen:search_updated on text changes; bind to that event for application callbacks."
+  },
+  {
+    "number": 2830,
+    "status": "support-question",
+    "note": "Angular ngFor renders asynchronously; initialize or update Chosen after options exist."
+  },
+  {
+    "number": 2829,
+    "status": "covered-in-fork",
+    "note": "Stay-open multiple-select scroll position is preserved on selection (#117)."
+  },
+  {
+    "number": 2828,
+    "status": "support-question",
+    "note": "Application asks how to handle Enter and read selected values; native select change is available."
+  },
+  {
+    "number": 2826,
+    "status": "covered-in-fork",
+    "note": "After Select all and individual removals, both adapters restored the data-placeholder and default input state."
+  },
+  {
+    "number": 2824,
+    "status": "duplicate",
+    "note": "Updating options while preserving an open dropdown is tracked in #3052."
+  },
+  {
+    "number": 2823,
+    "status": "covered-in-fork",
+    "note": "Wheel handling now uses native delta behavior rather than the old jquery-mousewheel path (#115 and #118)."
+  },
+  {
+    "number": 2814,
+    "status": "covered-in-fork",
+    "note": "Clicking the multiple-select control focused its search field in a current browser fixture."
+  },
+  {
+    "number": 2807,
+    "status": "covered-in-fork",
+    "note": "The package exports and ships Sass sources."
+  },
+  {
+    "number": 2799,
+    "status": "covered-in-fork",
+    "note": "Current Chrome fixture initialized 100 selects with 5 options in 36ms (jQuery) and 45ms (Prototype), and 700 selects with 22 options in 794ms and 1049ms respectively. This does not guarantee the same result on every integration or device."
+  },
+  {
+    "number": 2794,
+    "status": "declined",
+    "note": "The maintained fork intentionally supports touch controls on mobile rather than blocking broad device user agents. Current iPad WebKit selection, removal, search, and retap tests pass in both adapters."
+  },
+  {
+    "number": 2793,
+    "status": "declined",
+    "note": "Reported Chrome multi-column absolute-positioning behavior was referred to the browser by upstream maintainers."
+  },
+  {
+    "number": 2790,
+    "status": "covered-in-fork",
+    "note": "The current single-select control emitted focus in a browser fixture."
+  },
+  {
+    "number": 2789,
+    "status": "fixed-in-fork",
+    "note": "Native form reset refreshes selected text and chips in both adapters. The separate required-field validation question remains tracked by #3084.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 2788,
+    "status": "candidate",
+    "note": "Consider opt-in search ranking or first-highlight priority without changing native option order by default."
+  },
+  {
+    "number": 2787,
+    "status": "fixed-in-fork",
+    "note": "Inert result presses retain Chosen search focus; verified with pointer input and both adapter specs.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 2786,
+    "status": "support-question",
+    "note": "Coloring groups and options is an application CSS customization."
+  },
+  {
+    "number": 2783,
+    "status": "blocked",
+    "note": "Cyrillic appears as replacement characters, but source encoding and page charset are not supplied."
+  },
+  {
+    "number": 2782,
+    "status": "covered-in-fork",
+    "note": "Opt-in displayed-choice limit with expandable summary is implemented (#157)."
+  },
+  {
+    "number": 2778,
+    "status": "blocked",
+    "note": "External examples do not specify the requested behavior or working reproduction."
+  },
+  {
+    "number": 2777,
+    "status": "invalid",
+    "note": "No intelligible Chosen behavior or reproduction after clarification request."
+  },
+  {
+    "number": 2776,
+    "status": "candidate",
+    "note": "Assess a conventional jQuery noConflict/constructor interface while keeping existing plugin calls stable."
+  },
+  {
+    "number": 2775,
+    "status": "duplicate",
+    "note": "Single-row selected-chip layout is tracked in #918."
+  },
+  {
+    "number": 2771,
+    "status": "fixed-in-fork",
+    "note": "Pointer hover highlights a partly visible result without scrolling, while keyboard highlight still scrolls it into view; both adapters have regression specs and browser pointer checks.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/166"
+  },
+  {
+    "number": 2767,
+    "status": "duplicate",
+    "note": "Mouse hover scroll shifts the partially visible last result; tracked in #2571."
+  },
+  {
+    "number": 2765,
+    "status": "duplicate",
+    "note": "Native required-field validation placement is tracked in #3084."
+  },
+  {
+    "number": 2755,
+    "status": "covered-in-fork",
+    "note": "A current browser fixture with 1,200 native options rendered 1,200 result rows."
+  },
+  {
+    "number": 2753,
+    "status": "duplicate",
+    "note": "Paste a delimited list of known values is tracked in #2845."
+  },
+  {
+    "number": 2752,
+    "status": "covered-in-fork",
+    "note": "group_search is documented on the Options/API page."
+  },
+  {
+    "number": 2751,
+    "status": "candidate",
+    "note": "Audit option HTML rendering and escaping against untrusted option content before deciding on a fix."
+  },
+  {
+    "number": 2740,
+    "status": "blocked",
+    "note": "Internet Explorer-only selection report; no supported IE test environment."
+  },
+  {
+    "number": 2731,
+    "status": "support-question",
+    "note": "AJAX code mutates linked selects; supplied discussion resolves it with native selection and chosen:updated."
+  },
+  {
+    "number": 2724,
+    "status": "declined",
+    "note": "IE8-specific line-height change is outside this fork’s supported browser matrix."
+  },
+  {
+    "number": 2706,
+    "status": "support-question",
+    "note": "The report only shows a manual 5px width increase, without a clipping fixture. Use Chosen's width or dropdown_width option for a specific layout."
+  },
+  {
+    "number": 2689,
+    "status": "fixed-in-fork",
+    "note": "chosen:open now opens an already activated single select; both adapters have regression specs.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 2685,
+    "status": "declined",
+    "note": "Selecting an uncommitted first search result on blur risks changing submitted values unexpectedly."
+  },
+  {
+    "number": 2665,
+    "status": "declined",
+    "note": "Repeated Backspace deletion risks removing multiple choices accidentally; single_backstroke_delete covers deliberate one-key removal."
+  },
+  {
+    "number": 2659,
+    "status": "fixed-in-fork",
+    "note": "Dragging across associated label text now preserves selection without focusing Chosen; both adapters have regression specs and a real browser pointer check.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/163"
+  },
+  {
+    "number": 2657,
+    "status": "candidate",
+    "note": "Assess automatic GitHub Pages publication from a release or documentation workflow."
+  },
+  {
+    "number": 2651,
+    "status": "candidate",
+    "note": "Assess relative sizing and editable vector icon sources while preserving current visual defaults."
+  },
+  {
+    "number": 2638,
+    "status": "covered-in-fork",
+    "note": "chosen:updated preserved the configured placeholder in current jQuery and Prototype browser fixtures."
+  },
+  {
+    "number": 2613,
+    "status": "covered-in-fork",
+    "note": "Typing in the current control wrapped by a label retained the search text in a browser fixture."
+  },
+  {
+    "number": 2611,
+    "status": "covered-in-fork",
+    "note": "inherit_option_classes copies native option classes to selected chips."
+  },
+  {
+    "number": 2609,
+    "status": "duplicate",
+    "note": "Hidden or narrow multiple-select placeholder sizing is tracked in #2295."
+  },
+  {
+    "number": 2580,
+    "status": "covered-in-fork",
+    "note": "Current Chrome 20,000-option fixture with max_shown_results: 50 initialized in about 75ms, opened in 20ms, and filtered in 68ms (jQuery) or 270ms (Prototype). Opt-in search_delay is available. Larger sets and other devices may still warrant profiling."
+  },
+  {
+    "number": 2575,
+    "status": "candidate",
+    "note": "Assess optional CSS-controlled width and its interaction with strict CSP and hidden-select sizing."
+  },
+  {
+    "number": 2571,
+    "status": "fixed-in-fork",
+    "note": "Hovering the bottom edge no longer scrolls the results list at all; a stationary pointer remained at scrollTop 0 in both adapters after the #2771 fix.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/166"
+  },
+  {
+    "number": 2548,
+    "status": "covered-in-fork",
+    "note": "Current jQuery and Prototype search fixtures matched ampersands and apostrophes correctly."
+  },
+  {
+    "number": 2507,
+    "status": "covered-in-fork",
+    "note": "Opt-in display_selected_value shows option values in closed controls and selected chips."
+  },
+  {
+    "number": 2499,
+    "status": "candidate",
+    "note": "Consider an opt-in way to configure shared initialization defaults without global surprises."
+  },
+  {
+    "number": 2467,
+    "status": "covered-in-fork",
+    "note": "After blur and an outside click, the current dropdown stayed closed in a browser fixture."
+  },
+  {
+    "number": 2454,
+    "status": "covered-in-fork",
+    "note": "Generated search inputs now default to type=search, with text opt-in (#154)."
+  },
+  {
+    "number": 2438,
+    "status": "candidate",
+    "note": "Consider mobile presentation after validating current native fallback and touch behavior."
+  },
+  {
+    "number": 2397,
+    "status": "covered-in-fork",
+    "note": "The search_matcher callback can match combined group and option labels (#155)."
+  },
+  {
+    "number": 2366,
+    "status": "covered-in-fork",
+    "note": "Both adapters close an open dropdown on window blur before another Chosen control opens."
+  },
+  {
+    "number": 2336,
+    "status": "candidate",
+    "note": "This is a request to add deselected metadata to single-select change events, not a current selection bug. Review as an event API enhancement."
+  },
+  {
+    "number": 2300,
+    "status": "duplicate",
+    "note": "Prioritize prefix/exact matches in search is tracked in #2788."
+  },
+  {
+    "number": 2295,
+    "status": "covered-in-fork",
+    "note": "A browser probe initialized a hidden multiple select with a 300px width and confirmed the search input stayed within the control before and after showing it, in both adapters."
+  },
+  {
+    "number": 2245,
+    "status": "covered-in-fork",
+    "note": "F2 did not open Chosen in a real keyboard check against the current fork."
+  },
+  {
+    "number": 2230,
+    "status": "covered-in-fork",
+    "note": "The fork has WebKit touch click-through regression coverage and fixes (#95)."
+  },
+  {
+    "number": 2215,
+    "status": "candidate",
+    "note": "Check module-loader use with current package exports; browser UMD compatibility may remain distinct."
+  },
+  {
+    "number": 2212,
+    "status": "declined",
+    "note": "Extra blank option rows are indistinguishable and conflict with Chosen’s placeholder convention; preserve native select values."
+  },
+  {
+    "number": 2156,
+    "status": "fixed-in-fork",
+    "note": "A real bottom-edge click no longer opens and immediately closes the Prototype dropdown; the jQuery adapter already behaved correctly. The native select value stays unchanged.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/164"
+  },
+  {
+    "number": 2125,
+    "status": "support-question",
+    "note": "Use a valid empty option with a label attribute, such as <option value=\"\" label=\" \"></option>; Chosen treats it as the placeholder entry."
+  },
+  {
+    "number": 2114,
+    "status": "duplicate",
+    "note": "Cropped placeholder after initialization in a hidden container is tracked in #2295."
+  },
+  {
+    "number": 2107,
+    "status": "covered-in-fork",
+    "note": "The current default search found terms before and after repeated nonbreaking spaces in both adapters."
+  },
+  {
+    "number": 1989,
+    "status": "covered-in-fork",
+    "note": "CSS custom properties and scoped styles support application-specific control sizing; no Bootstrap dependency is needed."
+  },
+  {
+    "number": 1938,
+    "status": "covered-in-fork",
+    "note": "group_search: false excludes optgroup labels from matching while preserving option matching."
+  },
+  {
+    "number": 1870,
+    "status": "candidate",
+    "note": "Assess per-select data attributes for options with explicit parsing and safe defaults."
+  },
+  {
+    "number": 1833,
+    "status": "candidate",
+    "note": "Assess Sass selector simplification without changing generated selectors or visuals."
+  },
+  {
+    "number": 1829,
+    "status": "candidate",
+    "note": "Generate the jQuery and Prototype demos from shared source to prevent drift."
+  },
+  {
+    "number": 1797,
+    "status": "covered-in-fork",
+    "note": "Current result markup did not emit the reported empty style attribute in either adapter."
+  },
+  {
+    "number": 1611,
+    "status": "declined",
+    "note": "Group markup restructuring would break existing selectors for a presentation preference."
+  },
+  {
+    "number": 1577,
+    "status": "declined",
+    "note": "The search input also owns keyboard focus when search is disabled; removing it breaks interaction."
+  },
+  {
+    "number": 1528,
+    "status": "covered-in-fork",
+    "note": "The opt-in dropdown_width: max-content expanded a narrow select's result menu to its longest label in both adapters without changing the control width."
+  },
+  {
+    "number": 1480,
+    "status": "covered-in-fork",
+    "note": "The dropdown can open upward when space below is insufficient."
+  },
+  {
+    "number": 1473,
+    "status": "covered-in-fork",
+    "note": "Setup and package instructions were expanded in the fork demo and wiki."
+  },
+  {
+    "number": 1428,
+    "status": "support-question",
+    "note": "Native blur events on the hidden select are not forwarded; use Chosen lifecycle events on the select."
+  },
+  {
+    "number": 1386,
+    "status": "blocked",
+    "note": "Wacom pen/modifier gesture requires that hardware or a reproducible synthetic pointer sequence."
+  },
+  {
+    "number": 1380,
+    "status": "candidate",
+    "note": "A framework-neutral core exists, but a vanilla DOM adapter remains a separate potential edition."
+  },
+  {
+    "number": 1370,
+    "status": "covered-in-fork",
+    "note": "Repeated Tab navigation passed through current Chosen controls and adjacent fields without deadlock."
+  },
+  {
+    "number": 1076,
+    "status": "fixed-in-fork",
+    "note": "An explicitly empty data, native, or configured placeholder now remains empty; both adapters have regression specs.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 1011,
+    "status": "candidate",
+    "note": "chosen:no_results exists; assess whether a clear event or callback is still needed."
+  },
+  {
+    "number": 994,
+    "status": "candidate",
+    "note": "Assess additional keyboard shortcuts against existing shortcuts and native focus behavior."
+  },
+  {
+    "number": 949,
+    "status": "covered-in-fork",
+    "note": "Right-clicking a result did not select it in current jQuery and Prototype browser fixtures."
+  },
+  {
+    "number": 943,
+    "status": "candidate",
+    "note": "Assess localized no-results templates that can place the search term after other words."
+  },
+  {
+    "number": 918,
+    "status": "support-question",
+    "note": "Single-row selected-chip presentation is a CSS/layout choice; the fork also offers an opt-in displayed-choice limit."
+  },
+  {
+    "number": 858,
+    "status": "covered-in-fork",
+    "note": "The opt-in split_search_terms setting matches partial words in any order; search_contains can also match within a word. Both adapters have multi-term highlighting specs."
+  },
+  {
+    "number": 841,
+    "status": "declined",
+    "note": "Tab must move focus according to keyboard conventions, not select a result."
+  },
+  {
+    "number": 800,
+    "status": "covered-in-fork",
+    "note": "search_in_values opts into matching native option values."
+  },
+  {
+    "number": 677,
+    "status": "covered-in-fork",
+    "note": "The opt-in split_search_terms setting matches all query terms in any order and highlights each match in both adapters; regression specs cover reversed-term searches."
+  },
+  {
+    "number": 625,
+    "status": "blocked",
+    "note": "The 2012 Firefox-only double-Tab report needs a current Firefox reproduction. Playwright Firefox downloaded but exited before loading its profile in this local environment; Chrome results cannot settle it."
+  },
+  {
+    "number": 572,
+    "status": "candidate",
+    "note": "Consider exposing optgroup identity on selected chips for CSS customization."
+  },
+  {
+    "number": 495,
+    "status": "covered-in-fork",
+    "note": "The clear control no longer uses an abbr element."
+  },
+  {
+    "number": 381,
+    "status": "declined",
+    "note": "WebKit-specific hover scroll arrows are obsolete and add nonstandard interaction to the dropdown."
+  },
+  {
+    "number": 323,
+    "status": "covered-in-fork",
+    "note": "The select-by-group attribute makes multiple-select optgroup labels selectable."
+  },
+  {
+    "number": 171,
+    "status": "candidate",
+    "note": "Consider opt-in after-selection hint text without altering submitted values."
+  },
+  {
+    "number": 155,
+    "status": "covered-in-fork",
+    "note": "The fork positions the dropdown upward when needed and keeps closed dropdowns from affecting page layout."
+  },
+  {
+    "number": 135,
+    "status": "candidate",
+    "note": "Consider Shift range selection for multiple selects with clear keyboard semantics."
+  },
+  {
+    "number": 92,
+    "status": "fixed-in-fork",
+    "note": "A hidden select with explicit CSS width now retains that width when shown; verified in Chrome and both adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
+  },
+  {
+    "number": 86,
+    "status": "candidate",
+    "note": "Overflow clipping remains a valid integration pain point; assess a safe dropdown positioning strategy."
+  },
+  {
+    "number": 79,
+    "status": "candidate",
+    "note": "Consider remote option population while keeping the native select authoritative."
+  },
+  {
+    "number": 5,
+    "status": "covered-in-fork",
+    "note": "Opt-in create_option appends a new native option, preserving the select as the submitted-value source."
   }
 ]

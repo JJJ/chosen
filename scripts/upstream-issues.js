@@ -6,7 +6,10 @@ const path = require('node:path');
 
 const upstream = 'harvesthq/chosen';
 const queuePath = path.join(__dirname, '..', 'triage', 'upstream-issues.json');
-const statuses = new Set(['candidate', 'needs-reproduction', 'fixed-in-fork', 'covered-in-fork', 'blocked']);
+const statuses = new Set([
+  'candidate', 'needs-reproduction', 'fixed-in-fork', 'covered-in-fork', 'blocked',
+  'invalid', 'duplicate', 'support-question', 'declined',
+]);
 
 function readQueue() {
   const entries = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
@@ -81,7 +84,9 @@ async function main() {
   const unreviewed = issues.filter((issue) => issue.status === 'unreviewed')
     .sort((a, b) => b.updated_at.localeCompare(a.updated_at));
   console.log(`# Harvest Chosen issue queue\n`);
-  console.log(`${allIssues.length} open issues${search ? `; ${issues.length} match "${search}"` : ''}; ${active.length} queued; ${unreviewed.length} unreviewed.\n`);
+  const counts = Object.fromEntries([...statuses, 'unreviewed'].map((status) => [status, issues.filter((issue) => issue.status === status).length]));
+  console.log(`${allIssues.length} open issues${search ? `; ${issues.length} match "${search}"` : ''}; ${active.length} queued; ${unreviewed.length} unreviewed.`);
+  console.log(`Reviewed dispositions: ${[...statuses].map((status) => `${status} ${counts[status]}`).join('; ')}.\n`);
   console.log('## Reviewed candidates\n');
   console.log(active.length ? active.map(issueLine).join('\n') : 'None yet.');
   console.log(`\n## Recently updated, unreviewed (${Math.min(limit, unreviewed.length)} shown)\n`);
