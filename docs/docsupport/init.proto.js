@@ -12,6 +12,7 @@ document.observe('dom:loaded', function(evt) {
   '.chosen-select-readonly-recipe': { width: '100%' },
   '.chosen-select-invalid-recipe': { width: '100%' },
     '.chosen-select-dropdown-width': { width: '180px', dropdown_width: '300px' },
+    '.chosen-select-fixed-dropdown': { width: '240px', dropdown_position: 'fixed' },
     '.chosen-select-no-single' : { disable_search_threshold: 10 },
     '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
     '.chosen-select-rtl'       : { rtl: true },

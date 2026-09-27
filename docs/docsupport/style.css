@@ -359,6 +359,15 @@ li > p {
   color: #b84f16;
 }
 
+.side-by-side > .overflow-demo-frame {
+  height: 86px;
+  overflow: hidden;
+}
+
+.overflow-demo {
+  margin-bottom: 12rem;
+}
+
 .clearfix::after {
   display: block;
   clear: both;

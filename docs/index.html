@@ -1446,6 +1446,22 @@
         </div>
       </div>
 
+      <h2><a name="clipped-dropdowns" class="anchor" href="#clipped-dropdowns">Dropdowns in clipped containers</a></h2>
+      <div class="side-by-side overflow-demo clearfix">
+        <p>Open this control inside a short <code class="language-css">overflow: hidden</code> panel. The opt-in fixed position keeps its results visible outside the panel. Scroll the page while it is open to see it stay aligned.</p>
+        <pre><code class="language-javascript">$("#clipped-dropdown").chosen({dropdown_position: "fixed"});</code></pre>
+        <div class="overflow-demo-frame">
+          <label class="comparison-label" for="clipped-dropdown">Choose a project</label>
+          <select id="clipped-dropdown" class="chosen-select-fixed-dropdown">
+            <option value="">Select a project</option>
+            <option>Atlas Product Design Team</option>
+            <option>Beacon Research Collective</option>
+            <option>Comet Operations Group</option>
+            <option>Delta Support Studio</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="labels-work-too" class="anchor" href="#labels-work-too">Labels work, too</a></h2>
       <div class="side-by-side clearfix">
         <p>Use labels just like you would with a standard select. This demo sets <code class="language-javascript">open_on_label_click: false</code>, so clicking either label focuses its closed Chosen control without opening the dropdown. You can also drag across a label to select its text without activating Chosen.</p>

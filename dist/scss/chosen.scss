@@ -133,6 +133,11 @@ $chosen-highlight-text-decoration: underline !default;
 		}
 	}
 
+	&.chosen-fixed-dropdown .chosen-drop {
+		position: fixed;
+		bottom: auto;
+	}
+
 	a {
 		cursor: pointer;
 	}
