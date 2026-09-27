@@ -795,7 +795,8 @@
   {
     "number": 2862,
     "status": "fixed-in-fork",
-    "note": "The combined search_contains and enable_split_word_search: false settings now anchor at the option start while permitting punctuation-prefixed queries; the default search behavior is unchanged."
+    "note": "The combined search_contains and enable_split_word_search: false settings now anchor at the option start while permitting punctuation-prefixed queries; the default search behavior is unchanged.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/170"
   },
   {
     "number": 2855,
