@@ -1031,8 +1031,9 @@
   },
   {
     "number": 2657,
-    "status": "candidate",
-    "note": "Assess automatic GitHub Pages publication from a release or documentation workflow."
+    "status": "covered-in-fork",
+    "note": "GitHub Pages already auto-publishes master/docs after merges; the latest build tracked merged master. CI and release checks now reject stale generated dist/docs assets, and the release guide requires the release commit on master.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/177"
   },
   {
     "number": 2651,
