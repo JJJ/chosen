@@ -25,6 +25,9 @@ jobs:
     - name: Build
       run: npm run build
 
+    - name: Verify committed Pages assets
+      run: git diff --exit-code -- dist docs
+
     - name: Install WebKit for browser tests
       run: npx playwright-core install --with-deps webkit
     
