@@ -17,7 +17,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `disable_search` | No | No | Single-select search visibility and type navigation. |
 | `disable_search_threshold` | No | No | Search visibility based on option count. |
 | `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |
-| `inherit_select_classes` | No | Partial | React has `className` on its host; vanilla does not copy select classes. |
+| `inherit_select_classes` | Yes | Yes | Vanilla opts into copying source classes; React uses `className` directly on its generated host. |
 | `inherit_option_classes` | No | No | Generated result classes from source options. |
 | `max_selected_options` | Yes | Yes | Both enforce the limit. |
 | `max_items_shown` | No | No | Collapsible selected-choice summary. |

@@ -25,6 +25,7 @@ export interface ChosenOptions {
   multiselect_allow_tab_to_select?: boolean;
   search_input_type?: 'search' | 'text';
   rtl?: boolean;
+  inherit_select_classes?: boolean;
   display_selected_value?: boolean;
   include_group_label_in_selected?: boolean;
 }

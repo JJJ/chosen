@@ -5,6 +5,7 @@ const options: ChosenOptions = { search_contains: true, max_selected_options: 3,
   search_input_type: 'text',
   rtl: true,
   display_selected_value: true, include_group_label_in_selected: true,
+  inherit_select_classes: true,
   search_in_values: true, max_shown_results: 20,
   search_matcher: (query, item) => item.kind === 'option' && item.value === query };
 const select = document.createElement('select');

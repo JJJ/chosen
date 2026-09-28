@@ -335,6 +335,7 @@ var ChosenNative = (() => {
         display_selected_value: false,
         include_group_label_in_selected: false,
         rtl: false,
+        inherit_select_classes: false,
         placeholder_text: select.multiple ? "Select Some Options" : "Select an Option",
         no_results_text: "No results for:",
         allow_single_deselect: false,
@@ -378,6 +379,7 @@ var ChosenNative = (() => {
         this.open();
       };
       this.host = element("div", `chosen-native${this.multiple ? " chosen-native--multiple" : ""}`);
+      this.inheritedClasses = /* @__PURE__ */ new Set();
       this.control = element("div", "chosen-native__control");
       this.chips = element("span", "chosen-native__chips");
       this.value = element("span", "chosen-native__value");
@@ -436,6 +438,14 @@ var ChosenNative = (() => {
     }
     update() {
       if (this.destroyed) return;
+      for (const name of this.inheritedClasses) this.host.classList.remove(name);
+      this.inheritedClasses.clear();
+      for (const name of this.select.classList) {
+        if (name === "chosen-rtl" || this.options.inherit_select_classes && !name.startsWith("chosen-native")) {
+          this.host.classList.add(name);
+          this.inheritedClasses.add(name);
+        }
+      }
       const direction = this.options.rtl || this.select.classList.contains("chosen-rtl") ? "rtl" : this.select.dir;
       if (direction) this.host.dir = direction;
       else this.host.removeAttribute("dir");

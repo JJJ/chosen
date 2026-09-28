@@ -231,6 +231,23 @@ test('the generated control follows source direction and the classic RTL option'
   dom.window.close();
 });
 
+test('source class inheritance is opt-in, updates cleanly, and omits internal classes', () => {
+  const { dom, select } = fixture('<select class="product-select"><option value="a">Alpha</option></select>');
+  const defaultChosen = new Chosen(select);
+  assert.equal(defaultChosen.host.classList.contains('product-select'), false);
+  defaultChosen.destroy();
+  const chosen = new Chosen(select, { inherit_select_classes: true });
+  assert.equal(chosen.host.classList.contains('product-select'), true);
+  assert.equal(chosen.host.classList.contains('chosen-native__select'), false);
+  select.classList.replace('product-select', 'other-select');
+  chosen.update();
+  assert.equal(chosen.host.classList.contains('product-select'), false);
+  assert.equal(chosen.host.classList.contains('other-select'), true);
+  chosen.destroy();
+  assert.equal(select.classList.contains('other-select'), true);
+  dom.window.close();
+});
+
 test('selected value and group options change closed display without changing result labels', () => {
   const { dom, select } = fixture('<select><optgroup label="Team"><option value="alpha" selected>Alpha</option></optgroup></select>');
   const chosen = new Chosen(select, { display_selected_value: true, include_group_label_in_selected: true });

@@ -52,6 +52,7 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `backspace_deletes_choices` | `true` | Remove the final selected choice when Backspace is pressed in an empty multiple-select search field. |
 | `multiselect_allow_tab_to_select` | `false` | Select the highlighted multiple-select result on Tab while continuing normal focus navigation. |
 | `rtl` | `false` | Set right-to-left direction on the generated control; source `dir` and legacy `chosen-rtl` class also work. Call `update()` after changing source direction. |
+| `inherit_select_classes` | `false` | Copy source select classes to the generated host. The legacy `chosen-rtl` marker passes through even when this is off; internal `chosen-native` classes are not copied. Call `update()` after changing classes. |
 | `aria_label` | associated label or select label | Accessible name for the generated search input. |
 
 The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation, bulk actions, fixed or custom-width dropdowns, or the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.
