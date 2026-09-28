@@ -14,8 +14,8 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `deselect_selected_results` | Yes | Yes | React prop: `deselectSelectedResults`; defaults to `false`. Both demos opt in to selected-row removal. |
 | `select_all_text` | No | No | Localized bulk action label. |
 | `deselect_all_text` | No | No | Localized bulk action label. |
-| `disable_search` | No | No | Single-select search visibility and type navigation. |
-| `disable_search_threshold` | No | No | Search visibility based on option count. |
+| `disable_search` | Yes | Yes | Single-select search is hidden; typing prefixes navigates results. React prop: `disableSearch`. |
+| `disable_search_threshold` | Yes | Yes | Hide single-select search at or below the option count. React prop: `disableSearchThreshold`. |
 | `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |
 | `inherit_select_classes` | Yes | Yes | Vanilla opts into copying source classes; React uses `className` directly on its generated host. |
 | `inherit_option_classes` | Yes | Yes | Option and group classes reach result rows; opt in to copying option classes to selected chips. React uses `className` on option data and `inheritOptionClasses`. |

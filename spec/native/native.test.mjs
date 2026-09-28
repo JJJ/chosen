@@ -159,6 +159,23 @@ test('classic search settings reach the shared matcher without changing select v
   dom.window.close();
 });
 
+test('single search can be hidden while prefix typing navigates options', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="a">Apple</option><option value="b">Banana</option></select>');
+  const chosen = new Chosen(select, { disable_search_threshold: 3 });
+  assert.equal(chosen.input.readOnly, true);
+  assert.equal(chosen.input.getAttribute('aria-autocomplete'), 'none');
+  chosen.open();
+  key(chosen.input, 'b');
+  assert.equal(chosen.available[chosen.activeIndex].label, 'Banana');
+  key(chosen.input, 'Enter');
+  assert.equal(select.value, 'b');
+  chosen.options.disable_search_threshold = 0;
+  chosen.update();
+  assert.equal(chosen.input.readOnly, false);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('contains search can prefer a label prefix without changing result order', () => {
   const { dom, select } = fixture('<select><option value="react">React</option><option value="angular">Angular</option></select>');
   const chosen = new Chosen(select, { search_contains: true, highlight_prefix_matches: true });

@@ -59,6 +59,17 @@
   .chosen-native__input { font-size: 16px; font-size: max(16px, 1em); }
 }
 .chosen-native__input::placeholder { color: var(--chosen-placeholder-color, #666); opacity: 1; }
+.chosen-native--no-search .chosen-native__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.chosen-native--no-search .chosen-native__value { flex: 1 1 auto; }
+.chosen-native__value--placeholder { color: var(--chosen-placeholder-color, #666); }
+.chosen-native--no-search .chosen-native__clear { position: relative; z-index: 1; }
 .chosen-native__value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chosen-native__group-name { color: var(--chosen-group-color, #666); }
 .chosen-native__chips { display: contents; }

@@ -28,6 +28,8 @@ export interface ChosenOptions {
   open_on_label_click?: boolean;
   multiselect_allow_tab_to_select?: boolean;
   search_input_type?: 'search' | 'text';
+  disable_search?: boolean;
+  disable_search_threshold?: number;
   rtl?: boolean;
   inherit_select_classes?: boolean;
   inherit_option_classes?: boolean;

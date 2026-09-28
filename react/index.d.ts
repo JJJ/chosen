@@ -53,6 +53,8 @@ export interface ChosenProps {
   singleBackstrokeDelete?: boolean;
   multiselectAllowTabToSelect?: boolean;
   searchInputType?: 'search' | 'text';
+  disableSearch?: boolean;
+  disableSearchThreshold?: number;
   searchContains?: boolean;
   highlightPrefixMatches?: boolean;
   enableSplitWordSearch?: boolean;

@@ -137,6 +137,21 @@ async function main() {
         throw new Error(`${name}: React demo value search failed`);
       }
       await single.press('Escape');
+      const season = page.getByRole('combobox', { name: 'Season' });
+      const seasonStyle = await season.evaluate(input => ({ readOnly: input.readOnly,
+        autocomplete: input.getAttribute('aria-autocomplete'), opacity: getComputedStyle(input).opacity }));
+      if (!seasonStyle.readOnly || seasonStyle.autocomplete !== 'none' || seasonStyle.opacity !== '0') {
+        throw new Error(`${name}: search-free React input styling failed (${JSON.stringify(seasonStyle)})`);
+      }
+      await season.click();
+      await season.press('w');
+      if (await season.getAttribute('aria-activedescendant') !== 'react-season-option-3') {
+        throw new Error(`${name}: search-free React prefix navigation failed`);
+      }
+      await season.press('Enter');
+      if (await page.evaluate(() => document.querySelector('select[name="season"]').value) !== 'winter') {
+        throw new Error(`${name}: search-free React selection failed`);
+      }
       if (name === 'Chromium') await page.addScriptTag({ url: pathToFileURL(path.join(root, 'node_modules/axe-core/axe.min.js')).href });
       const audit = async theme => {
         if (name !== 'Chromium') return;

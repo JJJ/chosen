@@ -95,6 +95,17 @@
   color: var(--chosen-placeholder-color, #666);
   opacity: 1;
 }
+.chosen-react--no-search .chosen-react__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.chosen-react--no-search .chosen-react__value { flex: 1 1 auto; }
+.chosen-react__value--placeholder { color: var(--chosen-placeholder-color, #666); }
+.chosen-react--no-search .chosen-react__clear { position: relative; z-index: 1; }
 
 .chosen-react__chip {
   display: inline-flex;

@@ -76,9 +76,9 @@ async function check(name, engine) {
     await skills.press('Tab');
     const tabSelection = await page.evaluate(() => ({
       values: new FormData(document.querySelector('form')).getAll('skills'),
-      focus: document.activeElement?.textContent?.trim()
+      focus: document.activeElement?.id
     }));
-    if (JSON.stringify(tabSelection.values) !== '["typography"]' || tabSelection.focus !== 'Reset form') {
+    if (JSON.stringify(tabSelection.values) !== '["typography"]' || tabSelection.focus !== 'native-season-native') {
       throw new Error(`${name}: opt-in Tab selection or focus navigation failed (${JSON.stringify(tabSelection)})`);
     }
     await page.getByRole('button', { name: 'Use right-to-left skills' }).click();
@@ -106,6 +106,21 @@ async function check(name, engine) {
       throw new Error(`${name}: demo value search failed`);
     }
     await project.press('Escape');
+    const season = page.getByRole('combobox', { name: 'Season' });
+    const seasonStyle = await season.evaluate(input => ({ readOnly: input.readOnly,
+      autocomplete: input.getAttribute('aria-autocomplete'), opacity: getComputedStyle(input).opacity }));
+    if (!seasonStyle.readOnly || seasonStyle.autocomplete !== 'none' || seasonStyle.opacity !== '0') {
+      throw new Error(`${name}: search-free input styling failed (${JSON.stringify(seasonStyle)})`);
+    }
+    await season.click();
+    await season.press('w');
+    if (await season.getAttribute('aria-activedescendant') !== 'native-season-native-option-4') {
+      throw new Error(`${name}: search-free prefix navigation failed`);
+    }
+    await season.press('Enter');
+    if (await page.evaluate(() => document.querySelector('#native-season').value) !== 'winter') {
+      throw new Error(`${name}: search-free selection failed`);
+    }
     if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
     if (name === 'Chromium') {
       await page.addScriptTag({ path: path.join(__dirname, '..', 'node_modules/axe-core/axe.min.js') });

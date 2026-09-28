@@ -39,6 +39,8 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `search_in_values` | `false` | Also match option values. |
 | `max_search_length` | `1000` | Limit the query used for matching without truncating the input. |
 | `search_input_type` | `search` | Set to `text` when the host application requires a text input. Input styling uses classes, not its type. |
+| `disable_search` | `false` | Hide search on a single select. Prefix typing still moves through open results. |
+| `disable_search_threshold` | `0` | Hide single-select search when the source select has this many options or fewer. |
 | `normalize_search_text` | identity function | Transform the query and labels before built-in matching. |
 | `search_matcher` | built-in matching | Replace built-in matching with `(query, normalizedItem) => boolean`. The item has `kind`, `label`, and (for options) `value`. |
 | `max_shown_results` | unlimited | Limit the number of visible option rows, excluding group headings. |

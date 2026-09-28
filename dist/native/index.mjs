@@ -309,6 +309,8 @@ var Chosen = class {
       multiselect_allow_tab_to_select: false,
       single_backstroke_delete: true,
       search_input_type: "search",
+      disable_search: false,
+      disable_search_threshold: 0,
       max_search_length: 1e3,
       display_selected_options: true,
       display_disabled_options: true,
@@ -331,6 +333,8 @@ var Chosen = class {
     this.opened = false;
     this.activeIndex = -1;
     this.pendingBackstrokeValue = null;
+    this.typeahead = "";
+    this.typeaheadTimer = null;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -461,7 +465,10 @@ var Chosen = class {
     this.entries = parsed.entries;
     this.nodes = parsed.nodes;
     this.input.disabled = this.select.disabled;
-    this.input.readOnly = this.select.hasAttribute("readonly");
+    this.searchDisabled = !this.multiple && (this.options.disable_search || this.select.options.length <= this.options.disable_search_threshold && !this.options.create_option);
+    this.input.readOnly = this.select.hasAttribute("readonly") || this.searchDisabled;
+    this.input.setAttribute("aria-autocomplete", this.searchDisabled ? "none" : "list");
+    this.host.classList.toggle("chosen-native--no-search", this.searchDisabled);
     this.input.setAttribute("aria-required", String(this.select.required));
     this.host.classList.toggle("chosen-native--disabled", this.select.disabled);
     if (this.select.disabled) this.close();
@@ -485,7 +492,7 @@ var Chosen = class {
         if (entry.value === this.pendingBackstrokeValue) chip.classList.add("chosen-native__chip--pending");
         if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
         chip.append(selectedDisplay(entry));
-        if (!this.select.disabled && !this.input.readOnly) {
+        if (!this.select.disabled && !this.select.hasAttribute("readonly")) {
           const remove = element("button", "chosen-native__remove", "\xD7");
           remove.type = "button";
           remove.setAttribute("aria-label", `Remove ${entry.label}`);
@@ -498,9 +505,11 @@ var Chosen = class {
         this.chips.append(chip);
       }
     }
-    this.value.replaceChildren(...!this.multiple && selected.length ? [selectedDisplay(selected[0])] : []);
-    this.value.hidden = this.multiple || !selected.length || this.opened || !!this.input.value;
-    this.clearButton.hidden = this.multiple || !this.options.allow_single_deselect || !selected.length || !(this.select.options[0]?.value === "" && this.select.options[0]?.text === "") || this.select.disabled || this.input.readOnly;
+    const noSearchPlaceholder = this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? this.options.placeholder_text_single ?? this.options.placeholder_text;
+    this.value.replaceChildren(...!this.multiple && selected.length ? [selectedDisplay(selected[0])] : this.searchDisabled ? [document.createTextNode(noSearchPlaceholder)] : []);
+    this.value.classList.toggle("chosen-native__value--placeholder", this.searchDisabled && !selected.length);
+    this.value.hidden = this.multiple || !selected.length && !this.searchDisabled || !this.searchDisabled && (this.opened || !!this.input.value);
+    this.clearButton.hidden = this.multiple || !this.options.allow_single_deselect || !selected.length || !(this.select.options[0]?.value === "" && this.select.options[0]?.text === "") || this.select.disabled || this.select.hasAttribute("readonly");
     this.input.placeholder = this.opened ? this.options.search_placeholder || "Search options" : selected.length ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ?? this.options.placeholder_text;
     this.status.textContent = selected.length ? `Selected: ${selected.map((entry) => entry.label).join(", ")}.` : "No selection.";
   }
@@ -588,7 +597,7 @@ var Chosen = class {
   }
   choose(entry, remove = false, keepOpen = false) {
     const option = this.nodes[entry.index];
-    if (!option || option.disabled || option.hidden || option.parentElement?.disabled || this.select.disabled || this.input.readOnly) return;
+    if (!option || option.disabled || option.hidden || option.parentElement?.disabled || this.select.disabled || this.select.hasAttribute("readonly")) return;
     if (this.multiple) {
       if (!remove && !option.selected && this.options.max_selected_options != null && Array.from(this.select.options).filter((item) => item.selected).length >= this.options.max_selected_options) {
         emit(this.select, "chosen:maxselected", this);
@@ -611,7 +620,7 @@ var Chosen = class {
     this.input.focus();
   }
   clear() {
-    if (this.multiple || this.select.disabled || this.input.readOnly) return;
+    if (this.multiple || this.select.disabled || this.select.hasAttribute("readonly")) return;
     const blank = this.select.options[0];
     if (blank?.value !== "" || blank.text !== "") return;
     if (!blank || blank.selected) return;
@@ -625,7 +634,7 @@ var Chosen = class {
     this.select.dispatchEvent(new Event("change", { bubbles: true }));
   }
   open() {
-    if (this.destroyed || this.opened || this.select.disabled || this.input.readOnly) return;
+    if (this.destroyed || this.opened || this.select.disabled || this.select.hasAttribute("readonly")) return;
     this.opened = true;
     this.popup.hidden = false;
     this.host.classList.add("chosen-native--open");
@@ -637,6 +646,8 @@ var Chosen = class {
   close() {
     if (!this.opened) return;
     this.pendingBackstrokeValue = null;
+    this.typeahead = "";
+    clearTimeout(this.typeaheadTimer);
     this.opened = false;
     this.popup.hidden = true;
     this.host.classList.remove("chosen-native--open");
@@ -650,6 +661,28 @@ var Chosen = class {
   keyDown(event) {
     if (event.isComposing || this.select.disabled) return;
     const key = event.key;
+    if (this.searchDisabled && this.opened && key.length === 1 && /\S/.test(key) && !event.altKey && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      let query = this.typeahead + key;
+      const find = (text) => this.available.findIndex((item) => {
+        if (item.kind !== "option" || item.disabled) return false;
+        const label = String(this.options.normalize_search_text?.(item.label) ?? item.label);
+        const prefix = String(this.options.normalize_search_text?.(text) ?? text);
+        return this.options.case_sensitive_search ? label.startsWith(prefix) : label.toLowerCase().startsWith(prefix.toLowerCase());
+      });
+      let index = find(query);
+      if (index < 0) {
+        query = key;
+        index = find(query);
+      }
+      this.typeahead = query;
+      clearTimeout(this.typeaheadTimer);
+      this.typeaheadTimer = setTimeout(() => {
+        this.typeahead = "";
+      }, 500);
+      if (index >= 0) this.highlight(index);
+      return;
+    }
     if (key !== "Backspace" && this.pendingBackstrokeValue !== null) {
       this.pendingBackstrokeValue = null;
       this.renderSelection();
@@ -704,6 +737,7 @@ var Chosen = class {
   destroy() {
     if (this.destroyed) return;
     this.close();
+    clearTimeout(this.typeaheadTimer);
     this.destroyed = true;
     for (const label of this.boundLabels) label.removeEventListener("click", this.onLabelClick);
     this.boundLabels.clear();

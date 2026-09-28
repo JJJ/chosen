@@ -62,6 +62,18 @@
           </select>
           <p>Search the groups and select up to three items. The selected chips show group names and option values, while the dropdown keeps option labels. Click a selected result or press Enter on it to remove it; Backspace removes the last chip. This example also selects the highlighted result with Tab, then moves focus onward.</p>
         </section>
+        <section class="native-demo-field">
+          <h2>Search-free single select</h2>
+          <label for="native-season">Season</label>
+          <select id="native-season" name="season" data-placeholder="Choose a season">
+            <option value=""></option>
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+          </select>
+          <p>Open the list and type “w” to highlight Winter. Search is hidden because this select has five options and uses <code>disable_search_threshold: 5</code>.</p>
+        </section>
         <div class="native-demo-actions">
           <button type="reset">Reset form</button>
           <button type="button" id="native-add">Add a project</button>

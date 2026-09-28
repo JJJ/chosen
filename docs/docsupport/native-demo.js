@@ -1,15 +1,17 @@
 'use strict';
 const project = document.getElementById('native-project');
 const skills = document.getElementById('native-skills');
+const season = document.getElementById('native-season');
 const events = document.getElementById('native-events');
 const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
 const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
   multiselect_allow_tab_to_select: true, display_selected_value: true,
   include_group_label_in_selected: true, deselect_selected_results: true,
   hide_results_on_select: false });
+new ChosenNative.Chosen(season, { disable_search_threshold: 5 });
 let added = 0;
 
-for (const select of [project, skills]) {
+for (const select of [project, skills, season]) {
   for (const name of ['input', 'change', 'chosen:showing_dropdown', 'chosen:hiding_dropdown', 'chosen:maxselected']) {
     select.addEventListener(name, () => {
       events.textContent = `${select.name}: ${name}\nValues: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;

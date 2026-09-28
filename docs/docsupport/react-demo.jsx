@@ -95,6 +95,18 @@ function Demo() {
               onChange={event => setBasketDisabled(event.target.checked)} /> Disabled</label>
           </div>
         </section>
+        <section className="react-demo-card">
+          <p className="react-demo-eyebrow">Classic search threshold</p>
+          <h2>Search-free single selection</h2>
+          <label htmlFor="react-season">Season</label>
+          <Chosen id="react-season" name="season" options={[
+            { value: 'spring', label: 'Spring' },
+            { value: 'summer', label: 'Summer' },
+            { value: 'autumn', label: 'Autumn' },
+            { value: 'winter', label: 'Winter' }
+          ]} disableSearchThreshold={4} placeholder="Choose a season" />
+          <p className="react-demo-help">Open the list and type “w” to highlight Winter. The search field is hidden at four options or fewer.</p>
+        </section>
       </div>
       <div className="react-demo-actions">
         <button type="submit" onClick={() => setAttempted(true)}>Submit form</button>

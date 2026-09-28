@@ -29,6 +29,7 @@ export const Chosen = forwardRef(function Chosen({
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
   singleBackstrokeDelete = true,
   searchInputType = 'search',
+  disableSearch = false, disableSearchThreshold = 0,
   searchContains = false, splitSearchTerms = false, groupSearch = true,
   highlightPrefixMatches = false,
   enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
@@ -49,6 +50,8 @@ export const Chosen = forwardRef(function Chosen({
   const selectRef = useRef(null);
   const labelPointerDown = useRef(false);
   const labelForwardedClick = useRef(false);
+  const typeahead = useRef('');
+  const typeaheadTimer = useRef(null);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
@@ -60,6 +63,8 @@ export const Chosen = forwardRef(function Chosen({
   const selectedKey = selectedValues.join('\u0000');
   const selectedSet = useMemo(() => new Set(selectedValues), [selectedKey]);
   const entries = useMemo(() => normalizeOptions(options), [options]);
+  const searchDisabled = !multiple && (disableSearch ||
+    entries.filter(item => item.kind === 'option').length <= disableSearchThreshold);
   const searchable = useMemo(() => entries.map(item => item.kind === 'option'
     ? { ...item, selected: selectedSet.has(item.value) }
     : item), [entries, selectedSet]);
@@ -97,6 +102,8 @@ export const Chosen = forwardRef(function Chosen({
     if (controlledOpen === undefined) setInternalOpen(next);
     if (isOpen !== next) onOpenChange?.(next);
     if (!next) {
+      typeahead.current = '';
+      clearTimeout(typeaheadTimer.current);
       setPendingBackstrokeValue(null);
       setQuery('');
       setActiveIndex(-1);
@@ -143,6 +150,10 @@ export const Chosen = forwardRef(function Chosen({
     open: () => { inputRef.current?.focus(); changeOpen(true); },
     close: () => changeOpen(false)
   }), [changeOpen]);
+
+  useEffect(() => {
+    return () => clearTimeout(typeaheadTimer.current);
+  }, []);
 
   useEffect(() => {
     const control = selectRef.current;
@@ -217,6 +228,25 @@ export const Chosen = forwardRef(function Chosen({
 
   const keyDown = (event) => {
     if (disabled) return;
+    if (searchDisabled && isOpen && event.key.length === 1 && /\S/.test(event.key) &&
+      !event.altKey && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      const find = text => available.findIndex(item => {
+        if (item.kind !== 'option' || item.disabled) return false;
+        const label = String(normalizeSearchText?.(item.label) ?? item.label);
+        const prefix = String(normalizeSearchText?.(text) ?? text);
+        return caseSensitiveSearch ? label.startsWith(prefix) :
+          label.toLowerCase().startsWith(prefix.toLowerCase());
+      });
+      let queryText = typeahead.current + event.key;
+      let index = find(queryText);
+      if (index < 0) { queryText = event.key; index = find(queryText); }
+      typeahead.current = queryText;
+      clearTimeout(typeaheadTimer.current);
+      typeaheadTimer.current = setTimeout(() => { typeahead.current = ''; }, 500);
+      if (index >= 0) setActiveIndex(index);
+      return;
+    }
     if (event.key !== 'Backspace') setPendingBackstrokeValue(null);
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
@@ -255,7 +285,7 @@ export const Chosen = forwardRef(function Chosen({
       <span className="chosen-react__group-name">{item.groupLabel}: </span>}
     {displaySelectedValue ? item.value : item.label}
   </>;
-  const showSingleValue = !multiple && !!selectedOptions[0]?.label && !isOpen && !query;
+  const showSingleValue = !multiple && !!selectedOptions[0]?.label && (searchDisabled || (!isOpen && !query));
   const closedPlaceholder = (multiple ? placeholderTextMultiple : placeholderTextSingle) ??
     placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
   const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
@@ -295,7 +325,7 @@ export const Chosen = forwardRef(function Chosen({
   }
   flushGroup();
 
-  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={style}>
+  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${searchDisabled ? ' chosen-react--no-search' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={style}>
     <select ref={attachNativeSelect} className="chosen-react__native" tabIndex={-1} aria-hidden="true"
       name={name} form={form} required={required} disabled={disabled} multiple={multiple}
       value={multiple ? selectedValues : selectedValues[0] ?? ''} onChange={() => {}}
@@ -317,16 +347,17 @@ export const Chosen = forwardRef(function Chosen({
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}
       </span>)}
       {showSingleValue && <span className="chosen-react__value" aria-hidden="true">{selectedDisplay(selectedOptions[0])}</span>}
+      {searchDisabled && !showSingleValue && <span className="chosen-react__value chosen-react__value--placeholder" aria-hidden="true">{closedPlaceholder}</span>}
       <input ref={inputRef} id={baseId}
         className={`chosen-react__input${showSingleValue ? ' chosen-react__input--has-value' : ''}`}
         type={searchInputType === 'text' ? 'text' : 'search'}
-        role="combobox" aria-autocomplete="list" aria-haspopup="listbox"
+        role="combobox" aria-autocomplete={searchDisabled ? 'none' : 'list'} aria-haspopup="listbox"
         aria-expanded={isOpen} aria-controls={listId}
         aria-activedescendant={isOpen && activeOption ? `${baseId}-option-${activeOption.index}` : undefined}
         aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy ? `${ariaDescribedBy} ${statusId}` : statusId}
         aria-invalid={ariaInvalid} aria-required={required || undefined}
-        placeholder={visiblePlaceholder} value={query} disabled={disabled} readOnly={readOnly}
+        placeholder={visiblePlaceholder} value={query} disabled={disabled} readOnly={readOnly || searchDisabled}
         autoComplete="off" onFocus={event => { onFocus?.(event); }}
         onBlur={onInputBlur} onClick={() => {
           if (labelForwardedClick.current) { labelForwardedClick.current = false; return; }

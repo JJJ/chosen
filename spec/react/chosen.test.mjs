@@ -172,6 +172,18 @@ test('React defaults to classic word-start search and no-results copy', () => {
   assert.ok(screen.getByRole('option', { name: 'Banana' }));
 });
 
+test('React hides single search at threshold and supports prefix navigation', () => {
+  render(h(Chosen, { options, disableSearchThreshold: 3, 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  assert.equal(input.readOnly, true);
+  assert.equal(input.getAttribute('aria-autocomplete'), 'none');
+  fireEvent.click(input);
+  fireEvent.keyDown(input, { key: 'b' });
+  assert.equal(input.getAttribute('aria-activedescendant'), screen.getByRole('option', { name: 'Banana' }).id);
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.equal(document.querySelector('.chosen-react__value')?.textContent, 'Banana');
+});
+
 test('React carries option classes and uses literal localized result copy', () => {
   const styled = [{ label: 'Team', className: 'team-group', options: [
     { value: 'a', label: 'Alpha', className: 'leader' }, { value: 'b', label: 'Beta' }

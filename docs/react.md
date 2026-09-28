@@ -56,6 +56,9 @@ and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
 `maxShownResults` bound visible results and matching work. Set
 `searchInputType="text"` to use a text input instead of the classic default
 search input; the theme uses classes rather than input-type selectors. Set
+`disableSearch` to hide search on a single select, or set
+`disableSearchThreshold` to hide it when the option count is at or below the
+threshold. Prefix typing still moves through open results. Set
 `resultsCountText={count => count + ' choices'}` to localize the live result
 count. `noResultsText` is used literally before the query, with one space.
 Set `className` on option or group data to style result rows; set
