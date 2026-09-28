@@ -29,6 +29,7 @@ The compiled JavaScript and CSS files are located in the `/dist` directory. This
 - `chosen.css.map` - CSS source map
 
 The `/docs` directory also contains copies of these files for GitHub Pages.
+GitHub Pages publishes it automatically when changes reach `master`.
 Each [release](https://github.com/JJJ/chosen/releases/latest) includes both a
 full archive and a compiled distribution archive.
 

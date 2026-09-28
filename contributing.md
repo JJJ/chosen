@@ -207,16 +207,19 @@ If you're interested, you can find the task in [Gruntfile.coffee](https://github
 This documentation is for Chosen maintainers.  You must have write permissions for this repository to cut a release.
 
 1. Update the version in `package.json` and `package-lock.json`, then build,
-   test, and commit the generated files.
+   test, and commit the generated `dist/` and `docs/` files. CI checks that a
+   fresh build leaves both directories unchanged.
 2. Run `grunt prep-release` and review the generated ZIP archives and docs
    version. Run `npm pack --dry-run` to review the npm package contents. Commit
    any docs changes.
-3. Tag the release commit with its version (for example, `3.0.2`) and push the
-   commit and tag.
+3. Merge the release commit into `master`, then tag that commit with its version
+   (for example, `3.0.2`) and push the tag. GitHub Pages automatically publishes
+   the committed `docs/` directory when `master` changes; pushing a tag alone
+   does not update the site.
 4. Draft a GitHub release for that tag, attach the ZIP archives, and publish
    the release. The [npm publish workflow](.github/workflows/publish.yml)
    verifies that the tag matches `package.json`, runs the browser suites, and
    publishes `chosen-jjj` using npm trusted publishing.
-5. Check the npm package and release artifacts. GitHub Pages serves the
-   `docs/` directory from `master`; verify the [docs site](https://jjj.github.io/chosen/)
-   after the release commit is merged.
+5. Check the npm package and release artifacts. Verify the
+   [docs site](https://jjj.github.io/chosen/) shows the release commit. The npm
+   workflow also checks that the tagged `dist/` and `docs/` assets are current.

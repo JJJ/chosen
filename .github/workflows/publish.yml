@@ -32,4 +32,6 @@ jobs:
       - run: npm test
         env:
           CHROME_EXECUTABLE_PATH: /usr/bin/google-chrome
+      - name: Verify tagged Pages assets
+        run: git diff --exit-code -- dist docs
       - run: npm publish --access public

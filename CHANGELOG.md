@@ -68,6 +68,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
 ### Maintenance
+- Verify that generated `dist/` and `docs/` files are committed before CI and tagged npm releases pass; GitHub Pages already publishes `master/docs` automatically (harvesthq/chosen#2657).
 - Add an interactive React demo with native form submission, validation, multiple selection, selected/disabled result visibility switches, right-to-left layout, and light/dark token themes.
 - Cover bulk actions, selected-choice summaries and removal, single clearing, long labels, and RTL layouts in the visual fixtures. Audit representative dark controls and dropdowns for color contrast.
 - Complete the options reference and add matching jQuery, Prototype, and wiki recipes for search, option creation, selection, group actions, readonly controls, and dropdown sizing.
