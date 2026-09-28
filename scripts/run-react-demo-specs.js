@@ -20,6 +20,12 @@ async function main() {
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(demo);
+      const currentNav = await page.locator('.site-nav [aria-current="page"]').allTextContents();
+      if (JSON.stringify(currentNav) !== '["React demo"]') throw new Error(`${name}: wrong active demo navigation`);
+      for (const href of ['#react-single-example', '#react-multiple-example', '#react-season-example']) {
+        if (!await page.locator(`.demo-quick-tests a[href="${href}"]`).count() ||
+          !await page.locator(href).count()) throw new Error(`${name}: broken quick-test link ${href}`);
+      }
       const single = page.getByRole('combobox', { name: 'Favorite fruit' });
       const multiple = page.getByRole('combobox', { name: 'Fruit basket' });
       const singleControls = page.getByRole('group', { name: 'Single select examples' });
@@ -50,6 +56,17 @@ async function main() {
       };
       await single.waitFor();
       await multiple.waitFor();
+      await multiple.fill('zzzz');
+      if (!await page.getByRole('option', { name: 'Other' }).count() ||
+        !(await page.locator('.react-demo-event output').textContent()).includes('no results (zzzz)')) {
+        throw new Error(`${name}: pinned result or event feedback missing in quick test`);
+      }
+      await multiple.fill('New fruit');
+      await multiple.press('Enter');
+      if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('basket'))) !== '["apple","New fruit"]') {
+        throw new Error(`${name}: quick-test Enter did not create the new fruit`);
+      }
+      await page.reload();
       await checkChevron('.react-demo-card:first-child', 'ltr');
       await checkChevron('.react-demo-tailwind', 'ltr');
       const checkGroupIndent = async direction => {

@@ -42,6 +42,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Correct the React demo's active navigation link and add quick tests and visible event feedback to both new-edition demos.
 - Parse the classic scalar `data-*` initialization options in vanilla with strict value validation and explicit JavaScript precedence, forward applicable source ARIA attributes, and support native search/lifecycle events and open/close/activate commands. React gains callback equivalents for ready, popup, search, empty results, and selection limits.
 - Keep marked vanilla and React options visible during search without counting them as matches or selecting unmatched pinned results with Select all. Add opt-in group-heading selection through native `select-by-group` and React `selectByGroup`; selectable headings are listbox option rows with `chosen-native__group-label--selectable` and `chosen-react__group--selectable` selectors.
 - Add the classic opt-in creation settings to vanilla and React. Vanilla appends a native option or calls `create_option`; React accepts `createOption` and `onCreateOption`, retains created options in its hidden select, and passes new values through `onChange`. Creation rows use `chosen-native__option--create` and `chosen-react__option--create` selectors.

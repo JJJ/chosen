@@ -18,7 +18,7 @@
         <nav class="site-nav" aria-label="Primary navigation">
           <a href="index.html">jQuery demo</a>
           <a href="index.proto.html">Prototype demo</a>
-          <a class="is-current" href="native.html">Vanilla demo</a>
+          <a class="is-current" aria-current="page" href="native.html">Vanilla demo</a>
           <a href="react.html">React demo</a>
           <a href="options.html">Options &amp; API</a>
           <a href="https://github.com/JJJ/chosen">GitHub</a>
@@ -32,8 +32,17 @@
       </div>
     </header>
     <main>
+      <section class="demo-quick-tests" aria-labelledby="native-quick-tests">
+        <h2 id="native-quick-tests">Quick tests</h2>
+        <ol>
+          <li><a href="#native-single-example">Single select:</a> search <code>ops-42</code>, choose Operations, then clear it.</li>
+          <li><a href="#native-multiple-example">Multiple select:</a> search <code>zzzz</code> to see Other remain visible, then type <code>New skill</code> and press Enter to create it.</li>
+          <li><a href="#native-multiple-example">Groups and limits:</a> clear the search, choose Design, then try a fourth skill. The event log reports the limit.</li>
+          <li><a href="#native-season-example">Floating dropdown:</a> open Season, then scroll the page while its wider list is open.</li>
+        </ol>
+      </section>
       <form id="native-demo-form" class="native-demo-form">
-        <section class="native-demo-field">
+        <section id="native-single-example" class="native-demo-field">
           <h2>Single select</h2>
           <label for="native-project">Project</label>
           <select id="native-project" name="project" required>
@@ -46,7 +55,7 @@
           <p>Search for “ops-42” to find Operations by value. Choose a project, then clear or reset it. The original select submits the value.</p>
           <label><input id="native-slow-search" type="checkbox"> Delay search by 250 ms</label>
         </section>
-        <section class="native-demo-field">
+        <section id="native-multiple-example" class="native-demo-field">
           <h2>Multiple select and groups</h2>
           <label for="native-skills">Skills</label>
           <select id="native-skills" name="skills" multiple select-by-group data-create_option_text="Add skill:">
@@ -64,7 +73,7 @@
           </select>
           <p>Search the groups, click a group heading to select its available skills, or type a new skill and choose “Add skill”. “Other” remains visible during search. Select up to three items or paste “Research, Testing”. Click a selected result or press Enter on it to remove it; Backspace removes the last chip. This example also selects the highlighted result with Tab, then moves focus onward.</p>
         </section>
-        <section class="native-demo-field">
+        <section id="native-season-example" class="native-demo-field">
           <h2>Search-free single select</h2>
           <label for="native-season">Season</label>
           <select id="native-season" name="season" data-placeholder="Choose a season" data-disable-search-threshold="5">

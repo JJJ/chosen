@@ -21,9 +21,11 @@ new ChosenNative.Chosen(season, {
 let added = 0;
 
 for (const select of [project, skills, season]) {
-  for (const name of ['input', 'change', 'chosen:showing_dropdown', 'chosen:hiding_dropdown', 'chosen:maxselected']) {
-    select.addEventListener(name, () => {
-      events.textContent = `${select.name}: ${name}\nValues: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
+  for (const name of ['input', 'change', 'chosen:showing_dropdown', 'chosen:hiding_dropdown',
+    'chosen:search', 'chosen:search_updated', 'chosen:no_results', 'chosen:maxselected']) {
+    select.addEventListener(name, event => {
+      const query = event.detail?.search_term;
+      events.textContent = `${select.name}: ${name}${query === undefined ? '' : ` (${query})`}\nValues: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
     });
   }
 }

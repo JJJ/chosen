@@ -17,8 +17,8 @@
         <nav class="site-nav" aria-label="Primary navigation">
           <a href="index.html">jQuery demo</a>
           <a href="index.proto.html">Prototype demo</a>
-          <a class="is-current" href="native.html">Vanilla demo</a>
-          <a href="react.html">React demo</a>
+          <a href="native.html">Vanilla demo</a>
+          <a class="is-current" aria-current="page" href="react.html">React demo</a>
           <a href="options.html">Options &amp; API</a>
           <a href="https://github.com/JJJ/chosen">GitHub</a>
           <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
@@ -31,6 +31,15 @@
       </div>
     </header>
     <main>
+      <section class="demo-quick-tests" aria-labelledby="react-quick-tests">
+        <h2 id="react-quick-tests">Quick tests</h2>
+        <ol>
+          <li><a href="#react-single-example">Single select:</a> search <code>orchard-42</code>, choose Orchard, then clear it.</li>
+          <li><a href="#react-multiple-example">Multiple select:</a> search <code>zzzz</code> to see Other remain visible, then type <code>New fruit</code> and press Enter to create it.</li>
+          <li><a href="#react-multiple-example">Groups and limits:</a> clear the search, choose Citrus, add another fruit, then try a fourth. The event below reports the limit.</li>
+          <li><a href="#react-season-example">Floating dropdown:</a> open Season, then scroll the page while its wider list is open.</li>
+        </ol>
+      </section>
       <div id="react-demo-root"></div>
       <h2>Use it in your project</h2>
       <p>The React edition is currently experimental. It needs React 18 or newer and does not load jQuery or Prototype. Import its CSS separately, then customize the same <code>--chosen-*</code> tokens used by classic Chosen.</p>

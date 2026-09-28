@@ -137,6 +137,17 @@ samp {
   color: #ffffff;
 }
 
+.demo-quick-tests {
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+}
+
+.demo-quick-tests h2 { margin: 0 0 .65rem; font-size: 1.15rem; }
+.demo-quick-tests ol { margin: 0; padding-inline-start: 1.4rem; }
+.demo-quick-tests li + li { margin-top: .45rem; }
+
 .theme-toggle {
   padding: 4px 8px;
   border: 1px solid #687083;
@@ -581,6 +592,8 @@ footer {
   border-color: #30363d;
   background: #1d2128;
 }
+
+:root[data-theme="dark"] .demo-quick-tests { border-color: #3d444d; }
 
 :root[data-theme="dark"] .site-header {
   background: #11151c;

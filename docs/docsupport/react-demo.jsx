@@ -29,6 +29,7 @@ function Demo() {
   const [basketDisabled, setBasketDisabled] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [submitted, setSubmitted] = useState('');
+  const [lastEvent, setLastEvent] = useState('Try a control above.');
 
   return <div className="react-demo">
     <div className="react-demo-intro">
@@ -45,7 +46,7 @@ function Demo() {
       setSubmitted('');
     }}>
       <div className="react-demo-grid">
-        <section className="react-demo-card">
+        <section id="react-single-example" className="react-demo-card">
           <p className="react-demo-eyebrow">Standalone default</p>
           <h2>Single selection</h2>
           <label htmlFor="react-fruit">Favorite fruit <span aria-hidden="true">*</span></label>
@@ -72,12 +73,18 @@ function Demo() {
               onChange={event => setSlowSearch(event.target.checked)} /> Delay search</label>
           </div>
         </section>
-        <section className="react-demo-card react-demo-tailwind">
+        <section id="react-multiple-example" className="react-demo-card react-demo-tailwind">
           <p className="react-demo-eyebrow">Scoped Tailwind-compatible tokens</p>
           <h2>Multiple selection</h2>
           <label htmlFor="react-basket">Fruit basket</label>
           <Chosen id="react-basket" name="basket" options={basketOptions} multiple
-            value={basket} onChange={setBasket} maxSelectedOptions={3} maxItemsShown={1}
+            value={basket} onChange={value => { setBasket(value); setLastEvent(`basket: change (${value.join(', ') || 'none'})`); }}
+            onShowingDropdown={() => setLastEvent('basket: showing dropdown')}
+            onHidingDropdown={() => setLastEvent('basket: hiding dropdown')}
+            onSearchUpdated={query => setLastEvent(`basket: search (${query})`)}
+            onNoResults={query => setLastEvent(`basket: no results (${query})`)}
+            onMaxSelected={() => setLastEvent('basket: maximum selected')}
+            maxSelectedOptions={3} maxItemsShown={1}
             createOption persistentCreateOption skipNoResults createOptionText="Add fruit:"
             allowSelectAll allowDeselectAll selectByGroup pasteMultipleValues copyOptionDataAttributes
             multiselectAllowTabToSelect
@@ -102,7 +109,7 @@ function Demo() {
               onChange={event => setBasketDisabled(event.target.checked)} /> Disabled</label>
           </div>
         </section>
-        <section className="react-demo-card">
+        <section id="react-season-example" className="react-demo-card">
           <p className="react-demo-eyebrow">Classic search threshold</p>
           <h2>Search-free single selection</h2>
           <label htmlFor="react-season">Season</label>
@@ -116,6 +123,10 @@ function Demo() {
           <p className="react-demo-help">Open the wider floating list and type “w” to highlight Winter. This example uses a 12rem control, an independently sized fixed dropdown, and hides search at four options or fewer.</p>
         </section>
       </div>
+      <section className="react-demo-event" aria-labelledby="react-event-heading">
+        <h2 id="react-event-heading">Latest basket event</h2>
+        <output role="status">{lastEvent}</output>
+      </section>
       <div className="react-demo-actions">
         <button type="submit" onClick={() => setAttempted(true)}>Submit form</button>
         <button type="reset">Reset</button>

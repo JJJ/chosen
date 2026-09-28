@@ -15,6 +15,23 @@ async function check(name, engine) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(demo);
+    const currentNav = await page.locator('.site-nav [aria-current="page"]').allTextContents();
+    if (JSON.stringify(currentNav) !== '["Vanilla demo"]') throw new Error(`${name}: wrong active demo navigation`);
+    for (const href of ['#native-single-example', '#native-multiple-example', '#native-season-example']) {
+      if (!await page.locator(`.demo-quick-tests a[href="${href}"]`).count() ||
+        !await page.locator(href).count()) throw new Error(`${name}: broken quick-test link ${href}`);
+    }
+    const quickSkills = page.getByRole('combobox', { name: 'Skills' });
+    await quickSkills.fill('zzzz');
+    if (!await page.getByRole('option', { name: 'Other' }).count()) {
+      throw new Error(`${name}: pinned option missing in quick test`);
+    }
+    await quickSkills.fill('New skill');
+    await quickSkills.press('Enter');
+    if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))) !== '["New skill"]') {
+      throw new Error(`${name}: quick-test Enter did not create the new skill`);
+    }
+    await page.reload();
     const project = page.getByRole('combobox', { name: 'Project' });
     await project.click();
     await project.fill('bea');
