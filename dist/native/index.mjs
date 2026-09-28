@@ -367,6 +367,8 @@ var Chosen = class {
     if (!(select instanceof HTMLSelectElement)) throw new TypeError("Chosen needs a select element");
     if (instances.has(select)) throw new Error("Chosen is already initialized on this select");
     this.select = select;
+    this.initialSourceWidth = select.offsetWidth;
+    this.initialComputedWidth = window.getComputedStyle?.(select).width;
     this.options = {
       search_contains: false,
       split_search_terms: false,
@@ -391,6 +393,8 @@ var Chosen = class {
       allow_deselect_all: false,
       paste_multiple_values: false,
       search_delay: 0,
+      dropdown_position: "absolute",
+      recalculate_width_on_update: false,
       select_all_text: "Select all",
       deselect_all_text: "Deselect all",
       more_items_text: (count) => `Show ${count} more...`,
@@ -446,6 +450,7 @@ var Chosen = class {
       if (Array.from(this.select.labels || []).some((label) => label.contains(event.target))) return;
       this.close();
     };
+    this.onReposition = () => this.positionDropdown();
     this.onKeyDown = (event) => this.keyDown(event);
     this.onInput = () => {
       if (!this.composing) this.queueSearch();
@@ -562,9 +567,64 @@ var Chosen = class {
     this.host.classList.toggle("chosen-native--no-search", this.searchDisabled);
     this.input.setAttribute("aria-required", String(this.select.required));
     this.host.classList.toggle("chosen-native--disabled", this.select.disabled);
+    this.updateWidth();
     if (this.select.disabled) this.close();
     this.renderSelection();
     this.renderResults();
+    if (this.opened) this.positionDropdown();
+  }
+  updateWidth() {
+    const width = this.options.width;
+    if (width === false) {
+      this.host.style.removeProperty("width");
+      this.host.style.removeProperty("min-width");
+      return;
+    }
+    if (width != null) {
+      this.host.style.width = typeof width === "number" ? `${width}px` : String(width);
+      this.host.style.minWidth = "0";
+      return;
+    }
+    let measured = this.initialSourceWidth;
+    if (this.options.recalculate_width_on_update) {
+      this.select.classList.remove("chosen-native__select");
+      measured = this.select.offsetWidth;
+      this.select.classList.add("chosen-native__select");
+    }
+    if (measured > 0) {
+      this.host.style.width = `${measured}px`;
+      this.host.style.minWidth = "0";
+    } else if (this.initialComputedWidth && this.initialComputedWidth !== "auto" && this.initialComputedWidth !== "0px") {
+      this.host.style.width = this.initialComputedWidth;
+      this.host.style.minWidth = "0";
+    }
+  }
+  positionDropdown() {
+    const fixed = this.options.dropdown_position === "fixed";
+    const width = this.options.dropdown_width;
+    this.host.classList.toggle("chosen-native--floating", width != null || fixed);
+    if (!fixed) {
+      this.popup.style.removeProperty("position");
+      this.popup.style.removeProperty("top");
+      this.popup.style.removeProperty("left");
+      this.popup.style.removeProperty("right");
+      this.popup.style.removeProperty("bottom");
+      this.popup.classList.remove("chosen-native__popup--above");
+      this.popup.style.width = width == null ? "" : typeof width === "number" ? `${width}px` : String(width);
+      this.popup.style.insetInlineEnd = width == null ? "" : "auto";
+      return;
+    }
+    const rect = this.control.getBoundingClientRect();
+    const rtl = window.getComputedStyle(this.host).direction === "rtl";
+    const above = rect.bottom + this.popup.offsetHeight > window.innerHeight && rect.top >= this.popup.offsetHeight;
+    this.popup.style.position = "fixed";
+    this.popup.style.top = `${above ? rect.top - this.popup.offsetHeight : rect.bottom}px`;
+    this.popup.style.left = rtl ? "auto" : `${rect.left}px`;
+    this.popup.style.right = rtl ? `${window.innerWidth - rect.right}px` : "auto";
+    this.popup.style.insetInlineEnd = "auto";
+    this.popup.style.bottom = "auto";
+    this.popup.classList.toggle("chosen-native__popup--above", above);
+    this.popup.style.width = width == null ? `${rect.width}px` : typeof width === "string" && width.trim().endsWith("%") ? `${rect.width * parseFloat(width) / 100}px` : typeof width === "number" ? `${width}px` : String(width);
   }
   renderSelection() {
     const selected = this.entries.filter((entry) => entry.kind === "option" && this.nodes[entry.index]?.selected && !(entry.value === "" && entry.label === ""));
@@ -845,6 +905,11 @@ var Chosen = class {
     this.opened = true;
     this.appliedQuery = this.input.value;
     this.popup.hidden = false;
+    this.positionDropdown();
+    if (this.options.dropdown_position === "fixed") {
+      document.addEventListener("scroll", this.onReposition, true);
+      window.addEventListener("resize", this.onReposition);
+    }
     this.host.classList.add("chosen-native--open");
     this.input.setAttribute("aria-expanded", "true");
     this.renderSelection();
@@ -854,6 +919,8 @@ var Chosen = class {
   close() {
     if (!this.opened) return;
     this.pendingBackstrokeValue = null;
+    document.removeEventListener("scroll", this.onReposition, true);
+    window.removeEventListener("resize", this.onReposition);
     clearTimeout(this.searchTimer);
     this.searchTimer = null;
     this.appliedQuery = "";

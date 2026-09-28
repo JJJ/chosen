@@ -46,6 +46,10 @@ export interface ChosenOptions {
   results_count_text?: (count: number) => string;
   display_selected_value?: boolean;
   include_group_label_in_selected?: boolean;
+  width?: string | number | false;
+  dropdown_width?: string | number;
+  dropdown_position?: 'absolute' | 'fixed';
+  recalculate_width_on_update?: boolean;
 }
 
 export declare class Chosen {

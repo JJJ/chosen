@@ -108,6 +108,11 @@ Backspace and remove it with the second.
 `openOnLabelClick` defaults to `true` for multiple selects and `false` for
 single selects; override it to choose whether the associated label opens the
 popup or only focuses the input. The single-select demo opts into opening.
+Use `width="18rem"` for an explicit control width, or `style` for responsive
+CSS sizing. React has no source select to remeasure: change the prop when the
+desired width changes. `dropdownWidth="150%"` makes a wider, separate popup;
+percentages use the control width. `dropdownPosition="fixed"` keeps it outside
+clipped scrolling ancestors and updates its position on scroll and resize.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
 
@@ -183,7 +188,7 @@ mount. `ref` exposes `focus()`, `blur()`, `open()`, and `close()`.
 ```
 
 The React API still lacks several classic Chosen features, including option
-creation and bulk actions; see the parity inventory. It does not aim to copy
+creation; see the parity inventory. It does not aim to copy
 unrelated `react-select` features such as async loaders, virtualization, or
 arbitrary component injection. React uses camelCase props and a direct value
 callback rather than jQuery events.

@@ -42,6 +42,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Match classic control width, independent dropdown width, and fixed dropdown positioning in vanilla and React. Vanilla can remeasure its source select on update; React responds to width prop changes. Custom-width or fixed popups gain separate floating borders, adding `chosen-native--floating` and `chosen-react--floating` selectors.
 - Carry opt-in option `data-*` attributes to vanilla and React result rows. Vanilla honors `parser_config.copy_data_attributes`; React uses structured `dataAttributes` and `copyOptionDataAttributes`. Generated result rows can now expose these attributes to integrations.
 - Support classic `search_delay` in vanilla and React. Pending filters are applied before Enter, Tab, or navigation keys so keyboard actions use the current query.
 - Add opt-in multi-value paste to vanilla and React through shared token resolution. Existing unique enabled options are selected, unmatched tokens remain in search, and native select values or React callbacks still drive form state.

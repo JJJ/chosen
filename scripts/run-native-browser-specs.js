@@ -113,6 +113,17 @@ async function check(name, engine) {
       throw new Error(`${name}: search-free input styling failed (${JSON.stringify(seasonStyle)})`);
     }
     await season.click();
+    const seasonLayout = await page.evaluate(() => {
+      const host = document.querySelector('#native-season').nextElementSibling;
+      const control = host.querySelector('.chosen-native__control').getBoundingClientRect();
+      const popup = host.querySelector('.chosen-native__popup');
+      const rect = popup.getBoundingClientRect();
+      return { position: getComputedStyle(popup).position, controlWidth: control.width,
+        popupWidth: rect.width, aligned: Math.abs(rect.left - control.left) < 2 };
+    });
+    if (seasonLayout.position !== 'fixed' || seasonLayout.popupWidth <= seasonLayout.controlWidth || !seasonLayout.aligned) {
+      throw new Error(`${name}: fixed wider dropdown layout failed (${JSON.stringify(seasonLayout)})`);
+    }
     await season.press('w');
     if (await season.getAttribute('aria-activedescendant') !== 'native-season-native-option-4') {
       throw new Error(`${name}: search-free prefix navigation failed`);

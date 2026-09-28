@@ -46,6 +46,7 @@ export const Chosen = forwardRef(function Chosen({
   moreItemsText = count => `Show ${count} more...`,
   showFewerItemsText = 'Show fewer...',
   displaySelectedValue = false, includeGroupLabelInSelected = false,
+  width, dropdownWidth, dropdownPosition = 'absolute',
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid, onBlur, onFocus
@@ -55,6 +56,8 @@ export const Chosen = forwardRef(function Chosen({
   const listId = `${baseId}-list`;
   const statusId = `${baseId}-status`;
   const inputRef = useRef(null);
+  const controlRef = useRef(null);
+  const popupRef = useRef(null);
   const selectRef = useRef(null);
   const labelPointerDown = useRef(false);
   const labelForwardedClick = useRef(false);
@@ -300,6 +303,48 @@ export const Chosen = forwardRef(function Chosen({
     document.getElementById(`${baseId}-option-${activeOption.index}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [isOpen, activeOption?.index, baseId]);
 
+  useEffect(() => {
+    const popup = popupRef.current;
+    const control = controlRef.current;
+    if (!isOpen || !popup || !control) return;
+    if (dropdownPosition !== 'fixed') {
+      popup.style.removeProperty('position');
+      popup.style.removeProperty('top');
+      popup.style.removeProperty('left');
+      popup.style.removeProperty('right');
+      popup.style.removeProperty('bottom');
+      popup.classList.remove('chosen-react__popup--above');
+      popup.style.width = dropdownWidth == null ? '' :
+        (typeof dropdownWidth === 'number' ? `${dropdownWidth}px` : String(dropdownWidth));
+      popup.style.insetInlineEnd = dropdownWidth == null ? '' : 'auto';
+      return;
+    }
+    const position = () => {
+      const rect = control.getBoundingClientRect();
+      const rtl = window.getComputedStyle(control).direction === 'rtl';
+      const above = rect.bottom + popup.offsetHeight > window.innerHeight &&
+        rect.top >= popup.offsetHeight;
+      popup.style.position = 'fixed';
+      popup.style.top = `${above ? rect.top - popup.offsetHeight : rect.bottom}px`;
+      popup.style.left = rtl ? 'auto' : `${rect.left}px`;
+      popup.style.right = rtl ? `${window.innerWidth - rect.right}px` : 'auto';
+      popup.style.insetInlineEnd = 'auto';
+      popup.style.bottom = 'auto';
+      popup.classList.toggle('chosen-react__popup--above', above);
+      popup.style.width = dropdownWidth == null ? `${rect.width}px` :
+        (typeof dropdownWidth === 'string' && dropdownWidth.trim().endsWith('%')
+          ? `${rect.width * parseFloat(dropdownWidth) / 100}px`
+          : (typeof dropdownWidth === 'number' ? `${dropdownWidth}px` : String(dropdownWidth)));
+    };
+    position();
+    document.addEventListener('scroll', position, true);
+    window.addEventListener('resize', position);
+    return () => {
+      document.removeEventListener('scroll', position, true);
+      window.removeEventListener('resize', position);
+    };
+  }, [isOpen, dropdownPosition, dropdownWidth, dir, width, style]);
+
   const move = (direction, fromEnd = false, items = available, currentIndex = activeIndex) => {
     const enabled = items.map((item, index) => item.kind === 'option' && canActOnResult(item) ? index : -1)
       .filter(index => index >= 0);
@@ -439,7 +484,7 @@ export const Chosen = forwardRef(function Chosen({
   }
   flushGroup();
 
-  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${searchDisabled ? ' chosen-react--no-search' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={style}>
+  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${dropdownWidth != null || dropdownPosition === 'fixed' ? ' chosen-react--floating' : ''}${searchDisabled ? ' chosen-react--no-search' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={width == null || width === false ? style : { ...style, width, minWidth: 0 }}>
     <select ref={attachNativeSelect} className="chosen-react__native" tabIndex={-1} aria-hidden="true"
       name={name} form={form} required={required} disabled={disabled} multiple={multiple}
       value={multiple ? selectedValues : selectedValues[0] ?? ''} onChange={() => {}}
@@ -448,7 +493,7 @@ export const Chosen = forwardRef(function Chosen({
       {entries.filter(item => item.kind === 'option').map(item =>
         <option key={item.index} value={item.value} disabled={item.disabled}>{item.label}</option>)}
     </select>
-    <div className="chosen-react__control" onMouseDown={event => {
+    <div ref={controlRef} className="chosen-react__control" onMouseDown={event => {
       if (event.target !== inputRef.current && !event.target.closest('button') && !disabled) {
         event.preventDefault();
         inputRef.current?.focus();
@@ -493,7 +538,7 @@ export const Chosen = forwardRef(function Chosen({
       <span className="chosen-react__chevron" aria-hidden="true" />
     </div>
     <span id={statusId} className="chosen-react__sr-only" role="status" aria-live="polite">{status}</span>
-    {isOpen && <div className="chosen-react__popup">
+    {isOpen && <div ref={popupRef} className="chosen-react__popup">
       {multiple && ((allowSelectAll && canBulkSelect) || (allowDeselectAll && canBulkDeselect)) &&
         <div className="chosen-react__bulk-actions">
           {allowSelectAll && canBulkSelect && <button type="button" className="chosen-react__bulk-action"

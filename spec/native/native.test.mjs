@@ -215,6 +215,26 @@ test('delayed search waits for a stable query before filtering', async () => {
   dom.window.close();
 });
 
+test('width options preserve CSS sizing and fixed dropdown listeners clean up', () => {
+  const { dom, select } = fixture('<select><option value="a">Alpha</option><option value="b">Beta</option></select>');
+  const chosen = new Chosen(select, { width: '18rem', dropdown_width: '150%', dropdown_position: 'fixed' });
+  assert.equal(chosen.host.style.width, '18rem');
+  chosen.open();
+  assert.equal(chosen.popup.style.position, 'fixed');
+  assert.equal(chosen.popup.style.width, '0px');
+  assert.equal(chosen.host.classList.contains('chosen-native--floating'), true);
+  chosen.options.width = false;
+  chosen.update();
+  assert.equal(chosen.host.style.width, '');
+  chosen.options.dropdown_position = 'absolute';
+  chosen.update();
+  assert.equal(chosen.popup.style.position, '');
+  assert.equal(chosen.popup.style.width, '150%');
+  chosen.close();
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

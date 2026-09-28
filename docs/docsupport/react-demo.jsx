@@ -109,8 +109,9 @@ function Demo() {
             { value: 'summer', label: 'Summer' },
             { value: 'autumn', label: 'Autumn' },
             { value: 'winter', label: 'Winter' }
-          ]} disableSearchThreshold={4} placeholder="Choose a season" />
-          <p className="react-demo-help">Open the list and type “w” to highlight Winter. The search field is hidden at four options or fewer.</p>
+          ]} disableSearchThreshold={4} placeholder="Choose a season"
+            width="12rem" dropdownWidth="min(19rem, 90vw)" dropdownPosition="fixed" />
+          <p className="react-demo-help">Open the wider floating list and type “w” to highlight Winter. This example uses a 12rem control, an independently sized fixed dropdown, and hides search at four options or fewer.</p>
         </section>
       </div>
       <div className="react-demo-actions">

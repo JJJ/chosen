@@ -24,6 +24,23 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
+test('explicit width and dropdown layout props preserve the selected value', () => {
+  const view = render(h(Chosen, { options, width: '18rem', dropdownWidth: '150%',
+    dropdownPosition: 'fixed', name: 'fruit', defaultValue: 'a', 'aria-label': 'Fruit' }));
+  const host = document.querySelector('.chosen-react');
+  assert.equal(host.style.width, '18rem');
+  fireEvent.click(screen.getByRole('combobox'));
+  const popup = document.querySelector('.chosen-react__popup');
+  assert.equal(popup.style.position, 'fixed');
+  assert.equal(popup.style.width, '0px');
+  assert.equal(document.querySelector('select').value, 'a');
+  view.rerender(h(Chosen, { options, width: false, dropdownWidth: '150%',
+    dropdownPosition: 'absolute', name: 'fruit', defaultValue: 'a', 'aria-label': 'Fruit' }));
+  assert.equal(host.style.width, '');
+  assert.equal(document.querySelector('.chosen-react__popup').style.width, '150%');
+  assert.equal(document.querySelector('select').value, 'a');
+});
+
 test('uncontrolled single selection searches and submits a native form value', () => {
   const changes = [];
   render(h('form', null, h(Chosen, { options, name: 'fruit', 'aria-label': 'Fruit', onChange: value => changes.push(value) })));

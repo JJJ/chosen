@@ -182,6 +182,9 @@
   background: var(--chosen-dropdown-background, var(--chosen-background, #fff));
   box-shadow: var(--chosen-dropdown-shadow, 0 .3rem .6rem rgba(0, 0, 0, .18));
 }
+.chosen-react--floating .chosen-react__popup {
+  border-radius: var(--chosen-border-radius, 4px);
+}
 
 .chosen-react__list {
   max-height: var(--chosen-results-max-height, 15rem);

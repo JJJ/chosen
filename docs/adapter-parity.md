@@ -49,10 +49,10 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `single_backstroke_delete` | Yes | Yes | React prop: `singleBackstrokeDelete`; set `false` for first-press chip focus and second-press removal. |
 | `multiselect_allow_tab_to_select` | Yes | Yes | React prop: `multiselectAllowTabToSelect`; defaults to `false`. Tab continues to the next focus target. |
 | `open_on_label_click` | Yes | Yes | React prop: `openOnLabelClick`; labels focus singles and open multiples by default, with either behavior configurable. |
-| `width` | Partial | Partial | Vanilla uses CSS; React accepts `style`, with no classic width option or select measurement. |
-| `dropdown_width` | No | No | Independent result width and floating presentation. |
-| `recalculate_width_on_update` | No | No | Remeasure source select after an update. |
-| `dropdown_position` | No | No | Fixed-position escape from clipped ancestors. |
+| `width` | Yes | Yes | Vanilla measures its source select initially and accepts `width` or `false`; React accepts `width` or `style`, since it has no source select to measure. |
+| `dropdown_width` | Yes | Yes | Independent result width with a floating border; React prop: `dropdownWidth`. |
+| `recalculate_width_on_update` | Yes | Yes | Vanilla remeasures its source select on `update()` when enabled. React has no source select to remeasure; change its `width` or `style` prop when layout changes. |
+| `dropdown_position` | Yes | Yes | Fixed dropdown tracks scroll and resize; React prop: `dropdownPosition`. |
 | `display_disabled_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_value` | Yes | Yes | Value in the closed control; label remains in results. React prop: `displaySelectedValue`. |

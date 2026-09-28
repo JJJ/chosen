@@ -84,6 +84,9 @@ export interface ChosenProps {
   displayDisabledOptions?: boolean;
   displaySelectedValue?: boolean;
   includeGroupLabelInSelected?: boolean;
+  width?: string | number | false;
+  dropdownWidth?: string | number;
+  dropdownPosition?: 'absolute' | 'fixed';
   dir?: 'ltr' | 'rtl';
   id?: string;
   className?: string;

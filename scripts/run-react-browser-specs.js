@@ -91,6 +91,20 @@ async function main() {
         return getComputedStyle(host.querySelector('.chosen-react__control')).backgroundColor;
       });
       if (themedBackground !== 'rgb(240, 249, 255)') throw new Error(`${name}: theme token did not apply`);
+      await page.evaluate(() => window.mountChosen({ width: '180px', dropdownWidth: '150%', dropdownPosition: 'fixed' }));
+      await page.waitForFunction(() => document.querySelector('.chosen-react')?.style.width === '180px');
+      await page.getByRole('combobox', { name: 'Fruit' }).click();
+      const layout = await page.evaluate(() => {
+        const host = document.querySelector('.chosen-react');
+        const control = host.querySelector('.chosen-react__control').getBoundingClientRect();
+        const popup = host.querySelector('.chosen-react__popup');
+        const rect = popup.getBoundingClientRect();
+        return { position: getComputedStyle(popup).position, controlWidth: control.width,
+          popupWidth: rect.width, aligned: Math.abs(rect.left - control.left) < 2 };
+      });
+      if (layout.position !== 'fixed' || Math.abs(layout.popupWidth - 270) > 2 || !layout.aligned) {
+        throw new Error(`${name}: React fixed wider dropdown layout failed (${JSON.stringify(layout)})`);
+      }
       await page.evaluate(() => window.unmountChosen());
       if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
       console.log(`${name}: React search, keyboard, form, and accessibility checks passed`);

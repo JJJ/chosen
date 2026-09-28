@@ -72,8 +72,12 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `inherit_option_classes` | `false` | Option and optgroup classes appear on result rows; set this to also copy option classes to selected chips. |
 | `parser_config` | `{}` | Set `{copy_data_attributes: true}` to copy source option `data-*` attributes onto result rows. `data-search-text` still works without this setting. |
 | `aria_label` | associated label or select label | Accessible name for the generated search input. |
+| `width` | source select width | Explicit CSS width for the generated control; `false` leaves sizing to CSS. |
+| `dropdown_width` | control width | Set an independent CSS width for the result dropdown; percentages use the control width. |
+| `recalculate_width_on_update` | `false` | Remeasure the source select on `update()` unless `width` is explicit or `false`. |
+| `dropdown_position` | `absolute` | Use `fixed` to escape a clipped scrolling ancestor and track scroll or resize. |
 
-The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation, bulk actions, fixed or custom-width dropdowns, or the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.
+The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation and the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.
 
 ## Events and forms
 

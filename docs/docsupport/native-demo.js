@@ -15,7 +15,8 @@ const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
   multiselect_allow_tab_to_select: true, display_selected_value: true,
   include_group_label_in_selected: true, deselect_selected_results: true,
   hide_results_on_select: false });
-new ChosenNative.Chosen(season, { disable_search_threshold: 5 });
+new ChosenNative.Chosen(season, { disable_search_threshold: 5,
+  width: '12rem', dropdown_width: 'min(19rem, 90vw)', dropdown_position: 'fixed' });
 let added = 0;
 
 for (const select of [project, skills, season]) {
