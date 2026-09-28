@@ -11,6 +11,7 @@ const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
   max_items_shown: 1,
   allow_select_all: true, allow_deselect_all: true,
   paste_multiple_values: true,
+  parser_config: { copy_data_attributes: true },
   multiselect_allow_tab_to_select: true, display_selected_value: true,
   include_group_label_in_selected: true, deselect_selected_results: true,
   hide_results_on_select: false });

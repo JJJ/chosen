@@ -270,6 +270,19 @@ test('React carries option classes and uses literal localized result copy', () =
   assert.equal(screen.getByText('No matches missing').textContent, 'No matches missing');
 });
 
+test('React opts into forwarding safe option data attributes to result rows', () => {
+  const withData = [{ value: 'a', label: 'Alpha', dataAttributes: {
+    'data-category': 'fruit', onclick: 'ignored'
+  } }];
+  const view = render(h(Chosen, { options: withData, 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  assert.equal(screen.getByRole('option', { name: 'Alpha' }).hasAttribute('data-category'), false);
+  view.rerender(h(Chosen, { options: withData, copyOptionDataAttributes: true, 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('option', { name: 'Alpha' }).getAttribute('data-category'), 'fruit');
+  assert.equal(screen.getByRole('option', { name: 'Alpha' }).hasAttribute('onclick'), false);
+});
+
 test('React matches classic clear and type-specific placeholder defaults', () => {
   const view = render(h(Chosen, { options, value: 'a', 'aria-label': 'Fruit' }));
   assert.equal(screen.queryByRole('button', { name: 'Clear selection' }), null);

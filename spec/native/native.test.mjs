@@ -413,6 +413,18 @@ test('option classes and localized result copy follow classic behavior', () => {
   dom.window.close();
 });
 
+test('parser config opts into copying source option data attributes to result rows', () => {
+  const { dom, select } = fixture('<select><option value="a" data-category="fruit">Alpha</option></select>');
+  const chosen = new Chosen(select);
+  chosen.open();
+  assert.equal(chosen.list.querySelector('[role="option"]').hasAttribute('data-category'), false);
+  chosen.options.parser_config = { copy_data_attributes: true };
+  chosen.update();
+  assert.equal(chosen.list.querySelector('[role="option"]').getAttribute('data-category'), 'fruit');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('selected value and group options change closed display without changing result labels', () => {
   const { dom, select } = fixture('<select><optgroup label="Team"><option value="alpha" selected>Alpha</option></optgroup></select>');
   const chosen = new Chosen(select, { display_selected_value: true, include_group_label_in_selected: true });

@@ -92,6 +92,16 @@ function escapeRegex(value) {
 function isEmptyOption(option) {
   return !!option.empty || asText(option.value) === "" && asText(option.label) === "";
 }
+function optionDataAttributes(value) {
+  var attributes = {};
+  if (!value || typeof value !== "object") return attributes;
+  for (var name in value) {
+    if (Object.prototype.hasOwnProperty.call(value, name) && /^data-[a-z0-9_.:-]+$/.test(name)) {
+      attributes[name] = asText(value[name]);
+    }
+  }
+  return attributes;
+}
 function foldAccents(value) {
   var text = asText(value);
   for (var index = 0; index < accentReplacements.length; index += 1) {
@@ -112,6 +122,7 @@ function normalizeOptions(entries) {
       label,
       empty: value === "" && label === "",
       searchText: asText(source.searchText),
+      dataAttributes: optionDataAttributes(source.dataAttributes),
       className: asText(source.className),
       selected: !!source.selected,
       disabled: !!source.disabled || !!(group2 && group2.disabled),

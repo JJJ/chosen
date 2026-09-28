@@ -44,7 +44,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `search_delay` | Yes | Yes | Debounced results, flushed before navigation or selection keys; React prop: `searchDelay`. |
 | `search_in_values` | Yes | Yes | React prop: `searchInValues`. |
 | `group_search` | Yes | Yes | Include group labels in matching. |
-| `parser_config` | No | No | Vanilla needs source-option data copying; React needs an equivalent data model or a documented exception. |
+| `parser_config` | Yes | Yes | Vanilla supports `{copy_data_attributes: true}`; React uses option `dataAttributes` plus `copyOptionDataAttributes`. |
 | `backspace_deletes_choices` | Yes | Yes | React prop: `backspaceDeletesChoices`; defaults to `true`. |
 | `single_backstroke_delete` | Yes | Yes | React prop: `singleBackstrokeDelete`; set `false` for first-press chip focus and second-press removal. |
 | `multiselect_allow_tab_to_select` | Yes | Yes | React prop: `multiselectAllowTabToSelect`; defaults to `false`. Tab continues to the next focus target. |

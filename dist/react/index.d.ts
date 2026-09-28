@@ -8,6 +8,7 @@ export interface ChosenOption {
   hidden?: boolean;
   searchText?: string;
   className?: string;
+  dataAttributes?: Record<string, string>;
 }
 
 export interface ChosenGroup {
@@ -48,6 +49,7 @@ export interface ChosenProps {
   noResultsText?: string;
   resultsCountText?: (count: number) => string;
   inheritOptionClasses?: boolean;
+  copyOptionDataAttributes?: boolean;
   maxSelectedOptions?: number;
   maxItemsShown?: number;
   allowSelectAll?: boolean;

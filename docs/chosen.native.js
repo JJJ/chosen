@@ -83,6 +83,16 @@ var ChosenNative = (() => {
   function escapeRegex(value) {
     return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
+  function optionDataAttributes(value) {
+    var attributes = {};
+    if (!value || typeof value !== "object") return attributes;
+    for (var name in value) {
+      if (Object.prototype.hasOwnProperty.call(value, name) && /^data-[a-z0-9_.:-]+$/.test(name)) {
+        attributes[name] = asText(value[name]);
+      }
+    }
+    return attributes;
+  }
   function foldAccents(value) {
     var text = asText(value);
     for (var index = 0; index < accentReplacements.length; index += 1) {
@@ -103,6 +113,7 @@ var ChosenNative = (() => {
         label,
         empty: value === "" && label === "",
         searchText: asText(source.searchText),
+        dataAttributes: optionDataAttributes(source.dataAttributes),
         className: asText(source.className),
         selected: !!source.selected,
         disabled: !!source.disabled || !!(group2 && group2.disabled),
@@ -327,9 +338,12 @@ var ChosenNative = (() => {
   // native/Chosen.mjs
   var nextId = 0;
   var instances = /* @__PURE__ */ new WeakMap();
-  function optionTree(select) {
+  function optionTree(select, copyDataAttributes = false) {
     const entries = [];
     const nodes = [];
+    const dataAttributes = (option) => copyDataAttributes ? Object.fromEntries(
+      Array.from(option.attributes).filter((attribute) => attribute.name.startsWith("data-")).map((attribute) => [attribute.name, attribute.value])
+    ) : {};
     for (const child of select.children) {
       if (child.tagName === "OPTGROUP") {
         entries.push({
@@ -344,6 +358,7 @@ var ChosenNative = (() => {
             disabled: option.disabled,
             hidden: option.hidden,
             className: option.className,
+            dataAttributes: dataAttributes(option),
             searchText: option.getAttribute("data-search-text") || ""
           }))
         });
@@ -356,6 +371,7 @@ var ChosenNative = (() => {
           disabled: child.disabled,
           hidden: child.hidden,
           className: child.className,
+          dataAttributes: dataAttributes(child),
           searchText: child.getAttribute("data-search-text") || ""
         });
         nodes.push(child);
@@ -562,7 +578,7 @@ var ChosenNative = (() => {
       const direction = this.options.rtl || this.select.classList.contains("chosen-rtl") ? "rtl" : this.select.dir;
       if (direction) this.host.dir = direction;
       else this.host.removeAttribute("dir");
-      const parsed = optionTree(this.select);
+      const parsed = optionTree(this.select, !!this.options.parser_config?.copy_data_attributes);
       this.entries = parsed.entries;
       this.nodes = parsed.nodes;
       this.input.disabled = this.select.disabled;
@@ -672,6 +688,7 @@ var ChosenNative = (() => {
         row.id = `${this.id}-option-${entry.index}`;
         row.setAttribute("role", "option");
         row.setAttribute("aria-selected", String(selected));
+        for (const [name, value] of Object.entries(entry.dataAttributes)) row.setAttribute(name, value);
         if (entry.disabled) row.setAttribute("aria-disabled", "true");
         row.addEventListener("pointerenter", () => {
           if (actionable) this.highlight(position);

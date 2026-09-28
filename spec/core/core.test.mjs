@@ -136,3 +136,10 @@ test('pasted tokens select unique eligible options and preserve unmatched text',
   assert.equal(result.limitReached, true);
   assert.equal(core.resolvePastedChoices('ordinary', entries, [], 1).handled, false);
 });
+
+test('normalization keeps valid option data attributes without accepting arbitrary DOM attributes', () => {
+  const [option] = core.normalizeOptions([{ value: 'a', label: 'Alpha', dataAttributes: {
+    'data-category': 'fruit', onclick: 'ignored', 'data-Bad': 'ignored'
+  } }]);
+  assert.deepEqual(option.dataAttributes, { 'data-category': 'fruit' });
+});

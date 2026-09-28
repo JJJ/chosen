@@ -65,6 +65,10 @@ threshold. Prefix typing still moves through open results. Set
 count. `noResultsText` is used literally before the query, with one space.
 Set `className` on option or group data to style result rows; set
 `inheritOptionClasses` to copy option classes to selected chips too. Set
+`dataAttributes` on an option and enable `copyOptionDataAttributes` to add its
+safe `data-*` keys to the result row. This is React's equivalent of classic
+`parser_config: {copy_data_attributes: true}`; it does not parse a source select.
+Set
 `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without

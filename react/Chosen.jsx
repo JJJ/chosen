@@ -26,6 +26,7 @@ export const Chosen = forwardRef(function Chosen({
   noResultsText = 'No results for:', maxSelectedOptions,
   resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
   inheritOptionClasses = false,
+  copyOptionDataAttributes = false,
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
   singleBackstrokeDelete = true,
   searchInputType = 'search',
@@ -406,6 +407,7 @@ export const Chosen = forwardRef(function Chosen({
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');
 
   const renderOption = (item, position) => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
+    {...(copyOptionDataAttributes ? item.dataAttributes : {})}
     aria-selected={selectedSet.has(item.value)} aria-disabled={item.disabled || undefined}
     className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${multiple && selectedSet.has(item.value) && deselectSelectedResults ? ' chosen-react__option--deselectable' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}${item.className ? ` ${item.className}` : ''}`}
     onMouseEnter={() => { if (canActOnResult(item)) setActiveIndex(position); }}

@@ -4,6 +4,7 @@ export interface ChosenOption {
   value: string;
   label?: string;
   searchText?: string;
+  dataAttributes?: Record<string, string>;
   className?: string;
   selected?: boolean;
   disabled?: boolean;
@@ -35,6 +36,7 @@ export interface NormalizedOption {
   className: string;
   empty: boolean;
   searchText: string;
+  dataAttributes: Record<string, string>;
   selected: boolean;
   disabled: boolean;
   hidden: boolean;

@@ -3,9 +3,12 @@ import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedCho
 let nextId = 0;
 const instances = new WeakMap();
 
-function optionTree(select) {
+function optionTree(select, copyDataAttributes = false) {
   const entries = [];
   const nodes = [];
+  const dataAttributes = option => copyDataAttributes ? Object.fromEntries(
+    Array.from(option.attributes).filter(attribute => attribute.name.startsWith('data-'))
+      .map(attribute => [attribute.name, attribute.value])) : {};
   for (const child of select.children) {
     if (child.tagName === 'OPTGROUP') {
       entries.push({ label: child.label, disabled: child.disabled, hidden: child.hidden,
@@ -13,12 +16,14 @@ function optionTree(select) {
         options: Array.from(child.children, option => ({ value: option.value, label: option.text,
           selected: option.selected, disabled: option.disabled, hidden: option.hidden,
           className: option.className,
+          dataAttributes: dataAttributes(option),
           searchText: option.getAttribute('data-search-text') || '' })) });
       nodes.push(null, ...child.children);
     } else if (child.tagName === 'OPTION') {
       entries.push({ value: child.value, label: child.text, selected: child.selected,
         disabled: child.disabled, hidden: child.hidden,
         className: child.className,
+        dataAttributes: dataAttributes(child),
         searchText: child.getAttribute('data-search-text') || '' });
       nodes.push(child);
     }
@@ -196,7 +201,7 @@ export class Chosen {
       ? 'rtl' : this.select.dir;
     if (direction) this.host.dir = direction;
     else this.host.removeAttribute('dir');
-    const parsed = optionTree(this.select);
+    const parsed = optionTree(this.select, !!this.options.parser_config?.copy_data_attributes);
     this.entries = parsed.entries;
     this.nodes = parsed.nodes;
     this.input.disabled = this.select.disabled;
@@ -319,6 +324,7 @@ export class Chosen {
       row.id = `${this.id}-option-${entry.index}`;
       row.setAttribute('role', 'option');
       row.setAttribute('aria-selected', String(selected));
+      for (const [name, value] of Object.entries(entry.dataAttributes)) row.setAttribute(name, value);
       if (entry.disabled) row.setAttribute('aria-disabled', 'true');
       row.addEventListener('pointerenter', () => { if (actionable) this.highlight(position); });
       row.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse') event.preventDefault(); });

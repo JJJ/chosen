@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Chosen } from '../../dist/react/index.mjs';
 
 const options = [
-  { value: 'apple', label: 'Apple' },
+  { value: 'apple', label: 'Apple', dataAttributes: { 'data-family': 'pome' } },
   { value: 'banana', label: 'Banana' },
   { label: 'Citrus', options: [
     { value: 'orange', label: 'Orange' },
@@ -77,7 +77,7 @@ function Demo() {
           <label htmlFor="react-basket">Fruit basket</label>
           <Chosen id="react-basket" name="basket" options={options} multiple
             value={basket} onChange={setBasket} maxSelectedOptions={3} maxItemsShown={1}
-            allowSelectAll allowDeselectAll pasteMultipleValues
+            allowSelectAll allowDeselectAll pasteMultipleValues copyOptionDataAttributes
             multiselectAllowTabToSelect
             includeGroupLabelInSelected
             deselectSelectedResults hideResultsOnSelect={false}
