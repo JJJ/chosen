@@ -156,6 +156,25 @@ describe "Bugfixes", ->
     expect(div.down(".search-choice span").textContent).toBe("One")
     div.remove()
 
+  it "renders native option text and configurable result labels as text", ->
+    div = new Element('div').update("<select multiple data-no_results_text='&lt;strong class=&quot;injected&quot;&gt;No match&lt;/strong&gt;' data-create_option_text='&lt;strong class=&quot;injected&quot;&gt;Add&lt;/strong&gt;'></select>")
+    document.body.appendChild(div)
+    option = document.createElement('option')
+    option.value = 'safe'
+    option.innerHTML = '<strong class="injected">Safe</strong>'
+    option.selected = true
+    div.down('select').appendChild(option)
+    chosen = new Chosen(div.down('select'), create_option: true)
+
+    expect(div.select('.chosen-container .injected').length).toBe(0)
+    expect(div.down('.search-choice > span').textContent).toBe('Safe')
+    chosen.no_results('missing')
+    chosen.show_create_option('missing')
+    expect(div.select('.chosen-container .injected').length).toBe(0)
+    expect(div.down('.no-results').textContent).toContain('<strong class="injected">No match</strong>')
+    expect(div.down('.create-option').textContent).toContain('<strong class="injected">Add</strong>')
+    div.remove()
+
   it "https://github.com/harvesthq/chosen/issues/2996 - XSS Vulnerability with `include_group_label_in_selected: true`", ->
     tmpl = "
       <select>

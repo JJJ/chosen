@@ -5,6 +5,9 @@ class SelectParser
     @parsed = []
     @copy_data_attributes = options.copy_data_attributes || false
 
+  escape_html: (text) ->
+    String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+
   add_node: (child) ->
     if child.nodeName.toUpperCase() is "OPTGROUP"
       this.add_group child
@@ -36,7 +39,7 @@ class SelectParser
           text: option.text
           search_text: option.getAttribute('data-search-text') || ''
           always_visible: option.hasAttribute('data-chosen-always-visible')
-          html: option.innerHTML.replace(/^\s+|\s+$/g, '')
+          html: this.escape_html(option.text).replace(/^\s+|\s+$/g, '')
           title: option.title if option.title
           selected: option.selected
           disabled: if group_disabled is true then group_disabled else option.disabled
