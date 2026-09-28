@@ -3108,12 +3108,17 @@ var ChosenCore = (function() {
     }
 
     results_reset() {
+      var change, previous_option;
+      previous_option = this.form_field.options[this.form_field.selectedIndex];
       this.reset_single_select_options();
       this.form_field.options[0].selected = true;
       this.single_set_selected_text();
       this.show_search_field_default();
       this.results_reset_cleanup();
-      this.trigger_form_field_change();
+      change = (previous_option != null) && (previous_option.index > 0 || previous_option.value !== "") ? {
+        deselected: previous_option.value
+      } : void 0;
+      this.trigger_form_field_change(change);
       if (this.active_field) {
         return this.results_hide();
       }
@@ -3125,7 +3130,7 @@ var ChosenCore = (function() {
     }
 
     result_select(evt) {
-      var action, high, item, option, ref;
+      var action, change, high, item, option, previous_option, ref;
       action = ((ref = this.result_highlight) != null ? ref.attr('data-chosen-action') : void 0) || $(evt.target).attr('data-chosen-action');
       if (action) {
         evt.preventDefault();
@@ -3185,6 +3190,7 @@ var ChosenCore = (function() {
         if (this.is_multiple) {
           high.removeClass("active-result");
         } else {
+          previous_option = this.form_field.options[this.form_field.selectedIndex];
           this.reset_single_select_options();
           this.search_results.find('[role="option"][aria-selected="true"]').attr('aria-selected', 'false');
         }
@@ -3218,9 +3224,13 @@ var ChosenCore = (function() {
           }
         }
         if (this.is_multiple || this.form_field.selectedIndex !== this.current_selectedIndex) {
-          this.trigger_form_field_change({
+          change = {
             selected: option.value
-          });
+          };
+          if (!this.is_multiple && (previous_option != null) && previous_option !== option && (previous_option.index > 0 || previous_option.value !== "")) {
+            change.deselected = previous_option.value;
+          }
+          this.trigger_form_field_change(change);
         }
         this.current_selectedIndex = this.form_field.selectedIndex;
         evt.preventDefault();

@@ -1,4 +1,31 @@
 describe "Events", ->
+  it "reports the previous single-select value when switching or clearing", ->
+    div = $("<div><select><option value=''></option><option value='one'>One</option><option value='two'>Two</option></select></div>").appendTo('body')
+    select = div.find('select').chosen(allow_single_deselect: true)
+    chosen = select.data('chosen')
+    events = []
+    select.on 'input change', (evt, params) -> events.push [evt.type, params]
+
+    choose = (index) ->
+      chosen.results_show()
+      div.find(".active-result[data-option-array-index='#{index}']").trigger($.Event('mouseup', which: 1))
+
+    choose(1)
+    choose(2)
+    chosen.results_reset()
+
+    expect(select.val()).toBe('')
+    expect(events).toEqual [
+      ['input', { selected: 'one' }]
+      ['change', { selected: 'one' }]
+      ['input', { selected: 'two', deselected: 'one' }]
+      ['change', { selected: 'two', deselected: 'one' }]
+      ['input', { deselected: 'two' }]
+      ['change', { deselected: 'two' }]
+    ]
+    select.chosen('destroy')
+    div.remove()
+
   it "focuses the native search input without jQuery's focus shorthand", ->
     div = $("<div><select multiple><option>One</option><option>Two</option></select></div>").appendTo('body')
     select = div.find('select').chosen()
