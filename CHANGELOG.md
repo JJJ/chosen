@@ -48,6 +48,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Carry source select direction and the legacy `chosen-rtl` class into the vanilla control, and expose the classic `rtl` setting.
 - Add opt-in selected-value and optgroup-prefix display to vanilla and React; dropdown labels and submitted values are unchanged.
 - Add opt-in source-class inheritance to vanilla, with update-time synchronization. The legacy `chosen-rtl` marker also passes through by default.
+- Carry option and optgroup classes into vanilla and React result rows, with opt-in class copying to chips; add customizable live result counts and use no-results text literally. Generated result elements now receive source option classes.
 - Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.

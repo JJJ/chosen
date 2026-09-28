@@ -111,6 +111,7 @@ function normalizeOptions(entries) {
       label,
       empty: value === "" && label === "",
       searchText: asText(source.searchText),
+      className: asText(source.className),
       selected: !!source.selected,
       disabled: !!source.disabled || !!(group2 && group2.disabled),
       hidden: !!source.hidden || !!(group2 && group2.hidden),
@@ -126,6 +127,7 @@ function normalizeOptions(entries) {
         kind: "group",
         index: groupIndex,
         label: asText(entry.label),
+        className: asText(entry.className),
         disabled: !!entry.disabled,
         hidden: !!entry.hidden
       };

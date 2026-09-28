@@ -23,6 +23,8 @@ export const Chosen = forwardRef(function Chosen({
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', maxSelectedOptions,
+  resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
+  inheritOptionClasses = false,
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
   searchInputType = 'search',
   searchContains = false, splitSearchTerms = false, groupSearch = true,
@@ -227,12 +229,12 @@ export const Chosen = forwardRef(function Chosen({
     placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
   const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
   const status = limitNotice ? `Maximum of ${maxSelectedOptions} selections reached.` :
-    isOpen ? `${results.count} result${results.count === 1 ? '' : 's'} available.` :
+    isOpen ? String(resultsCountText(results.count)) :
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');
 
   const renderOption = (item, position) => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
     aria-selected={selectedSet.has(item.value)} aria-disabled={item.disabled || undefined}
-    className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}`}
+    className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}${item.className ? ` ${item.className}` : ''}`}
     onMouseEnter={() => { if (!item.disabled) setActiveIndex(position); }}
     onMouseDown={event => event.preventDefault()}
     onClick={event => choose(item, event)}>{item.label}</div>;
@@ -243,7 +245,7 @@ export const Chosen = forwardRef(function Chosen({
     if (!currentGroup) return;
     const labelId = `${baseId}-group-${currentGroup.index}`;
     renderedResults.push(<div key={currentGroup.index} role="group" aria-labelledby={labelId}>
-      <div id={labelId} className="chosen-react__group" role="presentation">{currentGroup.label}</div>
+      <div id={labelId} className={`chosen-react__group${currentGroup.className ? ` ${currentGroup.className}` : ''}`} role="presentation">{currentGroup.label}</div>
       {groupOptions}
     </div>);
     currentGroup = null;
@@ -278,7 +280,7 @@ export const Chosen = forwardRef(function Chosen({
         changeOpen(true);
       }
     }}>
-      {multiple && selectedOptions.map(item => <span className="chosen-react__chip" key={item.index}>
+      {multiple && selectedOptions.map(item => <span className={`chosen-react__chip${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
         <span>{selectedDisplay(item)}</span>
         {!disabled && !readOnly && <button type="button" className="chosen-react__remove"
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}
@@ -308,7 +310,7 @@ export const Chosen = forwardRef(function Chosen({
       <div id={listId} role="listbox" aria-multiselectable={multiple || undefined} className="chosen-react__list">
         {renderedResults}
       </div>
-      {!results.count && <div className="chosen-react__empty">{noResultsText}{query ? `${/:\s*$/.test(noResultsText) ? ' ' : ': '}${query}` : ''}</div>}
+      {!results.count && <div className="chosen-react__empty">{noResultsText}{query ? ` ${query}` : ''}</div>}
     </div>}
   </div>;
 });

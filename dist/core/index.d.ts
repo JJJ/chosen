@@ -4,6 +4,7 @@ export interface ChosenOption {
   value: string;
   label?: string;
   searchText?: string;
+  className?: string;
   selected?: boolean;
   disabled?: boolean;
   hidden?: boolean;
@@ -11,6 +12,7 @@ export interface ChosenOption {
 
 export interface ChosenGroup {
   label: string;
+  className?: string;
   options: readonly ChosenOption[];
   disabled?: boolean;
   hidden?: boolean;
@@ -20,6 +22,7 @@ export interface NormalizedGroup {
   kind: 'group';
   index: number;
   label: string;
+  className: string;
   disabled: boolean;
   hidden: boolean;
 }
@@ -29,6 +32,7 @@ export interface NormalizedOption {
   index: number;
   value: string;
   label: string;
+  className: string;
   empty: boolean;
   searchText: string;
   selected: boolean;

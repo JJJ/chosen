@@ -15,12 +15,15 @@ test('core has equivalent ESM and CommonJS package entry points', () => {
 });
 
 test('normalization preserves groups, inherited states, and caller data', () => {
-  const entries = [{ label: 'Group', disabled: true, options: [{ value: 'one', label: 'One' }] }];
+  const entries = [{ label: 'Group', className: 'group-accent', disabled: true,
+    options: [{ value: 'one', label: 'One', className: 'option-accent' }] }];
   const normalized = core.normalizeOptions(entries);
   assert.deepEqual(normalized.map((item) => item.kind), ['group', 'option']);
   assert.equal(normalized[1].groupIndex, 0);
   assert.equal(normalized[1].groupLabel, 'Group');
   assert.equal(normalized[1].disabled, true);
+  assert.equal(normalized[0].className, 'group-accent');
+  assert.equal(normalized[1].className, 'option-accent');
   assert.equal(entries[0].options[0].disabled, undefined);
   assert.equal(core.normalizeOptions([{ value: 'one', label: '' }])[0].empty, false);
 });

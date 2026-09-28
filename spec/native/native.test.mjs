@@ -248,6 +248,22 @@ test('source class inheritance is opt-in, updates cleanly, and omits internal cl
   dom.window.close();
 });
 
+test('option classes and localized result copy follow classic behavior', () => {
+  const { dom, select } = fixture('<select multiple data-no_results_text="No matches"><optgroup class="team-group" label="Team"><option class="leader" value="a" selected>Alpha</option><option value="b">Beta</option></optgroup></select>');
+  const chosen = new Chosen(select, { inherit_option_classes: true,
+    results_count_text: count => `${count} choices` });
+  assert.equal(chosen.chips.querySelector('.chosen-native__chip').classList.contains('leader'), true);
+  chosen.open();
+  assert.equal(chosen.list.querySelector('[role="group"]').classList.contains('team-group'), true);
+  assert.equal(chosen.list.querySelector('[role="option"]').classList.contains('leader'), true);
+  assert.equal(chosen.status.textContent, '2 choices');
+  chosen.input.value = 'missing';
+  chosen.renderResults();
+  assert.equal(chosen.empty.textContent, 'No matches missing');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('selected value and group options change closed display without changing result labels', () => {
   const { dom, select } = fixture('<select><optgroup label="Team"><option value="alpha" selected>Alpha</option></optgroup></select>');
   const chosen = new Chosen(select, { display_selected_value: true, include_group_label_in_selected: true });

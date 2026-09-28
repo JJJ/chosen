@@ -26,6 +26,8 @@ export interface ChosenOptions {
   search_input_type?: 'search' | 'text';
   rtl?: boolean;
   inherit_select_classes?: boolean;
+  inherit_option_classes?: boolean;
+  results_count_text?: (count: number) => string;
   display_selected_value?: boolean;
   include_group_label_in_selected?: boolean;
 }

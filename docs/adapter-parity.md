@@ -18,18 +18,18 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `disable_search_threshold` | No | No | Search visibility based on option count. |
 | `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |
 | `inherit_select_classes` | Yes | Yes | Vanilla opts into copying source classes; React uses `className` directly on its generated host. |
-| `inherit_option_classes` | No | No | Generated result classes from source options. |
+| `inherit_option_classes` | Yes | Yes | Option and group classes reach result rows; opt in to copying option classes to selected chips. React uses `className` on option data and `inheritOptionClasses`. |
 | `max_selected_options` | Yes | Yes | Both enforce the limit. |
 | `max_items_shown` | No | No | Collapsible selected-choice summary. |
 | `paste_multiple_values` | No | No | Existing-option token paste with unmatched text preserved. |
 | `more_items_text` | No | No | Selected-choice summary text callback. |
 | `show_fewer_items_text` | No | No | Expanded summary button text. |
-| `no_results_text` | Yes | Partial | React has `noResultsText`, but its default and punctuation differ. |
+| `no_results_text` | Yes | Yes | React prop: `noResultsText`; custom text is used literally before the query. Vanilla also reads source `data-no_results_text`. |
 | `create_option` | No | No | New-option action; React needs a parent callback for controlled options. |
 | `create_option_text` | No | No | New-option action label. |
 | `persistent_create_option` | No | No | Keep creation available when results match. |
 | `skip_no_results` | No | No | Hide no-results copy during creation. |
-| `results_count_text` | Partial | Partial | Both announce counts with fixed English text; neither accepts the localization callback. |
+| `results_count_text` | Yes | Yes | React prop: `resultsCountText`; both accept `(count) => text` for the live result count. |
 | `placeholder_text_multiple` | Yes | Yes | React prop: `placeholderTextMultiple`. |
 | `placeholder_text` | Yes | Yes | React prop: `placeholder`; type-specific props take precedence. |
 | `placeholder_text_single` | Yes | Yes | React prop: `placeholderTextSingle`. |

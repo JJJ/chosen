@@ -64,6 +64,7 @@ export function normalizeOptions(entries) {
       label: label,
       empty: value === '' && label === '',
       searchText: asText(source.searchText),
+      className: asText(source.className),
       selected: !!source.selected,
       disabled: !!source.disabled || !!(group && group.disabled),
       hidden: !!source.hidden || !!(group && group.hidden),
@@ -80,6 +81,7 @@ export function normalizeOptions(entries) {
         kind: 'group',
         index: groupIndex,
         label: asText(entry.label),
+        className: asText(entry.className),
         disabled: !!entry.disabled,
         hidden: !!entry.hidden
       };

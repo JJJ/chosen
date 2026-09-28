@@ -7,10 +7,12 @@ export interface ChosenOption {
   disabled?: boolean;
   hidden?: boolean;
   searchText?: string;
+  className?: string;
 }
 
 export interface ChosenGroup {
   label: string;
+  className?: string;
   disabled?: boolean;
   hidden?: boolean;
   options: ChosenOption[];
@@ -43,6 +45,8 @@ export interface ChosenProps {
   allowSingleDeselect?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
+  resultsCountText?: (count: number) => string;
+  inheritOptionClasses?: boolean;
   maxSelectedOptions?: number;
   backspaceDeletesChoices?: boolean;
   multiselectAllowTabToSelect?: boolean;

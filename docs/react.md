@@ -56,6 +56,10 @@ and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
 `maxShownResults` bound visible results and matching work. Set
 `searchInputType="text"` to use a text input instead of the classic default
 search input; the theme uses classes rather than input-type selectors. Set
+`resultsCountText={count => count + ' choices'}` to localize the live result
+count. `noResultsText` is used literally before the query, with one space.
+Set `className` on option or group data to style result rows; set
+`inheritOptionClasses` to copy option classes to selected chips too. Set
 `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without

@@ -12,6 +12,7 @@ const source: Array<ChosenOption | ChosenGroup> = [
   { label: 'Animals', options: [{ value: 'cat', label: 'Cat' }] },
 ];
 const normalized = normalizeOptions(source);
+void normalized[0].className;
 const filtered: FilterResult = filterOptions(normalized, 'cat', { groupSearch: true,
   maxShownResults: 2, searchMatcher: (query, item) => item.label.includes(query) });
 const selected: SelectionResult = updateSelection([], { value: 'cat' }, { multiple: true });

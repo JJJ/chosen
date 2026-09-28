@@ -9,13 +9,16 @@ function optionTree(select) {
   for (const child of select.children) {
     if (child.tagName === 'OPTGROUP') {
       entries.push({ label: child.label, disabled: child.disabled, hidden: child.hidden,
+        className: child.className,
         options: Array.from(child.children, option => ({ value: option.value, label: option.text,
           selected: option.selected, disabled: option.disabled, hidden: option.hidden,
+          className: option.className,
           searchText: option.getAttribute('data-search-text') || '' })) });
       nodes.push(null, ...child.children);
     } else if (child.tagName === 'OPTION') {
       entries.push({ value: child.value, label: child.text, selected: child.selected,
         disabled: child.disabled, hidden: child.hidden,
+        className: child.className,
         searchText: child.getAttribute('data-search-text') || '' });
       nodes.push(child);
     }
@@ -49,8 +52,10 @@ export class Chosen {
       display_selected_value: false, include_group_label_in_selected: false,
       rtl: false,
       inherit_select_classes: false,
+      inherit_option_classes: false,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
       no_results_text: 'No results for:',
+      results_count_text: count => `${count} result${count === 1 ? '' : 's'} available`,
       allow_single_deselect: false, ...options };
     this.id = `${select.id || `chosen-native-${++nextId}`}-native`;
     this.multiple = select.multiple;
@@ -179,6 +184,7 @@ export class Chosen {
     if (this.multiple) {
       for (const entry of selected) {
         const chip = element('span', 'chosen-native__chip');
+        if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
         chip.append(selectedDisplay(entry));
         if (!this.select.disabled && !this.input.readOnly) {
           const remove = element('button', 'chosen-native__remove', '×');
@@ -229,7 +235,7 @@ export class Chosen {
     let groupIndex = -1;
     for (const [position, entry] of this.available.entries()) {
       if (entry.kind === 'group') {
-        group = element('div', 'chosen-native__group');
+        group = element('div', `chosen-native__group${entry.className ? ` ${entry.className}` : ''}`);
         groupIndex = entry.index;
         group.setAttribute('role', 'group');
         group.setAttribute('aria-label', entry.label);
@@ -238,7 +244,7 @@ export class Chosen {
         continue;
       }
       const selected = !!this.nodes[entry.index]?.selected;
-      const row = element('div', `chosen-native__option${selected ? ' chosen-native__option--selected' : ''}${entry.disabled ? ' chosen-native__option--disabled' : ''}`, entry.label);
+      const row = element('div', `chosen-native__option${selected ? ' chosen-native__option--selected' : ''}${entry.disabled ? ' chosen-native__option--disabled' : ''}${entry.className ? ` ${entry.className}` : ''}`, entry.label);
       row.id = `${this.id}-option-${entry.index}`;
       row.setAttribute('role', 'option');
       row.setAttribute('aria-selected', String(selected));
@@ -249,7 +255,8 @@ export class Chosen {
       (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
     }
     this.empty.hidden = !!result.count;
-    this.empty.textContent = `${this.options.no_results_text}${query ? ` ${query}` : ''}`;
+    const noResultsText = this.select.getAttribute('data-no_results_text') || this.options.no_results_text;
+    this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ''}`;
     if (!result.count && query && this.opened) emit(this.select, 'chosen:no_results', this, { search_term: query });
     const active = this.available[this.activeIndex];
     if (!active || active.kind !== 'option' || active.disabled) {
@@ -263,7 +270,7 @@ export class Chosen {
       this.activeIndex = preferred >= 0 ? preferred : this.available.findIndex(entry => entry.kind === 'option' && !entry.disabled);
     }
     this.highlight(this.activeIndex);
-    if (this.opened) this.status.textContent = `${result.count} result${result.count === 1 ? '' : 's'} available.`;
+    if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
   }
 
   highlight(index) {

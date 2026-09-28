@@ -31,6 +31,7 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `placeholder_text_multiple` | type default | Override the fallback for multiple selects; source attributes still take precedence. |
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
+| `results_count_text` | `count => "N results available"` | Localize the live result-count announcement. |
 | `search_contains` | `false` | Match within words. |
 | `highlight_prefix_matches` | `false` | With contains search, highlight a visible label prefix before an earlier substring result without changing result order. Does not override `search_matcher`. |
 | `enable_split_word_search` | `true` | Match at word boundaries; set `false` to require a label-start match. |
@@ -53,6 +54,7 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `multiselect_allow_tab_to_select` | `false` | Select the highlighted multiple-select result on Tab while continuing normal focus navigation. |
 | `rtl` | `false` | Set right-to-left direction on the generated control; source `dir` and legacy `chosen-rtl` class also work. Call `update()` after changing source direction. |
 | `inherit_select_classes` | `false` | Copy source select classes to the generated host. The legacy `chosen-rtl` marker passes through even when this is off; internal `chosen-native` classes are not copied. Call `update()` after changing classes. |
+| `inherit_option_classes` | `false` | Option and optgroup classes appear on result rows; set this to also copy option classes to selected chips. |
 | `aria_label` | associated label or select label | Accessible name for the generated search input. |
 
 The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation, bulk actions, fixed or custom-width dropdowns, or the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.

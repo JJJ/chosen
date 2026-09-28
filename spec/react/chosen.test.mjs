@@ -155,6 +155,23 @@ test('React defaults to classic word-start search and no-results copy', () => {
   assert.ok(screen.getByRole('option', { name: 'Banana' }));
 });
 
+test('React carries option classes and uses literal localized result copy', () => {
+  const styled = [{ label: 'Team', className: 'team-group', options: [
+    { value: 'a', label: 'Alpha', className: 'leader' }, { value: 'b', label: 'Beta' }
+  ] }];
+  render(h(Chosen, { options: styled, multiple: true, defaultValue: ['a'],
+    inheritOptionClasses: true, resultsCountText: count => `${count} choices`,
+    noResultsText: 'No matches', 'aria-label': 'Team' }));
+  assert.equal(document.querySelector('.chosen-react__chip').classList.contains('leader'), true);
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  assert.equal(document.querySelector('.chosen-react__group').classList.contains('team-group'), true);
+  assert.equal(screen.getByRole('option', { name: 'Alpha' }).classList.contains('leader'), true);
+  assert.equal(screen.getByRole('status').textContent, '2 choices');
+  fireEvent.change(input, { target: { value: 'missing' } });
+  assert.equal(screen.getByText('No matches missing').textContent, 'No matches missing');
+});
+
 test('React matches classic clear and type-specific placeholder defaults', () => {
   const view = render(h(Chosen, { options, value: 'a', 'aria-label': 'Fruit' }));
   assert.equal(screen.queryByRole('button', { name: 'Clear selection' }), null);

@@ -103,6 +103,7 @@ var ChosenNative = (() => {
         label,
         empty: value === "" && label === "",
         searchText: asText(source.searchText),
+        className: asText(source.className),
         selected: !!source.selected,
         disabled: !!source.disabled || !!(group2 && group2.disabled),
         hidden: !!source.hidden || !!(group2 && group2.hidden),
@@ -118,6 +119,7 @@ var ChosenNative = (() => {
           kind: "group",
           index: groupIndex,
           label: asText(entry.label),
+          className: asText(entry.className),
           disabled: !!entry.disabled,
           hidden: !!entry.hidden
         };
@@ -280,12 +282,14 @@ var ChosenNative = (() => {
           label: child.label,
           disabled: child.disabled,
           hidden: child.hidden,
+          className: child.className,
           options: Array.from(child.children, (option) => ({
             value: option.value,
             label: option.text,
             selected: option.selected,
             disabled: option.disabled,
             hidden: option.hidden,
+            className: option.className,
             searchText: option.getAttribute("data-search-text") || ""
           }))
         });
@@ -297,6 +301,7 @@ var ChosenNative = (() => {
           selected: child.selected,
           disabled: child.disabled,
           hidden: child.hidden,
+          className: child.className,
           searchText: child.getAttribute("data-search-text") || ""
         });
         nodes.push(child);
@@ -336,8 +341,10 @@ var ChosenNative = (() => {
         include_group_label_in_selected: false,
         rtl: false,
         inherit_select_classes: false,
+        inherit_option_classes: false,
         placeholder_text: select.multiple ? "Select Some Options" : "Select an Option",
         no_results_text: "No results for:",
+        results_count_text: (count) => `${count} result${count === 1 ? "" : "s"} available`,
         allow_single_deselect: false,
         ...options
       };
@@ -474,6 +481,7 @@ var ChosenNative = (() => {
       if (this.multiple) {
         for (const entry of selected) {
           const chip = element("span", "chosen-native__chip");
+          if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
           chip.append(selectedDisplay(entry));
           if (!this.select.disabled && !this.input.readOnly) {
             const remove = element("button", "chosen-native__remove", "\xD7");
@@ -519,7 +527,7 @@ var ChosenNative = (() => {
       let groupIndex = -1;
       for (const [position, entry] of this.available.entries()) {
         if (entry.kind === "group") {
-          group = element("div", "chosen-native__group");
+          group = element("div", `chosen-native__group${entry.className ? ` ${entry.className}` : ""}`);
           groupIndex = entry.index;
           group.setAttribute("role", "group");
           group.setAttribute("aria-label", entry.label);
@@ -528,7 +536,7 @@ var ChosenNative = (() => {
           continue;
         }
         const selected = !!this.nodes[entry.index]?.selected;
-        const row = element("div", `chosen-native__option${selected ? " chosen-native__option--selected" : ""}${entry.disabled ? " chosen-native__option--disabled" : ""}`, entry.label);
+        const row = element("div", `chosen-native__option${selected ? " chosen-native__option--selected" : ""}${entry.disabled ? " chosen-native__option--disabled" : ""}${entry.className ? ` ${entry.className}` : ""}`, entry.label);
         row.id = `${this.id}-option-${entry.index}`;
         row.setAttribute("role", "option");
         row.setAttribute("aria-selected", String(selected));
@@ -543,7 +551,8 @@ var ChosenNative = (() => {
         (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
       }
       this.empty.hidden = !!result.count;
-      this.empty.textContent = `${this.options.no_results_text}${query ? ` ${query}` : ""}`;
+      const noResultsText = this.select.getAttribute("data-no_results_text") || this.options.no_results_text;
+      this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ""}`;
       if (!result.count && query && this.opened) emit(this.select, "chosen:no_results", this, { search_term: query });
       const active = this.available[this.activeIndex];
       if (!active || active.kind !== "option" || active.disabled) {
@@ -557,7 +566,7 @@ var ChosenNative = (() => {
         this.activeIndex = preferred >= 0 ? preferred : this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled);
       }
       this.highlight(this.activeIndex);
-      if (this.opened) this.status.textContent = `${result.count} result${result.count === 1 ? "" : "s"} available.`;
+      if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
     }
     highlight(index) {
       this.activeIndex = index;
