@@ -38,6 +38,7 @@ document.observe('dom:loaded', function(evt) {
   new Chosen($('defaults-shared'));
   new Chosen($('defaults-local'), { placeholder_text_single: 'Local prompt' });
   Chosen.defaults = previousChosenDefaults;
+  new Chosen($('data-options-select'));
 
   $('width-update-add').observe('click', function() {
     var select = $('width-update');

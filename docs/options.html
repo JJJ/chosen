@@ -53,6 +53,14 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
 
 // Prototype: Chosen.defaults = { placeholder_text_single: "Choose an item" };</code></pre>
 
+      <h3>Per-select data attributes</h3>
+      <p>Put supported scalar options on a select using kebab-case <code class="language-html">data-*</code> names. For example, <code class="language-html">data-disable-search="true"</code> sets <code class="language-javascript">disable_search: true</code> for that select. Explicit JavaScript options override data attributes, which override shared initialization defaults. Attributes are read when Chosen is initialized; destroy and reinitialize it after changing them.</p>
+      <pre><code class="language-markup">&lt;select data-disable-search="true" data-allow-single-deselect="true" data-width="100%"&gt;
+  &lt;option value=""&gt;&lt;/option&gt;
+  &lt;option&gt;Atlas&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+      <p>Boolean attributes accept exactly <code>true</code> or <code>false</code>; integer attributes accept nonnegative whole numbers; text and CSS width attributes use their literal value. <code class="language-html">data-width="false"</code> preserves the CSS-controlled width setting. Invalid values and unknown option names are ignored. Callback and object options such as <code class="language-javascript">search_matcher</code>, <code class="language-javascript">normalize_search_text</code>, and <code class="language-javascript">parser_config</code> still require JavaScript. The existing <code class="language-html">data-placeholder</code>, <code class="language-html">data-no_results_text</code>, and <code class="language-html">data-create_option_text</code> attributes keep their established precedence.</p>
+
       <table class="docs-table docs-table-options">
         <tbody><tr>
           <th>Option</th><th>Default</th><th>Description</th>

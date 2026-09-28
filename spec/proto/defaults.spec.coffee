@@ -34,3 +34,18 @@ describe "Initialization defaults", ->
     chosen = new Chosen(div.down("select"), options)
     expect(chosen.options).toBe(options)
     div.remove()
+
+  it "reads typed select data attributes and keeps explicit options authoritative", ->
+    div = new Element("div").update("<select data-disable-search='true' data-allow-single-deselect='true' data-search-delay='15' data-search-input-type='text' data-placeholder-text-single='From attribute' data-max-items-shown='2.5' data-search-matcher='javascript'><option value=''></option><option>One</option></select>")
+    document.body.appendChild(div)
+    Chosen.defaults = {disable_search: true, search_delay: 5}
+    chosen = new Chosen(div.down('select'), disable_search: false)
+
+    expect(chosen.disable_search).toBe(false)
+    expect(chosen.allow_single_deselect).toBe(true)
+    expect(chosen.search_delay).toBe(15)
+    expect(chosen.search_input_type).toBe('text')
+    expect(chosen.default_text).toBe('From attribute')
+    expect(chosen.max_items_shown).toBe(Infinity)
+    expect(chosen.search_matcher).toBe(null)
+    div.remove()

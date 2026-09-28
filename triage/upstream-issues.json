@@ -1187,8 +1187,8 @@
   },
   {
     "number": 1870,
-    "status": "candidate",
-    "note": "Assess per-select data attributes for options with explicit parsing and safe defaults."
+    "status": "fixed-in-fork",
+    "note": "Both adapters read documented scalar options from per-select data attributes with strict typed parsing; explicit JavaScript options still win."
   },
   {
     "number": 1833,
