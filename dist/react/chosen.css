@@ -110,12 +110,14 @@
 .chosen-react__chip {
   display: inline-flex;
   align-items: center;
-  gap: .2rem;
+  gap: .15rem;
   max-width: 100%;
-  padding: .125rem .35rem;
+  padding: .2rem .35rem;
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-choice-border-radius, 3px);
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
+  font-size: .9em;
 }
 
 .chosen-react__chip > span {
@@ -151,15 +153,15 @@
   display: inline-grid;
   place-items: center;
   flex: none;
+  inline-size: 18px;
   block-size: 1.25rem;
   padding: 0;
-  line-height: 1;
+  background: var(--chosen-icon-clear, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%23888'/%3E%3Cpath d='m5.5 5.5 5 5m0-5-5 5' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")) no-repeat center / var(--chosen-icon-size, 15px);
+  font-size: 0;
 }
 
-.chosen-react__remove:hover,
-.chosen-react__clear:hover {
-  color: var(--chosen-hover-color, #3875d7);
-}
+.chosen-react__remove:hover { filter: brightness(.7); }
+.chosen-react__clear:hover { color: var(--chosen-hover-color, #3875d7); }
 
 .chosen-react__chevron {
   width: .5rem;
