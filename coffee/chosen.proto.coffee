@@ -236,9 +236,10 @@ class @Chosen extends AbstractChosen
     return if @is_disabled
     is_choice_close = evt? and (evt.target.hasClassName('search-choice-close') or evt.target.up('.search-choice-close')?)
 
-    if evt and this.mousedown_checker(evt) == 'left'
-      if evt and evt.type in ['mousedown', 'touchstart'] and not @results_showing and not (evt.type is 'touchstart' and is_choice_close)
-        evt.stop()
+    if evt and evt.type is 'touchstart' and not @results_showing and not is_choice_close
+      evt.stop()
+    else if evt and evt.type is 'mousedown' and this.mousedown_checker(evt) == 'left' and not @results_showing
+      evt.stop()
 
     if not is_choice_close
       if not @active_field

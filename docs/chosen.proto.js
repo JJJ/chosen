@@ -2682,15 +2682,15 @@ var ChosenCore = (function() {
       }
 
       container_mousedown(evt) {
-        var is_choice_close, ref;
+        var is_choice_close;
         if (this.is_disabled) {
           return;
         }
         is_choice_close = (evt != null) && (evt.target.hasClassName('search-choice-close') || (evt.target.up('.search-choice-close') != null));
-        if (evt && this.mousedown_checker(evt) === 'left') {
-          if (evt && ((ref = evt.type) === 'mousedown' || ref === 'touchstart') && !this.results_showing && !(evt.type === 'touchstart' && is_choice_close)) {
-            evt.stop();
-          }
+        if (evt && evt.type === 'touchstart' && !this.results_showing && !is_choice_close) {
+          evt.stop();
+        } else if (evt && evt.type === 'mousedown' && this.mousedown_checker(evt) === 'left' && !this.results_showing) {
+          evt.stop();
         }
         if (!is_choice_close) {
           if (!this.active_field) {
