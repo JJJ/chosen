@@ -137,3 +137,68 @@ function Demo() {
 }
 
 createRoot(document.getElementById('react-demo-root')).render(<Demo />);
+
+const suiteCases = window.ChosenAdapterCases;
+function optionData(items) {
+  return items.map(item => typeof item === 'string' ? { value: item, label: item } :
+    item.options ? { label: item.label, options: optionData(item.options) } :
+      { value: item.value || item.label, label: item.label,
+        disabled: !!item.disabled, hidden: !!item.hidden, searchText: item.searchText });
+}
+
+function SuiteExample({ example, report }) {
+  const [items, setItems] = useState(() => optionData(example.options));
+  const [mounted, setMounted] = useState(true);
+  const [readOnly, setReadOnly] = useState(false);
+  const [invalid, setInvalid] = useState(false);
+  const id = `react-suite-${example.id}`;
+  const select = mounted ? <Chosen id={id} name={`suite-${example.id}`}
+    options={items} multiple={!!example.multiple} defaultValue={example.defaultValue}
+    required={!!example.required} dir={example.dir} readOnly={readOnly}
+    placeholder={example.placeholder || (example.dataOptions ? 'Choose a project...' : undefined)}
+    aria-invalid={invalid || undefined}
+    onChange={value => { setInvalid(false); report(`${example.title}: ${Array.isArray(value) ? value.join(', ') : value || '(none)'}`); }}
+    {...(example.react || {})} /> : <p>Chosen is unmounted.</p>;
+  return <section id={example.id} className={`adapter-suite-example ${example.className || ''}`}>
+    <h2>{example.title}</h2>
+    <div className={`adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`}>
+      <label htmlFor={id} className={example.id === 'labels-work-too' ? undefined : 'adapter-suite-accessible-label'}>{example.title}</label>
+      {select}
+    </div>
+    <p>{example.help}</p>
+    {example.dynamic && <div className="adapter-suite-actions">
+      <button type="button" onClick={() => {
+        const count = items.length + 1;
+        setItems(current => [...current, { value: `item-${count}`, label: `Item ${count}` }]);
+        report(`${example.title}: added Item ${count}`);
+      }}>Add an option</button>
+      <button type="button" onClick={() => { setMounted(value => !value); report(`${example.title}: ${mounted ? 'unmounted' : 'rebuilt'}`); }}>
+        {mounted ? 'Unmount Chosen' : 'Rebuild Chosen'}
+      </button>
+    </div>}
+    {example.groupAction && <button type="button" onClick={() => setReadOnly(value => !value)}>
+      {readOnly ? 'Make editable' : 'Make read-only'}
+    </button>}
+    {example.required && <button type="button" onClick={() => {
+      const control = document.querySelector(`select[name="suite-${example.id}"]`);
+      const valid = control?.checkValidity() ?? false;
+      setInvalid(!valid);
+      report(`${example.title}: ${valid ? 'valid' : 'selection required'}`);
+    }}>Check validity</button>}
+  </section>;
+}
+
+function Suite() {
+  const [event, setEvent] = useState('Try an example above.');
+  return <>
+    <nav className="adapter-suite-index" aria-label="React feature examples">
+      {suiteCases.map(example => <a href={`#${example.id}`} key={example.id}>{example.title}</a>)}
+    </nav>
+    <form className="adapter-suite-form" onSubmit={event => event.preventDefault()}>
+      {suiteCases.map(example => <SuiteExample key={example.id} example={example} report={setEvent} />)}
+    </form>
+    <output role="status">{event}</output>
+  </>;
+}
+
+createRoot(document.getElementById('react-suite-root')).render(<Suite />);

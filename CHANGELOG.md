@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Give the Vanilla and React demo pages working examples for the same 26 feature sections as the jQuery and Prototype pages, with matching page navigation, headers, and footers.
 - Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
 - Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).
 - Read supported scalar Chosen options from per-select `data-*` attributes in both legacy adapters, with explicit JavaScript options taking precedence (harvesthq/chosen#1870).

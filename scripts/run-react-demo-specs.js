@@ -63,7 +63,7 @@ async function main() {
       }
       await multiple.fill('New fruit');
       await multiple.press('Enter');
-      if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('basket'))) !== '["apple","New fruit"]') {
+      if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('#react-example-form')).getAll('basket'))) !== '["apple","New fruit"]') {
         throw new Error(`${name}: quick-test Enter did not create the new fruit`);
       }
       await page.reload();

@@ -15,6 +15,8 @@ async function check(name, engine) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(demo);
+    const suiteControlWidth = await page.locator('#standard-select .chosen-native').evaluate(node => node.getBoundingClientRect().width);
+    if (suiteControlWidth < 300) throw new Error(`${name}: standard example control clipped at ${suiteControlWidth}px`);
     const currentNav = await page.locator('.site-nav [aria-current="page"]').allTextContents();
     if (JSON.stringify(currentNav) !== '["Vanilla demo"]') throw new Error(`${name}: wrong active demo navigation`);
     for (const href of ['#native-single-example', '#native-multiple-example', '#native-season-example']) {
@@ -28,7 +30,7 @@ async function check(name, engine) {
     }
     await quickSkills.fill('New skill');
     await quickSkills.press('Enter');
-    if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))) !== '["New skill"]') {
+    if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).getAll('skills'))) !== '["New skill"]') {
       throw new Error(`${name}: quick-test Enter did not create the new skill`);
     }
     await page.reload();
@@ -37,7 +39,7 @@ async function check(name, engine) {
     await project.fill('bea');
     if (await page.getByRole('option', { name: 'Atlas' }).count()) throw new Error(`${name}: single search failed`);
     await page.getByRole('option', { name: 'Beacon' }).click();
-    const selected = await page.evaluate(() => new FormData(document.querySelector('form')).get('project'));
+    const selected = await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).get('project'));
     if (selected !== 'beacon') throw new Error(`${name}: native form value was ${selected}`);
     await project.press('ArrowDown');
     if (!await project.getAttribute('aria-activedescendant')) throw new Error(`${name}: no active keyboard option`);
@@ -63,12 +65,13 @@ async function check(name, engine) {
     }
     await skills.fill('jav');
     await skills.press('Enter');
-    const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'));
+    const values = await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).getAll('skills'));
     if (JSON.stringify(values) !== '["javascript"]') throw new Error(`${name}: multiple keyboard selection failed`);
     const resultStyle = await page.evaluate(() => {
-      const group = document.querySelector('.chosen-native__group-label');
-      const row = document.querySelector('.chosen-native__option--selected');
-      const chipRemove = document.querySelector('.chosen-native__remove');
+      const host = document.querySelector('#native-skills').nextElementSibling;
+      const group = host.querySelector('.chosen-native__group-label');
+      const row = host.querySelector('.chosen-native__option--selected');
+      const chipRemove = host.querySelector('.chosen-native__remove');
       return {
         selected: row?.getAttribute('aria-selected'),
         mark: getComputedStyle(row, '::after').content,
@@ -81,18 +84,18 @@ async function check(name, engine) {
       throw new Error(`${name}: selected/group/chip styling failed (${JSON.stringify(resultStyle)})`);
     }
     await page.getByRole('option', { name: 'JavaScript' }).click();
-    if ((await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))).length) {
+    if ((await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).getAll('skills'))).length) {
       throw new Error(`${name}: selected result click did not remove the option`);
     }
     await page.getByRole('option', { name: 'JavaScript' }).click();
     await page.getByRole('button', { name: 'Remove JavaScript' }).click();
-    if ((await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))).length) {
+    if ((await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).getAll('skills'))).length) {
       throw new Error(`${name}: chip removal failed`);
     }
     await skills.fill('typ');
     await skills.press('Tab');
     const tabSelection = await page.evaluate(() => ({
-      values: new FormData(document.querySelector('form')).getAll('skills'),
+      values: new FormData(document.querySelector('#native-demo-form')).getAll('skills'),
       focus: document.activeElement?.id
     }));
     if (JSON.stringify(tabSelection.values) !== '["typography"]' || tabSelection.focus !== 'native-season-native') {
@@ -100,7 +103,7 @@ async function check(name, engine) {
     }
     await skills.fill('New skill');
     await page.getByRole('option', { name: 'Add skill: New skill' }).click();
-    const createdValues = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'));
+    const createdValues = await page.evaluate(() => new FormData(document.querySelector('#native-demo-form')).getAll('skills'));
     if (JSON.stringify(createdValues) !== '["typography","New skill"]') {
       throw new Error(`${name}: native option creation did not submit (${JSON.stringify(createdValues)})`);
     }
@@ -118,7 +121,7 @@ async function check(name, engine) {
       const select = document.querySelector('#native-project');
       select.value = 'comet';
       select.dispatchEvent(new Event('change', { bubbles: true }));
-      return document.querySelector('.chosen-native__value').textContent;
+      return document.querySelector('#native-project').nextElementSibling.querySelector('.chosen-native__value').textContent;
     });
     if (external !== 'Comet') throw new Error(`${name}: external change did not synchronize`);
     await page.getByRole('button', { name: 'Reset form' }).click();
@@ -192,7 +195,7 @@ async function check(name, engine) {
       await touch.getByRole('option', { name: 'Atlas' }).tap();
       const mobile = await touch.evaluate(() => ({
         value: document.querySelector('#native-project').value,
-        fontSize: parseFloat(getComputedStyle(document.querySelector('.chosen-native__input')).fontSize),
+        fontSize: parseFloat(getComputedStyle(document.querySelector('#native-project').nextElementSibling.querySelector('.chosen-native__input')).fontSize),
         scale: visualViewport.scale
       }));
       if (mobile.value !== 'atlas' || mobile.fontSize < 16 || mobile.scale !== 1) {

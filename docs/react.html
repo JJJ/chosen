@@ -2,16 +2,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111827">
-  <title>Chosen: Native React demo</title>
+  <title>Chosen: React demo</title>
   <link rel="stylesheet" href="docsupport/style.css?ver=3.0.4">
   <link rel="stylesheet" href="chosen.react.css?ver=3.0.4-mobile">
   <link rel="stylesheet" href="docsupport/react-demo.css?ver=3.0.4">
   <script src="docsupport/theme.js" defer></script>
+  <script src="docsupport/adapter-demo-cases.js" defer></script>
   <script src="docsupport/react-demo.js" defer></script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
 </head><body class="docs-reference">
   <div id="container"><div id="content">
-    <header class="site-header site-header-compact">
+    <header class="site-header">
       <div class="site-nav-wrap">
         <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
         <nav class="site-nav" aria-label="Primary navigation">
@@ -25,9 +26,14 @@
         </nav>
       </div>
       <div class="hero-copy">
-        <p class="eyebrow">Native React edition</p>
-        <h1>Chosen for React.</h1>
-        <p class="lede">A compact select component with native form values, approachable defaults, and theme tokens you can use with Tailwind.</p>
+        <p class="eyebrow">React edition</p>
+        <h1>Tame unwieldy select boxes.</h1>
+        <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+        <div class="hero-actions">
+          <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+          <a class="button" href="options.html">Explore the API</a>
+          <a class="text-link" href="https://github.com/JJJ/chosen/blob/master/contributing.md">Contribute on GitHub <span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </header>
     <main>
@@ -40,6 +46,11 @@
           <li><a href="#react-season-example">Floating dropdown:</a> open Season, then scroll the page while its wider list is open.</li>
         </ol>
       </section>
+      <section class="adapter-suite" aria-labelledby="react-suite-heading">
+        <h2 id="react-suite-heading">Feature examples</h2>
+        <p>These follow the jQuery and Prototype demo sections in the same order, using React props and callbacks.</p>
+        <div id="react-suite-root"></div>
+      </section>
       <div id="react-demo-root"></div>
       <h2>Use it in your project</h2>
       <p>The React edition is currently experimental. It needs React 18 or newer and does not load jQuery or Prototype. Import its CSS separately, then customize the same <code>--chosen-*</code> tokens used by classic Chosen.</p>
@@ -49,6 +60,6 @@ import 'chosen-jjj/react/styles.css';
 &lt;Chosen name="fruit" options={options} defaultValue="apple" /&gt;</code></pre>
       <p>See the <a href="https://github.com/JJJ/chosen/blob/master/docs/react.md">React guide</a> for controlled and uncontrolled values, accessibility, server rendering, and the Tailwind recipe.</p>
     </main>
-    <footer>© 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ.</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.</footer>
+    <footer>© 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.</footer>
   </div></div>
 </body></html>

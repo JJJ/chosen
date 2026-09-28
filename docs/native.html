@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="docsupport/native-demo.css?ver=3.0.4">
   <script src="docsupport/theme.js" defer></script>
   <script src="chosen.native.js" defer></script>
+  <script src="docsupport/adapter-demo-cases.js" defer></script>
   <script src="docsupport/native-demo.js" defer></script>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
 </head><body class="docs-reference">
   <div id="container"><div id="content">
-    <header class="site-header site-header-compact">
+    <header class="site-header">
       <div class="site-nav-wrap">
         <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
         <nav class="site-nav" aria-label="Primary navigation">
@@ -27,8 +28,13 @@
       </div>
       <div class="hero-copy">
         <p class="eyebrow">Vanilla JavaScript edition</p>
-        <h1>Chosen without a framework.</h1>
-        <p class="lede">An experimental Chosen adapter for ordinary select elements. Try a selection, search a group, reset the form, or add an option.</p>
+        <h1>Tame unwieldy select boxes.</h1>
+        <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+        <div class="hero-actions">
+          <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+          <a class="button" href="options.html">Explore the API</a>
+          <a class="text-link" href="https://github.com/JJJ/chosen/blob/master/contributing.md">Contribute on GitHub <span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </header>
     <main>
@@ -40,6 +46,13 @@
           <li><a href="#native-multiple-example">Groups and limits:</a> clear the search, choose Design, then try a fourth skill. The event log reports the limit.</li>
           <li><a href="#native-season-example">Floating dropdown:</a> open Season, then scroll the page while its wider list is open.</li>
         </ol>
+      </section>
+      <section class="adapter-suite" aria-labelledby="native-suite-heading">
+        <h2 id="native-suite-heading">Feature examples</h2>
+        <p>These follow the jQuery and Prototype demo sections in the same order, using native select elements and DOM events.</p>
+        <nav id="native-suite-index" class="adapter-suite-index" aria-label="Vanilla feature examples"></nav>
+        <form id="native-suite-form" class="adapter-suite-form"></form>
+        <output id="native-suite-event" role="status">Try an example above.</output>
       </section>
       <form id="native-demo-form" class="native-demo-form">
         <section id="native-single-example" class="native-demo-field">
@@ -106,6 +119,6 @@ const chosen = new Chosen(document.querySelector('#native-project'), {
 chosen.update();
 chosen.destroy();</code></pre>
     </main>
-    <footer>© 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ.</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.</footer>
+    <footer>© 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.</footer>
   </div></div>
 </body></html>

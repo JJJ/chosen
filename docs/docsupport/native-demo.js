@@ -51,3 +51,117 @@ document.getElementById('native-demo-form').addEventListener('submit', event => 
   const data = new FormData(event.currentTarget);
   events.textContent = `Submitted project: ${data.get('project') || '(none)'}\nSubmitted skills: ${data.getAll('skills').join(', ') || '(none)'}`;
 });
+
+// Keep the feature sections in the same order as the classic demo pages.
+const suite = document.getElementById('native-suite-form');
+const suiteIndex = document.getElementById('native-suite-index');
+const suiteEvent = document.getElementById('native-suite-event');
+const makeOption = item => {
+  const data = typeof item === 'string' ? { label: item } : item;
+  const option = new Option(data.label, data.value || data.label);
+  option.disabled = !!data.disabled;
+  option.hidden = !!data.hidden;
+  if (data.searchText) option.dataset.searchText = data.searchText;
+  return option;
+};
+for (const example of window.ChosenAdapterCases) {
+  const link = document.createElement('a');
+  link.href = `#${example.id}`;
+  link.textContent = example.title;
+  suiteIndex.append(link);
+  const section = document.createElement('section');
+  section.id = example.id;
+  section.className = `adapter-suite-example ${example.className || ''}`;
+  const title = document.createElement('h2');
+  title.textContent = example.title;
+  const label = document.createElement('label');
+  const id = `native-suite-${example.id}`;
+  label.htmlFor = id;
+  label.textContent = example.title;
+  const select = document.createElement('select');
+  select.id = id;
+  select.name = `suite-${example.id}`;
+  select.multiple = !!example.multiple;
+  select.required = !!example.required;
+  if (example.dir) select.dir = example.dir;
+  if (example.groupAction) select.setAttribute('select-by-group', '');
+  if (example.placeholder) select.dataset.placeholder = example.placeholder;
+  if (example.dataOptions) {
+    select.dataset.disableSearch = 'true';
+    select.dataset.allowSingleDeselect = 'true';
+    select.dataset.placeholderTextSingle = 'Choose a project...';
+  }
+  if (!example.multiple) select.add(new Option('', ''));
+  for (const item of example.options) {
+    if (typeof item === 'object' && item.options) {
+      const group = document.createElement('optgroup');
+      group.label = item.label;
+      for (const child of item.options) group.append(makeOption(child));
+      select.append(group);
+    } else select.append(makeOption(item));
+  }
+  if (example.defaultValue) for (const option of select.options) {
+    option.selected = (Array.isArray(example.defaultValue) ? example.defaultValue : [example.defaultValue]).includes(option.value);
+  }
+  const help = document.createElement('p');
+  help.textContent = example.help;
+  const controlWrap = document.createElement('div');
+  controlWrap.className = `adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`;
+  if (example.id !== 'labels-work-too') label.className = 'adapter-suite-accessible-label';
+  section.append(controlWrap);
+  controlWrap.append(label, select);
+  section.prepend(title);
+  section.append(help);
+  suite.append(section);
+  const chosenOptions = { width: '100%', ...(example.native || {}) };
+  let chosen = new ChosenNative.Chosen(select, chosenOptions);
+  select.addEventListener('change', () => {
+    suiteEvent.textContent = `${example.title}: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
+  });
+  if (example.dynamic) {
+    const actions = document.createElement('div');
+    actions.className = 'adapter-suite-actions';
+    const add = document.createElement('button');
+    add.type = 'button';
+    add.textContent = 'Add an option';
+    add.addEventListener('click', () => {
+      const count = select.options.length;
+      select.add(new Option(`Item ${count}`, `item-${count}`));
+      chosen?.update();
+      suiteEvent.textContent = `${example.title}: added Item ${count}`;
+    });
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.textContent = 'Destroy Chosen';
+    toggle.addEventListener('click', () => {
+      if (chosen) { chosen.destroy(); chosen = null; toggle.textContent = 'Rebuild Chosen'; }
+      else { chosen = new ChosenNative.Chosen(select, chosenOptions); toggle.textContent = 'Destroy Chosen'; }
+      suiteEvent.textContent = `${example.title}: ${chosen ? 'rebuilt' : 'destroyed'}`;
+    });
+    actions.append(add, toggle);
+    section.append(actions);
+  }
+  if (example.groupAction) {
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.textContent = 'Make read-only';
+    toggle.addEventListener('click', () => {
+      if (select.hasAttribute('readonly')) select.removeAttribute('readonly');
+      else select.setAttribute('readonly', '');
+      chosen.update();
+      toggle.textContent = select.hasAttribute('readonly') ? 'Make editable' : 'Make read-only';
+    });
+    section.append(toggle);
+  }
+  if (example.required) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = 'Check validity';
+    button.addEventListener('click', () => {
+      select.setAttribute('aria-invalid', String(!select.checkValidity()));
+      chosen.update();
+      suiteEvent.textContent = `${example.title}: ${select.checkValidity() ? 'valid' : 'selection required'}`;
+    });
+    section.append(button);
+  }
+}
