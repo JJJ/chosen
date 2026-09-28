@@ -127,6 +127,13 @@ describe "Basic setup", ->
 
     expect(chosen.container.getWidth()).toBe(140)
     expect(chosen.dropdown.getWidth()).toBe(320)
+    expect(chosen.container.hasClassName('chosen-floating-dropdown')).toBe(true)
+    chosen.results_show()
+    expect(getComputedStyle(chosen.dropdown).borderTopWidth).toBe('1px')
+    expect(getComputedStyle(chosen.dropdown).borderTopLeftRadius).toBe('4px')
+    expect(getComputedStyle(chosen.selected_item).borderBottomLeftRadius).toBe('4px')
+    expect(getComputedStyle(chosen.search_container).padding).toBe('4px')
+    expect(getComputedStyle(chosen.search_container).margin).toBe('0px')
 
     intrinsic = new Chosen(div.down('select.intrinsic'), width: '140px', dropdown_width: 'max-content')
     expect(intrinsic.dropdown.getBoundingClientRect().width).toBeGreaterThan(intrinsic.container.getBoundingClientRect().width)
