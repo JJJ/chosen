@@ -37,6 +37,9 @@ export const Chosen = forwardRef(function Chosen({
   normalizeSearchText, searchMatcher,
   displaySelectedOptions = true, displayDisabledOptions = true,
   deselectSelectedResults = false, hideResultsOnSelect = true,
+  maxItemsShown = Infinity,
+  moreItemsText = count => `Show ${count} more...`,
+  showFewerItemsText = 'Show fewer...',
   displaySelectedValue = false, includeGroupLabelInSelected = false,
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
@@ -58,6 +61,7 @@ export const Chosen = forwardRef(function Chosen({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [limitNotice, setLimitNotice] = useState(false);
   const [pendingBackstrokeValue, setPendingBackstrokeValue] = useState(null);
+  const [choicesExpanded, setChoicesExpanded] = useState(false);
   const selectedValues = value === undefined ? internalValues : valuesOf(value, multiple);
   const isOpen = controlledOpen === undefined ? internalOpen : controlledOpen;
   const selectedKey = selectedValues.join('\u0000');
@@ -88,6 +92,10 @@ export const Chosen = forwardRef(function Chosen({
       (preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
   const activeOption = active >= 0 ? available[active] : null;
   const selectedOptions = entries.filter(item => item.kind === 'option' && selectedSet.has(item.value));
+  const itemLimit = Number.isInteger(maxItemsShown) && maxItemsShown > 0 ? maxItemsShown : Infinity;
+  const hiddenChoiceCount = Math.max(0, selectedOptions.length - itemLimit);
+  const showingAllChoices = hiddenChoiceCount > 0 && choicesExpanded;
+  useEffect(() => { if (!hiddenChoiceCount) setChoicesExpanded(false); }, [hiddenChoiceCount]);
   const attachNativeSelect = useCallback(node => {
     selectRef.current = node;
     if (value === undefined || !node) return;
@@ -341,11 +349,16 @@ export const Chosen = forwardRef(function Chosen({
         changeOpen(true);
       }
     }}>
-      {multiple && selectedOptions.map(item => <span className={`chosen-react__chip${pendingBackstrokeValue === item.value ? ' chosen-react__chip--pending' : ''}${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
+      {multiple && selectedOptions.map((item, index) => <span hidden={hiddenChoiceCount > 0 && !showingAllChoices && index >= itemLimit} className={`chosen-react__chip${pendingBackstrokeValue === item.value ? ' chosen-react__chip--pending' : ''}${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
         <span>{selectedDisplay(item)}</span>
         {!disabled && !readOnly && <button type="button" className="chosen-react__remove"
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}
       </span>)}
+      {multiple && hiddenChoiceCount > 0 && <button type="button" className="chosen-react__summary"
+        aria-expanded={showingAllChoices} onClick={event => {
+          event.stopPropagation();
+          setChoicesExpanded(!showingAllChoices);
+        }}>{showingAllChoices ? showFewerItemsText : moreItemsText(hiddenChoiceCount)}</button>}
       {showSingleValue && <span className="chosen-react__value" aria-hidden="true">{selectedDisplay(selectedOptions[0])}</span>}
       {searchDisabled && !showSingleValue && <span className="chosen-react__value chosen-react__value--placeholder" aria-hidden="true">{closedPlaceholder}</span>}
       <input ref={inputRef} id={baseId}

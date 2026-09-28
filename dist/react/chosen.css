@@ -125,6 +125,18 @@
   white-space: nowrap;
 }
 .chosen-react__chip--pending { outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb)); }
+.chosen-react__chip[hidden] { display: none; }
+.chosen-react__summary {
+  align-self: center;
+  padding: .125rem .35rem;
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
+  border-radius: var(--chosen-choice-border-radius, 3px);
+  background: var(--chosen-choice-background, #eee);
+  color: var(--chosen-choice-color, #333);
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
 
 .chosen-react__remove,
 .chosen-react__clear {

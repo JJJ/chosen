@@ -128,6 +128,24 @@ test('classic multiple defaults keep selected result rows inert and close after 
   dom.window.close();
 });
 
+test('selected choices collapse with customizable summary copy without changing native values', () => {
+  const { dom, select } = fixture('<select multiple><option value="a" selected>Alpha</option><option value="b" selected>Beta</option><option value="c" selected>Charlie</option></select>');
+  const chosen = new Chosen(select, { max_items_shown: 1,
+    more_items_text: count => `${count} hidden`, show_fewer_items_text: 'Show everything' });
+  assert.equal(chosen.chips.querySelectorAll('.chosen-native__chip[hidden]').length, 2);
+  assert.equal(chosen.chips.querySelector('.chosen-native__summary').textContent, '2 hidden');
+  click(chosen.chips.querySelector('.chosen-native__summary'));
+  assert.equal(chosen.chips.querySelectorAll('.chosen-native__chip[hidden]').length, 0);
+  assert.equal(chosen.chips.querySelector('.chosen-native__summary').textContent, 'Show everything');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'b', 'c']);
+  select.options[1].selected = false;
+  select.options[2].selected = false;
+  chosen.update();
+  assert.equal(chosen.chips.querySelector('.chosen-native__summary'), null);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

@@ -342,6 +342,9 @@ var Chosen = class {
       display_disabled_options: true,
       deselect_selected_results: false,
       hide_results_on_select: true,
+      max_items_shown: Infinity,
+      more_items_text: (count) => `Show ${count} more...`,
+      show_fewer_items_text: "Show fewer...",
       display_selected_value: false,
       include_group_label_in_selected: false,
       rtl: false,
@@ -359,6 +362,7 @@ var Chosen = class {
     this.opened = false;
     this.activeIndex = -1;
     this.pendingBackstrokeValue = null;
+    this.choicesExpanded = false;
     this.typeahead = "";
     this.typeaheadTimer = null;
     this.entries = [];
@@ -504,6 +508,9 @@ var Chosen = class {
   renderSelection() {
     const selected = this.entries.filter((entry) => entry.kind === "option" && this.nodes[entry.index]?.selected && !(entry.value === "" && entry.label === ""));
     this.chips.replaceChildren();
+    const itemLimit = Number.isInteger(this.options.max_items_shown) && this.options.max_items_shown > 0 ? this.options.max_items_shown : Infinity;
+    const hiddenCount = Math.max(0, selected.length - itemLimit);
+    if (!hiddenCount) this.choicesExpanded = false;
     const selectedDisplay = (entry) => {
       const label = element("span", "chosen-native__selected-label");
       if (this.options.include_group_label_in_selected && entry.groupLabel != null) {
@@ -513,8 +520,9 @@ var Chosen = class {
       return label;
     };
     if (this.multiple) {
-      for (const entry of selected) {
+      for (const [index, entry] of selected.entries()) {
         const chip = element("span", "chosen-native__chip");
+        chip.hidden = hiddenCount > 0 && !this.choicesExpanded && index >= itemLimit;
         if (entry.value === this.pendingBackstrokeValue) chip.classList.add("chosen-native__chip--pending");
         if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
         chip.append(selectedDisplay(entry));
@@ -529,6 +537,18 @@ var Chosen = class {
           chip.append(remove);
         }
         this.chips.append(chip);
+      }
+      if (hiddenCount) {
+        const summary = element("button", "chosen-native__summary", this.choicesExpanded ? this.options.show_fewer_items_text : this.options.more_items_text(hiddenCount));
+        summary.type = "button";
+        summary.setAttribute("aria-expanded", String(this.choicesExpanded));
+        summary.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.choicesExpanded = !this.choicesExpanded;
+          this.renderSelection();
+          this.chips.querySelector(".chosen-native__summary")?.focus();
+        });
+        this.chips.append(summary);
       }
     }
     const noSearchPlaceholder = this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? this.options.placeholder_text_single ?? this.options.placeholder_text;

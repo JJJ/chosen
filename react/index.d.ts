@@ -49,6 +49,9 @@ export interface ChosenProps {
   resultsCountText?: (count: number) => string;
   inheritOptionClasses?: boolean;
   maxSelectedOptions?: number;
+  maxItemsShown?: number;
+  moreItemsText?: (count: number) => string;
+  showFewerItemsText?: string;
   backspaceDeletesChoices?: boolean;
   singleBackstrokeDelete?: boolean;
   multiselectAllowTabToSelect?: boolean;

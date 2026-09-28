@@ -106,6 +106,20 @@ test('React classic multiple defaults keep selected rows inert and close after s
   assert.equal(input.getAttribute('aria-expanded'), 'false');
 });
 
+test('React collapses selected chips with localized summary and keeps native values', () => {
+  render(h('form', null, h(Chosen, { options: [
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'c', label: 'Charlie' }
+  ], multiple: true, defaultValue: ['a', 'b', 'c'], name: 'choices',
+  maxItemsShown: 1, moreItemsText: count => `${count} hidden`,
+  showFewerItemsText: 'Show everything', 'aria-label': 'Choices' })));
+  assert.equal(document.querySelectorAll('.chosen-react__chip[hidden]').length, 2);
+  const summary = screen.getByRole('button', { name: '2 hidden' });
+  fireEvent.click(summary);
+  assert.equal(document.querySelectorAll('.chosen-react__chip[hidden]').length, 0);
+  assert.equal(screen.getByRole('button', { name: 'Show everything' }).getAttribute('aria-expanded'), 'true');
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('choices'), ['a', 'b', 'c']);
+});
+
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',

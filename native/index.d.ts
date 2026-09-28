@@ -23,6 +23,9 @@ export interface ChosenOptions {
   display_disabled_options?: boolean;
   min_search_length?: number;
   max_selected_options?: number;
+  max_items_shown?: number;
+  more_items_text?: (count: number) => string;
+  show_fewer_items_text?: string;
   backspace_deletes_choices?: boolean;
   single_backstroke_delete?: boolean;
   open_on_label_click?: boolean;

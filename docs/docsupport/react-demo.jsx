@@ -72,7 +72,7 @@ function Demo() {
           <h2>Multiple selection</h2>
           <label htmlFor="react-basket">Fruit basket</label>
           <Chosen id="react-basket" name="basket" options={options} multiple
-            value={basket} onChange={setBasket} maxSelectedOptions={3}
+            value={basket} onChange={setBasket} maxSelectedOptions={3} maxItemsShown={1}
             multiselectAllowTabToSelect
             includeGroupLabelInSelected
             deselectSelectedResults hideResultsOnSelect={false}

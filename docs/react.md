@@ -72,6 +72,10 @@ visible, selected rows are inert by default and have a check mark. Set
 remove mark then indicates this action. The chip's remove button always works.
 `hideResultsOnSelect` defaults to `true` for multiple choices; set it to
 `false` to keep the dropdown open. Ctrl or Command selection also keeps it open.
+Set `maxItemsShown` to a positive integer to show only that many selected
+chips until the summary button is expanded. `moreItemsText={count => text}`
+and `showFewerItemsText` customize its copy. The native selection and form
+values remain intact.
 `displaySelectedValue` shows option values in the closed control and chips;
 `includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
 and result rows continue to show option labels. `open` and

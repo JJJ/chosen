@@ -286,6 +286,7 @@ async function main() {
       await basketControls.getByRole('checkbox', { name: 'Disabled', exact: true }).uncheck();
       await multiple.click();
       await page.getByRole('option', { name: 'Dragon fruit with a deliberately long option label' }).click();
+      await page.locator('.react-demo-tailwind .chosen-react__summary').click();
       const longChip = await page.evaluate(() => {
         const chip = [...document.querySelectorAll('.react-demo-tailwind .chosen-react__chip')]
           .find(item => item.textContent.includes('Dragon fruit'));

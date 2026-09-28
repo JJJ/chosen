@@ -54,6 +54,9 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `display_disabled_options` | `true` | Show disabled options in results. |
 | `min_search_length` | `0` | Wait until enough search text is entered. |
 | `max_selected_options` | unlimited | Limit multiple-select selection count. |
+| `max_items_shown` | unlimited | Show up to this many selected chips, then a button to reveal the rest. Selection and submitted values do not change. |
+| `more_items_text` | `count => "Show N more..."` | Localize the collapsed summary button. |
+| `show_fewer_items_text` | “Show fewer...” | Localize the expanded summary button. |
 | `backspace_deletes_choices` | `true` | Remove the final selected choice when Backspace is pressed in an empty multiple-select search field. |
 | `single_backstroke_delete` | `true` | Set `false` to focus the final chip with the first Backspace and remove it with the second. |
 | `open_on_label_click` | `true` for multiple, `false` for single | Choose whether an associated label opens the popup or only focuses its input. |

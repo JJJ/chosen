@@ -42,6 +42,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Add the classic selected-choice summary options to vanilla and React. A button expands hidden chips without changing the underlying selection; generated summaries use the new `chosen-native__summary` and `chosen-react__summary` selectors.
 - Match classic single-select search visibility in vanilla and React with `disable_search` / `disableSearch` and option-count thresholds. The hidden search input remains the focus target and prefix typing still navigates open results.
 - Align experimental React's default substring search, placeholder capitalization, single-clear visibility, multiple placeholder, and no-results copy with classic Chosen; apps depending on the earlier React defaults can set `searchContains`, `allowSingleDeselect`, `placeholder`, and `noResultsText` explicitly.
 - Expose classic multiple-select Backspace removal and opt-in Tab selection in the vanilla and React editions with matching defaults.

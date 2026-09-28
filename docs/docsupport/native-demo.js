@@ -5,6 +5,7 @@ const season = document.getElementById('native-season');
 const events = document.getElementById('native-events');
 const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
 const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
+  max_items_shown: 1,
   multiselect_allow_tab_to_select: true, display_selected_value: true,
   include_group_label_in_selected: true, deselect_selected_results: true,
   hide_results_on_select: false });
