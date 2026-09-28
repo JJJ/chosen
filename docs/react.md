@@ -44,9 +44,15 @@ submission. Multiple selection uses arrays. `onChange` receives the next value
 and the triggering React event.
 
 Unlike classic Chosen, this component receives option objects directly rather
-than enhancing a `<select>`, uses camelCase props, and matches substrings by
-default (`searchContains={true}`). Set `splitSearchTerms` to match words in any
-order, `groupSearch={false}` to search only option labels, or
+than enhancing a `<select>` and uses camelCase props. Search matches word starts
+by default, as in classic Chosen; set `searchContains` to match within words,
+`enableSplitWordSearch={false}` to require a label-start match,
+`caseSensitiveSearch` to preserve case, `searchInValues` to search values,
+or `splitSearchTerms` to match words in any order. `normalizeSearchText` and
+`searchMatcher` customize matching; the latter receives `(query, normalizedItem)`
+and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
+`maxShownResults` bound visible results and matching work. Set
+`groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without
 removing them from the underlying native select. When selected results are
@@ -130,7 +136,8 @@ mount. `ref` exposes `focus()`, `blur()`, `open()`, and `close()`.
 // Client: hydrateRoot(node, <Chosen options={options} aria-label="Fruit" />)
 ```
 
-The initial React API is deliberately smaller than `react-select`: there are no
-async loaders, creatable options, virtualization, arbitrary component injection,
-or compatibility wrappers. Legacy option names that fit React were retained;
-React uses camelCase props and a direct value callback rather than jQuery events.
+The React API still lacks several classic Chosen features, including option
+creation and bulk actions; see the parity inventory. It does not aim to copy
+unrelated `react-select` features such as async loaders, virtualization, or
+arbitrary component injection. React uses camelCase props and a direct value
+callback rather than jQuery events.

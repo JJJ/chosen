@@ -288,10 +288,12 @@ var ChosenCore = (function() {
     var count = 0;
     var exactMatch = false;
     var text = asText(query).trim();
+    var customMatcher = typeof config.searchMatcher === "function" ? config.searchMatcher : null;
+    var maximum = config.maxShownResults == null ? Infinity : Math.max(0, config.maxShownResults);
     if (text.length < (config.minSearchLength || 0)) {
       return { items: items, count: count, exactMatch: exactMatch };
     }
-    var matcher = createMatcher(text, config);
+    var matcher = customMatcher ? null : createMatcher(text, config);
     var group = null;
     var groupMatches = false;
     var groupIncluded = false;
@@ -300,7 +302,7 @@ var ChosenCore = (function() {
       if (item.kind === "group") {
         group = item;
         groupIncluded = false;
-        groupMatches = !item.hidden && config.groupSearch !== false && matcher({ label: item.label }).matched;
+        groupMatches = !item.hidden && (customMatcher ? !!customMatcher(text, item) : config.groupSearch !== false && matcher({ label: item.label }).matched);
         continue;
       }
       if (item.groupIndex == null) {
@@ -308,8 +310,9 @@ var ChosenCore = (function() {
         groupMatches = false;
       }
       if (!includeOptionInResults(item, config)) continue;
-      var result = matcher(item);
+      var result = customMatcher ? { matched: !!customMatcher(text, item), exact: item.label === text } : matcher(item);
       if (!result.matched && !groupMatches) continue;
+      if (count >= maximum) break;
       if (group && !groupIncluded) {
         items.push(group);
         groupIncluded = true;

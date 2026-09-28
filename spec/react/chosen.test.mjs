@@ -102,6 +102,37 @@ test('single clear and no-results messaging remain keyboard accessible', () => {
   assert.match(screen.getByText(/Nothing found/).textContent, /missing/);
 });
 
+test('classic search settings filter React results and keep native form values', () => {
+  const options = [
+    { value: 'zebra', label: 'The Zebra' },
+    { value: 'special', label: 'Café' },
+    { value: 'whale', label: 'The Whale' }
+  ];
+  const view = render(h('form', null, h(Chosen, { options, name: 'animal',
+    searchContains: true, enableSplitWordSearch: false, caseSensitiveSearch: true,
+    searchInValues: true, normalizeSearchText: text => text.replace('é', 'e'),
+    maxSearchLength: 1000, maxShownResults: 1, 'aria-label': 'Animal' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'Zebra' } });
+  assert.equal(screen.queryByRole('option', { name: 'The Zebra' }), null);
+  fireEvent.change(input, { target: { value: 'The' } });
+  assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['The Zebra']);
+  fireEvent.change(input, { target: { value: 'special' } });
+  assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['Café']);
+  fireEvent.change(input, { target: { value: 'Cafe' } });
+  assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['Café']);
+  view.rerender(h('form', null, h(Chosen, { options, name: 'animal',
+    minSearchLength: 5, searchMatcher: (query, item) => item.kind === 'option' && item.value === query,
+    'aria-label': 'Animal' })));
+  fireEvent.change(input, { target: { value: 'spec' } });
+  assert.equal(screen.queryByRole('option'), null);
+  fireEvent.change(input, { target: { value: 'special' } });
+  assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['Café']);
+  fireEvent.click(screen.getByRole('option', { name: 'Café' }));
+  assert.equal(new FormData(document.querySelector('form')).get('animal'), 'special');
+});
+
 test('controlled values stay controlled across option replacement and form reset', () => {
   const changes = [];
   const view = render(h('form', null, h(Chosen, { options, name: 'fruit', value: 'a', onChange: value => changes.push(value) })));

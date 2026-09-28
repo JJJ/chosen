@@ -16,7 +16,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `deselect_all_text` | No | No | Localized bulk action label. |
 | `disable_search` | No | No | Single-select search visibility and type navigation. |
 | `disable_search_threshold` | No | No | Search visibility based on option count. |
-| `enable_split_word_search` | Partial | Partial | Word matching is fixed; there is no setting to require a start match. |
+| `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |
 | `inherit_select_classes` | No | Partial | React has `className` on its host; vanilla does not copy select classes. |
 | `inherit_option_classes` | No | No | Generated result classes from source options. |
 | `max_selected_options` | Yes | Yes | Both enforce the limit. |
@@ -33,16 +33,16 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `placeholder_text_multiple` | Partial | Partial | Both have one placeholder setting rather than type-specific settings. |
 | `placeholder_text` | Yes | Partial | React's `placeholder` is equivalent but has a different default and precedence. |
 | `placeholder_text_single` | Partial | Partial | Both have one placeholder setting rather than type-specific settings. |
-| `search_contains` | Yes | Partial | React supports it, but defaults to `true`; classic and vanilla default to `false`. |
+| `search_contains` | Yes | Yes | React now defaults to `false`, matching classic. |
 | `highlight_prefix_matches` | No | No | Prefix-priority keyboard highlight. |
-| `search_matcher` | No | No | Custom matching callback. |
+| `search_matcher` | Yes | Yes | React prop: `searchMatcher`; both receive normalized items. |
 | `search_input_type` | No | No | Both use a fixed text input; classic defaults to search. |
-| `min_search_length` | Yes | No | Result visibility below the minimum. |
-| `max_search_length` | No | No | Bound matching work while leaving input editable. |
-| `normalize_search_text` | No | No | Custom normalization callback. |
+| `min_search_length` | Yes | Yes | React prop: `minSearchLength`. |
+| `max_search_length` | Yes | Yes | React prop: `maxSearchLength`; both default to 1000. |
+| `normalize_search_text` | Yes | Yes | React prop: `normalizeSearchText`. |
 | `split_search_terms` | Yes | Yes | Order-independent multi-term matching. |
 | `search_delay` | No | No | Debounced results with immediate keyboard flush. |
-| `search_in_values` | No | No | Search source option values. |
+| `search_in_values` | Yes | Yes | React prop: `searchInValues`. |
 | `group_search` | Yes | Yes | Include group labels in matching. |
 | `parser_config` | No | No | Vanilla needs source-option data copying; React needs an equivalent data model or a documented exception. |
 | `backspace_deletes_choices` | Partial | Partial | Both delete the final chip; neither exposes the setting. |
@@ -57,8 +57,8 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `display_selected_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_value` | No | No | Value in the closed control; label remains in results. |
 | `include_group_label_in_selected` | No | No | Group name in selected text. |
-| `max_shown_results` | No | No | Limit visible result count. |
-| `case_sensitive_search` | No | No | Case-sensitive matching. |
+| `max_shown_results` | Yes | Yes | React prop: `maxShownResults`; group headings do not count. |
+| `case_sensitive_search` | Yes | Yes | React prop: `caseSensitiveSearch`. |
 | `hide_results_on_select` | Partial | Partial | Both close single results but keep multiple results open; classic closes multiple results by default. Neither exposes the setting. |
 | `rtl` | Partial | Yes | Vanilla can inherit page direction but does not copy `dir` from its select; React has `dir`. |
 

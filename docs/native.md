@@ -30,6 +30,13 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
 | `search_contains` | `false` | Match within words. |
+| `enable_split_word_search` | `true` | Match at word boundaries; set `false` to require a label-start match. |
+| `case_sensitive_search` | `false` | Preserve case while matching. |
+| `search_in_values` | `false` | Also match option values. |
+| `max_search_length` | `1000` | Limit the query used for matching without truncating the input. |
+| `normalize_search_text` | identity function | Transform the query and labels before built-in matching. |
+| `search_matcher` | built-in matching | Replace built-in matching with `(query, normalizedItem) => boolean`. The item has `kind`, `label`, and (for options) `value`. |
+| `max_shown_results` | unlimited | Limit the number of visible option rows, excluding group headings. |
 | `split_search_terms` | `false` | Match whitespace-separated words in any order. |
 | `group_search` | `true` | Include optgroup labels in search. |
 | `display_selected_options` | `true` | Show selected options in multiple-select results. |

@@ -62,6 +62,26 @@ test('contains search still starts at the option beginning when split word searc
   assert.equal(core.createMatcher('<01M', { searchContains: true })({ label: 'Other <01M Fund' }).matched, true);
 });
 
+test('custom matching and result caps preserve group structure and visibility rules', () => {
+  const entries = core.normalizeOptions([
+    { label: 'First', options: [{ value: '1', label: 'Alpha' }, { value: '2', label: 'Beta' }] },
+    { label: 'Second', options: [{ value: '3', label: 'Gamma' }] }
+  ]);
+  const visited = [];
+  const result = core.filterOptions(entries, 'a', {
+    searchMatcher(query, item) {
+      visited.push(item.label);
+      return item.kind === 'option' && item.label.toLowerCase().includes(query);
+    },
+    maxShownResults: 2
+  });
+  assert.deepEqual(result.items.map(item => item.label), ['First', 'Alpha', 'Beta']);
+  assert.equal(result.count, 2);
+  assert.equal(result.exactMatch, false);
+  assert.deepEqual(visited, ['First', 'Alpha', 'Beta', 'Second', 'Gamma']);
+  assert.deepEqual(core.filterOptions(entries, '', { maxShownResults: 0 }).items, []);
+});
+
 for (const fixture of cases.selectionCases) {
   test(`shared selection fixture: ${fixture.name}`, () => {
     let values = fixture.initial;

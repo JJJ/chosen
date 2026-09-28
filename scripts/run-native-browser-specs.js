@@ -85,6 +85,11 @@ async function check(name, engine) {
     if (external !== 'Comet') throw new Error(`${name}: external change did not synchronize`);
     await page.getByRole('button', { name: 'Reset form' }).click();
     await page.waitForFunction(() => document.querySelector('#native-project').value === '');
+    await project.fill('ops-42');
+    if (!await page.getByRole('option', { name: 'Operations' }).count()) {
+      throw new Error(`${name}: demo value search failed`);
+    }
+    await project.press('Escape');
     if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
     if (name === 'Chromium') {
       await page.addScriptTag({ path: path.join(__dirname, '..', 'node_modules/axe-core/axe.min.js') });

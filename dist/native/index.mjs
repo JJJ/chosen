@@ -191,10 +191,12 @@ function filterOptions(entries, query, settings) {
   var count = 0;
   var exactMatch = false;
   var text = asText(query).trim();
+  var customMatcher = typeof config.searchMatcher === "function" ? config.searchMatcher : null;
+  var maximum = config.maxShownResults == null ? Infinity : Math.max(0, config.maxShownResults);
   if (text.length < (config.minSearchLength || 0)) {
     return { items, count, exactMatch };
   }
-  var matcher = createMatcher(text, config);
+  var matcher = customMatcher ? null : createMatcher(text, config);
   var group = null;
   var groupMatches = false;
   var groupIncluded = false;
@@ -203,7 +205,7 @@ function filterOptions(entries, query, settings) {
     if (item.kind === "group") {
       group = item;
       groupIncluded = false;
-      groupMatches = !item.hidden && config.groupSearch !== false && matcher({ label: item.label }).matched;
+      groupMatches = !item.hidden && (customMatcher ? !!customMatcher(text, item) : config.groupSearch !== false && matcher({ label: item.label }).matched);
       continue;
     }
     if (item.groupIndex == null) {
@@ -211,8 +213,9 @@ function filterOptions(entries, query, settings) {
       groupMatches = false;
     }
     if (!includeOptionInResults(item, config)) continue;
-    var result = matcher(item);
+    var result = customMatcher ? { matched: !!customMatcher(text, item), exact: item.label === text } : matcher(item);
     if (!result.matched && !groupMatches) continue;
+    if (count >= maximum) break;
     if (group && !groupIncluded) {
       items.push(group);
       groupIncluded = true;
@@ -278,6 +281,10 @@ var Chosen = class {
       search_contains: false,
       split_search_terms: false,
       group_search: true,
+      enable_split_word_search: true,
+      case_sensitive_search: false,
+      search_in_values: false,
+      max_search_length: 1e3,
       display_selected_options: true,
       display_disabled_options: true,
       placeholder_text: select.multiple ? "Select Some Options" : "Select an Option",
@@ -426,6 +433,13 @@ var Chosen = class {
       searchContains: this.options.search_contains,
       splitSearchTerms: this.options.split_search_terms,
       groupSearch: this.options.group_search,
+      enableSplitWordSearch: this.options.enable_split_word_search,
+      caseSensitiveSearch: this.options.case_sensitive_search,
+      searchInValues: this.options.search_in_values,
+      maxSearchLength: this.options.max_search_length,
+      normalizeSearchText: this.options.normalize_search_text,
+      searchMatcher: this.options.search_matcher,
+      maxShownResults: this.options.max_shown_results,
       displaySelectedOptions: this.options.display_selected_options,
       displayDisabledOptions: this.options.display_disabled_options,
       minSearchLength: this.options.min_search_length || 0

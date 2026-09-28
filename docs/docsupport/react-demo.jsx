@@ -10,6 +10,7 @@ const options = [
     { value: 'lemon', label: 'Lemon', disabled: true },
   ] },
   { value: 'pear', label: 'Pear' },
+  { value: 'orchard-42', label: 'Orchard' },
   { value: 'dragon-fruit', label: 'Dragon fruit with a deliberately long option label' },
 ];
 
@@ -48,11 +49,12 @@ function Demo() {
           <label htmlFor="react-fruit">Favorite fruit <span aria-hidden="true">*</span></label>
           <Chosen id="react-fruit" name="fruit" options={options} value={fruit}
             onChange={value => { setFruit(value); setAttempted(false); }} required
+            searchInValues
             placeholder="Choose a fruit" searchPlaceholder="Choose a fruit"
             aria-describedby="react-fruit-help"
             aria-invalid={attempted && !fruit} dir={singleRtl ? 'rtl' : undefined}
             readOnly={singleReadOnly} disabled={singleDisabled} />
-          <p id="react-fruit-help" className="react-demo-help">Search, choose, or clear a required value. The form uses the underlying native select.</p>
+          <p id="react-fruit-help" className="react-demo-help">Search for “orchard-42” to find Orchard by value, then choose or clear it. The form uses the underlying native select.</p>
           <div className="react-demo-switches" role="group" aria-label="Single select examples">
             <label className="react-demo-switch"><input type="checkbox" checked={singleRtl}
               onChange={event => setSingleRtl(event.target.checked)} /> Right-to-left</label>

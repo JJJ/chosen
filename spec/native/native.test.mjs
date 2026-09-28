@@ -114,6 +114,37 @@ test('selected multiple results show removal state and toggle through pointer or
   dom.window.close();
 });
 
+test('classic search settings reach the shared matcher without changing select values', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
+  const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,
+    search_in_values: true, case_sensitive_search: true, max_search_length: 1000,
+    normalize_search_text: text => text.replace('é', 'e'), max_shown_results: 1 });
+  chosen.open();
+  chosen.input.value = 'Zebra';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), []);
+  chosen.input.value = 'The';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['The Zebra']);
+  chosen.options.enable_split_word_search = true;
+  chosen.input.value = 'whale';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['The Whale']);
+  chosen.input.value = 'zebra';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['The Zebra']);
+  chosen.input.value = 'Cafe';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['Café']);
+  chosen.options.search_matcher = (query, item) => item.kind === 'option' && item.value === query;
+  chosen.input.value = 'special';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['Café']);
+  assert.equal(select.value, '');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

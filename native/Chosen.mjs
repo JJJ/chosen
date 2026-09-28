@@ -40,6 +40,8 @@ export class Chosen {
     if (instances.has(select)) throw new Error('Chosen is already initialized on this select');
     this.select = select;
     this.options = { search_contains: false, split_search_terms: false, group_search: true,
+      enable_split_word_search: true, case_sensitive_search: false, search_in_values: false,
+      max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
       no_results_text: 'No results for:',
@@ -181,6 +183,13 @@ export class Chosen {
       searchContains: this.options.search_contains,
       splitSearchTerms: this.options.split_search_terms,
       groupSearch: this.options.group_search,
+      enableSplitWordSearch: this.options.enable_split_word_search,
+      caseSensitiveSearch: this.options.case_sensitive_search,
+      searchInValues: this.options.search_in_values,
+      maxSearchLength: this.options.max_search_length,
+      normalizeSearchText: this.options.normalize_search_text,
+      searchMatcher: this.options.search_matcher,
+      maxShownResults: this.options.max_shown_results,
       displaySelectedOptions: this.options.display_selected_options,
       displayDisabledOptions: this.options.display_disabled_options,
       minSearchLength: this.options.min_search_length || 0

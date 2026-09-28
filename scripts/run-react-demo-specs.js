@@ -132,6 +132,11 @@ async function main() {
         throw new Error(`${name}: clicking the single select label did not open its dropdown`);
       }
       await single.press('Escape');
+      await single.fill('orchard-42');
+      if (!await page.getByRole('option', { name: 'Orchard' }).count()) {
+        throw new Error(`${name}: React demo value search failed`);
+      }
+      await single.press('Escape');
       if (name === 'Chromium') await page.addScriptTag({ url: pathToFileURL(path.join(root, 'node_modules/axe-core/axe.min.js')).href });
       const audit = async theme => {
         if (name !== 'Chromium') return;

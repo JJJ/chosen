@@ -1,4 +1,5 @@
 import type { CSSProperties, FocusEvent, ForwardRefExoticComponent, RefAttributes, SyntheticEvent } from 'react';
+import type { NormalizedEntry } from 'chosen-jjj/core';
 
 export interface ChosenOption {
   value: string | number;
@@ -41,6 +42,14 @@ export interface ChosenProps {
   noResultsText?: string;
   maxSelectedOptions?: number;
   searchContains?: boolean;
+  enableSplitWordSearch?: boolean;
+  caseSensitiveSearch?: boolean;
+  searchInValues?: boolean;
+  maxSearchLength?: number;
+  minSearchLength?: number;
+  maxShownResults?: number;
+  normalizeSearchText?: (text: string) => string;
+  searchMatcher?: (query: string, item: NormalizedEntry) => boolean;
   splitSearchTerms?: boolean;
   groupSearch?: boolean;
   displaySelectedOptions?: boolean;

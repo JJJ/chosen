@@ -2,7 +2,7 @@
 const project = document.getElementById('native-project');
 const skills = document.getElementById('native-skills');
 const events = document.getElementById('native-events');
-const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true });
+const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
 new ChosenNative.Chosen(skills, { max_selected_options: 3 });
 let added = 0;
 

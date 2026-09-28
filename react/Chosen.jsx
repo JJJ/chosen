@@ -20,9 +20,12 @@ export const Chosen = forwardRef(function Chosen({
   options = [], multiple = false, value, defaultValue, onChange,
   open: controlledOpen, defaultOpen = false, onOpenChange,
   name, form, required = false, disabled = false, readOnly = false,
-  placeholder = 'Select an option', searchPlaceholder = 'Search options',
-  noResultsText = 'No results match', maxSelectedOptions,
-  searchContains = true, splitSearchTerms = false, groupSearch = true,
+  placeholder = 'Select an Option', searchPlaceholder = 'Search options',
+  noResultsText = 'No results for:', maxSelectedOptions,
+  searchContains = false, splitSearchTerms = false, groupSearch = true,
+  enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
+  maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
+  normalizeSearchText, searchMatcher,
   displaySelectedOptions = true, displayDisabledOptions = true,
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
@@ -50,8 +53,12 @@ export const Chosen = forwardRef(function Chosen({
     : item), [entries, selectedSet]);
   const results = useMemo(() => filterOptions(searchable, query, {
     multiple, searchContains, splitSearchTerms, groupSearch,
+    enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
+    minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions
   }), [searchable, query, multiple, searchContains, splitSearchTerms, groupSearch,
+    enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
+    minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
   const available = results.items;
   const active = activeIndex >= 0 && available[activeIndex]?.kind === 'option'
@@ -283,7 +290,7 @@ export const Chosen = forwardRef(function Chosen({
       <div id={listId} role="listbox" aria-multiselectable={multiple || undefined} className="chosen-react__list">
         {renderedResults}
       </div>
-      {!results.count && <div className="chosen-react__empty">{noResultsText}{query ? `: ${query}` : ''}</div>}
+      {!results.count && <div className="chosen-react__empty">{noResultsText}{query ? `${/:\s*$/.test(noResultsText) ? ' ' : ': '}${query}` : ''}</div>}
     </div>}
   </div>;
 });

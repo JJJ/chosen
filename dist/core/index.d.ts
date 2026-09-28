@@ -53,11 +53,13 @@ export interface SearchSettings extends ResultSettings {
   enableSplitWordSearch?: boolean;
   foldAccents?: (text: string) => string;
   groupSearch?: boolean;
+  maxShownResults?: number;
   maxSearchLength?: number;
   minSearchLength?: number;
   normalizeSearchText?: (text: string) => string;
   searchContains?: boolean;
   searchInValues?: boolean;
+  searchMatcher?: (query: string, item: NormalizedEntry) => boolean;
   searchStringMatch?: (text: string, regex: RegExp) => RegExpExecArray | null;
   splitSearchTerms?: boolean;
 }
