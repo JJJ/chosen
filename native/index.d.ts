@@ -46,6 +46,10 @@ export interface ChosenOptions {
   results_count_text?: (count: number) => string;
   display_selected_value?: boolean;
   include_group_label_in_selected?: boolean;
+  create_option?: boolean | ((this: Chosen, query: string) => void);
+  create_option_text?: string;
+  persistent_create_option?: boolean;
+  skip_no_results?: boolean;
   width?: string | number | false;
   dropdown_width?: string | number;
   dropdown_position?: 'absolute' | 'fixed';

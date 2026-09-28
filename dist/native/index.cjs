@@ -419,6 +419,10 @@ var Chosen = class {
       allow_deselect_all: false,
       paste_multiple_values: false,
       search_delay: 0,
+      create_option: false,
+      create_option_text: "Add Option:",
+      persistent_create_option: false,
+      skip_no_results: false,
       dropdown_position: "absolute",
       recalculate_width_on_update: false,
       select_all_text: "Select all",
@@ -597,7 +601,17 @@ var Chosen = class {
     if (this.select.disabled) this.close();
     this.renderSelection();
     this.renderResults();
-    if (this.opened) this.positionDropdown();
+    if (this.opened) {
+      document.removeEventListener("scroll", this.onReposition, true);
+      window.removeEventListener("scroll", this.onReposition, true);
+      window.removeEventListener("resize", this.onReposition);
+      this.positionDropdown();
+      if (this.options.dropdown_position === "fixed") {
+        document.addEventListener("scroll", this.onReposition, true);
+        window.addEventListener("scroll", this.onReposition, true);
+        window.addEventListener("resize", this.onReposition);
+      }
+    }
   }
   updateWidth() {
     const width = this.options.width;
@@ -727,6 +741,8 @@ var Chosen = class {
       minSearchLength: this.options.min_search_length || 0
     });
     this.available = result.items;
+    this.createQuery = query;
+    this.createIndex = this.options.create_option && query.length && (result.count === 0 || this.options.persistent_create_option && !result.exactMatch) ? this.available.length : -1;
     this.renderBulkActions();
     this.list.replaceChildren();
     let group = null;
@@ -761,12 +777,25 @@ var Chosen = class {
       });
       (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
     }
-    this.empty.hidden = !!result.count;
+    if (this.createIndex >= 0) {
+      const label = this.select.getAttribute("data-create_option_text") || this.options.create_option_text;
+      const row = element("div", "chosen-native__option chosen-native__option--create", `${label} ${query}`);
+      row.id = `${this.id}-option-create`;
+      row.setAttribute("role", "option");
+      row.setAttribute("aria-selected", "false");
+      row.addEventListener("pointerenter", () => this.highlight(this.createIndex));
+      row.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") event.preventDefault();
+      });
+      row.addEventListener("click", (event) => this.createOption(query, event.metaKey || event.ctrlKey));
+      this.list.append(row);
+    }
+    this.empty.hidden = !!result.count || this.createIndex >= 0 && this.options.skip_no_results;
     const noResultsText = this.select.getAttribute("data-no_results_text") || this.options.no_results_text;
     this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ""}`;
     if (!result.count && query && this.opened) emit(this.select, "chosen:no_results", this, { search_term: query });
     const active = this.available[this.activeIndex];
-    if (!active || active.kind !== "option" || active.disabled || this.multiple && this.nodes[active.index]?.selected && !this.options.deselect_selected_results) {
+    if (this.activeIndex < 0 || this.activeIndex !== this.createIndex && (!active || active.kind !== "option" || active.disabled || this.multiple && this.nodes[active.index]?.selected && !this.options.deselect_selected_results)) {
       const preferred = preferredPrefixIndex(this.available, query, {
         highlightPrefixMatches: this.options.highlight_prefix_matches,
         searchContains: this.options.search_contains,
@@ -775,6 +804,7 @@ var Chosen = class {
         normalizeSearchText: this.options.normalize_search_text
       });
       this.activeIndex = preferred >= 0 && (!this.multiple || !this.nodes[this.available[preferred].index]?.selected || this.options.deselect_selected_results) ? preferred : this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results));
+      if (this.activeIndex < 0) this.activeIndex = this.createIndex;
     }
     this.highlight(this.activeIndex);
     if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
@@ -878,7 +908,7 @@ var Chosen = class {
   highlight(index) {
     this.activeIndex = index;
     const active = this.available[index];
-    const id = active?.kind === "option" ? `${this.id}-option-${active.index}` : null;
+    const id = index >= 0 && index === this.createIndex ? `${this.id}-option-create` : active?.kind === "option" ? `${this.id}-option-${active.index}` : null;
     for (const row of this.list.querySelectorAll('[role="option"]')) {
       row.classList.toggle("chosen-native__option--active", row.id === id);
     }
@@ -912,6 +942,27 @@ var Chosen = class {
     } else this.close();
     this.input.focus();
   }
+  createOption(query, keepOpen = false) {
+    if (!this.options.create_option || this.select.disabled || this.select.hasAttribute("readonly")) return;
+    if (this.multiple && this.options.max_selected_options != null && this.select.selectedOptions.length >= this.options.max_selected_options) {
+      emit(this.select, "chosen:maxselected", this);
+      return;
+    }
+    if (typeof this.options.create_option === "function") {
+      this.options.create_option.call(this, query);
+      this.update();
+    } else {
+      this.select.add(new this.select.ownerDocument.defaultView.Option(query, query, true, true));
+      this.update();
+      this.changed();
+    }
+    this.input.value = "";
+    this.appliedQuery = "";
+    this.activeIndex = -1;
+    if (!this.multiple || this.options.hide_results_on_select && !keepOpen) this.close();
+    else this.renderResults();
+    this.input.focus();
+  }
   clear() {
     if (this.multiple || this.select.disabled || this.select.hasAttribute("readonly")) return;
     const blank = this.select.options[0];
@@ -934,6 +985,7 @@ var Chosen = class {
     this.positionDropdown();
     if (this.options.dropdown_position === "fixed") {
       document.addEventListener("scroll", this.onReposition, true);
+      window.addEventListener("scroll", this.onReposition, true);
       window.addEventListener("resize", this.onReposition);
     }
     this.host.classList.add("chosen-native--open");
@@ -946,6 +998,7 @@ var Chosen = class {
     if (!this.opened) return;
     this.pendingBackstrokeValue = null;
     document.removeEventListener("scroll", this.onReposition, true);
+    window.removeEventListener("scroll", this.onReposition, true);
     window.removeEventListener("resize", this.onReposition);
     clearTimeout(this.searchTimer);
     this.searchTimer = null;
@@ -1009,11 +1062,16 @@ var Chosen = class {
         return;
       }
       const enabled = this.available.map((item, index) => item.kind === "option" && !item.disabled && (!this.multiple || !this.nodes[item.index]?.selected || this.options.deselect_selected_results) ? index : -1).filter((index) => index !== -1);
+      if (this.createIndex >= 0) enabled.push(this.createIndex);
       if (!enabled.length) return;
       const current = enabled.indexOf(this.activeIndex);
       this.highlight(enabled[(current + (key === "ArrowDown" ? 1 : -1) + enabled.length) % enabled.length]);
     } else if (key === "Enter" && this.opened) {
       event.preventDefault();
+      if (this.activeIndex === this.createIndex && this.createIndex >= 0) {
+        this.createOption(this.createQuery ?? this.input.value, event.metaKey || event.ctrlKey);
+        return;
+      }
       const entry = this.available[this.activeIndex];
       if (entry?.kind === "option" && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
         this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey);
@@ -1023,6 +1081,11 @@ var Chosen = class {
       this.close();
     } else if (key === "Tab") {
       if (this.multiple && this.opened && this.options.multiselect_allow_tab_to_select) {
+        if (this.activeIndex === this.createIndex && this.createIndex >= 0) {
+          this.createOption(this.createQuery ?? this.input.value);
+          this.close();
+          return;
+        }
         const entry = this.available[this.activeIndex];
         if (entry?.kind === "option" && (!this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
           this.choose(entry, !!this.nodes[entry.index]?.selected);

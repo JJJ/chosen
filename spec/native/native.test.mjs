@@ -235,6 +235,49 @@ test('width options preserve CSS sizing and fixed dropdown listeners clean up', 
   dom.window.close();
 });
 
+test('new options preserve native submission and creation messages use plain text', () => {
+  const { dom, select, form } = fixture('<select name="items" multiple data-create_option_text="Add item:"><option value="a">Apple</option></select>');
+  const chosen = new Chosen(select, { create_option: true, skip_no_results: true,
+    persistent_create_option: true, hide_results_on_select: false });
+  chosen.input.value = '<Mango>';
+  chosen.open();
+  const create = chosen.list.querySelector('.chosen-native__option--create');
+  assert.equal(create.textContent, 'Add item: <Mango>');
+  assert.equal(create.children.length, 0);
+  assert.equal(chosen.empty.hidden, true);
+  key(chosen.input, 'Enter');
+  assert.deepEqual(new dom.window.FormData(form).getAll('items'), ['<Mango>']);
+  assert.equal(select.options.length, 2);
+  chosen.input.value = 'App';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.list.querySelector('.chosen-native__option--create')?.textContent, 'Add item: App');
+  chosen.input.value = 'Apple';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.list.querySelector('.chosen-native__option--create'), null);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('creation callback can own the new native option and a selection limit prevents creation', () => {
+  const { dom, select } = fixture('<select multiple><option value="a" selected>Apple</option></select>');
+  let called = 0;
+  const chosen = new Chosen(select, { create_option(query) {
+    called++;
+    this.select.add(new dom.window.Option(query.toUpperCase(), query, true, true));
+  }, max_selected_options: 1 });
+  chosen.input.value = 'Mango';
+  chosen.open();
+  click(chosen.list.querySelector('.chosen-native__option--create'));
+  assert.equal(called, 0);
+  assert.equal(select.options.length, 1);
+  chosen.options.max_selected_options = 2;
+  click(chosen.list.querySelector('.chosen-native__option--create'));
+  assert.equal(called, 1);
+  assert.equal(select.options[1].text, 'MANGO');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

@@ -176,6 +176,7 @@
 }
 .chosen-native--multiple .chosen-native__option--selected:not(.chosen-native__option--deselectable) { cursor: default; }
 .chosen-native__option--active { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
+.chosen-native__option--create { font-style: italic; }
 .chosen-native__option--disabled { opacity: .5; cursor: default; }
 .chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: bold; }
 .chosen-native__empty { padding: .5rem .75rem; }

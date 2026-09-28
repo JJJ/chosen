@@ -47,6 +47,11 @@ export interface ChosenProps {
   allowSingleDeselect?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
+  createOption?: boolean;
+  createOptionText?: string;
+  persistentCreateOption?: boolean;
+  skipNoResults?: boolean;
+  onCreateOption?: (query: string, event: SyntheticEvent) => ChosenOption | false | void;
   resultsCountText?: (count: number) => string;
   inheritOptionClasses?: boolean;
   copyOptionDataAttributes?: boolean;

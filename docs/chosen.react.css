@@ -209,6 +209,7 @@
 .chosen-react__option {
   cursor: pointer;
 }
+.chosen-react__option--create { font-style: italic; }
 
 .chosen-react__option--selected {
   position: relative;

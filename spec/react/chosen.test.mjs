@@ -41,6 +41,40 @@ test('explicit width and dropdown layout props preserve the selected value', () 
   assert.equal(document.querySelector('select').value, 'a');
 });
 
+test('React creates a plain-text option and keeps it in the native select', () => {
+  const changes = [];
+  render(h('form', null, h(Chosen, { options, name: 'fruit', createOption: true,
+    skipNoResults: true, onChange: value => changes.push(value), 'aria-label': 'Fruit' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: '<Mango>' } });
+  const create = screen.getByRole('option', { name: 'Add Option: <Mango>' });
+  assert.equal(create.children.length, 0);
+  assert.equal(screen.queryByText('No results for: <Mango>'), null);
+  fireEvent.click(create);
+  assert.deepEqual(changes, ['<Mango>']);
+  assert.equal(new FormData(document.querySelector('form')).get('fruit'), '<Mango>');
+});
+
+test('React creation callback can supply option data and a controlled parent receives its value', () => {
+  const created = [];
+  const changed = [];
+  const view = render(h(Chosen, { options, multiple: true, value: [], createOption: true,
+    persistentCreateOption: true, onCreateOption: query => {
+      created.push(query);
+      return { value: 'new-mango', label: query.toUpperCase() };
+    }, onChange: value => changed.push(value), 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'Mang' } });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.deepEqual(created, ['Mang']);
+  assert.deepEqual(changed, [['new-mango']]);
+  view.rerender(h(Chosen, { options, multiple: true, value: ['new-mango'], createOption: true,
+    'aria-label': 'Fruit' }));
+  assert.equal(document.querySelector('select').selectedOptions[0].text, 'MANG');
+});
+
 test('uncontrolled single selection searches and submits a native form value', () => {
   const changes = [];
   render(h('form', null, h(Chosen, { options, name: 'fruit', 'aria-label': 'Fruit', onChange: value => changes.push(value) })));

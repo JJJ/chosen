@@ -63,6 +63,15 @@ keys flush pending text before acting. It defaults to zero. Set
 threshold. Prefix typing still moves through open results. Set
 `resultsCountText={count => count + ' choices'}` to localize the live result
 count. `noResultsText` is used literally before the query, with one space.
+Set `createOption` to offer an Add Option row when no option matches.
+`persistentCreateOption` also offers it beside partial matches, unless an
+option exactly matches the query. `createOptionText` changes its prefix and
+`skipNoResults` hides the redundant empty message. `onCreateOption` receives
+the query and triggering event; it may return an option object to customize
+the new value and label, or `false` to cancel. Chosen retains new options in
+its hidden select so the value can submit. When `value` is controlled, update
+it in `onChange`; update the parent `options` array if the new option should
+remain in the application model.
 Set `className` on option or group data to style result rows; set
 `inheritOptionClasses` to copy option classes to selected chips too. Set
 `dataAttributes` on an option and enable `copyOptionDataAttributes` to add its
@@ -187,8 +196,8 @@ mount. `ref` exposes `focus()`, `blur()`, `open()`, and `close()`.
 // Client: hydrateRoot(node, <Chosen options={options} aria-label="Fruit" />)
 ```
 
-The React API still lacks several classic Chosen features, including option
-creation; see the parity inventory. It does not aim to copy
+The React API still has adapter-level differences in event and attribute
+handling; see the parity inventory. It does not aim to copy
 unrelated `react-select` features such as async loaders, virtualization, or
 arbitrary component injection. React uses camelCase props and a direct value
 callback rather than jQuery events.

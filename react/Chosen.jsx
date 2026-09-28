@@ -13,7 +13,13 @@ function valueFor(values, multiple) {
 }
 
 function firstEnabled(items, canAct) {
-  return items.findIndex(item => item.kind === 'option' && canAct(item));
+  return items.findIndex(item => (item.kind === 'option' || item.kind === 'create') && canAct(item));
+}
+
+function withCreation(result, query, enabled, persistent) {
+  return enabled && query.length && (result.count === 0 || (persistent && !result.exactMatch))
+    ? [...result.items, { kind: 'create', index: 'create', label: query }]
+    : result.items;
 }
 
 export const Chosen = forwardRef(function Chosen({
@@ -24,6 +30,8 @@ export const Chosen = forwardRef(function Chosen({
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', maxSelectedOptions,
+  createOption = false, createOptionText = 'Add Option:',
+  persistentCreateOption = false, skipNoResults = false, onCreateOption,
   resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
   inheritOptionClasses = false,
   copyOptionDataAttributes = false,
@@ -66,6 +74,7 @@ export const Chosen = forwardRef(function Chosen({
   const composing = useRef(false);
   const searchTimer = useRef(null);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
+  const [createdOptions, setCreatedOptions] = useState([]);
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
   const [appliedQuery, setAppliedQuery] = useState('');
@@ -77,9 +86,13 @@ export const Chosen = forwardRef(function Chosen({
   const isOpen = controlledOpen === undefined ? internalOpen : controlledOpen;
   const selectedKey = selectedValues.join('\u0000');
   const selectedSet = useMemo(() => new Set(selectedValues), [selectedKey]);
-  const entries = useMemo(() => normalizeOptions(options), [options]);
+  const entries = useMemo(() => {
+    const supplied = normalizeOptions(options);
+    const suppliedValues = new Set(supplied.filter(item => item.kind === 'option').map(item => item.value));
+    return normalizeOptions([...options, ...createdOptions.filter(item => !suppliedValues.has(String(item.value)))]);
+  }, [options, createdOptions]);
   const searchDisabled = !multiple && (disableSearch ||
-    entries.filter(item => item.kind === 'option').length <= disableSearchThreshold);
+    (entries.filter(item => item.kind === 'option').length <= disableSearchThreshold && !createOption));
   const searchable = useMemo(() => entries.map(item => item.kind === 'option'
     ? { ...item, selected: selectedSet.has(item.value) }
     : item), [entries, selectedSet]);
@@ -93,13 +106,13 @@ export const Chosen = forwardRef(function Chosen({
     enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
-  const available = results.items;
-  const canActOnResult = item => !item.disabled &&
-    (!multiple || !selectedSet.has(item.value) || deselectSelectedResults);
+  const available = withCreation(results, appliedQuery, createOption, persistentCreateOption);
+  const canActOnResult = item => item.kind === 'create' || (!item.disabled &&
+    (!multiple || !selectedSet.has(item.value) || deselectSelectedResults));
   const preferred = preferredPrefixIndex(available, appliedQuery, {
     highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
   });
-  const active = activeIndex >= 0 && available[activeIndex]?.kind === 'option'
+  const active = activeIndex >= 0 && ['option', 'create'].includes(available[activeIndex]?.kind)
     && canActOnResult(available[activeIndex]) ? activeIndex :
       (preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
   const activeOption = active >= 0 ? available[active] : null;
@@ -142,6 +155,7 @@ export const Chosen = forwardRef(function Chosen({
   }, [multiple, onChange, value]);
 
   const choose = (option, event) => {
+    if (option.kind === 'create') { createNew(option.label, event); return; }
     if (!canActOnResult(option)) return;
     const next = updateSelection(selectedValues, option, {
       multiple, maxSelectedOptions, disabled, readOnly,
@@ -158,6 +172,26 @@ export const Chosen = forwardRef(function Chosen({
       setAppliedQuery('');
       setActiveIndex(-1);
     }
+    inputRef.current?.focus();
+  };
+
+  const createNew = (queryText, event) => {
+    if (!createOption || disabled || readOnly) return;
+    if (multiple && maxSelectedOptions != null && selectedValues.length >= maxSelectedOptions) {
+      setLimitNotice(true);
+      return;
+    }
+    const response = onCreateOption?.(queryText, event);
+    if (response === false) return;
+    const option = response && typeof response === 'object' ? response :
+      { value: queryText, label: queryText };
+    const createdValue = String(option.value);
+    if (entries.some(item => item.kind === 'option' && item.value === createdValue)) return;
+    setCreatedOptions(previous => [...previous, option]);
+    setLimitNotice(false);
+    commit(multiple ? [...selectedValues, createdValue] : [createdValue], event);
+    if (!multiple || (hideResultsOnSelect && !event?.metaKey && !event?.ctrlKey)) changeOpen(false);
+    else { setQuery(''); setAppliedQuery(''); setActiveIndex(-1); }
     inputRef.current?.focus();
   };
 
@@ -338,15 +372,17 @@ export const Chosen = forwardRef(function Chosen({
     };
     position();
     document.addEventListener('scroll', position, true);
+    window.addEventListener('scroll', position, true);
     window.addEventListener('resize', position);
     return () => {
       document.removeEventListener('scroll', position, true);
+      window.removeEventListener('scroll', position, true);
       window.removeEventListener('resize', position);
     };
   }, [isOpen, dropdownPosition, dropdownWidth, dir, width, style]);
 
   const move = (direction, fromEnd = false, items = available, currentIndex = activeIndex) => {
-    const enabled = items.map((item, index) => item.kind === 'option' && canActOnResult(item) ? index : -1)
+    const enabled = items.map((item, index) => (item.kind === 'option' || item.kind === 'create') && canActOnResult(item) ? index : -1)
       .filter(index => index >= 0);
     if (!enabled.length) return;
     const current = enabled.indexOf(currentIndex);
@@ -368,7 +404,7 @@ export const Chosen = forwardRef(function Chosen({
       clearTimeout(searchTimer.current);
       searchTimer.current = null;
       setAppliedQuery(query);
-      freshItems = getResults(query).items;
+      freshItems = withCreation(getResults(query), query, createOption, persistentCreateOption);
     }
     const currentItems = freshItems || available;
     const freshPreferred = freshItems ? preferredPrefixIndex(freshItems, query, {
@@ -458,6 +494,10 @@ export const Chosen = forwardRef(function Chosen({
     onMouseEnter={() => { if (canActOnResult(item)) setActiveIndex(position); }}
     onMouseDown={event => event.preventDefault()}
     onClick={event => choose(item, event)}>{item.label}</div>;
+  const renderCreate = (item, position) => <div id={`${baseId}-option-create`} role="option" key="create"
+    aria-selected="false" className={`chosen-react__option chosen-react__option--create${activeOption?.kind === 'create' ? ' chosen-react__option--active' : ''}`}
+    onMouseEnter={() => setActiveIndex(position)} onMouseDown={event => event.preventDefault()}
+    onClick={event => createNew(item.label, event)}>{createOptionText} {item.label}</div>;
   const renderedResults = [];
   let currentGroup = null;
   let groupOptions = [];
@@ -475,6 +515,9 @@ export const Chosen = forwardRef(function Chosen({
     if (item.kind === 'group') {
       flushGroup();
       currentGroup = item;
+    } else if (item.kind === 'create') {
+      flushGroup();
+      renderedResults.push(renderCreate(item, position));
     } else if (currentGroup && item.groupIndex === currentGroup.index) {
       groupOptions.push(renderOption(item, position));
     } else {
@@ -549,7 +592,8 @@ export const Chosen = forwardRef(function Chosen({
       <div id={listId} role="listbox" aria-multiselectable={multiple || undefined} className="chosen-react__list">
         {renderedResults}
       </div>
-      {!results.count && <div className="chosen-react__empty">{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</div>}
+      {!results.count && !(skipNoResults && available.some(item => item.kind === 'create')) &&
+        <div className="chosen-react__empty">{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</div>}
     </div>}
   </div>;
 });

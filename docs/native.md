@@ -31,6 +31,10 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `placeholder_text_multiple` | type default | Override the fallback for multiple selects; source attributes still take precedence. |
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
+| `create_option` | `false` | Offer a new option for unmatched text. `true` appends and selects a native option; a function receives the query with the Chosen instance as `this` and owns option insertion and native change events. Chosen refreshes its view after the callback. |
+| `create_option_text` | “Add Option:” | Prefix for the creation row. Source `data-create_option_text` takes precedence. Text is escaped. |
+| `persistent_create_option` | `false` | Keep the creation row when results match but none matches the full query exactly. |
+| `skip_no_results` | `false` | Hide no-results copy while a creation row is available. |
 | `results_count_text` | `count => "N results available"` | Localize the live result-count announcement. |
 | `search_contains` | `false` | Match within words. |
 | `highlight_prefix_matches` | `false` | With contains search, highlight a visible label prefix before an earlier substring result without changing result order. Does not override `search_matcher`. |
@@ -77,7 +81,7 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `recalculate_width_on_update` | `false` | Remeasure the source select on `update()` unless `width` is explicit or `false`. |
 | `dropdown_position` | `absolute` | Use `fixed` to escape a clipped scrolling ancestor and track scroll or resize. |
 
-The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation and the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.
+The native edition also reads `data-search-text` on individual options. It does not yet implement the classic `data-*` initialization option parser. The generated `chosen-native__*` markup and CSS selectors are experimental.
 
 ## Events and forms
 

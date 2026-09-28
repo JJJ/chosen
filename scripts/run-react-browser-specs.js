@@ -105,6 +105,20 @@ async function main() {
       if (layout.position !== 'fixed' || Math.abs(layout.popupWidth - 270) > 2 || !layout.aligned) {
         throw new Error(`${name}: React fixed wider dropdown layout failed (${JSON.stringify(layout)})`);
       }
+      await page.evaluate(() => { document.body.style.minHeight = '300vh'; window.scrollBy(0, 60); });
+      await page.waitForTimeout(30);
+      const scrolled = await page.evaluate(() => ({
+        bottom: document.querySelector('.chosen-react__control').getBoundingClientRect().bottom,
+        top: document.querySelector('.chosen-react__popup').getBoundingClientRect().top
+      }));
+      if (Math.abs(scrolled.top - scrolled.bottom) > 3) {
+        throw new Error(`${name}: React fixed dropdown did not follow page scroll (${JSON.stringify(scrolled)})`);
+      }
+      await page.evaluate(() => window.mountChosen({ createOption: true, skipNoResults: true }));
+      await page.getByRole('combobox', { name: 'Fruit' }).fill('Mango');
+      await page.getByRole('option', { name: 'Add Option: Mango' }).click();
+      const createdValue = await page.evaluate(() => new FormData(document.querySelector('form')).get('fruit'));
+      if (createdValue !== 'Mango') throw new Error(`${name}: React option creation did not submit (${createdValue})`);
       await page.evaluate(() => window.unmountChosen());
       if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
       console.log(`${name}: React search, keyboard, form, and accessibility checks passed`);

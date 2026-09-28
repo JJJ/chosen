@@ -25,10 +25,10 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `more_items_text` | Yes | Yes | Hidden-choice count callback; React prop: `moreItemsText`. |
 | `show_fewer_items_text` | Yes | Yes | Expanded summary button copy; React prop: `showFewerItemsText`. |
 | `no_results_text` | Yes | Yes | React prop: `noResultsText`; custom text is used literally before the query. Vanilla also reads source `data-no_results_text`. |
-| `create_option` | No | No | New-option action; React needs a parent callback for controlled options. |
-| `create_option_text` | No | No | New-option action label. |
-| `persistent_create_option` | No | No | Keep creation available when results match. |
-| `skip_no_results` | No | No | Hide no-results copy during creation. |
+| `create_option` | Yes | Yes | Vanilla appends to the source select or calls a supplied function; React `createOption` adds a local option and calls optional `onCreateOption`. Controlled parents must update `value`. |
+| `create_option_text` | Yes | Yes | New-option action label; React prop: `createOptionText`. Vanilla also reads `data-create_option_text`. |
+| `persistent_create_option` | Yes | Yes | Keep creation available when results match but no exact option exists; React prop: `persistentCreateOption`. |
+| `skip_no_results` | Yes | Yes | Hide no-results copy during creation; React prop: `skipNoResults`. |
 | `results_count_text` | Yes | Yes | React prop: `resultsCountText`; both accept `(count) => text` for the live result count. |
 | `placeholder_text_multiple` | Yes | Yes | React prop: `placeholderTextMultiple`. |
 | `placeholder_text` | Yes | Yes | React prop: `placeholder`; type-specific props take precedence. |

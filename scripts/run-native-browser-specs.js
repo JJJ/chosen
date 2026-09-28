@@ -81,6 +81,12 @@ async function check(name, engine) {
     if (JSON.stringify(tabSelection.values) !== '["typography"]' || tabSelection.focus !== 'native-season-native') {
       throw new Error(`${name}: opt-in Tab selection or focus navigation failed (${JSON.stringify(tabSelection)})`);
     }
+    await skills.fill('New skill');
+    await page.getByRole('option', { name: 'Add skill: New skill' }).click();
+    const createdValues = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'));
+    if (JSON.stringify(createdValues) !== '["typography","New skill"]') {
+      throw new Error(`${name}: native option creation did not submit (${JSON.stringify(createdValues)})`);
+    }
     await page.getByRole('button', { name: 'Use right-to-left skills' }).click();
     const direction = await skills.evaluate(node => getComputedStyle(node).direction);
     if (direction !== 'rtl') throw new Error(`${name}: source direction was not copied to the control`);
@@ -123,6 +129,19 @@ async function check(name, engine) {
     });
     if (seasonLayout.position !== 'fixed' || seasonLayout.popupWidth <= seasonLayout.controlWidth || !seasonLayout.aligned) {
       throw new Error(`${name}: fixed wider dropdown layout failed (${JSON.stringify(seasonLayout)})`);
+    }
+    await page.evaluate(() => { document.body.style.minHeight = '300vh'; window.scrollBy(0, 60); });
+    await page.waitForTimeout(30);
+    const scrolledLayout = await page.evaluate(() => {
+      const host = document.querySelector('#native-season').nextElementSibling;
+      const control = host.querySelector('.chosen-native__control').getBoundingClientRect();
+      const popup = host.querySelector('.chosen-native__popup').getBoundingClientRect();
+      return { controlBottom: control.bottom, controlTop: control.top,
+        popupTop: popup.top, popupBottom: popup.bottom };
+    });
+    if (Math.min(Math.abs(scrolledLayout.popupTop - scrolledLayout.controlBottom),
+      Math.abs(scrolledLayout.popupBottom - scrolledLayout.controlTop)) > 3) {
+      throw new Error(`${name}: fixed dropdown did not follow page scroll (${JSON.stringify(scrolledLayout)})`);
     }
     await season.press('w');
     if (await season.getAttribute('aria-activedescendant') !== 'native-season-native-option-4') {
