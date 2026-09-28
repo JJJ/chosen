@@ -19,7 +19,7 @@ window.ChosenAdapterCases = [
   { id: 'right-to-left-support', title: 'Right-to-Left Support', help: 'The control and results follow right-to-left direction.', dir: 'rtl', options: ['Alpha', 'Beta', 'Gamma'] },
   { id: 'change-update-events', title: 'Observing, Updating, and Destroying Chosen', help: 'Add an option, then destroy and rebuild the control.', dynamic: true, options: ['Alpha', 'Beta'] },
   { id: 'relative-size-support', title: 'Relative Sizing', help: 'The control follows CSS width and its icon uses a rem token.', className: 'adapter-case-relative', options: ['Small', 'Medium', 'Large'], native: { width: false }, react: { width: false } },
-  { id: 'initialization-defaults', title: 'Shared Initialization Defaults', help: 'This example sets defaults for its adapter without changing other controls.', options: ['Alpha', 'Beta'], native: { placeholder_text: 'Choose a default...' }, react: { placeholder: 'Choose a default...' } },
+  { id: 'initialization-defaults', title: 'Shared Initialization Defaults', help: 'Pass a placeholder when creating this control; the other controls keep their own settings.', options: ['Alpha', 'Beta'], native: { placeholder_text: 'Choose a default...' }, react: { placeholder: 'Choose a default...' } },
   { id: 'data-attribute-options', title: 'Options from Data Attributes', help: 'Vanilla reads select data attributes; React passes the equivalent as props.', dataOptions: true, options: ['Atlas', 'Beacon', 'Comet'], react: { disableSearch: true, allowSingleDeselect: true } },
   { id: 'custom-width-support', title: 'Custom Width Support', help: 'The dropdown is wider than its control.', options: ['Atlas Product Design Team', 'Beacon Engineering Group', 'Comet'], native: { width: '12rem', dropdown_width: '18rem' }, react: { width: '12rem', dropdownWidth: '18rem' } },
   { id: 'clipped-dropdowns', title: 'Dropdowns in clipped containers', help: 'The fixed dropdown escapes this clipped frame.', className: 'adapter-case-clipped', options: ['Alpha', 'Beta', 'Gamma', 'Delta'], native: { width: '12rem', dropdown_position: 'fixed' }, react: { width: '12rem', dropdownPosition: 'fixed' } },
@@ -33,5 +33,5 @@ window.ChosenAdapterCases = [
   { id: 'group-and-readonly', title: 'Group Selection and Readonly', help: 'Click a group heading to select its enabled items. This example can be made read-only.', multiple: true, groupAction: true, options: [
     { label: 'Design', options: ['Research', 'Typography'] }, { label: 'Engineering', options: ['JavaScript', 'Testing'] }
   ], native: { hide_results_on_select: false }, react: { hideResultsOnSelect: false, selectByGroup: true } },
-  { id: 'validation-styling', title: 'Validation Styling', help: 'Submit the form without selecting an item to see the invalid state.', required: true, options: ['Atlas', 'Beacon'] }
+  { id: 'validation-styling', title: 'Validation Styling', help: 'Use Check validity without selecting an item to see the invalid state.', required: true, options: ['Atlas', 'Beacon'] }
 ];
