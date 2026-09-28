@@ -708,7 +708,7 @@ $(".my-select").myChosen();</code></pre>
         <tr>
           <td>change</td>
           <td>
-            <p>Chosen triggers the standard DOM event whenever a selection is made (it also sends a <code class="language-javascript">selected</code> or <code class="language-javascript">deselected</code> parameter that tells you which option was changed).</p>
+            <p>Chosen triggers the standard DOM event whenever a selection is made. In the jQuery version, the extra parameter contains <code class="language-javascript">selected</code> for the new value and <code class="language-javascript">deselected</code> for the previous value. Switching a single select provides both keys; clearing it provides only <code class="language-javascript">deselected</code>. An initial blank placeholder is not reported as a deselected value.</p>
             <p><strong>Note:</strong> The selected and deselected parameters are not available for Prototype.</p>
           </td>
         </tr>

@@ -1121,8 +1121,8 @@
   },
   {
     "number": 2336,
-    "status": "candidate",
-    "note": "This is a request to add deselected metadata to single-select change events, not a current selection bug. Review as an event API enhancement."
+    "status": "fixed-in-fork",
+    "note": "jQuery single-select input and change events now report the replaced value as deselected when switching or clearing; native select values and Prototype events remain unchanged."
   },
   {
     "number": 2300,

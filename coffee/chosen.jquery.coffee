@@ -548,12 +548,14 @@ class Chosen extends AbstractChosen
       this.search_field_scale()
 
   results_reset: ->
+    previous_option = @form_field.options[@form_field.selectedIndex]
     this.reset_single_select_options()
     @form_field.options[0].selected = true
     this.single_set_selected_text()
     this.show_search_field_default()
     this.results_reset_cleanup()
-    this.trigger_form_field_change()
+    change = if previous_option? and (previous_option.index > 0 or previous_option.value isnt "") then deselected: previous_option.value else undefined
+    this.trigger_form_field_change change
     this.results_hide() if @active_field
 
   results_reset_cleanup: ->
@@ -611,6 +613,7 @@ class Chosen extends AbstractChosen
       if @is_multiple
         high.removeClass("active-result")
       else
+        previous_option = @form_field.options[@form_field.selectedIndex]
         this.reset_single_select_options()
         @search_results.find('[role="option"][aria-selected="true"]').attr('aria-selected', 'false')
 
@@ -642,7 +645,11 @@ class Chosen extends AbstractChosen
           @search_field.trigger "blur"
           @selected_item.trigger "focus"
 
-      this.trigger_form_field_change selected: option.value  if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
+      if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
+        change = selected: option.value
+        if not @is_multiple and previous_option? and previous_option isnt option and (previous_option.index > 0 or previous_option.value isnt "")
+          change.deselected = previous_option.value
+        this.trigger_form_field_change change
       @current_selectedIndex = @form_field.selectedIndex
 
       evt.preventDefault()
