@@ -22,7 +22,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add opt-in removal of individual multiple selections from their dropdown results by pointer or Enter, with a visible remove mark.
 - Allow integrations to override Chosen's existing Sass palette variables before importing the stylesheet.
 - Add opt-in Select all and Deselect all actions for multiple selects, with filtering, disabled-option, selection-limit, keyboard shortcuts, and customizable text.
-- Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control.
+- Add an opt-in `dropdown_width` setting for sizing the result dropdown independently from the Chosen control. Custom-width dropdowns float as separate surfaces and align to the control's reading edge.
 - Support per-option synonyms and aliases through the `data-search-text` attribute without changing visible labels.
 - Add an opt-in `display_selected_value` setting for showing option values in selected controls while retaining labels in the dropdown.
 - Add an opt-in `min_search_length` setting for keeping results hidden until enough search text is entered.
@@ -78,6 +78,8 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+
+- Setting `dropdown_width` adds `chosen-floating-dropdown` to the generated container so custom-width dropdowns can use complete corners, a gap, and independent elevation. Integrations that assert generated container classes should allow this opt-in state.
 - Generated result and selected-choice labels now use the native option's text. Integrations that placed HTML nodes inside an `<option>` will see their text rather than copied markup; native option values and selection events are unchanged.
 - Opting into `dropdown_position: "fixed"` adds `chosen-fixed-dropdown` to the generated container and positions its existing `.chosen-drop` relative to the viewport. The dropdown stays inside the container in the DOM; integrations that inspect container classes should allow this opt-in state.
 - React adds `.chosen-react__option--selected` to selected result rows; its check mark is CSS generated. Pointer entry now updates the active option and `aria-activedescendant`, while the highlighted row remains distinct from selection.

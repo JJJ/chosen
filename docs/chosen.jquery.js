@@ -2373,6 +2373,9 @@ var ChosenCore = (function() {
       if (this.fixed_dropdown) {
         container_classes.push("chosen-fixed-dropdown");
       }
+      if (this.options.dropdown_width != null) {
+        container_classes.push("chosen-floating-dropdown");
+      }
       container_props = {
         'class': container_classes.join(' '),
         'title': this.form_field.title

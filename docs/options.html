@@ -263,7 +263,7 @@
         <tr>
           <td>dropdown_width</td>
           <td>100% of the Chosen control.</td>
-          <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing.</td>
+          <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing. Custom-width dropdowns float with a small gap and align to the control's reading edge.</td>
         </tr>
         <tr>
           <td>recalculate_width_on_update</td>
@@ -469,7 +469,8 @@ $(".my-select").myChosen();</code></pre>
         <tr><td><code>--chosen-control-line-height</code>, <code>--chosen-control-padding-block</code>, <code>--chosen-control-padding-inline-start</code>, and <code>--chosen-control-padding-inline-end</code></td><td>Closed single-select size and density.</td></tr>
         <tr><td><code>--chosen-rtl-control-padding-block</code></td><td>Optional right-to-left single-select block padding. It inherits an explicit control-padding override and otherwise preserves Chosen's compact RTL default.</td></tr>
         <tr><td><code>--chosen-control-shadow</code></td><td>Closed single- and multiple-select shadow.</td></tr>
-        <tr><td><code>--chosen-dropdown-shadow</code>, <code>--chosen-dropdown-offset</code>, and <code>--chosen-dropdown-z-index</code></td><td>Dropdown elevation, overlap, and stacking.</td></tr>
+        <tr><td><code>--chosen-dropdown-shadow</code>, <code>--chosen-dropdown-offset</code>, and <code>--chosen-dropdown-z-index</code></td><td>Attached dropdown elevation, overlap, and stacking.</td></tr>
+        <tr><td><code>--chosen-floating-dropdown-gap</code> and <code>--chosen-floating-dropdown-shadow</code></td><td>Separation and elevation for a custom-width dropdown (4px and a modest shadow by default).</td></tr>
         <tr><td><code>--chosen-search-text-color</code>, <code>--chosen-search-placeholder-color</code>, and <code>--chosen-search-shadow</code></td><td>Search field text, placeholder, and shadow.</td></tr>
         <tr><td><code>--chosen-search-padding-block</code>, <code>--chosen-search-padding-inline-start</code>, and <code>--chosen-search-padding-inline-end</code></td><td>Search field density and icon space.</td></tr>
         <tr><td><code>--chosen-result-padding-block</code>, <code>--chosen-result-padding-inline</code>, <code>--chosen-result-line-height</code>, and <code>--chosen-group-option-indent</code></td><td>Result density and grouped-option indentation.</td></tr>
@@ -605,7 +606,7 @@ $(".my-select").myChosen();</code></pre>
           <td>Visually hidden live status text that announces the available result count.</td>
         </tr>
         <tr>
-          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-readonly</code>, <code>.chosen-rtl</code>, and <code>.chosen-dropup</code></td>
+          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-readonly</code>, <code>.chosen-rtl</code>, <code>.chosen-dropup</code>, and <code>.chosen-floating-dropdown</code></td>
           <td>Open, active, disabled, readonly, right-to-left, and upward-opening container states.</td>
         </tr>
       </tbody></table>

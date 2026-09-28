@@ -46,6 +46,7 @@ class Chosen extends AbstractChosen
     container_classes = container_classes.concat(@inherited_select_classes)
     container_classes.push "chosen-rtl" if @is_rtl
     container_classes.push "chosen-fixed-dropdown" if @fixed_dropdown
+    container_classes.push "chosen-floating-dropdown" if @options.dropdown_width?
 
     container_props =
       'class': container_classes.join ' '
