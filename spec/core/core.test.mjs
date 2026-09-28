@@ -122,3 +122,17 @@ test('selection rejects hidden and disabled options before checking the limit', 
   assert.equal(core.canSelectOption({ value: '', label: '' }, [], { multiple: true }), false);
   assert.equal(core.updateSelection([], { value: '', label: '' }, { multiple: true }).changed, false);
 });
+
+test('pasted tokens select unique eligible options and preserve unmatched text', () => {
+  const entries = core.normalizeOptions([
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta', disabled: true },
+    { value: 'c', label: 'Charlie' }, { value: 'd', label: 'Delta' },
+    { value: 'x', label: 'Duplicate' }, { value: 'y', label: 'Duplicate' }
+  ]);
+  const result = core.resolvePastedChoices('alpha, Beta; c\nDuplicate, unknown', entries, [], 1);
+  assert.deepEqual(result.values, ['a']);
+  assert.equal(result.remaining, 'Beta, c, Duplicate, unknown');
+  assert.equal(result.handled, true);
+  assert.equal(result.limitReached, true);
+  assert.equal(core.resolvePastedChoices('ordinary', entries, [], 1).handled, false);
+});

@@ -73,7 +73,7 @@ function Demo() {
           <label htmlFor="react-basket">Fruit basket</label>
           <Chosen id="react-basket" name="basket" options={options} multiple
             value={basket} onChange={setBasket} maxSelectedOptions={3} maxItemsShown={1}
-            allowSelectAll allowDeselectAll
+            allowSelectAll allowDeselectAll pasteMultipleValues
             multiselectAllowTabToSelect
             includeGroupLabelInSelected
             deselectSelectedResults hideResultsOnSelect={false}
@@ -82,7 +82,7 @@ function Demo() {
             displaySelectedOptions={showSelected} displayDisabledOptions={showDisabled}
             readOnly={basketReadOnly} disabled={basketDisabled}
             aria-describedby="react-basket-help" />
-          <p id="react-basket-help" className="react-demo-help">Choose up to three. Grouped chips include their group names. Click a selected result or its chip × to remove it; Tab selects the highlighted result and moves focus onward. Try disabled Lemon or the long Dragon fruit label.</p>
+          <p id="react-basket-help" className="react-demo-help">Choose up to three, or paste “Apple, Orange” into search. Grouped chips include their group names. Click a selected result or its chip × to remove it; Tab selects the highlighted result and moves focus onward. Try disabled Lemon or the long Dragon fruit label.</p>
           <div className="react-demo-switches" role="group" aria-label="Multiple select examples">
             <label className="react-demo-switch"><input type="checkbox" checked={basketRtl}
               onChange={event => setBasketRtl(event.target.checked)} /> Right-to-left</label>

@@ -21,7 +21,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `inherit_option_classes` | Yes | Yes | Option and group classes reach result rows; opt in to copying option classes to selected chips. React uses `className` on option data and `inheritOptionClasses`. |
 | `max_selected_options` | Yes | Yes | Both enforce the limit. |
 | `max_items_shown` | Yes | Yes | Positive integer limit for visible chips; React prop: `maxItemsShown`. |
-| `paste_multiple_values` | No | No | Existing-option token paste with unmatched text preserved. |
+| `paste_multiple_values` | Yes | Yes | Opt-in token paste selects unique enabled existing options and preserves unmatched text; React prop: `pasteMultipleValues`. |
 | `more_items_text` | Yes | Yes | Hidden-choice count callback; React prop: `moreItemsText`. |
 | `show_fewer_items_text` | Yes | Yes | Expanded summary button copy; React prop: `showFewerItemsText`. |
 | `no_results_text` | Yes | Yes | React prop: `noResultsText`; custom text is used literally before the query. Vanilla also reads source `data-no_results_text`. |

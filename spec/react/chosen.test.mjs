@@ -142,6 +142,18 @@ test('React bulk actions honor filtering, selection limits, and disabled values'
   assert.equal(changes.length, 3);
 });
 
+test('React opt-in paste selects existing values and keeps unmatched text', () => {
+  const changes = [];
+  render(h('form', null, h(Chosen, { options, multiple: true, name: 'fruit',
+    pasteMultipleValues: true, maxSelectedOptions: 1, onChange: value => changes.push(value),
+    'aria-label': 'Fruit' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.paste(input, { clipboardData: { getData: () => 'Apple; Banana; Cherry; unknown' } });
+  assert.deepEqual(changes, [['a']]);
+  assert.equal(input.value, 'Banana, Cherry, unknown');
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('fruit'), ['a']);
+});
+
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',

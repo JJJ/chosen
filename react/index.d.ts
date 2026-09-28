@@ -52,6 +52,7 @@ export interface ChosenProps {
   maxItemsShown?: number;
   allowSelectAll?: boolean;
   allowDeselectAll?: boolean;
+  pasteMultipleValues?: boolean;
   selectAllText?: string;
   deselectAllText?: string;
   moreItemsText?: (count: number) => string;

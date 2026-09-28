@@ -175,6 +175,19 @@ test('bulk actions select filtered options, respect limits, and preserve disable
   dom.window.close();
 });
 
+test('opt-in paste selects existing values and leaves unmatched tokens in search', () => {
+  const { dom, select } = fixture('<select multiple><option value="a">Alpha</option><option value="b">Beta</option><option value="c" disabled>Charlie</option></select>');
+  const chosen = new Chosen(select, { paste_multiple_values: true, max_selected_options: 1 });
+  const paste = new dom.window.Event('paste', { bubbles: true, cancelable: true });
+  Object.defineProperty(paste, 'clipboardData', { value: { getData: () => 'Alpha, Beta, Charlie, unknown' } });
+  chosen.input.dispatchEvent(paste);
+  assert.equal(paste.defaultPrevented, true);
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  assert.equal(chosen.input.value, 'Beta, Charlie, unknown');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

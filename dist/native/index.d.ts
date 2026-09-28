@@ -26,6 +26,7 @@ export interface ChosenOptions {
   max_items_shown?: number;
   allow_select_all?: boolean;
   allow_deselect_all?: boolean;
+  paste_multiple_values?: boolean;
   select_all_text?: string;
   deselect_all_text?: string;
   more_items_text?: (count: number) => string;

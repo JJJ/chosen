@@ -141,6 +141,41 @@ export function updateSelection(selectedValues, option, settings) {
   };
 }
 
+export function resolvePastedChoices(text, entries, selectedValues, maximum) {
+  var input = asText(text);
+  var values = selectedValues.slice();
+  var remaining = [];
+  var consumed = false;
+  var limitReached = false;
+  if (!/[,;\t\r\n]/.test(input)) {
+    return { values: values, remaining: input, handled: false, changed: false, limitReached: false };
+  }
+  var tokens = input.split(/[,;\t\r\n]/).map(function (token) { return token.trim(); }).filter(Boolean);
+  if (!tokens.length) {
+    return { values: values, remaining: input, handled: false, changed: false, limitReached: false };
+  }
+  var eligible = entries.filter(function (item) {
+    return item.kind === 'option' && !item.empty && !item.disabled && !item.hidden;
+  });
+  for (var index = 0; index < tokens.length; index += 1) {
+    var token = tokens[index];
+    var matches = eligible.filter(function (item) { return item.value === token; });
+    if (!matches.length) matches = eligible.filter(function (item) { return item.label.toLowerCase() === token.toLowerCase(); });
+    if (matches.length !== 1) { remaining.push(token); continue; }
+    var value = matches[0].value;
+    if (values.indexOf(value) !== -1) { consumed = true; continue; }
+    if (selectionLimitReached(values.length, maximum)) {
+      remaining.push(token);
+      limitReached = true;
+      continue;
+    }
+    values.push(value);
+    consumed = true;
+  }
+  return { values: values, remaining: remaining.join(', '), handled: consumed || limitReached,
+    changed: values.length !== selectedValues.length, limitReached: limitReached };
+}
+
 export function createMatcher(query, settings) {
   var config = settings || {};
   var normalize = config.normalizeSearchText || asText;

@@ -81,6 +81,10 @@ up to `maxSelectedOptions`. `allowDeselectAll` removes enabled selections even
 outside the current filter. Both default to `false`; customize the action labels
 with `selectAllText` and `deselectAllText`. Ctrl/Command+A and
 Ctrl/Command+Shift+A invoke the enabled actions when search is empty.
+Set `pasteMultipleValues` to accept comma, semicolon, tab, or newline-separated
+existing values or unique labels pasted into multiple search. Disabled and
+hidden options are skipped, the selection limit applies, and unmatched tokens
+remain in the search field. It defaults to `false`.
 `displaySelectedValue` shows option values in the closed control and chips;
 `includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
 and result rows continue to show option labels. `open` and

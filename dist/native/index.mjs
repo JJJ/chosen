@@ -114,6 +114,60 @@ function includeOptionInResults(option, settings) {
   if (option.empty || option.hidden || config.groupHidden) return false;
   return true;
 }
+function selectionLimitReached(selectedCount, maximum) {
+  return selectedCount >= (maximum == null ? Infinity : maximum);
+}
+function resolvePastedChoices(text, entries, selectedValues, maximum) {
+  var input = asText(text);
+  var values = selectedValues.slice();
+  var remaining = [];
+  var consumed = false;
+  var limitReached = false;
+  if (!/[,;\t\r\n]/.test(input)) {
+    return { values, remaining: input, handled: false, changed: false, limitReached: false };
+  }
+  var tokens = input.split(/[,;\t\r\n]/).map(function(token2) {
+    return token2.trim();
+  }).filter(Boolean);
+  if (!tokens.length) {
+    return { values, remaining: input, handled: false, changed: false, limitReached: false };
+  }
+  var eligible = entries.filter(function(item) {
+    return item.kind === "option" && !item.empty && !item.disabled && !item.hidden;
+  });
+  for (var index = 0; index < tokens.length; index += 1) {
+    var token = tokens[index];
+    var matches = eligible.filter(function(item) {
+      return item.value === token;
+    });
+    if (!matches.length) matches = eligible.filter(function(item) {
+      return item.label.toLowerCase() === token.toLowerCase();
+    });
+    if (matches.length !== 1) {
+      remaining.push(token);
+      continue;
+    }
+    var value = matches[0].value;
+    if (values.indexOf(value) !== -1) {
+      consumed = true;
+      continue;
+    }
+    if (selectionLimitReached(values.length, maximum)) {
+      remaining.push(token);
+      limitReached = true;
+      continue;
+    }
+    values.push(value);
+    consumed = true;
+  }
+  return {
+    values,
+    remaining: remaining.join(", "),
+    handled: consumed || limitReached,
+    changed: values.length !== selectedValues.length,
+    limitReached
+  };
+}
 function createMatcher(query, settings) {
   var config = settings || {};
   var normalize = config.normalizeSearchText || asText;
@@ -319,6 +373,7 @@ var Chosen = class {
       max_items_shown: Infinity,
       allow_select_all: false,
       allow_deselect_all: false,
+      paste_multiple_values: false,
       select_all_text: "Select all",
       deselect_all_text: "Deselect all",
       more_items_text: (count) => `Show ${count} more...`,
@@ -343,6 +398,7 @@ var Chosen = class {
     this.choicesExpanded = false;
     this.typeahead = "";
     this.typeaheadTimer = null;
+    this.composing = false;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -432,6 +488,16 @@ var Chosen = class {
     select.setAttribute("aria-hidden", "true");
     this.input.addEventListener("keydown", this.onKeyDown);
     this.input.addEventListener("input", this.onInput);
+    this.onPaste = (event) => this.paste(event);
+    this.input.addEventListener("paste", this.onPaste);
+    this.onCompositionStart = () => {
+      this.composing = true;
+    };
+    this.onCompositionEnd = () => {
+      this.composing = false;
+    };
+    this.input.addEventListener("compositionstart", this.onCompositionStart);
+    this.input.addEventListener("compositionend", this.onCompositionEnd);
     this.input.addEventListener("click", () => this.open());
     this.control.addEventListener("pointerdown", this.onControlPointer);
     select.addEventListener("change", this.onNativeChange);
@@ -658,6 +724,31 @@ var Chosen = class {
     if (limitReached) emit(this.select, "chosen:maxselected", this);
     this.input.focus();
   }
+  paste(event) {
+    if (!this.multiple || !this.options.paste_multiple_values || this.composing || this.select.disabled || this.select.hasAttribute("readonly")) return;
+    const pasted = event.clipboardData?.getData("text/plain") || event.clipboardData?.getData("Text");
+    if (!pasted) return;
+    const start = this.input.selectionStart ?? 0;
+    const end = this.input.selectionEnd ?? this.input.value.length;
+    const text = this.input.value.slice(0, start) + pasted + this.input.value.slice(end);
+    const selected = Array.from(this.select.selectedOptions, (option) => option.value);
+    const result = resolvePastedChoices(text, this.entries, selected, this.options.max_selected_options);
+    if (!result.handled) return;
+    event.preventDefault();
+    if (result.changed) {
+      const added = new Set(result.values.filter((value) => !selected.includes(value)));
+      for (const entry of this.entries) {
+        if (entry.kind === "option" && added.has(entry.value)) this.nodes[entry.index].selected = true;
+      }
+      this.changed();
+    }
+    this.input.value = result.remaining;
+    this.activeIndex = -1;
+    if (result.limitReached) emit(this.select, "chosen:maxselected", this);
+    this.open();
+    this.renderSelection();
+    this.renderResults();
+  }
   highlight(index) {
     this.activeIndex = index;
     const active = this.available[index];
@@ -826,6 +917,9 @@ var Chosen = class {
     this.boundLabels.clear();
     this.input.removeEventListener("keydown", this.onKeyDown);
     this.input.removeEventListener("input", this.onInput);
+    this.input.removeEventListener("paste", this.onPaste);
+    this.input.removeEventListener("compositionstart", this.onCompositionStart);
+    this.input.removeEventListener("compositionend", this.onCompositionEnd);
     this.control.removeEventListener("pointerdown", this.onControlPointer);
     this.select.removeEventListener("change", this.onNativeChange);
     this.select.removeEventListener("chosen:updated", this.onUpdate);

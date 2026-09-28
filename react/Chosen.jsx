@@ -1,7 +1,7 @@
 import React, {
   forwardRef, useCallback, useEffect, useId, useImperativeHandle, useMemo, useRef, useState
 } from 'react';
-import { filterOptions, normalizeOptions, preferredPrefixIndex, updateSelection } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedChoices, updateSelection } from '../core/index.mjs';
 
 function valuesOf(value, multiple) {
   if (value == null || value === '') return [];
@@ -39,6 +39,7 @@ export const Chosen = forwardRef(function Chosen({
   deselectSelectedResults = false, hideResultsOnSelect = true,
   maxItemsShown = Infinity,
   allowSelectAll = false, allowDeselectAll = false,
+  pasteMultipleValues = false,
   selectAllText = 'Select all', deselectAllText = 'Deselect all',
   moreItemsText = count => `Show ${count} more...`,
   showFewerItemsText = 'Show fewer...',
@@ -57,6 +58,7 @@ export const Chosen = forwardRef(function Chosen({
   const labelForwardedClick = useRef(false);
   const typeahead = useRef('');
   const typeaheadTimer = useRef(null);
+  const composing = useRef(false);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
@@ -178,6 +180,23 @@ export const Chosen = forwardRef(function Chosen({
     if (limitReached) setLimitNotice(true);
     else setLimitNotice(false);
     inputRef.current?.focus();
+  };
+
+  const paste = event => {
+    if (!multiple || !pasteMultipleValues || composing.current || disabled || readOnly) return;
+    const pasted = event.clipboardData?.getData('text/plain') || event.clipboardData?.getData('Text');
+    if (!pasted) return;
+    const input = event.currentTarget;
+    const text = input.value.slice(0, input.selectionStart ?? 0) + pasted +
+      input.value.slice(input.selectionEnd ?? input.value.length);
+    const result = resolvePastedChoices(text, entries, selectedValues, maxSelectedOptions);
+    if (!result.handled) return;
+    event.preventDefault();
+    if (result.changed) commit(result.values, event);
+    if (result.limitReached) setLimitNotice(true);
+    setQuery(result.remaining);
+    setActiveIndex(-1);
+    changeOpen(true);
   };
 
   useImperativeHandle(ref, () => ({
@@ -412,7 +431,9 @@ export const Chosen = forwardRef(function Chosen({
         onBlur={onInputBlur} onClick={() => {
           if (labelForwardedClick.current) { labelForwardedClick.current = false; return; }
           changeOpen(true);
-        }} onKeyDown={keyDown}
+        }} onKeyDown={keyDown} onPaste={paste}
+        onCompositionStart={() => { composing.current = true; }}
+        onCompositionEnd={() => { composing.current = false; }}
         onChange={event => { setPendingBackstrokeValue(null); setQuery(event.target.value); setActiveIndex(-1); changeOpen(true); }} />
       {!multiple && allowSingleDeselect && selectedValues.length > 0 && !disabled && !readOnly && <button type="button"
         className="chosen-react__clear" aria-label="Clear selection" onClick={event => {

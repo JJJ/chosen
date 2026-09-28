@@ -1,4 +1,4 @@
-import { filterOptions, normalizeOptions, preferredPrefixIndex } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedChoices } from '../core/index.mjs';
 
 let nextId = 0;
 const instances = new WeakMap();
@@ -54,6 +54,7 @@ export class Chosen {
       deselect_selected_results: false, hide_results_on_select: true,
       max_items_shown: Infinity,
       allow_select_all: false, allow_deselect_all: false,
+      paste_multiple_values: false,
       select_all_text: 'Select all', deselect_all_text: 'Deselect all',
       more_items_text: count => `Show ${count} more...`,
       show_fewer_items_text: 'Show fewer...',
@@ -74,6 +75,7 @@ export class Chosen {
     this.choicesExpanded = false;
     this.typeahead = '';
     this.typeaheadTimer = null;
+    this.composing = false;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -151,6 +153,12 @@ export class Chosen {
     select.setAttribute('aria-hidden', 'true');
     this.input.addEventListener('keydown', this.onKeyDown);
     this.input.addEventListener('input', this.onInput);
+    this.onPaste = event => this.paste(event);
+    this.input.addEventListener('paste', this.onPaste);
+    this.onCompositionStart = () => { this.composing = true; };
+    this.onCompositionEnd = () => { this.composing = false; };
+    this.input.addEventListener('compositionstart', this.onCompositionStart);
+    this.input.addEventListener('compositionend', this.onCompositionEnd);
     this.input.addEventListener('click', () => this.open());
     this.control.addEventListener('pointerdown', this.onControlPointer);
     select.addEventListener('change', this.onNativeChange);
@@ -387,6 +395,33 @@ export class Chosen {
     this.input.focus();
   }
 
+  paste(event) {
+    if (!this.multiple || !this.options.paste_multiple_values || this.composing ||
+      this.select.disabled || this.select.hasAttribute('readonly')) return;
+    const pasted = event.clipboardData?.getData('text/plain') || event.clipboardData?.getData('Text');
+    if (!pasted) return;
+    const start = this.input.selectionStart ?? 0;
+    const end = this.input.selectionEnd ?? this.input.value.length;
+    const text = this.input.value.slice(0, start) + pasted + this.input.value.slice(end);
+    const selected = Array.from(this.select.selectedOptions, option => option.value);
+    const result = resolvePastedChoices(text, this.entries, selected, this.options.max_selected_options);
+    if (!result.handled) return;
+    event.preventDefault();
+    if (result.changed) {
+      const added = new Set(result.values.filter(value => !selected.includes(value)));
+      for (const entry of this.entries) {
+        if (entry.kind === 'option' && added.has(entry.value)) this.nodes[entry.index].selected = true;
+      }
+      this.changed();
+    }
+    this.input.value = result.remaining;
+    this.activeIndex = -1;
+    if (result.limitReached) emit(this.select, 'chosen:maxselected', this);
+    this.open();
+    this.renderSelection();
+    this.renderResults();
+  }
+
   highlight(index) {
     this.activeIndex = index;
     const active = this.available[index];
@@ -558,6 +593,9 @@ export class Chosen {
     this.boundLabels.clear();
     this.input.removeEventListener('keydown', this.onKeyDown);
     this.input.removeEventListener('input', this.onInput);
+    this.input.removeEventListener('paste', this.onPaste);
+    this.input.removeEventListener('compositionstart', this.onCompositionStart);
+    this.input.removeEventListener('compositionend', this.onCompositionEnd);
     this.control.removeEventListener('pointerdown', this.onControlPointer);
     this.select.removeEventListener('change', this.onNativeChange);
     this.select.removeEventListener('chosen:updated', this.onUpdate);
