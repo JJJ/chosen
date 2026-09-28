@@ -1,0 +1,1997 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+<!-- chosen-demo:jquery -->
+  <title>Chosen: A jQuery Plugin to Tame Unwieldy Select Boxes</title>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+  <title>Chosen: A Prototype Plugin by Harvest to Tame Unwieldy Select Boxes</title>
+<!-- chosen-demo:end -->
+  <link rel="stylesheet" href="docsupport/prism.css">
+  <link rel="stylesheet" href="chosen.css?ver=3.0.4-mobile">
+  <link rel="stylesheet" href="docsupport/style.css?ver=3.0.4">
+  <script src="docsupport/theme.js"></script>
+
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://ajax.googleapis.com; style-src 'self'; img-src 'self' data:">
+
+</head>
+<body class="docs-home">
+<!-- chosen-demo:jquery -->
+  <form>
+    <div id="container">
+      <div id="content">
+        <header class="site-header">
+          <div class="site-nav-wrap">
+            <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
+            <nav class="site-nav" aria-label="Primary navigation">
+              <a class="is-current" href="index.html">jQuery demo</a>
+              <a href="index.proto.html">Prototype demo</a>
+              <a href="react.html">React demo</a>
+              <a href="options.html">Options &amp; API</a>
+              <a href="https://github.com/JJJ/chosen">GitHub</a>
+              <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
+            </nav>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+  <div id="container">
+    <div id="content">
+      <header class="site-header">
+        <div class="site-nav-wrap">
+          <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
+          <nav class="site-nav" aria-label="Primary navigation">
+            <a href="index.html">jQuery demo</a>
+            <a class="is-current" href="index.proto.html">Prototype demo</a>
+            <a href="react.html">React demo</a>
+            <a href="options.html">Options &amp; API</a>
+            <a href="https://github.com/JJJ/chosen">GitHub</a>
+            <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
+          </nav>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Prototype plugin</p>
+          <h1>Tame unwieldy select boxes.</h1>
+          <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+          <div class="hero-actions">
+            <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+            <a class="button" href="options.html">Explore the API</a>
+            <a class="text-link" href="index.html">View the jQuery demo <span aria-hidden="true">→</span></a>
+<!-- chosen-demo:end -->
+          </div>
+<!-- chosen-demo:jquery -->
+          <div class="hero-copy">
+            <p class="eyebrow">Still choosing after all these years.</p>
+            <h1>Tame unwieldy select boxes.</h1>
+            <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+            <div class="hero-actions">
+              <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+              <a class="button" href="options.html">Explore the API</a>
+              <a class="text-link" href="https://github.com/JJJ/chosen/blob/master/contributing.md">Contribute on GitHub <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </header>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        </div>
+      </header>
+<!-- chosen-demo:end -->
+
+<!-- chosen-demo:jquery -->
+        <h2><a name="standard-select" class="anchor" href="#standard-select">Standard Select</a></h2>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+      <h2><a name="standard-select" class="anchor" href="#standard-select">Standard Select</a></h2>
+<!-- chosen-demo:end -->
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="standard-select-native">Turns This</label>
+          <select id="standard-select-native" data-placeholder="Choose a Country..." class="select" tabindex="1">
+            <option value="" selected="" disabled="" hidden="">Choose a Country...</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Aland Islands">Aland Islands</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="American Samoa">American Samoa</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Anguilla">Anguilla</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Aruba">Aruba</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bermuda">Bermuda</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia, Plurinational State of">Bolivia, Plurinational State of</option>
+            <option value="Bonaire, Sint Eustatius and Saba">Bonaire, Sint Eustatius and Saba</option>
+            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Bouvet Island">Bouvet Island</option>
+            <option value="Brazil">Brazil</option>
+            <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+            <option value="Brunei Darussalam">Brunei Darussalam</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Cape Verde">Cape Verde</option>
+            <option value="Cayman Islands">Cayman Islands</option>
+            <option value="Central African Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Christmas Island">Christmas Island</option>
+            <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+            <option value="Cook Islands">Cook Islands</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cote D'ivoire">Cote D'ivoire</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Curacao">Curacao</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Equatorial Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+            <option value="Faroe Islands">Faroe Islands</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="French Guiana">French Guiana</option>
+            <option value="French Polynesia">French Polynesia</option>
+            <option value="French Southern Territories">French Southern Territories</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Gibraltar">Gibraltar</option>
+            <option value="Greece">Greece</option>
+            <option value="Greenland">Greenland</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guam">Guam</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guernsey">Guernsey</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-bissau">Guinea-bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+            <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Isle of Man">Isle of Man</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jersey">Jersey</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+            <option value="Korea, Republic of">Korea, Republic of</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libya">Libya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Macao">Macao</option>
+            <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall Islands">Marshall Islands</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+            <option value="Moldova, Republic of">Moldova, Republic of</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Caledonia">New Caledonia</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Niue">Niue</option>
+            <option value="Norfolk Island">Norfolk Island</option>
+            <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua New Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pitcairn">Pitcairn</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Reunion">Reunion</option>
+            <option value="Romania">Romania</option>
+            <option value="Russian Federation">Russian Federation</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint Barthelemy">Saint Barthelemy</option>
+            <option value="Saint Helena, Ascension and Tristan da Cunha">Saint Helena, Ascension and Tristan da Cunha</option>
+            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint Lucia">Saint Lucia</option>
+            <option value="Saint Martin (French part)">Saint Martin (French part)</option>
+            <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+            <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San Marino">San Marino</option>
+            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Sint Maarten (Dutch part)">Sint Maarten (Dutch part)</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+            <option value="South Sudan">South Sudan</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+            <option value="Swaziland">Swaziland</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+            <option value="Taiwan, Province of China">Taiwan, Province of China</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-leste">Timor-leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tokelau">Tokelau</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United States">United States</option>
+            <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela, Bolivarian Republic of">Venezuela, Bolivarian Republic of</option>
+            <option value="Viet Nam">Viet Nam</option>
+            <option value="Virgin Islands, British">Virgin Islands, British</option>
+            <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+            <option value="Wallis and Futuna">Wallis and Futuna</option>
+            <option value="Western Sahara">Western Sahara</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="standard-select-chosen">Into This</label>
+          <select id="standard-select-chosen" data-placeholder="Choose a Country..." class="chosen-select" tabindex="2">
+            <option value="" selected="" disabled="" hidden="">Choose a Country...</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Aland Islands">Aland Islands</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="American Samoa">American Samoa</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Anguilla">Anguilla</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Aruba">Aruba</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bermuda">Bermuda</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia, Plurinational State of">Bolivia, Plurinational State of</option>
+            <option value="Bonaire, Sint Eustatius and Saba">Bonaire, Sint Eustatius and Saba</option>
+            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Bouvet Island">Bouvet Island</option>
+            <option value="Brazil">Brazil</option>
+            <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+            <option value="Brunei Darussalam">Brunei Darussalam</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Cape Verde">Cape Verde</option>
+            <option value="Cayman Islands">Cayman Islands</option>
+            <option value="Central African Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Christmas Island">Christmas Island</option>
+            <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+            <option value="Cook Islands">Cook Islands</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cote D'ivoire">Cote D'ivoire</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Curacao">Curacao</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Equatorial Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+            <option value="Faroe Islands">Faroe Islands</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="French Guiana">French Guiana</option>
+            <option value="French Polynesia">French Polynesia</option>
+            <option value="French Southern Territories">French Southern Territories</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Gibraltar">Gibraltar</option>
+            <option value="Greece">Greece</option>
+            <option value="Greenland">Greenland</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guam">Guam</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guernsey">Guernsey</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-bissau">Guinea-bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+            <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Isle of Man">Isle of Man</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jersey">Jersey</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+            <option value="Korea, Republic of">Korea, Republic of</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libya">Libya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Macao">Macao</option>
+            <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall Islands">Marshall Islands</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+            <option value="Moldova, Republic of">Moldova, Republic of</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Caledonia">New Caledonia</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Niue">Niue</option>
+            <option value="Norfolk Island">Norfolk Island</option>
+            <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua New Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pitcairn">Pitcairn</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Reunion">Reunion</option>
+            <option value="Romania">Romania</option>
+            <option value="Russian Federation">Russian Federation</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint Barthelemy">Saint Barthelemy</option>
+            <option value="Saint Helena, Ascension and Tristan da Cunha">Saint Helena, Ascension and Tristan da Cunha</option>
+            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint Lucia">Saint Lucia</option>
+            <option value="Saint Martin (French part)">Saint Martin (French part)</option>
+            <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+            <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San Marino">San Marino</option>
+            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Sint Maarten (Dutch part)">Sint Maarten (Dutch part)</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+            <option value="South Sudan">South Sudan</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+            <option value="Swaziland">Swaziland</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+            <option value="Taiwan, Province of China">Taiwan, Province of China</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-leste">Timor-leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tokelau">Tokelau</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United States">United States</option>
+            <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela, Bolivarian Republic of">Venezuela, Bolivarian Republic of</option>
+            <option value="Viet Nam">Viet Nam</option>
+            <option value="Virgin Islands, British">Virgin Islands, British</option>
+            <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+            <option value="Wallis and Futuna">Wallis and Futuna</option>
+            <option value="Western Sahara">Western Sahara</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="multiple-select" class="anchor" href="#multiple-select">Multiple Select</a></h2>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="multiple-select-native">Turns This</label>
+          <select id="multiple-select-native" data-placeholder="Choose a Country..." class="select" multiple="" tabindex="3">
+            <option value=""></option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Aland Islands">Aland Islands</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="American Samoa">American Samoa</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Anguilla">Anguilla</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Aruba">Aruba</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bermuda">Bermuda</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia, Plurinational State of">Bolivia, Plurinational State of</option>
+            <option value="Bonaire, Sint Eustatius and Saba">Bonaire, Sint Eustatius and Saba</option>
+            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Bouvet Island">Bouvet Island</option>
+            <option value="Brazil">Brazil</option>
+            <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+            <option value="Brunei Darussalam">Brunei Darussalam</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Cape Verde">Cape Verde</option>
+            <option value="Cayman Islands">Cayman Islands</option>
+            <option value="Central African Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Christmas Island">Christmas Island</option>
+            <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+            <option value="Cook Islands">Cook Islands</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cote D'ivoire">Cote D'ivoire</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Curacao">Curacao</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Equatorial Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+            <option value="Faroe Islands">Faroe Islands</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="French Guiana">French Guiana</option>
+            <option value="French Polynesia">French Polynesia</option>
+            <option value="French Southern Territories">French Southern Territories</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Gibraltar">Gibraltar</option>
+            <option value="Greece">Greece</option>
+            <option value="Greenland">Greenland</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guam">Guam</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guernsey">Guernsey</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-bissau">Guinea-bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+            <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Isle of Man">Isle of Man</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jersey">Jersey</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+            <option value="Korea, Republic of">Korea, Republic of</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libya">Libya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Macao">Macao</option>
+            <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall Islands">Marshall Islands</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+            <option value="Moldova, Republic of">Moldova, Republic of</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Caledonia">New Caledonia</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Niue">Niue</option>
+            <option value="Norfolk Island">Norfolk Island</option>
+            <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua New Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pitcairn">Pitcairn</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Reunion">Reunion</option>
+            <option value="Romania">Romania</option>
+            <option value="Russian Federation">Russian Federation</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint Barthelemy">Saint Barthelemy</option>
+            <option value="Saint Helena, Ascension and Tristan da Cunha">Saint Helena, Ascension and Tristan da Cunha</option>
+            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint Lucia">Saint Lucia</option>
+            <option value="Saint Martin (French part)">Saint Martin (French part)</option>
+            <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+            <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San Marino">San Marino</option>
+            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Sint Maarten (Dutch part)">Sint Maarten (Dutch part)</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+            <option value="South Sudan">South Sudan</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+            <option value="Swaziland">Swaziland</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+            <option value="Taiwan, Province of China">Taiwan, Province of China</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-leste">Timor-leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tokelau">Tokelau</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United States">United States</option>
+            <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela, Bolivarian Republic of">Venezuela, Bolivarian Republic of</option>
+            <option value="Viet Nam">Viet Nam</option>
+            <option value="Virgin Islands, British">Virgin Islands, British</option>
+            <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+            <option value="Wallis and Futuna">Wallis and Futuna</option>
+            <option value="Western Sahara">Western Sahara</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="multiple-select-chosen">Into This</label>
+          <select id="multiple-select-chosen" data-placeholder="Choose a Country..." class="chosen-select" multiple="" tabindex="4">
+            <option value=""></option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Aland Islands">Aland Islands</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="American Samoa">American Samoa</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Anguilla">Anguilla</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Aruba">Aruba</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bermuda">Bermuda</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia, Plurinational State of">Bolivia, Plurinational State of</option>
+            <option value="Bonaire, Sint Eustatius and Saba">Bonaire, Sint Eustatius and Saba</option>
+            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Bouvet Island">Bouvet Island</option>
+            <option value="Brazil">Brazil</option>
+            <option value="British Indian Ocean Territory">British Indian Ocean Territory</option>
+            <option value="Brunei Darussalam">Brunei Darussalam</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Cape Verde">Cape Verde</option>
+            <option value="Cayman Islands">Cayman Islands</option>
+            <option value="Central African Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Christmas Island">Christmas Island</option>
+            <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Congo, The Democratic Republic of The">Congo, The Democratic Republic of The</option>
+            <option value="Cook Islands">Cook Islands</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cote D'ivoire">Cote D'ivoire</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Curacao">Curacao</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Equatorial Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Falkland Islands (Malvinas)">Falkland Islands (Malvinas)</option>
+            <option value="Faroe Islands">Faroe Islands</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="French Guiana">French Guiana</option>
+            <option value="French Polynesia">French Polynesia</option>
+            <option value="French Southern Territories">French Southern Territories</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Gibraltar">Gibraltar</option>
+            <option value="Greece">Greece</option>
+            <option value="Greenland">Greenland</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guam">Guam</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guernsey">Guernsey</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-bissau">Guinea-bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Heard Island and Mcdonald Islands">Heard Island and Mcdonald Islands</option>
+            <option value="Holy See (Vatican City State)">Holy See (Vatican City State)</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran, Islamic Republic of">Iran, Islamic Republic of</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Isle of Man">Isle of Man</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jersey">Jersey</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Korea, Democratic People's Republic of">Korea, Democratic People's Republic of</option>
+            <option value="Korea, Republic of">Korea, Republic of</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Lao People's Democratic Republic">Lao People's Democratic Republic</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libya">Libya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Macao">Macao</option>
+            <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall Islands">Marshall Islands</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Micronesia, Federated States of">Micronesia, Federated States of</option>
+            <option value="Moldova, Republic of">Moldova, Republic of</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Caledonia">New Caledonia</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Niue">Niue</option>
+            <option value="Norfolk Island">Norfolk Island</option>
+            <option value="Northern Mariana Islands">Northern Mariana Islands</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Palestinian Territory, Occupied">Palestinian Territory, Occupied</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua New Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pitcairn">Pitcairn</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Reunion">Reunion</option>
+            <option value="Romania">Romania</option>
+            <option value="Russian Federation">Russian Federation</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint Barthelemy">Saint Barthelemy</option>
+            <option value="Saint Helena, Ascension and Tristan da Cunha">Saint Helena, Ascension and Tristan da Cunha</option>
+            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint Lucia">Saint Lucia</option>
+            <option value="Saint Martin (French part)">Saint Martin (French part)</option>
+            <option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon</option>
+            <option value="Saint Vincent and The Grenadines">Saint Vincent and The Grenadines</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San Marino">San Marino</option>
+            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Sint Maarten (Dutch part)">Sint Maarten (Dutch part)</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Georgia and The South Sandwich Islands">South Georgia and The South Sandwich Islands</option>
+            <option value="South Sudan">South Sudan</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
+            <option value="Swaziland">Swaziland</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syrian Arab Republic">Syrian Arab Republic</option>
+            <option value="Taiwan, Province of China">Taiwan, Province of China</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania, United Republic of">Tanzania, United Republic of</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-leste">Timor-leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tokelau">Tokelau</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Turks and Caicos Islands">Turks and Caicos Islands</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United States">United States</option>
+            <option value="United States Minor Outlying Islands">United States Minor Outlying Islands</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela, Bolivarian Republic of">Venezuela, Bolivarian Republic of</option>
+            <option value="Viet Nam">Viet Nam</option>
+            <option value="Virgin Islands, British">Virgin Islands, British</option>
+            <option value="Virgin Islands, U.S.">Virgin Islands, U.S.</option>
+            <option value="Wallis and Futuna">Wallis and Futuna</option>
+            <option value="Western Sahara">Western Sahara</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="optgroup-support" class="anchor" href="#optgroup-support">&lt;optgroup&gt; Support</a></h2>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="optgroup-single">Single Select with Groups</label>
+          <select id="optgroup-single" data-placeholder="Your Favorite Football Team" class="chosen-select" tabindex="5">
+            <option value=""></option>
+            <optgroup label="NFC EAST">
+              <option>Dallas Cowboys</option>
+              <option>New York Giants</option>
+              <option>Philadelphia Eagles</option>
+              <option>Washington Redskins</option>
+            </optgroup>
+            <optgroup label="NFC NORTH">
+              <option>Chicago Bears</option>
+              <option>Detroit Lions</option>
+              <option>Green Bay Packers</option>
+              <option>Minnesota Vikings</option>
+            </optgroup>
+            <optgroup label="NFC SOUTH">
+              <option>Atlanta Falcons</option>
+              <option>Carolina Panthers</option>
+              <option>New Orleans Saints</option>
+              <option>Tampa Bay Buccaneers</option>
+            </optgroup>
+            <optgroup label="NFC WEST">
+              <option>Arizona Cardinals</option>
+              <option>St. Louis Rams</option>
+              <option>San Francisco 49ers</option>
+              <option>Seattle Seahawks</option>
+            </optgroup>
+            <optgroup label="AFC EAST">
+              <option>Buffalo Bills</option>
+              <option>Miami Dolphins</option>
+              <option>New England Patriots</option>
+              <option>New York Jets</option>
+            </optgroup>
+            <optgroup label="AFC NORTH">
+              <option>Baltimore Ravens</option>
+              <option>Cincinnati Bengals</option>
+              <option>Cleveland Browns</option>
+              <option>Pittsburgh Steelers</option>
+            </optgroup>
+            <optgroup label="AFC SOUTH">
+              <option>Houston Texans</option>
+              <option>Indianapolis Colts</option>
+              <option>Jacksonville Jaguars</option>
+              <option>Tennessee Titans</option>
+            </optgroup>
+            <optgroup label="AFC WEST">
+              <option>Denver Broncos</option>
+              <option>Kansas City Chiefs</option>
+              <option>Oakland Raiders</option>
+              <option>San Diego Chargers</option>
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="optgroup-multiple">Multiple Select with Groups</label>
+          <select id="optgroup-multiple" data-placeholder="Your Favorite Football Team" class="chosen-select" multiple="" tabindex="6">
+            <option value=""></option>
+            <optgroup label="NFC EAST">
+              <option>Dallas Cowboys</option>
+              <option>New York Giants</option>
+              <option>Philadelphia Eagles</option>
+              <option>Washington Redskins</option>
+            </optgroup>
+            <optgroup label="NFC NORTH">
+              <option>Chicago Bears</option>
+              <option>Detroit Lions</option>
+              <option>Green Bay Packers</option>
+              <option>Minnesota Vikings</option>
+            </optgroup>
+            <optgroup label="NFC SOUTH">
+              <option>Atlanta Falcons</option>
+              <option>Carolina Panthers</option>
+              <option>New Orleans Saints</option>
+              <option>Tampa Bay Buccaneers</option>
+            </optgroup>
+            <optgroup label="NFC WEST">
+              <option>Arizona Cardinals</option>
+              <option>St. Louis Rams</option>
+              <option>San Francisco 49ers</option>
+              <option>Seattle Seahawks</option>
+            </optgroup>
+            <optgroup label="AFC EAST">
+              <option>Buffalo Bills</option>
+              <option>Miami Dolphins</option>
+              <option>New England Patriots</option>
+              <option>New York Jets</option>
+            </optgroup>
+            <optgroup label="AFC NORTH">
+              <option>Baltimore Ravens</option>
+              <option>Cincinnati Bengals</option>
+              <option>Cleveland Browns</option>
+              <option>Pittsburgh Steelers</option>
+            </optgroup>
+            <optgroup label="AFC SOUTH">
+              <option>Houston Texans</option>
+              <option>Indianapolis Colts</option>
+              <option>Jacksonville Jaguars</option>
+              <option>Tennessee Titans</option>
+            </optgroup>
+            <optgroup label="AFC WEST">
+              <option>Denver Broncos</option>
+              <option>Kansas City Chiefs</option>
+              <option>Oakland Raiders</option>
+              <option>San Diego Chargers</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="selected-and-disabled-support" class="anchor" href="#selected-and-disabled-support">Selected, Disabled and Hidden Support</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Chosen automatically highlights selected options and removes disabled and / or hidden options.</p>
+        <div>
+          <label class="comparison-label" for="selected-single">Single Select</label>
+          <select id="selected-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select" tabindex="7">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option hidden="">Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="">Sloth Bear</option>
+            <option disabled="">Sun Bear</option>
+            <option>Polar Bear</option>
+            <option disabled="">Spectacled Bear</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="selected-multiple">Multiple Select</label>
+          <select id="selected-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="8">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option hidden="">Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="">Sloth Bear</option>
+            <option disabled="">Sun Bear</option>
+            <option selected="">Polar Bear</option>
+            <option disabled="">Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="hide-search-on-single-select" class="anchor" href="#hide-search-on-single-select">Hide Search on Single Select</a></h2>
+      <div class="side-by-side clearfix">
+        <p>The <code>disable_search_threshold</code> option can be specified to hide the search input on single selects if there are <i>n</i> or fewer options.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$(".chosen-select").chosen({disable_search_threshold: 10});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript"> new Chosen($("chosen_select_field"),{disable_search_threshold: 10}); </code></pre>
+<!-- chosen-demo:end -->
+        <p></p>
+        <div>
+          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select-no-single" tabindex="9">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="" disabled="">Sloth Bear</option>
+            <option disabled="">Sun Bear</option>
+<!-- chosen-demo:jquery -->
+            <option selected="" disabled="">Paddington Bear</option>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+            <option selected="">Paddington Bear</option>
+<!-- chosen-demo:end -->
+            <option selected="">Polar Bear</option>
+            <option disabled="">Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="default-text-support" class="anchor" href="#default-text-support">Default Text Support</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Chosen automatically sets the default field text ("Choose a country...") by reading the select element's <code>data-placeholder</code> value. Without that attribute, it uses the select's <code>placeholder</code>, then a type-specific <code>placeholder_text_single</code> or <code>placeholder_text_multiple</code> option, then the shared <code>placeholder_text</code> option. Otherwise it shows "Select an Option" or "Select Some Options". An explicitly empty value removes the placeholder text.</p>
+        <pre><code class="language-markup">&lt;select <strong>data-placeholder="Choose a country..."</strong> multiple class="chosen-select"&gt;</code></pre>
+        <p><strong>Note:</strong> on single selects, the first element is assumed to be selected by the browser. To take advantage of the default text support, you will need to include a blank option as the first element of your select list - or include an element with the same label as the placeholder and set the <code class="language-javascript">hidden</code>, <code class="language-javascript">selected</code> and <code class="language-javascript">disabled</code> attributes on it for a more graceful degradation on devices Chosen does not support:</p>
+        <pre><code class="language-markup">&lt;option value="" selected disabled hidden&gt;Choose a country...&lt;/option&gt;</code></pre>
+      </div>
+
+      <h2><a name="no-results-text-support" class="anchor" href="#no-results-text-support">No Results Text Support</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Setting the "No results" search text is as easy as passing an option when you create Chosen:</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript"> $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); </code></pre>
+        <p></p>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{no_results_text: "Oops, nothing found!"}); </code></pre>
+
+<!-- chosen-demo:end -->
+        <div>
+          <label class="comparison-label" for="no-results-single">Single Select</label>
+          <select id="no-results-single" data-placeholder="Type 'C' to view" class="chosen-select-no-results" tabindex="10">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="no-results-multiple">Multiple Select</label>
+          <select id="no-results-multiple" data-placeholder="Type 'C' to view" multiple="" class="chosen-select-no-results" tabindex="11">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="limit-selected-options-in-multiselect" class="anchor" href="#limit-selected-options-in-multiselect">Limit Selected Options in Multiselect</a></h2>
+      <div class="side-by-side clearfix">
+        <p>You can easily limit how many options the user can select:</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$(".chosen-select").chosen({max_selected_options: 5});</code></pre>
+        <p>If you try to select another option with limit reached <code class="language-javascript">chosen:maxselected</code> event is triggered:</p>
+        <pre><code class="language-javascript"> $(".chosen-select").bind("chosen:maxselected", function () { ... }); </code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{max_selected_options: 5}); </code></pre>
+        <p>If you try to select another option with limit reached <code>chosen:maxselected</code> event is triggered:</p>
+        <pre><code class="language-javascript">$("chosen_select_field").observe("chosen:maxselected", function(evt) { ... }); </code></pre>
+<!-- chosen-demo:end -->
+      </div>
+
+      <h2><a name="summarize-selected-choices" class="anchor" href="#summarize-selected-choices">Summarize Selected Choices</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Use <code class="language-javascript">max_items_shown</code> to keep a long multiple selection compact. The remaining choices are still selected; the summary button reveals them without changing the underlying select. This is separate from <code class="language-javascript">max_selected_options</code>, which limits how many choices can be selected.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$(".chosen-select-summary").chosen({max_items_shown: 2});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("summary-select"), {max_items_shown: 2});</code></pre>
+<!-- chosen-demo:end -->
+        <div>
+          <label class="comparison-label" for="summary-select">Try showing and hiding selected choices</label>
+          <select id="summary-select" data-placeholder="Choose projects" class="chosen-select-summary" multiple="">
+            <option selected>Atlas</option>
+            <option selected>Beacon</option>
+            <option selected>Comet</option>
+            <option selected>Delta</option>
+            <option>Echo</option>
+            <option>Fable</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="paste-multiple-values" class="anchor" href="#paste-multiple-values">Paste Multiple Choices</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Copy <code>Atlas, Beacon; Comet</code>, click the search area below, and paste. Chosen selects those existing options. Try adding <code>Unknown</code> to see unmatched text stay available for editing.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$(".chosen-select-paste").chosen({paste_multiple_values: true});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("paste-select"), {paste_multiple_values: true});</code></pre>
+<!-- chosen-demo:end -->
+        <div>
+          <label class="comparison-label" for="paste-select">Paste project names or values</label>
+          <select id="paste-select" class="chosen-select-paste" multiple data-placeholder="Paste Atlas, Beacon; Comet">
+            <option value="atlas">Atlas</option>
+            <option value="beacon">Beacon</option>
+            <option value="comet">Comet</option>
+            <option value="delta">Delta</option>
+            <option value="echo" disabled>Echo (disabled)</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="select-all-actions" class="anchor" href="#select-all-actions">Select All and Deselect All</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Multiple selects can add opt-in bulk actions. Select all applies to the currently filtered enabled options; Deselect all clears every enabled choice. With an empty search, use Command/Ctrl+A to select all or Command/Ctrl+Shift+A to deselect all.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$(".chosen-select").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("chosen_select_field"), {
+<!-- chosen-demo:end -->
+  allow_select_all: true,
+  allow_deselect_all: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="bulk-select">Try searching for “bear” first</label>
+          <select id="bulk-select" data-placeholder="Choose some animals" class="chosen-select-bulk" multiple="" tabindex="12">
+            <option selected>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option disabled>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="allow-deselect-on-single-selects" class="anchor" href="#allow-deselect-on-single-selects">Allow Deselect on Single Selects</a></h2>
+      <div class="side-by-side clearfix">
+        <p>When a single select box isn't a required field, you can set <code class="language-javascript">allow_single_deselect: true</code> and Chosen will add a UI element for option deselection. The selection can also be cleared with Backspace or Delete when the control is focused. This will only work if the first option has blank text.</p>
+        <div class="side-by-side clearfix">
+          <select data-placeholder="Your Favorite Type of Bear" class="chosen-select-deselect" tabindex="13">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="">Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="right-to-left-support" class="anchor" href="#right-to-left-support">Right-to-Left Support</a></h2>
+      <div class="side-by-side clearfix">
+        <p>You can set right-to-left text by setting <code class="language-javascript">rtl: true</code></p>
+        <pre><code class="language-javascript"> $(".chosen-select").chosen({rtl: true}); </code></pre>
+<!-- chosen-demo:jquery -->
+
+<!-- chosen-demo:end -->
+        <div>
+          <label class="comparison-label" for="rtl-single">Single Right-to-Left Select</label>
+          <select id="rtl-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select-rtl" tabindex="14">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="">Sloth Bear</option>
+            <option>Polar Bear</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="rtl-multiple">Multiple Right-to-Left Select</label>
+          <select id="rtl-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-rtl" tabindex="15">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option selected="">Sloth Bear</option>
+            <option selected="">Polar Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="change-update-events" class="anchor" href="#change-update-events">Observing, Updating, and Destroying Chosen</a></h2>
+      <div class="side-by-side clearfix">
+        <ul>
+          <li>
+            <h3>Observing Form Field Changes</h3>
+            <p>When working with form fields, you often want to perform some behavior after a value has been selected or deselected. Whenever a user selects a field in Chosen, it triggers a "change" event on the original form field. That lets you do something like this:</p>
+            <pre><code class="language-javascript">$("#form_field").chosen().change( … );</code></pre>
+<!-- chosen-demo:prototype -->
+            <p><strong>Note:</strong> Prototype doesn't offer support for triggering standard browser events. <a href="https://github.com/kangax/protolicious/blob/5b56fdafcd7d7662c9d648534225039b2e78e371/event.simulate.js">Event.simulate</a> is required to trigger the change event when using the Prototype version.</p>
+<!-- chosen-demo:end -->
+          </li>
+          <li>
+            <h3>Updating Chosen Dynamically</h3>
+            <p>If you need to update the options in your select field and want Chosen to pick up the changes, you'll need to trigger the "chosen:updated" event on the field. Chosen will re-build itself based on the updated content.</p>
+<!-- chosen-demo:jquery -->
+              <pre><code class="language-javascript">$("#form_field").trigger("chosen:updated");</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+            <pre><code class="language-javascript">Event.fire($("form_field"), "chosen:updated");</code></pre>
+<!-- chosen-demo:end -->
+          </li>
+          <li>
+            <h3>Destroying Chosen</h3>
+<!-- chosen-demo:jquery -->
+            <p>To destroy Chosen and revert back to the native select:</p>
+              <pre><code class="language-javascript">$("#form_field").chosen("destroy");</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+            <p>To destroy Chosen and revert back to the native select, call <code class="language-javascript">destroy</code> on the Chosen instance:</p>
+              <pre><code class="language-javascript">chosen = new Chosen($("form_field"));
+
+// ...later
+chosen.destroy();</code></pre>
+<!-- chosen-demo:end -->
+          </li>
+        </ul>
+      </div>
+
+      <h2><a name="relative-size-support" class="anchor" href="#relative-size-support">Relative Sizing</a></h2>
+      <p>Chosen's default dimensions stay familiar, while CSS variables can use relative units. This select uses <code>rem</code> for text, spacing, and its SVG icons. Change your browser's root font size or zoom to see it scale. See the <a href="options.html#styling">styling reference</a> for the CSS recipe.</p>
+      <div class="relative-size-demo">
+        <label class="comparison-label" for="relative-size-select">Scalable select</label>
+        <select id="relative-size-select" class="chosen-select-relative-size" data-placeholder="Choose a project">
+          <option value=""></option>
+          <option>Atlas</option>
+          <option>Beacon</option>
+          <option>Comet</option>
+        </select>
+      </div>
+
+      <h2><a name="initialization-defaults" class="anchor" href="#initialization-defaults">Shared Initialization Defaults</a></h2>
+      <p>Set adapter-local defaults once before initializing a group of controls. A per-select option still wins. These two controls use one shared prompt and one local override:</p>
+<!-- chosen-demo:jquery -->
+      <pre><code class="language-javascript">$.fn.chosen.defaults = {placeholder_text_single: "Shared prompt"};</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+      <pre><code class="language-javascript">Chosen.defaults = {placeholder_text_single: "Shared prompt"};</code></pre>
+<!-- chosen-demo:end -->
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="defaults-shared">Shared default</label>
+          <select id="defaults-shared" class="chosen-select-shared-defaults">
+            <option value=""></option>
+            <option>Atlas</option>
+            <option>Beacon</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="defaults-local">Per-select override</label>
+          <select id="defaults-local" class="chosen-select-local-defaults">
+            <option value=""></option>
+            <option>Comet</option>
+            <option>Delta</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="data-attribute-options" class="anchor" href="#data-attribute-options">Options from Data Attributes</a></h2>
+      <p>Give one select its own options in markup. This example hides search, allows clearing the selection, and sets its width without a separate JavaScript configuration object.</p>
+      <pre><code class="language-markup">&lt;select data-disable-search="true" data-allow-single-deselect="true" data-width="100%"&gt;...&lt;/select&gt;</code></pre>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="data-options-select">Select, then clear a project</label>
+          <select id="data-options-select" class="chosen-select-data-options" data-disable-search="true" data-allow-single-deselect="true" data-width="100%" data-placeholder-text-single="Choose a project">
+            <option value=""></option>
+            <option>Atlas</option>
+            <option>Beacon</option>
+            <option>Comet</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="custom-width-support" class="anchor" href="#custom-width-support">Custom Width Support</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Using a custom width with Chosen is as easy as passing an option when you create Chosen:</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript"> $(".chosen-select").chosen({width: "95%"}); </code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("chosen_select_field"),{width: "95%"}); </code></pre>
+<!-- chosen-demo:end -->
+        <p>Use <code class="language-javascript">dropdown_width</code> when the results need more room than the closed control. A custom-width dropdown floats as a separate surface so the unequal edges do not look accidentally connected:</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#width-dropdown").chosen({width: "180px", dropdown_width: "300px"});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("width-dropdown"), {width: "180px", dropdown_width: "300px"});</code></pre>
+<!-- chosen-demo:end -->
+        <div>
+          <label class="comparison-label" for="width-dropdown">Open the wider dropdown</label>
+          <select id="width-dropdown" class="chosen-select-dropdown-width">
+            <option value="">Choose a project</option>
+            <option>Atlas Product Design Team</option>
+            <option>Beacon Research Collective</option>
+            <option>Comet Operations Group</option>
+          </select>
+        </div>
+        <p>Set <code class="language-javascript">width: false</code> to leave the generated container's width to CSS:</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#css-width-select").chosen({width: false});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("css-width-select"), {width: false});</code></pre>
+<!-- chosen-demo:end -->
+        <pre><code class="language-css">#css_width_select_chosen { width: 24rem; max-width: 100%; }</code></pre>
+        <div>
+          <label class="comparison-label" for="css-width-select">Width from CSS</label>
+          <select id="css-width-select" class="chosen-select-css-width">
+            <option value="">Choose a project</option>
+            <option>Atlas</option>
+            <option>Beacon</option>
+            <option>Comet</option>
+          </select>
+        </div>
+        <p>For options loaded later, enable <code class="language-javascript">recalculate_width_on_update</code> so <code class="language-javascript">chosen:updated</code> can resize the control.</p>
+        <div>
+          <label class="comparison-label" for="width-update">Width after an option update</label>
+          <select id="width-update" class="chosen-select-update-width">
+            <option>Short</option>
+          </select>
+          <button type="button" id="width-update-add">Add a longer option</button>
+        </div>
+        <div>
+          <label class="comparison-label" for="width-single">Single Select</label>
+          <select id="width-single" data-placeholder="Your Favorite Types of Bear" class="chosen-select-width" tabindex="16">
+            <option value=""></option>
+            <option selected="">American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="width-multiple">Multiple Select</label>
+          <select id="width-multiple" data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select-width" tabindex="17">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option selected="">Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="clipped-dropdowns" class="anchor" href="#clipped-dropdowns">Dropdowns in clipped containers</a></h2>
+      <div class="side-by-side overflow-demo clearfix">
+        <p>Open this control inside a short <code class="language-css">overflow: hidden</code> panel. The opt-in fixed position keeps its results visible outside the panel. Scroll the page while it is open to see it stay aligned.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#clipped-dropdown").chosen({dropdown_position: "fixed"});</code></pre>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("clipped-dropdown"), {dropdown_position: "fixed"});</code></pre>
+<!-- chosen-demo:end -->
+        <div class="overflow-demo-frame">
+          <label class="comparison-label" for="clipped-dropdown">Choose a project</label>
+          <select id="clipped-dropdown" class="chosen-select-fixed-dropdown">
+            <option value="">Select a project</option>
+            <option>Atlas Product Design Team</option>
+            <option>Beacon Research Collective</option>
+            <option>Comet Operations Group</option>
+            <option>Delta Support Studio</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="labels-work-too" class="anchor" href="#labels-work-too">Labels work, too</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Use labels just like you would with a standard select. This demo sets <code class="language-javascript">open_on_label_click: false</code>, so clicking either label focuses its closed Chosen control without opening the dropdown. You can also drag across a label to select its text without activating Chosen.</p>
+        <p></p>
+        <div>
+          <label class="comparison-label" for="single-label-example">Click to Highlight Single Select</label>
+          <select data-placeholder="Your Favorite Types of Bear" class="chosen-select" tabindex="18" id="single-label-example">
+            <option value=""></option>
+            <option selected="">American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option>Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="multiple-label-example">Click to Highlight Multiple Select</label>
+          <select data-placeholder="Your Favorite Types of Bear" multiple="" class="chosen-select" tabindex="19" id="multiple-label-example">
+            <option value=""></option>
+            <option>American Black Bear</option>
+            <option>Asiatic Black Bear</option>
+            <option>Brown Bear</option>
+            <option selected="">Giant Panda</option>
+            <option>Sloth Bear</option>
+            <option>Sun Bear</option>
+            <option>Polar Bear</option>
+            <option>Spectacled Bear</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="search-recipes" class="anchor" href="#search-recipes">Search Aliases and Phrases</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Search “espresso” for the Café alias, “cafe” without the accent, or “project blue” with the words out of order. This example also waits for two characters before showing results. See the <a href="options.html#options">options reference</a> for custom matchers, result limits, and search timing.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#recipe-search").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("recipe-search"), {
+<!-- chosen-demo:end -->
+  split_search_terms: true,
+  min_search_length: 2,
+  normalize_search_text: function(text) {
+    if (text.normalize) {
+      return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    return text.replace(/[éèêë]/g, "e");
+  }
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-search">Try an alias or reordered phrase</label>
+          <select id="recipe-search" class="chosen-select-search-recipe" data-placeholder="Search projects">
+            <option value=""></option>
+            <option value="cafe" data-search-text="coffee espresso">Café</option>
+            <option value="atlas">Blue Atlas Project</option>
+            <option value="beacon">Beacon Studio</option>
+          </select>
+        </div>
+        <p>To match only from the start, including punctuation, combine <code class="language-javascript">enable_split_word_search: false</code> with <code class="language-javascript">search_contains: true</code>. Try searching for <code>&lt;01M</code>; the option with a preceding word stays hidden.</p>
+        <div>
+          <label class="comparison-label" for="recipe-prefix">Search from the start of an option</label>
+          <select id="recipe-prefix" class="chosen-select-prefix-recipe" data-placeholder="Search coded funds">
+            <option value=""></option>
+            <option value="start">&lt;01M Fund</option>
+            <option value="middle">Other &lt;01M Fund</option>
+            <option value="inside">X&lt;01M Fund</option>
+          </select>
+        </div>
+        <p>An option marked <code class="language-html">data-chosen-always-visible</code> remains available when a search has no match. Search for “France” here, choose “Other”, then enter a country name. The original select still holds the submitted choice.</p>
+        <div>
+          <label class="comparison-label" for="recipe-other">Choose a country or Other</label>
+          <select id="recipe-other" class="chosen-select-other-recipe" data-placeholder="Choose a country">
+            <option value=""></option>
+            <option value="au">Australia</option>
+            <option value="de">Germany</option>
+            <option value="other" data-chosen-always-visible>Other</option>
+          </select>
+          <p id="other-detail" hidden><label for="other-country">Country name</label><br><input id="other-country" class="other-country-input" type="text"></p>
+        </div>
+        <p>A custom <code class="language-javascript">search_matcher</code> can replace built-in matching. This one only offers SKU-backed options, even before typing. Custom matches have no automatic text highlighting.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#recipe-matcher").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("recipe-matcher"), {
+<!-- chosen-demo:end -->
+  search_matcher: function(query, item) {
+    return !item.group &amp;&amp; item.value.indexOf("SKU-") === 0 &amp;&amp;
+      item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+  }
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-matcher">Only SKU-backed projects appear</label>
+          <select id="recipe-matcher" class="chosen-select-matcher-recipe" data-placeholder="Search eligible projects">
+            <option value=""></option>
+            <option value="SKU-101">Atlas</option>
+            <option value="LEGACY-102">Beacon</option>
+            <option value="SKU-103">Comet</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="prefix-highlight" class="anchor" href="#prefix-highlight">Prefer Prefix Matches</a></h2>
+      <div class="side-by-side clearfix">
+<!-- chosen-demo:jquery -->
+        <p>Type “a” in both controls. <code class="language-javascript">search_contains</code> keeps React in the results, while <code class="language-javascript">highlight_prefix_matches</code> makes Angular the initial keyboard choice. The list stays in the original order.</p>
+        <pre><code class="language-javascript">$(".chosen-select-prefix-highlight").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <p>Type “a” in both controls. <code>search_contains</code> keeps React in the results, while <code>highlight_prefix_matches</code> makes Angular the initial keyboard choice. The list stays in the original order.</p>
+        <pre><code class="language-javascript">new Chosen($("prefix-preferred"), {
+<!-- chosen-demo:end -->
+  search_contains: true,
+  highlight_prefix_matches: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="prefix-default">Default contains search</label>
+          <select id="prefix-default" class="chosen-select-contains-demo" data-placeholder="Type a">
+            <option value=""></option><option>React</option><option>Angular</option><option>React Native</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="prefix-preferred">Prefer a label prefix</label>
+          <select id="prefix-preferred" class="chosen-select-prefix-highlight" data-placeholder="Type a">
+            <option value=""></option><option>React</option><option>Angular</option><option>React Native</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="create-options" class="anchor" href="#create-options">Create an Option from Search</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Type a new project name and choose “Add project” to append it to the original multiple select. Existing matches remain available; an exact match does not offer a duplicate.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#recipe-create").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("recipe-create"), {
+<!-- chosen-demo:end -->
+  create_option: true,
+  persistent_create_option: true,
+  skip_no_results: true
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-create">Try adding a project</label>
+          <select id="recipe-create" class="chosen-select-create-recipe" multiple="" data-placeholder="Choose or add a project" data-create_option_text="Add project:">
+            <option>Atlas</option>
+            <option>Beacon</option>
+            <option>Comet</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="selected-result-actions" class="anchor" href="#selected-result-actions">Review Selected Results</a></h2>
+      <div class="side-by-side clearfix">
+        <p>The closed control can display option values while its dropdown keeps the labels. Open this multiple select and click a selected result to remove it. The underlying select still holds the actual values.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#recipe-selected").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("recipe-selected"), {
+<!-- chosen-demo:end -->
+  display_selected_value: true,
+  deselect_selected_results: true,
+  hide_results_on_select: false
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-selected">Open to remove a selected result</label>
+          <select id="recipe-selected" class="chosen-select-selected-recipe" multiple="">
+            <option value="AT" selected>Atlas Team</option>
+            <option value="BC" selected>Beacon Crew</option>
+            <option value="CP">Comet Project</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="group-and-readonly" class="anchor" href="#group-and-readonly">Group Selection and Readonly</a></h2>
+      <div class="side-by-side clearfix">
+        <p>On a multiple select, <code class="language-html">select-by-group</code> makes each optgroup label select its available options. The separate <code class="language-html">readonly</code> control keeps its value enabled for form submission while preventing changes.</p>
+        <div>
+          <label class="comparison-label" for="recipe-group">Click a group name to select its options</label>
+          <select id="recipe-group" class="chosen-select-group-recipe" multiple="" select-by-group>
+            <optgroup label="Planets"><option>Mercury</option><option>Venus</option><option>Earth</option></optgroup>
+            <optgroup label="Stars"><option>Sun</option><option>Sirius</option></optgroup>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="recipe-readonly">Readonly, with its selected value intact</label>
+          <select id="recipe-readonly" class="chosen-select-readonly-recipe" readonly>
+            <option value="atlas" selected>Atlas</option>
+            <option value="beacon">Beacon</option>
+          </select>
+        </div>
+      </div>
+
+      <h2><a name="validation-styling" class="anchor" href="#validation-styling">Validation Styling</a></h2>
+      <p>Set <code>aria-invalid="true"</code> on the original select when your application reports an error. The red border is opt-in; a native <code>required</code> field does not change Chosen's default appearance on its own.</p>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="recipe-invalid-single">Single choice with an error</label>
+          <select id="recipe-invalid-single" class="chosen-select-invalid-recipe" required aria-invalid="true" aria-describedby="recipe-invalid-single-error">
+            <option value="" selected>Choose a fruit</option><option>Apple</option><option>Banana</option>
+          </select>
+          <p id="recipe-invalid-single-error">Choose one fruit before continuing.</p>
+        </div>
+        <div>
+          <label class="comparison-label" for="recipe-invalid-multiple">Multiple choices with an error</label>
+          <select id="recipe-invalid-multiple" class="chosen-select-invalid-recipe" multiple required aria-invalid="true" aria-describedby="recipe-invalid-multiple-error">
+            <option>Apple</option><option>Banana</option><option>Orange</option>
+          </select>
+          <p id="recipe-invalid-multiple-error">Choose at least one fruit.</p>
+        </div>
+      </div>
+
+      <h2><a name="setup" class="anchor" href="#setup">Setup</a></h2>
+      <p>Using Chosen is easy as can be.</p>
+      <ol>
+        <li><a href="https://github.com/jjj/chosen/releases">Download</a> the plugin and copy the chosen files to your app.</li>
+<!-- chosen-demo:jquery -->
+        <li>Activate the plugin on the select boxes of your choice: <code class="language-javascript">$(".chosen-select").chosen()</code></li>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <li>Activate the plugin by creating a new instance of Chosen: New Chosen(<em>some_form_field</em>,<em>some_options</em>);</li>
+<!-- chosen-demo:end -->
+        <li><a href="https://www.youtube.com/watch?feature=player_detailpage&amp;v=UkSPUDpe0U8#t=11s">Disco</a>.</li>
+      </ol>
+
+      <h2><a name="faqs" class="anchor" href="#faqs">FAQs</a></h2>
+      <ul class="faqs">
+       <li>
+          <h3>Do you have all the available options documented somewhere?</h3>
+          <p>Yes! You can find them on <a href="options.html">the options page</a>.</p>
+        </li>
+<!-- chosen-demo:jquery -->
+       <li>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <li>
+<!-- chosen-demo:end -->
+          <h3>Something doesn't work. Can you fix it?</h3>
+          <p>Yes! Please report all issues using the <a href="https://github.com/JJJ/chosen/issues">GitHub issue tracking tool</a>. Please include the plugin version (jQuery or Prototype), browser and OS. The more information provided, the easier it is to fix a problem.</p>
+<!-- chosen-demo:jquery -->
+       </li>
+       <li>
+          <h3>Can I customize Chosen's appearance?</h3>
+          <p>Yes. See the <a href="options.html#styling">styling guide and CSS examples</a>.</p>
+       </li>
+       <li>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        </li>
+        <li>
+           <h3>Can I customize Chosen's appearance?</h3>
+           <p>Yes. See the <a href="options.html#styling">styling guide and CSS examples</a>.</p>
+        </li>
+        <li>
+<!-- chosen-demo:end -->
+          <h3>Can I change how matching search text is highlighted?</h3>
+          <p>Yes. See the <a href="options.html#search-match-styling">CSS and Sass examples for matched search text</a>.</p>
+<!-- chosen-demo:jquery -->
+       </li>
+       <li>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        </li>
+        <li>
+<!-- chosen-demo:end -->
+          <h3>What browsers are supported?</h3>
+          <p>Chosen's original compatibility target includes Chrome, Firefox, Safari, and Internet Explorer 9. Automated browser tests currently run in Chrome with jQuery 4.0, 3.5, 1.12, and 1.7, plus Prototype 1.7. Other browsers in that original target are not currently covered by automated tests.</p>
+<!-- chosen-demo:jquery -->
+          <p>To check support before initializing the jQuery plugin, call <code class="language-javascript">$.fn.chosen.browser_is_supported()</code>.</p>
+       </li>
+       <li>
+          <h3>Didn't there used to be a Prototype version of Chosen?</h3>
+          <p><a href="index.proto.html">There still is!</a></p>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+          <p>To check support before initializing the Prototype plugin, call <code class="language-javascript">Chosen.browser_is_supported()</code>.</p>
+<!-- chosen-demo:end -->
+        </li>
+      </ul>
+
+      <h2><a name="credits" class="anchor" href="#credits">Credits</a></h2>
+
+      <ul class="credits">
+        <li>Concept and development by <a href="https://patrickfiller.com">Patrick Filler</a> for <a href="https://getharvest.com">Harvest</a>.</li>
+        <li>Design and CSS by <a href="https://matthewlettini.com">Matthew Lettini</a>.</li>
+        <li>1.8.x and earlier maintained by <a href="https://github.com/pfiller">@pfiller</a>, <a href="https://github.com/kenearley">@kenearley</a>, <a href="https://github.com/stof">@stof</a>, <a href="https://github.com/koenpunt">@koenpunt</a>, and <a href="https://github.com/tjschuck">@tjschuck</a>.</li>
+		<li>2.0.x and later maintained by <a href="https://github.com/jjj">@jjj</a>.</li>
+        <li>Chosen includes <a href="https://github.com/jjj/chosen/contributors">contributions by many fine folks</a>.</li>
+      </ul>
+
+      <footer>
+        © 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ.</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.
+      </footer>
+
+    </div>
+  </div>
+<!-- chosen-demo:jquery -->
+  <script src="docsupport/jquery-3.5.1.min.js" type="text/javascript"></script>
+  <script src="chosen.jquery.js?ver=3.0.4-data-options" type="text/javascript"></script>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+  <script src="docsupport/prototype-1.7.0.0.js" type="text/javascript"></script>
+  <script src="chosen.proto.js?ver=3.0.4-data-options" type="text/javascript"></script>
+<!-- chosen-demo:end -->
+  <script src="docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<!-- chosen-demo:jquery -->
+  <script src="docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+  </form>
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+  <script src="docsupport/init.proto.js" type="text/javascript" charset="utf-8"></script>
+<!-- chosen-demo:end -->
+  <div class="oss-bar">
+    <ul>
+      <li><a class="fork" href="https://github.com/jjj/chosen">Fork on Github</a></li>
+    </ul>
+  </div>
+
+
+</body></html>
