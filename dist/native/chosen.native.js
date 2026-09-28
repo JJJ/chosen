@@ -470,10 +470,11 @@ var ChosenNative = (() => {
           this.list.append(group);
           continue;
         }
-        const row = element("div", `chosen-native__option${entry.disabled ? " chosen-native__option--disabled" : ""}`, entry.label);
+        const selected = !!this.nodes[entry.index]?.selected;
+        const row = element("div", `chosen-native__option${selected ? " chosen-native__option--selected" : ""}${entry.disabled ? " chosen-native__option--disabled" : ""}`, entry.label);
         row.id = `${this.id}-option-${entry.index}`;
         row.setAttribute("role", "option");
-        row.setAttribute("aria-selected", String(!!this.nodes[entry.index]?.selected));
+        row.setAttribute("aria-selected", String(selected));
         if (entry.disabled) row.setAttribute("aria-disabled", "true");
         row.addEventListener("pointerenter", () => {
           if (!entry.disabled) this.highlight(position);
@@ -481,7 +482,7 @@ var ChosenNative = (() => {
         row.addEventListener("pointerdown", (event) => {
           if (event.pointerType === "mouse") event.preventDefault();
         });
-        row.addEventListener("click", () => this.choose(entry));
+        row.addEventListener("click", () => this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected));
         (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
       }
       this.empty.hidden = !!result.count;
@@ -580,7 +581,7 @@ var ChosenNative = (() => {
       } else if (key === "Enter" && this.opened) {
         event.preventDefault();
         const entry = this.available[this.activeIndex];
-        if (entry?.kind === "option") this.choose(entry);
+        if (entry?.kind === "option") this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected);
       } else if (key === "Escape" && this.opened) {
         event.preventDefault();
         this.close();

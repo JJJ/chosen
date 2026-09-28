@@ -89,6 +89,31 @@ test('external select changes and disabled state synchronize without synthetic c
   dom.window.close();
 });
 
+test('selected multiple results show removal state and toggle through pointer or keyboard', () => {
+  const { dom, select } = fixture('<select multiple><optgroup label="Team"><option value="a" selected>Alpha</option><option value="b">Beta</option></optgroup></select>');
+  let changes = 0;
+  select.addEventListener('change', () => changes++);
+  const chosen = new Chosen(select);
+  chosen.open();
+  let selected = chosen.list.querySelector('.chosen-native__option--selected');
+  assert.equal(selected.textContent, 'Alpha');
+  assert.equal(selected.getAttribute('aria-selected'), 'true');
+  assert.equal(selected.parentElement.getAttribute('role'), 'group');
+  click(selected);
+  assert.equal(select.options[0].selected, false);
+  assert.equal(changes, 1);
+  selected = chosen.list.querySelector('[role="option"]');
+  click(selected);
+  assert.equal(select.options[0].selected, true);
+  assert.equal(changes, 2);
+  chosen.highlight(1);
+  key(chosen.input, 'Enter');
+  assert.equal(select.options[0].selected, false);
+  assert.equal(changes, 3);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

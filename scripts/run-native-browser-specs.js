@@ -45,6 +45,26 @@ async function check(name, engine) {
     await skills.press('Enter');
     const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'));
     if (JSON.stringify(values) !== '["javascript"]') throw new Error(`${name}: multiple keyboard selection failed`);
+    const resultStyle = await page.evaluate(() => {
+      const group = document.querySelector('.chosen-native__group-label');
+      const row = document.querySelector('.chosen-native__option--selected');
+      const chipRemove = document.querySelector('.chosen-native__remove');
+      return {
+        selected: row?.getAttribute('aria-selected'),
+        mark: getComputedStyle(row, '::after').content,
+        indent: parseFloat(getComputedStyle(row).paddingInlineStart) - parseFloat(getComputedStyle(group).paddingInlineStart),
+        removePadding: parseFloat(getComputedStyle(chipRemove).paddingLeft)
+      };
+    });
+    if (resultStyle.selected !== 'true' || !resultStyle.mark.includes('×') ||
+        resultStyle.indent < 4 || resultStyle.removePadding !== 0) {
+      throw new Error(`${name}: selected/group/chip styling failed (${JSON.stringify(resultStyle)})`);
+    }
+    await page.getByRole('option', { name: 'JavaScript' }).click();
+    if ((await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))).length) {
+      throw new Error(`${name}: selected result click did not remove the option`);
+    }
+    await page.getByRole('option', { name: 'JavaScript' }).click();
     await page.getByRole('button', { name: 'Remove JavaScript' }).click();
     if ((await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))).length) {
       throw new Error(`${name}: chip removal failed`);

@@ -63,7 +63,9 @@
   align-items: center;
   gap: .2rem;
   max-width: 100%;
-  padding: .125rem .35rem;
+  padding-block: .125rem;
+  padding-inline: .35rem .25rem;
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-choice-border-radius, 3px);
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
@@ -71,6 +73,15 @@
 .chosen-native__chip > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chosen-native__clear,
 .chosen-native__remove { border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.chosen-native__remove {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 1rem;
+  height: 1.25rem;
+  padding: 0;
+  line-height: 1;
+}
 .chosen-native__clear:hover,
 .chosen-native__remove:hover { color: var(--chosen-hover-color, #3875d7); }
 .chosen-native__chevron {
@@ -102,7 +113,26 @@
 .chosen-native__list { max-height: var(--chosen-results-max-height, 15rem); overflow-y: auto; padding: .25rem; }
 .chosen-native__option,
 .chosen-native__group-label { padding: .3rem .5rem; }
-.chosen-native__option { border-radius: var(--chosen-result-border-radius, 4px); cursor: pointer; }
+.chosen-native__option { position: relative; border-radius: var(--chosen-result-border-radius, 4px); cursor: pointer; }
+.chosen-native__group > .chosen-native__option {
+  padding-inline-start: var(--chosen-group-option-indent, 1.25rem);
+}
+.chosen-native__option--selected {
+  padding-inline-end: 1.75rem;
+  background: var(--chosen-selected-background, #e0e0e0);
+  color: var(--chosen-selected-color, var(--chosen-text-color, #444));
+}
+.chosen-native__option--selected::after {
+  position: absolute;
+  inset-inline-end: .55rem;
+  content: '✓';
+  font-weight: 700;
+}
+.chosen-native--multiple .chosen-native__option--selected::after {
+  content: '×';
+  font-size: 1.2em;
+  line-height: 1;
+}
 .chosen-native__option--active { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
 .chosen-native__option--disabled { opacity: .5; cursor: default; }
 .chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: bold; }

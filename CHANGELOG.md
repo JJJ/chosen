@@ -41,6 +41,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.
 - Render option labels and configurable no-results/create-option messages as text, preventing nested option markup or label HTML from becoming generated Chosen elements (harvesthq/chosen#2751).
@@ -86,6 +87,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Selected vanilla results now gain `.chosen-native__option--selected`; the mark is CSS generated, and selected multiple results can be toggled off without changing the row's `role="option"` markup.
 - The new opt-in vanilla edition renders `chosen-native__*` elements and uses native `CustomEvent` details and native `input`/`change` events; its generated selectors, roles, and attributes are separate from the classic adapters and remain experimental.
 - With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.
 

@@ -7,3 +7,14 @@
 .native-demo-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .native-demo-actions button { padding: .5rem .75rem; cursor: pointer; }
 .native-demo-events { max-width: 52rem; min-height: 5rem; white-space: pre-wrap; }
+:root[data-theme="dark"] .chosen-native {
+  --chosen-text-color: #e6edf3;
+  --chosen-placeholder-color: #c4ccd7;
+  --chosen-border-color: #68717d;
+  --chosen-control-background: #22272e;
+  --chosen-dropdown-background: #22272e;
+  --chosen-choice-background: #343b45;
+  --chosen-choice-color: #e6edf3;
+  --chosen-selected-background: #343b45;
+  --chosen-selected-color: #e6edf3;
+}

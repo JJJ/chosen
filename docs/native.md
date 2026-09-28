@@ -17,6 +17,8 @@ For a plain browser script, load `dist/native/chosen.css` and `dist/native/chose
 
 The original select remains in the form. Chosen changes its option selection and dispatches bubbling native `input` and `change` events after user changes. Call `chosen.update()` after editing its options or state; a native `select.dispatchEvent(new Event('chosen:updated'))` works too. The adapter listens for native events. jQuery's `.trigger('chosen:updated')` does not dispatch a native DOM event.
 
+Selected results remain visible by default. In a multiple select, click a selected result or press Enter on it to remove it; the × mark indicates this action. Grouped options are indented under their headings. Set `display_selected_options: false` to hide selected results instead.
+
 Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `chosen.clear()` as needed. `chosen.destroy()` removes the generated control and listeners and restores the select's original `tabindex` and `aria-hidden` attributes. A second instance on the same select is rejected until the first is destroyed.
 
 ## Supported options
