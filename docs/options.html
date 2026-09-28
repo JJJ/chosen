@@ -258,7 +258,7 @@
         <tr>
           <td>width</td>
           <td>Original select width.</td>
-          <td>The width of the Chosen select box. By default, Chosen attempts to match the width of the select box you are replacing. If your select is hidden when Chosen is instantiated, you must specify a width or the select will show up with a width of 0.</td>
+          <td>The width of the Chosen select box. By default, Chosen attempts to match the width of the select box you are replacing. Set <code class="language-javascript">width: false</code> to leave the generated container without an inline width so your stylesheet can size it, for example with <code class="language-css">#my_select_chosen { width: 24rem; }</code>. With this setting, <code class="language-javascript">recalculate_width_on_update</code> does not replace your CSS width. If your select is hidden when Chosen is instantiated, specify a width or use the CSS-controlled setting.</td>
         </tr>
         <tr>
           <td>dropdown_width</td>

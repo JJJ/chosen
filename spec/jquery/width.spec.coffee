@@ -1,5 +1,26 @@
 describe "Width handling", ->
 
+  it "lets CSS control width when width is false", ->
+    div = $("<div><select id='css-width-test'><option>One</option></select></div>").appendTo("body")
+    rule = $("<style>#css_width_test_chosen { width: 240px; }</style>").appendTo("head")
+    select = div.find("select")
+    select.chosen(width: false, recalculate_width_on_update: true)
+    container = div.find(".chosen-container")[0]
+
+    expect(container.style.width).toBe("")
+    expect(container.getBoundingClientRect().width).toBe(240)
+    select.trigger("chosen:updated")
+    expect(container.style.width).toBe("")
+    expect(container.getBoundingClientRect().width).toBe(240)
+    rule.remove()
+    div.remove()
+
+  it "keeps an explicit width inline", ->
+    div = $("<div><select><option>One</option></select></div>").appendTo("body")
+    div.find("select").chosen(width: "180px")
+    expect(div.find(".chosen-container")[0].style.width).toBe("180px")
+    div.remove()
+
   it "uses auto width when the source select has no measurable width", ->
     div = $("<div style='display:none'><select><option>One</option></select></div>").appendTo("body")
     select = div.find("select")

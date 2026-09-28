@@ -802,6 +802,11 @@ footer {
   --chosen-icon-size: 1rem;
 }
 
+#css_width_select_chosen {
+  width: 24rem;
+  max-width: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

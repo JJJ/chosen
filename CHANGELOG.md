@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Allow `width: false` to leave the generated container width to CSS in both adapters (harvesthq/chosen#2575).
 - Allow opt-in relative sizing of the SVG control icons through `--chosen-icon-size`, with a `rem` sizing recipe and live jQuery/Prototype examples (harvesthq/chosen#2651).
 - Expose the jQuery plugin's `Constructor`, `AbstractConstructor`, and `noConflict()` interface without changing existing `.chosen()` calls (harvesthq/chosen#2776).
 - Add opt-in `highlight_prefix_matches` so contains searches initially highlight a visible label-prefix match without changing result or native option order (harvesthq/chosen#2788).
@@ -78,6 +79,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.
 
 - Setting `dropdown_width` adds `chosen-floating-dropdown` to the generated container so custom-width dropdowns can use complete corners, a gap, and independent elevation. Integrations that assert generated container classes should allow this opt-in state.
 - Generated result and selected-choice labels now use the native option's text. Integrations that placed HTML nodes inside an `<option>` will see their text rather than copied markup; native option values and selection events are unchanged.

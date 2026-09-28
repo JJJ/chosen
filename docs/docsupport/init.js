@@ -16,6 +16,7 @@ var config = {
   '.chosen-select-readonly-recipe': { width: '100%' },
   '.chosen-select-invalid-recipe': { width: '100%' },
   '.chosen-select-relative-size': { width: '100%' },
+  '.chosen-select-css-width': { width: false },
   '.chosen-select-dropdown-width': { width: '180px', dropdown_width: '300px' },
   '.chosen-select-update-width': { recalculate_width_on_update: true },
   '.chosen-select-fixed-dropdown': { width: '240px', dropdown_position: 'fixed' },

@@ -1068,8 +1068,8 @@
   },
   {
     "number": 2575,
-    "status": "candidate",
-    "note": "Assess optional CSS-controlled width and its interaction with strict CSP and hidden-select sizing."
+    "status": "fixed-in-fork",
+    "note": "The opt-in width: false setting leaves the generated container without an inline width, allowing CSS to size it in both adapters; explicit and default widths retain their prior behavior."
   },
   {
     "number": 2571,

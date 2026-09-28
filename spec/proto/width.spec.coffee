@@ -1,5 +1,29 @@
 describe "Width handling", ->
 
+  it "lets CSS control width when width is false", ->
+    div = new Element("div").update("<select id='css-width-test'><option>One</option></select>")
+    document.body.appendChild(div)
+    rule = new Element("style").update("#css_width_test_chosen { width: 240px; }")
+    document.head.appendChild(rule)
+    select = div.down("select")
+    chosen = new Chosen(select, width: false, recalculate_width_on_update: true)
+    container = div.down(".chosen-container")
+
+    expect(container.style.width).toBe("")
+    expect(container.getBoundingClientRect().width).toBe(240)
+    select.fire("chosen:updated")
+    expect(container.style.width).toBe("")
+    expect(container.getBoundingClientRect().width).toBe(240)
+    rule.remove()
+    div.remove()
+
+  it "keeps an explicit width inline", ->
+    div = new Element("div").update("<select><option>One</option></select>")
+    document.body.appendChild(div)
+    new Chosen(div.down("select"), width: "180px")
+    expect(div.down(".chosen-container").style.width).toBe("180px")
+    div.remove()
+
   it "uses auto width when the source select has no measurable width", ->
     div = new Element("div", style: "display:none").update("<select><option>One</option></select>")
     document.body.appendChild(div)

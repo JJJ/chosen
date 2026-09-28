@@ -2363,10 +2363,11 @@ var ChosenCore = (function() {
           container_props.id = this.form_field.id.replace(/[^\w]/g, '_') + "_chosen";
         }
         this.container = new Element('div', container_props);
-        // CSP without 'unsafe-inline' doesn't allow setting the style attribute directly
-        this.container.setStyle({
-          width: this.container_width()
-        });
+        if (this.options.width !== false) {
+          this.container.setStyle({
+            width: this.container_width()
+          });
+        }
         if (this.is_multiple) {
           this.container.update(this.get_multi_html());
         } else {
