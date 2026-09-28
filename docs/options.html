@@ -45,6 +45,14 @@
   });</code>
 </pre>
 
+      <h3>Shared initialization defaults</h3>
+      <p>Set defaults in your application bootstrap before creating controls. Defaults are local to the adapter and apply only to future instances. Per-select options win, and a native select's <code class="language-html">data-placeholder</code> or <code class="language-html">placeholder</code> still takes precedence over configured placeholder text. Replace the defaults object or edit its properties; options are copied one level deep when an instance is created.</p>
+      <pre><code class="language-javascript">$.fn.chosen.defaults = { placeholder_text_single: "Choose an item" };
+$(".my_select_box").chosen();
+$(".special_select").chosen({ placeholder_text_single: "Choose a project" });
+
+// Prototype: Chosen.defaults = { placeholder_text_single: "Choose an item" };</code></pre>
+
       <table class="docs-table docs-table-options">
         <tbody><tr>
           <th>Option</th><th>Default</th><th>Description</th>

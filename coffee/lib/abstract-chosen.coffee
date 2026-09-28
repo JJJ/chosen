@@ -1,6 +1,18 @@
 class AbstractChosen
 
-  constructor: (@form_field, @options={}) ->
+  constructor: (@form_field, options={}, defaults) ->
+    @options = options
+    defaults ?= @constructor.defaults
+    if defaults? and typeof defaults is "object"
+      merged_options = {}
+      has_defaults = false
+      for own key, value of defaults
+        merged_options[key] = value
+        has_defaults = true
+      if has_defaults
+        for own key, value of options
+          merged_options[key] = value
+        @options = merged_options
     return unless AbstractChosen.browser_is_supported()
     form_field_had_focus = document.activeElement is @form_field
     @result_id_base = if @form_field.id then "#{@form_field.id}-chosen" else "chosen-#{++AbstractChosen.next_id}"

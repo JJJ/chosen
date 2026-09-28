@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Let applications set adapter-local initialization defaults through `$.fn.chosen.defaults` or `Chosen.defaults`, with per-control options taking precedence (harvesthq/chosen#2499).
 - Allow `width: false` to leave the generated container width to CSS in both adapters (harvesthq/chosen#2575).
 - Allow opt-in relative sizing of the SVG control icons through `--chosen-icon-size`, with a `rem` sizing recipe and live jQuery/Prototype examples (harvesthq/chosen#2651).
 - Expose the jQuery plugin's `Constructor`, `AbstractConstructor`, and `noConflict()` interface without changing existing `.chosen()` calls (harvesthq/chosen#2776).

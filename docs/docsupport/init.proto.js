@@ -33,6 +33,12 @@ document.observe('dom:loaded', function(evt) {
       new Chosen(element, config[selector]);
     });
   }
+  var previousChosenDefaults = Chosen.defaults;
+  Chosen.defaults = { placeholder_text_single: 'Shared prompt' };
+  new Chosen($('defaults-shared'));
+  new Chosen($('defaults-local'), { placeholder_text_single: 'Local prompt' });
+  Chosen.defaults = previousChosenDefaults;
+
   $('width-update-add').observe('click', function() {
     var select = $('width-update');
     if (!select.select('option[value="long"]').length) {

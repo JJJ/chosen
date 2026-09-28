@@ -1431,6 +1431,28 @@ chosen.destroy();</code></pre>
         </select>
       </div>
 
+      <h2><a name="initialization-defaults" class="anchor" href="#initialization-defaults">Shared Initialization Defaults</a></h2>
+      <p>Set adapter-local defaults once before initializing a group of controls. A per-select option still wins. These two controls use one shared prompt and one local override:</p>
+      <pre><code class="language-javascript">Chosen.defaults = {placeholder_text_single: "Shared prompt"};</code></pre>
+      <div class="side-by-side clearfix">
+        <div>
+          <label class="comparison-label" for="defaults-shared">Shared default</label>
+          <select id="defaults-shared" class="chosen-select-shared-defaults">
+            <option value=""></option>
+            <option>Atlas</option>
+            <option>Beacon</option>
+          </select>
+        </div>
+        <div>
+          <label class="comparison-label" for="defaults-local">Per-select override</label>
+          <select id="defaults-local" class="chosen-select-local-defaults">
+            <option value=""></option>
+            <option>Comet</option>
+            <option>Delta</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="custom-width-support" class="anchor" href="#custom-width-support">Custom Width Support</a></h2>
       <div class="side-by-side clearfix">
         <p>Using a custom width with Chosen is as easy as passing an option when you create Chosen:</p>

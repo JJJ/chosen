@@ -1090,8 +1090,8 @@
   },
   {
     "number": 2499,
-    "status": "candidate",
-    "note": "Consider an opt-in way to configure shared initialization defaults without global surprises."
+    "status": "fixed-in-fork",
+    "note": "Both adapters accept explicit shared initialization defaults for future instances, with per-control options taking precedence and existing instances retaining their options."
   },
   {
     "number": 2467,

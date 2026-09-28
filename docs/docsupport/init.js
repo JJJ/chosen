@@ -29,6 +29,12 @@ for (var selector in config) {
   config[selector].open_on_label_click = false;
   $(selector).chosen(config[selector]);
 }
+var previousChosenDefaults = $.fn.chosen.defaults;
+$.fn.chosen.defaults = { placeholder_text_single: 'Shared prompt' };
+$('.chosen-select-shared-defaults').chosen();
+$('.chosen-select-local-defaults').chosen({ placeholder_text_single: 'Local prompt' });
+$.fn.chosen.defaults = previousChosenDefaults;
+
 $('#width-update-add').on('click', function() {
   var select = $('#width-update');
   if (!select.find('option[value="long"]').length) {
