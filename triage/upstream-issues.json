@@ -1069,7 +1069,8 @@
   {
     "number": 2575,
     "status": "fixed-in-fork",
-    "note": "The opt-in width: false setting leaves the generated container without an inline width, allowing CSS to size it in both adapters; explicit and default widths retain their prior behavior."
+    "note": "The opt-in width: false setting leaves the generated container without an inline width, allowing CSS to size it in both adapters; explicit and default widths retain their prior behavior.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/181"
   },
   {
     "number": 2571,
