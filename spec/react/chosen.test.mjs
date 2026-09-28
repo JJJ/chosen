@@ -168,6 +168,28 @@ test('React matches classic clear and type-specific placeholder defaults', () =>
   assert.equal(screen.getByRole('combobox').placeholder, '');
 });
 
+test('multiple keyboard settings keep defaults and allow Tab selection', () => {
+  const changes = [];
+  const view = render(h(Chosen, { options, multiple: true, defaultValue: ['a'],
+    backspaceDeletesChoices: false, onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.keyDown(input, { key: 'Backspace' });
+  assert.deepEqual(changes, []);
+  fireEvent.click(input);
+  fireEvent.mouseEnter(screen.getByRole('option', { name: 'Banana' }));
+  fireEvent.keyDown(input, { key: 'Tab' });
+  assert.deepEqual(changes, []);
+  assert.equal(input.getAttribute('aria-expanded'), 'false');
+
+  view.rerender(h(Chosen, { options, multiple: true, defaultValue: ['a'],
+    multiselectAllowTabToSelect: true, onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+  fireEvent.click(input);
+  fireEvent.mouseEnter(screen.getByRole('option', { name: 'Banana' }));
+  fireEvent.keyDown(input, { key: 'Tab' });
+  assert.deepEqual(changes, [['a', 'b']]);
+  assert.equal(input.getAttribute('aria-expanded'), 'false');
+});
+
 test('controlled values stay controlled across option replacement and form reset', () => {
   const changes = [];
   const view = render(h('form', null, h(Chosen, { options, name: 'fruit', value: 'a', onChange: value => changes.push(value) })));

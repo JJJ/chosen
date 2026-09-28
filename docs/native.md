@@ -46,6 +46,8 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `display_disabled_options` | `true` | Show disabled options in results. |
 | `min_search_length` | `0` | Wait until enough search text is entered. |
 | `max_selected_options` | unlimited | Limit multiple-select selection count. |
+| `backspace_deletes_choices` | `true` | Remove the final selected choice when Backspace is pressed in an empty multiple-select search field. |
+| `multiselect_allow_tab_to_select` | `false` | Select the highlighted multiple-select result on Tab while continuing normal focus navigation. |
 | `aria_label` | associated label or select label | Accessible name for the generated search input. |
 
 The native edition also reads `data-search-text` on individual options. It does not yet implement the full classic option set, including option creation, bulk actions, fixed or custom-width dropdowns, or the classic `data-*` initialization option parser. Those remain available in the jQuery and Prototype editions. The generated `chosen-native__*` markup and CSS selectors are experimental.

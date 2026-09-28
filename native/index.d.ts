@@ -21,6 +21,8 @@ export interface ChosenOptions {
   display_disabled_options?: boolean;
   min_search_length?: number;
   max_selected_options?: number;
+  backspace_deletes_choices?: boolean;
+  multiselect_allow_tab_to_select?: boolean;
 }
 
 export declare class Chosen {

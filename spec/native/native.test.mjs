@@ -180,6 +180,28 @@ test('a multiple selection hides its closed placeholder once a choice exists', (
   dom.window.close();
 });
 
+test('multiple keyboard options preserve Backspace and Tab defaults and permit opt-in Tab selection', () => {
+  const { dom, select } = fixture('<select multiple><option value="a" selected>Alpha</option><option value="b">Beta</option></select>');
+  const chosen = new Chosen(select, { backspace_deletes_choices: false });
+  chosen.open();
+  key(chosen.input, 'Backspace');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  chosen.highlight(chosen.available.findIndex(item => item.value === 'b'));
+  key(chosen.input, 'Tab');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  assert.equal(chosen.opened, false);
+  chosen.destroy();
+
+  const optIn = new Chosen(select, { multiselect_allow_tab_to_select: true });
+  optIn.open();
+  optIn.highlight(optIn.available.findIndex(item => item.value === 'b'));
+  key(optIn.input, 'Tab');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'b']);
+  assert.equal(optIn.opened, false);
+  optIn.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

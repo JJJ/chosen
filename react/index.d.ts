@@ -44,6 +44,8 @@ export interface ChosenProps {
   searchPlaceholder?: string;
   noResultsText?: string;
   maxSelectedOptions?: number;
+  backspaceDeletesChoices?: boolean;
+  multiselectAllowTabToSelect?: boolean;
   searchContains?: boolean;
   highlightPrefixMatches?: boolean;
   enableSplitWordSearch?: boolean;

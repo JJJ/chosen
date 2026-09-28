@@ -66,6 +66,9 @@ uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
 `placeholderTextMultiple`, `searchPlaceholder`, and `noResultsText` cover common
 form behavior without framework-specific markup hooks. Single clearing is
 opt-in with `allowSingleDeselect`, matching classic Chosen; the demo enables it.
+For multiple selects, `backspaceDeletesChoices` defaults to `true` and
+`multiselectAllowTabToSelect` defaults to `false`. Enabling the latter selects
+the highlighted result on Tab and still moves focus to the next control.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
 

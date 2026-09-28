@@ -45,9 +45,9 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `search_in_values` | Yes | Yes | React prop: `searchInValues`. |
 | `group_search` | Yes | Yes | Include group labels in matching. |
 | `parser_config` | No | No | Vanilla needs source-option data copying; React needs an equivalent data model or a documented exception. |
-| `backspace_deletes_choices` | Partial | Partial | Both delete the final chip; neither exposes the setting. |
+| `backspace_deletes_choices` | Yes | Yes | React prop: `backspaceDeletesChoices`; defaults to `true`. |
 | `single_backstroke_delete` | No | No | First-press chip focus, second-press removal. |
-| `multiselect_allow_tab_to_select` | No | No | Tab accepts the highlighted result when enabled. |
+| `multiselect_allow_tab_to_select` | Yes | Yes | React prop: `multiselectAllowTabToSelect`; defaults to `false`. Tab continues to the next focus target. |
 | `open_on_label_click` | No | No | Configurable focus versus open behavior for both select types. |
 | `width` | Partial | Partial | Vanilla uses CSS; React accepts `style`, with no classic width option or select measurement. |
 | `dropdown_width` | No | No | Independent result width and floating presentation. |

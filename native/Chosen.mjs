@@ -42,6 +42,7 @@ export class Chosen {
     this.options = { search_contains: false, split_search_terms: false, group_search: true,
       enable_split_word_search: true, case_sensitive_search: false, search_in_values: false,
       highlight_prefix_matches: false,
+      backspace_deletes_choices: true, multiselect_allow_tab_to_select: false,
       max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
@@ -332,8 +333,12 @@ export class Chosen {
     } else if (key === 'Escape' && this.opened) {
       event.preventDefault(); this.close();
     } else if (key === 'Tab') {
+      if (this.multiple && this.opened && this.options.multiselect_allow_tab_to_select) {
+        const entry = this.available[this.activeIndex];
+        if (entry?.kind === 'option') this.choose(entry, !!this.nodes[entry.index]?.selected);
+      }
       this.close();
-    } else if (key === 'Backspace' && this.multiple && !this.input.value) {
+    } else if (key === 'Backspace' && this.multiple && this.options.backspace_deletes_choices && !this.input.value) {
       const selected = this.entries.filter(entry => entry.kind === 'option' && this.nodes[entry.index]?.selected);
       if (selected.length) { event.preventDefault(); this.choose(selected[selected.length - 1], true); }
     }

@@ -23,6 +23,7 @@ export const Chosen = forwardRef(function Chosen({
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', maxSelectedOptions,
+  backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
   searchContains = false, splitSearchTerms = false, groupSearch = true,
   highlightPrefixMatches = false,
   enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
@@ -201,7 +202,10 @@ export const Chosen = forwardRef(function Chosen({
     } else if (event.key === 'Escape' && isOpen) {
       event.preventDefault();
       changeOpen(false);
-    } else if (event.key === 'Backspace' && multiple && !query && selectedOptions.length) {
+    } else if (event.key === 'Tab') {
+      if (multiple && isOpen && multiselectAllowTabToSelect && activeOption) choose(activeOption, event);
+      changeOpen(false);
+    } else if (event.key === 'Backspace' && multiple && backspaceDeletesChoices && !query && selectedOptions.length) {
       remove(selectedOptions[selectedOptions.length - 1], event);
     }
   };
