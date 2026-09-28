@@ -6,7 +6,7 @@ available. Explicit entries make new integrations easier to identify:
 
 | Import | Purpose |
 | --- | --- |
-| `chosen-jjj` or `chosen-jjj/jquery` | Classic jQuery adapter and its DOM lifecycle. |
+| `chosen-jjj` or `chosen-jjj/jquery` | Classic jQuery adapter and its DOM lifecycle; supports browser globals, AMD, and CommonJS. |
 | `chosen-jjj/prototype` | Classic Prototype adapter and its DOM lifecycle. |
 | `chosen-jjj/core` | Framework-neutral option, search, and selection functions; ESM and CommonJS builds with TypeScript declarations. |
 | `chosen-jjj/react` | Native React component; ESM build and TypeScript declarations with React as a peer dependency. |
@@ -27,6 +27,25 @@ The source of truth is `core/index.mjs`. `grunt build` copies its ESM source,
 generates CommonJS and ES5 browser formats, and includes the browser format in
 both legacy builds. `core/index.d.ts` declares the data API. The core has no
 jQuery, Prototype, React, or Tailwind runtime dependency.
+
+The jQuery distribution registers as an AMD module with a `jquery` dependency,
+exports the plugin function from CommonJS, or installs on `window.jQuery` when
+loaded as a plain script. These paths all install `$.fn.chosen`; existing
+`.chosen()` calls and the browser `ChosenCore` global remain available. For
+CommonJS, install jQuery alongside Chosen and make a DOM available before
+requiring either package:
+
+```js
+const $ = require('jquery');
+const chosen = require('chosen-jjj');
+
+$('.chosen-select').chosen();
+```
+
+The CommonJS export is the same function as `$.fn.chosen`. The browser's AMD
+loader supplies jQuery before Chosen evaluates its adapter. The Prototype
+distribution remains a browser-global script because Prototype itself does not
+provide a CommonJS or AMD package dependency here.
 
 ```js
 import { normalizeOptions, filterOptions, updateSelection } from 'chosen-jjj/core';

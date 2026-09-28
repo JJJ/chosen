@@ -41,7 +41,9 @@ To install with npm:
 npm install chosen-jjj
 ```
 
-The default package entry still loads the jQuery adapter. Explicit entries for
+The default package entry loads the jQuery adapter through browser globals,
+AMD, or CommonJS. CommonJS consumers should install jQuery alongside Chosen
+and provide a DOM before requiring the packages. Explicit entries for
 the Prototype adapter, shared CSS, Sass, and the experimental framework-neutral
 ESM/CommonJS core are described in the
 [package boundaries](docs/package-boundaries.md). The experimental native React

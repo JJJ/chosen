@@ -323,6 +323,16 @@ var ChosenCore = (function() {
   return __toCommonJS(index_exports);
 })();
 
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(root.jQuery);
+  }
+})(typeof window !== 'undefined' ? window : this, function(jQuery) {
+
 (function() {
   var $, AbstractChosen, Chosen, SelectParser, chosen_interface, previous_chosen,
     hasProp = {}.hasOwnProperty,
@@ -3543,3 +3553,6 @@ var ChosenCore = (function() {
   chosen_interface.AbstractConstructor = AbstractChosen;
 
 }).call(this);
+
+  return jQuery.fn.chosen;
+});
