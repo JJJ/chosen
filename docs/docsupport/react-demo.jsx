@@ -145,6 +145,13 @@ function optionData(items) {
       { value: item.value || item.label, label: item.label,
         disabled: !!item.disabled, hidden: !!item.hidden, searchText: item.searchText });
 }
+function nativeOptions(items) {
+  return items.map((item, index) => typeof item === 'string'
+    ? <option key={index}>{item}</option>
+    : item.options
+      ? <optgroup key={index} label={item.label}>{nativeOptions(item.options)}</optgroup>
+      : <option key={index} value={item.value || item.label} disabled={item.disabled} hidden={item.hidden}>{item.label}</option>);
+}
 
 function SuiteExample({ example, report }) {
   const [items, setItems] = useState(() => optionData(example.options));
@@ -160,12 +167,19 @@ function SuiteExample({ example, report }) {
     onChange={value => { setInvalid(false); report(`${example.title}: ${Array.isArray(value) ? value.join(', ') : value || '(none)'}`); }}
     {...(example.react || {})} /> : <p>Chosen is unmounted.</p>;
   return <section id={example.id} className={`adapter-suite-example ${example.className || ''}`}>
-    <h2>{example.title}</h2>
-    <div className={`adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`}>
-      <label htmlFor={id} className={example.id === 'labels-work-too' ? undefined : 'adapter-suite-accessible-label'}>{example.title}</label>
-      {select}
-    </div>
-    <p>{example.help}</p>
+    <h2><a className="anchor" href={`#${example.id}`}>{example.title}</a></h2>
+    <div className="side-by-side clearfix">
+      <p>{example.help}</p>
+      {(example.id === 'standard-select' || example.id === 'multiple-select') && <div>
+        <label className="comparison-label" htmlFor={`${id}-original`}>Turns This</label>
+        <select id={`${id}-original`} className="select" multiple={!!example.multiple} defaultValue={example.multiple ? [] : ''}>
+          {!example.multiple && <option value="">Select an Option</option>}
+          {nativeOptions(example.options)}
+        </select>
+      </div>}
+      <div className={`adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`}>
+        <label className="comparison-label" htmlFor={id}>{example.id === 'labels-work-too' ? 'Click this label' : 'Into This'}</label>
+        {select}
     {example.dynamic && <div className="adapter-suite-actions">
       <button type="button" onClick={() => {
         const count = items.length + 1;
@@ -185,15 +199,14 @@ function SuiteExample({ example, report }) {
       setInvalid(!valid);
       report(`${example.title}: ${valid ? 'valid' : 'selection required'}`);
     }}>Check validity</button>}
+      </div>
+    </div>
   </section>;
 }
 
 function Suite() {
   const [event, setEvent] = useState('Try an example above.');
   return <>
-    <nav className="adapter-suite-index" aria-label="React feature examples">
-      {suiteCases.map(example => <a href={`#${example.id}`} key={example.id}>{example.title}</a>)}
-    </nav>
     <form className="adapter-suite-form" onSubmit={event => event.preventDefault()}>
       {suiteCases.map(example => <SuiteExample key={example.id} example={example} report={setEvent} />)}
     </form>

@@ -54,7 +54,6 @@ document.getElementById('native-demo-form').addEventListener('submit', event => 
 
 // Keep the feature sections in the same order as the classic demo pages.
 const suite = document.getElementById('native-suite-form');
-const suiteIndex = document.getElementById('native-suite-index');
 const suiteEvent = document.getElementById('native-suite-event');
 const makeOption = item => {
   const data = typeof item === 'string' ? { label: item } : item;
@@ -65,19 +64,22 @@ const makeOption = item => {
   return option;
 };
 for (const example of window.ChosenAdapterCases) {
-  const link = document.createElement('a');
-  link.href = `#${example.id}`;
-  link.textContent = example.title;
-  suiteIndex.append(link);
   const section = document.createElement('section');
   section.id = example.id;
   section.className = `adapter-suite-example ${example.className || ''}`;
   const title = document.createElement('h2');
-  title.textContent = example.title;
+  const anchor = document.createElement('a');
+  anchor.className = 'anchor';
+  anchor.href = `#${example.id}`;
+  anchor.textContent = example.title;
+  title.append(anchor);
+  const comparison = document.createElement('div');
+  comparison.className = 'side-by-side clearfix';
   const label = document.createElement('label');
   const id = `native-suite-${example.id}`;
   label.htmlFor = id;
-  label.textContent = example.title;
+  label.className = 'comparison-label';
+  label.textContent = example.id === 'labels-work-too' ? 'Click this label' : 'Into This';
   const select = document.createElement('select');
   select.id = id;
   select.name = `suite-${example.id}`;
@@ -107,11 +109,23 @@ for (const example of window.ChosenAdapterCases) {
   help.textContent = example.help;
   const controlWrap = document.createElement('div');
   controlWrap.className = `adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`;
-  if (example.id !== 'labels-work-too') label.className = 'adapter-suite-accessible-label';
-  section.append(controlWrap);
+  comparison.append(help);
+  if (example.id === 'standard-select' || example.id === 'multiple-select') {
+    const originalWrap = document.createElement('div');
+    const originalLabel = document.createElement('label');
+    originalLabel.className = 'comparison-label';
+    originalLabel.htmlFor = `${id}-original`;
+    originalLabel.textContent = 'Turns This';
+    const original = select.cloneNode(true);
+    original.id = `${id}-original`;
+    original.removeAttribute('name');
+    original.className = 'select';
+    originalWrap.append(originalLabel, original);
+    comparison.append(originalWrap);
+  }
   controlWrap.append(label, select);
-  section.prepend(title);
-  section.append(help);
+  comparison.append(controlWrap);
+  section.append(title, comparison);
   suite.append(section);
   const chosenOptions = { width: '100%', ...(example.native || {}) };
   let chosen = new ChosenNative.Chosen(select, chosenOptions);
@@ -139,7 +153,7 @@ for (const example of window.ChosenAdapterCases) {
       suiteEvent.textContent = `${example.title}: ${chosen ? 'rebuilt' : 'destroyed'}`;
     });
     actions.append(add, toggle);
-    section.append(actions);
+    controlWrap.append(actions);
   }
   if (example.groupAction) {
     const toggle = document.createElement('button');
@@ -151,7 +165,7 @@ for (const example of window.ChosenAdapterCases) {
       chosen.update();
       toggle.textContent = select.hasAttribute('readonly') ? 'Make editable' : 'Make read-only';
     });
-    section.append(toggle);
+    controlWrap.append(toggle);
   }
   if (example.required) {
     const button = document.createElement('button');
@@ -162,6 +176,6 @@ for (const example of window.ChosenAdapterCases) {
       chosen.update();
       suiteEvent.textContent = `${example.title}: ${select.checkValidity() ? 'valid' : 'selection required'}`;
     });
-    section.append(button);
+    controlWrap.append(button);
   }
 }

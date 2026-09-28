@@ -185,7 +185,7 @@ async function check(name, engine) {
     if (name === 'Chromium') {
       await page.addScriptTag({ path: path.join(__dirname, '..', 'node_modules/axe-core/axe.min.js') });
       const violations = await page.evaluate(async () => (await window.axe.run(document.querySelector('main'))).violations);
-      if (violations.length) throw new Error(`${name}: accessibility violations: ${violations.map(v => v.id).join(', ')}`);
+      if (violations.length) throw new Error(`${name}: accessibility violations: ${violations.map(v => `${v.id}: ${v.nodes.map(node => node.target.join(' ')).join(', ')}`).join('; ')}`);
     }
     if (name === 'WebKit') {
       const touch = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
