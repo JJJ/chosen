@@ -40,8 +40,7 @@ class @Chosen extends AbstractChosen
 
     @container = new Element('div', container_props)
 
-    # CSP without 'unsafe-inline' doesn't allow setting the style attribute directly
-    @container.setStyle(width: this.container_width())
+    @container.setStyle(width: this.container_width()) unless @options.width is false
 
     if @is_multiple
       @container.update this.get_multi_html()

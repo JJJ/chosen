@@ -1444,6 +1444,18 @@
             <option>Comet Operations Group</option>
           </select>
         </div>
+        <p>Set <code class="language-javascript">width: false</code> to leave the generated container's width to CSS:</p>
+        <pre><code class="language-javascript">$("#css-width-select").chosen({width: false});</code></pre>
+        <pre><code class="language-css">#css_width_select_chosen { width: 24rem; max-width: 100%; }</code></pre>
+        <div>
+          <label class="comparison-label" for="css-width-select">Width from CSS</label>
+          <select id="css-width-select" class="chosen-select-css-width">
+            <option value="">Choose a project</option>
+            <option>Atlas</option>
+            <option>Beacon</option>
+            <option>Comet</option>
+          </select>
+        </div>
         <p>For options loaded later, enable <code class="language-javascript">recalculate_width_on_update</code> so <code class="language-javascript">chosen:updated</code> can resize the control.</p>
         <div>
           <label class="comparison-label" for="width-update">Width after an option update</label>
