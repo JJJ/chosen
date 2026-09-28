@@ -132,7 +132,7 @@
         <tr>
           <td>no_results_text</td>
           <td>"No results for:"</td>
-          <td>The text to be displayed when no matching results are found. The current search is shown at the end of the text (<i>e.g.</i>,
+          <td>Plain text to display when no matching results are found. HTML markup is shown literally. The current search is shown at the end of the text (<i>e.g.</i>,
            No results for: "Bad Search").</td>
         </tr>
         <tr>
@@ -143,7 +143,7 @@
         <tr>
           <td>create_option_text</td>
           <td>"Add Option:"</td>
-          <td>Label before the search text in the create-option result. The select's <code class="language-html">data-create_option_text</code> attribute takes precedence.</td>
+          <td>Plain-text label before the search text in the create-option result. HTML markup is shown literally. The select's <code class="language-html">data-create_option_text</code> attribute takes precedence.</td>
         </tr>
         <tr>
           <td>persistent_create_option</td>
@@ -350,6 +350,7 @@ $(".my-select").myChosen();</code></pre>
 
       <h2><a name="attributes" class="anchor" href="#attributes">Attributes</a></h2>
       <p>Certain attributes placed on the select tag or its options can be used to configure Chosen.</p>
+      <p>Option labels come from the native <code>&lt;option&gt;</code> text and are displayed as text. HTML nested in an option is not copied into Chosen's results or selected choices.</p>
 
       <h3>Example:</h3>
 

@@ -1124,7 +1124,7 @@ class AbstractChosen
   get_no_results_html: (terms) ->
     """
       <li class="no-results">
-        #{@results_none_found} <span>#{this.escape_html(terms)}</span>
+        #{this.escape_html(@results_none_found)} <span>#{this.escape_html(terms)}</span>
       </li>
     """
 
@@ -1133,7 +1133,7 @@ class AbstractChosen
 
   get_create_option_html: (terms) ->
     """
-      <li class="create-option active-result" role="option"><a>#{@create_option_text}</a> <span>#{this.escape_html(terms)}</span></li>
+      <li class="create-option active-result" role="option"><a>#{this.escape_html(@create_option_text)}</a> <span>#{this.escape_html(terms)}</span></li>
     """
 
   # class methods and variables ============================================================

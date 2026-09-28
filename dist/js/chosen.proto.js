@@ -334,6 +334,10 @@ var ChosenCore = (function() {
       this.copy_data_attributes = options.copy_data_attributes || false;
     }
 
+    escape_html(text) {
+      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     add_node(child) {
       if (child.nodeName.toUpperCase() === "OPTGROUP") {
         return this.add_group(child);
@@ -377,7 +381,7 @@ var ChosenCore = (function() {
             text: option.text,
             search_text: option.getAttribute('data-search-text') || '',
             always_visible: option.hasAttribute('data-chosen-always-visible'),
-            html: option.innerHTML.replace(/^\s+|\s+$/g, ''),
+            html: this.escape_html(option.text).replace(/^\s+|\s+$/g, ''),
             title: option.title ? option.title : void 0,
             selected: option.selected,
             disabled: group_disabled === true ? group_disabled : option.disabled,
@@ -2253,7 +2257,7 @@ var ChosenCore = (function() {
 
       get_no_results_html(terms) {
         return `<li class="no-results">
-  ${this.results_none_found} <span>${this.escape_html(terms)}</span>
+  ${this.escape_html(this.results_none_found)} <span>${this.escape_html(terms)}</span>
 </li>`;
       }
 
@@ -2262,7 +2266,7 @@ var ChosenCore = (function() {
       }
 
       get_create_option_html(terms) {
-        return `<li class="create-option active-result" role="option"><a>${this.create_option_text}</a> <span>${this.escape_html(terms)}</span></li>`;
+        return `<li class="create-option active-result" role="option"><a>${this.escape_html(this.create_option_text)}</a> <span>${this.escape_html(terms)}</span></li>`;
       }
 
       // class methods and variables ============================================================

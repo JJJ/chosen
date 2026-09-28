@@ -34,6 +34,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Render option labels and configurable no-results/create-option messages as text, preventing nested option markup or label HTML from becoming generated Chosen elements (harvesthq/chosen#2751).
 - Honor `enable_split_word_search: false` even with `search_contains: true`, so punctuation-prefixed option text can match from the beginning without matching the same text later in an option (harvesthq/chosen#2862).
 - Highlight partly visible results on pointer hover without moving the result list; keyboard navigation still scrolls the active result into view (harvesthq/chosen#2771).
 - Use native element focus after selecting a jQuery result, avoiding the deprecated jQuery event shorthand (harvesthq/chosen#2931).
@@ -75,6 +76,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Generated result and selected-choice labels now use the native option's text. Integrations that placed HTML nodes inside an `<option>` will see their text rather than copied markup; native option values and selection events are unchanged.
 - Opting into `dropdown_position: "fixed"` adds `chosen-fixed-dropdown` to the generated container and positions its existing `.chosen-drop` relative to the viewport. The dropdown stays inside the container in the DOM; integrations that inspect container classes should allow this opt-in state.
 - React adds `.chosen-react__option--selected` to selected result rows; its check mark is CSS generated. Pointer entry now updates the active option and `aria-activedescendant`, while the highlighted row remains distinct from selection.
 - The documentation-only `docs/docsupport/react-demo.js` bundles React and ReactDOM for GitHub Pages. The published `chosen-jjj/react` entry still treats React as a peer dependency; regenerate the demo and its copied stylesheet with `npm run build`.

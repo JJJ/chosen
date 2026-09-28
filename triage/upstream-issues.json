@@ -983,8 +983,9 @@
   },
   {
     "number": 2751,
-    "status": "candidate",
-    "note": "Audit option HTML rendering and escaping against untrusted option content before deciding on a fix."
+    "status": "fixed-in-fork",
+    "note": "Option labels render from escaped native text, and configurable no-results/create-option labels are escaped. Static internal templates still use HTML APIs; browser add-on certification was not assessed.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/176"
   },
   {
     "number": 2740,
