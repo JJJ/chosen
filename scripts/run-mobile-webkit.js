@@ -146,15 +146,24 @@ async function main() {
         phonePage.on('pageerror', (error) => phoneErrors.push(error.message));
         await phonePage.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
           <select id="phone-choice" style="width:300px"><option value="">Choose</option><option value="one">One</option><option value="two">Two</option></select>
+          <select id="phone-multiple" style="width:300px" multiple><option>One</option><option>Two</option></select>
         </body></html>`);
         await phonePage.addStyleTag({ path: fixture('docs/chosen.css') });
         await phonePage.addScriptTag({ path: fixture(adapter.library) });
         await phonePage.addScriptTag({ path: fixture(adapter.chosen) });
         await phonePage.evaluate((name) => {
-          const select = document.querySelector('#phone-choice');
-          if (name === 'jQuery') window.jQuery(select).chosen();
-          else new window.Chosen(select);
+          for (const select of document.querySelectorAll('select')) {
+            if (name === 'jQuery') window.jQuery(select).chosen();
+            else new window.Chosen(select);
+          }
         }, adapter.name);
+        const phoneInputSizes = await phonePage.evaluate(() => [
+          document.querySelector('#phone_choice_chosen .chosen-search-input'),
+          document.querySelector('#phone_multiple_chosen .chosen-search-input'),
+        ].map((input) => parseFloat(getComputedStyle(input).fontSize)));
+        if (phoneInputSizes.some((size) => size < 16)) {
+          throw new Error(`${adapter.name}: phone search input font sizes ${phoneInputSizes.join(', ')}px`);
+        }
         await phonePage.locator('#phone_choice_chosen .chosen-single').tap();
         if (!await phonePage.locator('#phone_choice_chosen').evaluate((container) => container.classList.contains('chosen-with-drop'))) {
           throw new Error(`${adapter.name}: phone tap closed the single-select dropdown`);

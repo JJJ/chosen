@@ -66,6 +66,13 @@
   font: inherit;
 }
 
+@media (any-pointer: coarse) {
+  .chosen-react__input {
+    font-size: 16px;
+    font-size: max(16px, 1em);
+  }
+}
+
 .chosen-react__input--has-value {
   flex-basis: 1rem;
   min-width: 1rem;

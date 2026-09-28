@@ -281,6 +281,11 @@ async function main() {
       const touchPage = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
       try {
         await touchPage.goto(demo);
+        const phoneInputSizes = await touchPage.locator('.chosen-react__input').evaluateAll(inputs =>
+          inputs.map(input => parseFloat(getComputedStyle(input).fontSize)));
+        if (phoneInputSizes.some(size => size < 16)) {
+          throw new Error(`${name}: React phone input font sizes ${phoneInputSizes.join(', ')}px`);
+        }
         const touchBasket = touchPage.getByRole('combobox', { name: 'Fruit basket' });
         await touchBasket.tap();
         await touchPage.locator('label[for="react-basket"]').tap();
