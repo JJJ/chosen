@@ -55,6 +55,7 @@ export class Chosen {
       max_items_shown: Infinity,
       allow_select_all: false, allow_deselect_all: false,
       paste_multiple_values: false,
+      search_delay: 0,
       select_all_text: 'Select all', deselect_all_text: 'Deselect all',
       more_items_text: count => `Show ${count} more...`,
       show_fewer_items_text: 'Show fewer...',
@@ -76,6 +77,8 @@ export class Chosen {
     this.typeahead = '';
     this.typeaheadTimer = null;
     this.composing = false;
+    this.appliedQuery = '';
+    this.searchTimer = null;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -100,7 +103,7 @@ export class Chosen {
       this.close();
     };
     this.onKeyDown = event => this.keyDown(event);
-    this.onInput = () => { this.pendingBackstrokeValue = null; this.activeIndex = -1; this.open(); this.renderSelection(); this.renderResults(); };
+    this.onInput = () => { if (!this.composing) this.queueSearch(); };
     this.onControlPointer = event => {
       if (event.target === this.input || event.target.closest('button')) return;
       if (event.pointerType === 'mouse') event.preventDefault();
@@ -156,7 +159,7 @@ export class Chosen {
     this.onPaste = event => this.paste(event);
     this.input.addEventListener('paste', this.onPaste);
     this.onCompositionStart = () => { this.composing = true; };
-    this.onCompositionEnd = () => { this.composing = false; };
+    this.onCompositionEnd = () => { this.composing = false; this.queueSearch(); };
     this.input.addEventListener('compositionstart', this.onCompositionStart);
     this.input.addEventListener('compositionend', this.onCompositionEnd);
     this.input.addEventListener('click', () => this.open());
@@ -274,7 +277,8 @@ export class Chosen {
   }
 
   renderResults() {
-    const query = this.input.value;
+    const query = this.searchTimer ? this.appliedQuery : this.input.value;
+    this.appliedQuery = query;
     const searchable = this.entries.map(entry => entry.kind === 'option'
       ? { ...entry, selected: !!this.nodes[entry.index]?.selected } : entry);
     const result = filterOptions(searchable, query, {
@@ -415,11 +419,32 @@ export class Chosen {
       this.changed();
     }
     this.input.value = result.remaining;
+    this.appliedQuery = result.remaining;
     this.activeIndex = -1;
     if (result.limitReached) emit(this.select, 'chosen:maxselected', this);
     this.open();
     this.renderSelection();
     this.renderResults();
+  }
+
+  queueSearch() {
+    this.pendingBackstrokeValue = null;
+    this.activeIndex = -1;
+    this.renderSelection();
+    clearTimeout(this.searchTimer);
+    const delay = Math.max(0, parseInt(this.options.search_delay, 10) || 0);
+    if (delay) {
+      this.searchTimer = setTimeout(() => { this.searchTimer = null; this.flushSearch(); }, delay);
+    } else this.flushSearch();
+  }
+
+  flushSearch() {
+    clearTimeout(this.searchTimer);
+    this.searchTimer = null;
+    if (this.composing) return;
+    this.appliedQuery = this.input.value;
+    if (!this.opened) this.open();
+    else this.renderResults();
   }
 
   highlight(index) {
@@ -454,6 +479,7 @@ export class Chosen {
     this.changed();
     if (this.multiple) {
       this.input.value = '';
+      this.appliedQuery = '';
       this.activeIndex = -1;
       if (this.options.hide_results_on_select && !keepOpen) this.close();
       else this.renderResults();
@@ -481,6 +507,7 @@ export class Chosen {
   open() {
     if (this.destroyed || this.opened || this.select.disabled || this.select.hasAttribute('readonly')) return;
     this.opened = true;
+    this.appliedQuery = this.input.value;
     this.popup.hidden = false;
     this.host.classList.add('chosen-native--open');
     this.input.setAttribute('aria-expanded', 'true');
@@ -492,6 +519,9 @@ export class Chosen {
   close() {
     if (!this.opened) return;
     this.pendingBackstrokeValue = null;
+    clearTimeout(this.searchTimer);
+    this.searchTimer = null;
+    this.appliedQuery = '';
     this.typeahead = '';
     clearTimeout(this.typeaheadTimer);
     this.opened = false;
@@ -508,6 +538,9 @@ export class Chosen {
   keyDown(event) {
     if (event.isComposing || this.select.disabled) return;
     const key = event.key;
+    if (this.searchTimer && ['Tab', 'Enter', 'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown'].includes(key)) {
+      this.flushSearch();
+    }
     if (this.multiple && key.toLowerCase() === 'a' && (event.metaKey || event.ctrlKey) &&
       !event.altKey && !this.input.value) {
       const action = event.shiftKey ? 'deselect' : 'select';
@@ -588,6 +621,7 @@ export class Chosen {
     if (this.destroyed) return;
     this.close();
     clearTimeout(this.typeaheadTimer);
+    clearTimeout(this.searchTimer);
     this.destroyed = true;
     for (const label of this.boundLabels) label.removeEventListener('click', this.onLabelClick);
     this.boundLabels.clear();

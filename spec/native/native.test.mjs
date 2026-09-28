@@ -188,6 +188,33 @@ test('opt-in paste selects existing values and leaves unmatched tokens in search
   dom.window.close();
 });
 
+test('delayed search flushes before Enter so a stale result is not selected', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="a">Apple</option><option value="b">Banana</option></select>');
+  const chosen = new Chosen(select, { search_delay: 1000 });
+  chosen.open();
+  chosen.input.value = 'Ban';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.available.some(item => item.label === 'Apple'), true);
+  key(chosen.input, 'Enter');
+  assert.equal(select.value, 'b');
+  assert.equal(chosen.searchTimer, null);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('delayed search waits for a stable query before filtering', async () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="a">Apple</option><option value="b">Banana</option></select>');
+  const chosen = new Chosen(select, { search_delay: 10 });
+  chosen.open();
+  chosen.input.value = 'Ban';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.available.some(item => item.label === 'Apple'), true);
+  await new Promise(resolve => setTimeout(resolve, 25));
+  assert.deepEqual(chosen.available.map(item => item.label), ['Banana']);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

@@ -56,6 +56,8 @@ and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
 `maxShownResults` bound visible results and matching work. Set
 `searchInputType="text"` to use a text input instead of the classic default
 search input; the theme uses classes rather than input-type selectors. Set
+`searchDelay={250}` to debounce filtering on large lists; Enter and navigation
+keys flush pending text before acting. It defaults to zero. Set
 `disableSearch` to hide search on a single select, or set
 `disableSearchThreshold` to hide it when the option count is at or below the
 threshold. Prefix typing still moves through open results. Set

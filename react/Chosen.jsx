@@ -40,6 +40,7 @@ export const Chosen = forwardRef(function Chosen({
   maxItemsShown = Infinity,
   allowSelectAll = false, allowDeselectAll = false,
   pasteMultipleValues = false,
+  searchDelay = 0,
   selectAllText = 'Select all', deselectAllText = 'Deselect all',
   moreItemsText = count => `Show ${count} more...`,
   showFewerItemsText = 'Show fewer...',
@@ -59,9 +60,11 @@ export const Chosen = forwardRef(function Chosen({
   const typeahead = useRef('');
   const typeaheadTimer = useRef(null);
   const composing = useRef(false);
+  const searchTimer = useRef(null);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
+  const [appliedQuery, setAppliedQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [limitNotice, setLimitNotice] = useState(false);
   const [pendingBackstrokeValue, setPendingBackstrokeValue] = useState(null);
@@ -76,19 +79,20 @@ export const Chosen = forwardRef(function Chosen({
   const searchable = useMemo(() => entries.map(item => item.kind === 'option'
     ? { ...item, selected: selectedSet.has(item.value) }
     : item), [entries, selectedSet]);
-  const results = useMemo(() => filterOptions(searchable, query, {
+  const getResults = text => filterOptions(searchable, text, {
     multiple, searchContains, splitSearchTerms, groupSearch,
     enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions
-  }), [searchable, query, multiple, searchContains, splitSearchTerms, groupSearch,
+  });
+  const results = useMemo(() => getResults(appliedQuery), [searchable, appliedQuery, multiple, searchContains, splitSearchTerms, groupSearch,
     enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
   const available = results.items;
   const canActOnResult = item => !item.disabled &&
     (!multiple || !selectedSet.has(item.value) || deselectSelectedResults);
-  const preferred = preferredPrefixIndex(available, query, {
+  const preferred = preferredPrefixIndex(available, appliedQuery, {
     highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
   });
   const active = activeIndex >= 0 && available[activeIndex]?.kind === 'option'
@@ -117,10 +121,13 @@ export const Chosen = forwardRef(function Chosen({
     if (controlledOpen === undefined) setInternalOpen(next);
     if (isOpen !== next) onOpenChange?.(next);
     if (!next) {
+      clearTimeout(searchTimer.current);
+      searchTimer.current = null;
       typeahead.current = '';
       clearTimeout(typeaheadTimer.current);
       setPendingBackstrokeValue(null);
       setQuery('');
+      setAppliedQuery('');
       setActiveIndex(-1);
     }
   }, [controlledOpen, disabled, isOpen, onOpenChange, readOnly]);
@@ -144,6 +151,7 @@ export const Chosen = forwardRef(function Chosen({
     if (!multiple || (hideResultsOnSelect && !event?.metaKey && !event?.ctrlKey)) changeOpen(false);
     else {
       setQuery('');
+      setAppliedQuery('');
       setActiveIndex(-1);
     }
     inputRef.current?.focus();
@@ -194,9 +202,27 @@ export const Chosen = forwardRef(function Chosen({
     event.preventDefault();
     if (result.changed) commit(result.values, event);
     if (result.limitReached) setLimitNotice(true);
+    clearTimeout(searchTimer.current);
+    searchTimer.current = null;
     setQuery(result.remaining);
+    setAppliedQuery(result.remaining);
     setActiveIndex(-1);
     changeOpen(true);
+  };
+
+  const queueSearch = text => {
+    clearTimeout(searchTimer.current);
+    const delay = Math.max(0, parseInt(searchDelay, 10) || 0);
+    if (delay) {
+      searchTimer.current = setTimeout(() => {
+        searchTimer.current = null;
+        setAppliedQuery(text);
+        changeOpen(true);
+      }, delay);
+    } else {
+      setAppliedQuery(text);
+      changeOpen(true);
+    }
   };
 
   useImperativeHandle(ref, () => ({
@@ -207,7 +233,7 @@ export const Chosen = forwardRef(function Chosen({
   }), [changeOpen]);
 
   useEffect(() => {
-    return () => clearTimeout(typeaheadTimer.current);
+    return () => { clearTimeout(typeaheadTimer.current); clearTimeout(searchTimer.current); };
   }, []);
 
   useEffect(() => {
@@ -217,6 +243,9 @@ export const Chosen = forwardRef(function Chosen({
     const reset = () => {
       setInternalValues(valuesOf(defaultValue, multiple));
       setQuery('');
+      setAppliedQuery('');
+      clearTimeout(searchTimer.current);
+      searchTimer.current = null;
       setActiveIndex(-1);
       if (controlledOpen === undefined) setInternalOpen(false);
     };
@@ -270,11 +299,11 @@ export const Chosen = forwardRef(function Chosen({
     document.getElementById(`${baseId}-option-${activeOption.index}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [isOpen, activeOption?.index, baseId]);
 
-  const move = (direction, fromEnd = false) => {
-    const enabled = available.map((item, index) => item.kind === 'option' && canActOnResult(item) ? index : -1)
+  const move = (direction, fromEnd = false, items = available, currentIndex = activeIndex) => {
+    const enabled = items.map((item, index) => item.kind === 'option' && canActOnResult(item) ? index : -1)
       .filter(index => index >= 0);
     if (!enabled.length) return;
-    const current = enabled.indexOf(activeIndex);
+    const current = enabled.indexOf(currentIndex);
     const next = fromEnd ? (direction > 0 ? 0 : enabled.length - 1)
       : enabled[(current < 0 ? (direction > 0 ? 0 : enabled.length - 1)
         : (current + direction + enabled.length) % enabled.length)];
@@ -283,6 +312,25 @@ export const Chosen = forwardRef(function Chosen({
 
   const keyDown = (event) => {
     if (disabled) return;
+    if (event.key === 'Escape' && searchTimer.current) {
+      event.preventDefault();
+      changeOpen(false);
+      return;
+    }
+    let freshItems = null;
+    if (searchTimer.current && ['Tab', 'Enter', 'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+      clearTimeout(searchTimer.current);
+      searchTimer.current = null;
+      setAppliedQuery(query);
+      freshItems = getResults(query).items;
+    }
+    const currentItems = freshItems || available;
+    const freshPreferred = freshItems ? preferredPrefixIndex(freshItems, query, {
+      highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
+    }) : -1;
+    const currentActive = freshItems ? (freshPreferred >= 0 && canActOnResult(freshItems[freshPreferred])
+      ? freshPreferred : firstEnabled(freshItems, canActOnResult)) : active;
+    const currentOption = currentActive >= 0 ? currentItems[currentActive] : null;
     if (multiple && event.key.toLowerCase() === 'a' && (event.metaKey || event.ctrlKey) &&
       !event.altKey && !query) {
       const action = event.shiftKey ? 'deselect' : 'select';
@@ -315,21 +363,21 @@ export const Chosen = forwardRef(function Chosen({
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       if (!isOpen) changeOpen(true);
-      else move(event.key === 'ArrowDown' ? 1 : -1);
+      else move(event.key === 'ArrowDown' ? 1 : -1, false, currentItems, freshItems ? currentActive : activeIndex);
     } else if (event.key === 'Home' && isOpen) {
       event.preventDefault();
-      move(1, true);
+      move(1, true, currentItems, freshItems ? currentActive : activeIndex);
     } else if (event.key === 'End' && isOpen) {
       event.preventDefault();
-      move(-1, true);
-    } else if (event.key === 'Enter' && isOpen) {
+      move(-1, true, currentItems, freshItems ? currentActive : activeIndex);
+    } else if (event.key === 'Enter' && (isOpen || freshItems)) {
       event.preventDefault();
-      if (activeOption) choose(activeOption, event);
+      if (currentOption) choose(currentOption, event);
     } else if (event.key === 'Escape' && isOpen) {
       event.preventDefault();
       changeOpen(false);
     } else if (event.key === 'Tab') {
-      if (multiple && isOpen && multiselectAllowTabToSelect && activeOption) choose(activeOption, event);
+      if (multiple && (isOpen || freshItems) && multiselectAllowTabToSelect && currentOption) choose(currentOption, event);
       changeOpen(false);
     } else if (event.key === 'Backspace' && multiple && backspaceDeletesChoices && !query && selectedOptions.length) {
       event.preventDefault();
@@ -433,8 +481,9 @@ export const Chosen = forwardRef(function Chosen({
           changeOpen(true);
         }} onKeyDown={keyDown} onPaste={paste}
         onCompositionStart={() => { composing.current = true; }}
-        onCompositionEnd={() => { composing.current = false; }}
-        onChange={event => { setPendingBackstrokeValue(null); setQuery(event.target.value); setActiveIndex(-1); changeOpen(true); }} />
+        onCompositionEnd={event => { composing.current = false; queueSearch(event.currentTarget.value); }}
+        onChange={event => { setPendingBackstrokeValue(null); setQuery(event.target.value); setActiveIndex(-1);
+          if (!composing.current) queueSearch(event.target.value); }} />
       {!multiple && allowSingleDeselect && selectedValues.length > 0 && !disabled && !readOnly && <button type="button"
         className="chosen-react__clear" aria-label="Clear selection" onClick={event => {
           commit([], event); inputRef.current?.focus();
@@ -453,7 +502,7 @@ export const Chosen = forwardRef(function Chosen({
       <div id={listId} role="listbox" aria-multiselectable={multiple || undefined} className="chosen-react__list">
         {renderedResults}
       </div>
-      {!results.count && <div className="chosen-react__empty">{noResultsText}{query ? ` ${query}` : ''}</div>}
+      {!results.count && <div className="chosen-react__empty">{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</div>}
     </div>}
   </div>;
 });

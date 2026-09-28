@@ -154,6 +154,27 @@ test('React opt-in paste selects existing values and keeps unmatched text', () =
   assert.deepEqual(new FormData(document.querySelector('form')).getAll('fruit'), ['a']);
 });
 
+test('React delayed search flushes before Enter and cannot choose a stale result', () => {
+  render(h(Chosen, { options, searchDelay: 1000, 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'Ban' } });
+  assert.ok(screen.getByRole('option', { name: 'Apple' }));
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.equal(document.querySelector('.chosen-react__value')?.textContent, 'Banana');
+});
+
+test('React delayed search applies a stable query after the configured interval', async () => {
+  render(h(Chosen, { options, searchDelay: 10, 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'Ban' } });
+  assert.ok(screen.getByRole('option', { name: 'Apple' }));
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 25)); });
+  assert.equal(screen.queryByRole('option', { name: 'Apple' }), null);
+  assert.ok(screen.getByRole('option', { name: 'Banana' }));
+});
+
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',
@@ -382,7 +403,9 @@ test('keyboard navigation, Escape, and imperative methods work in Strict Mode', 
   act(() => handle.current.open());
   assert.equal(input.getAttribute('aria-expanded'), 'true');
   fireEvent.keyDown(input, { key: 'ArrowDown' });
-  assert.ok(input.getAttribute('aria-activedescendant'));
+  assert.equal(document.getElementById(input.getAttribute('aria-activedescendant'))?.textContent, 'Apple');
+  fireEvent.keyDown(input, { key: 'ArrowDown' });
+  assert.equal(document.getElementById(input.getAttribute('aria-activedescendant'))?.textContent, 'Banana');
   fireEvent.keyDown(input, { key: 'Escape' });
   assert.equal(input.getAttribute('aria-expanded'), 'false');
   act(() => handle.current.blur());

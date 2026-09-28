@@ -4,6 +4,9 @@ const skills = document.getElementById('native-skills');
 const season = document.getElementById('native-season');
 const events = document.getElementById('native-events');
 const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
+document.getElementById('native-slow-search').addEventListener('change', event => {
+  projectChosen.options.search_delay = event.currentTarget.checked ? 250 : 0;
+});
 const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
   max_items_shown: 1,
   allow_select_all: true, allow_deselect_all: true,

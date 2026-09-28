@@ -20,6 +20,7 @@ function Demo() {
   const [singleRtl, setSingleRtl] = useState(false);
   const [singleReadOnly, setSingleReadOnly] = useState(false);
   const [singleDisabled, setSingleDisabled] = useState(false);
+  const [slowSearch, setSlowSearch] = useState(false);
   const [basketRtl, setBasketRtl] = useState(false);
   const [showSelected, setShowSelected] = useState(true);
   const [showDisabled, setShowDisabled] = useState(true);
@@ -53,6 +54,7 @@ function Demo() {
             openOnLabelClick
             displaySelectedValue
             searchInValues
+            searchDelay={slowSearch ? 250 : 0}
             placeholder="Choose a fruit" searchPlaceholder="Choose a fruit"
             aria-describedby="react-fruit-help"
             aria-invalid={attempted && !fruit} dir={singleRtl ? 'rtl' : undefined}
@@ -65,6 +67,8 @@ function Demo() {
               onChange={event => setSingleReadOnly(event.target.checked)} /> Read-only</label>
             <label className="react-demo-switch"><input type="checkbox" checked={singleDisabled}
               onChange={event => setSingleDisabled(event.target.checked)} /> Disabled</label>
+            <label className="react-demo-switch"><input type="checkbox" checked={slowSearch}
+              onChange={event => setSlowSearch(event.target.checked)} /> Delay search</label>
           </div>
         </section>
         <section className="react-demo-card react-demo-tailwind">

@@ -41,7 +41,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `max_search_length` | Yes | Yes | React prop: `maxSearchLength`; both default to 1000. |
 | `normalize_search_text` | Yes | Yes | React prop: `normalizeSearchText`. |
 | `split_search_terms` | Yes | Yes | Order-independent multi-term matching. |
-| `search_delay` | No | No | Debounced results with immediate keyboard flush. |
+| `search_delay` | Yes | Yes | Debounced results, flushed before navigation or selection keys; React prop: `searchDelay`. |
 | `search_in_values` | Yes | Yes | React prop: `searchInValues`. |
 | `group_search` | Yes | Yes | Include group labels in matching. |
 | `parser_config` | No | No | Vanilla needs source-option data copying; React needs an equivalent data model or a documented exception. |

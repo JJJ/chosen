@@ -400,6 +400,7 @@ var ChosenNative = (() => {
         allow_select_all: false,
         allow_deselect_all: false,
         paste_multiple_values: false,
+        search_delay: 0,
         select_all_text: "Select all",
         deselect_all_text: "Deselect all",
         more_items_text: (count) => `Show ${count} more...`,
@@ -425,6 +426,8 @@ var ChosenNative = (() => {
       this.typeahead = "";
       this.typeaheadTimer = null;
       this.composing = false;
+      this.appliedQuery = "";
+      this.searchTimer = null;
       this.entries = [];
       this.nodes = [];
       this.available = [];
@@ -455,11 +458,7 @@ var ChosenNative = (() => {
       };
       this.onKeyDown = (event) => this.keyDown(event);
       this.onInput = () => {
-        this.pendingBackstrokeValue = null;
-        this.activeIndex = -1;
-        this.open();
-        this.renderSelection();
-        this.renderResults();
+        if (!this.composing) this.queueSearch();
       };
       this.onControlPointer = (event) => {
         if (event.target === this.input || event.target.closest("button")) return;
@@ -521,6 +520,7 @@ var ChosenNative = (() => {
       };
       this.onCompositionEnd = () => {
         this.composing = false;
+        this.queueSearch();
       };
       this.input.addEventListener("compositionstart", this.onCompositionStart);
       this.input.addEventListener("compositionend", this.onCompositionEnd);
@@ -631,7 +631,8 @@ var ChosenNative = (() => {
       this.status.textContent = selected.length ? `Selected: ${selected.map((entry) => entry.label).join(", ")}.` : "No selection.";
     }
     renderResults() {
-      const query = this.input.value;
+      const query = this.searchTimer ? this.appliedQuery : this.input.value;
+      this.appliedQuery = query;
       const searchable = this.entries.map((entry) => entry.kind === "option" ? { ...entry, selected: !!this.nodes[entry.index]?.selected } : entry);
       const result = filterOptions(searchable, query, {
         multiple: this.multiple,
@@ -769,11 +770,33 @@ var ChosenNative = (() => {
         this.changed();
       }
       this.input.value = result.remaining;
+      this.appliedQuery = result.remaining;
       this.activeIndex = -1;
       if (result.limitReached) emit(this.select, "chosen:maxselected", this);
       this.open();
       this.renderSelection();
       this.renderResults();
+    }
+    queueSearch() {
+      this.pendingBackstrokeValue = null;
+      this.activeIndex = -1;
+      this.renderSelection();
+      clearTimeout(this.searchTimer);
+      const delay = Math.max(0, parseInt(this.options.search_delay, 10) || 0);
+      if (delay) {
+        this.searchTimer = setTimeout(() => {
+          this.searchTimer = null;
+          this.flushSearch();
+        }, delay);
+      } else this.flushSearch();
+    }
+    flushSearch() {
+      clearTimeout(this.searchTimer);
+      this.searchTimer = null;
+      if (this.composing) return;
+      this.appliedQuery = this.input.value;
+      if (!this.opened) this.open();
+      else this.renderResults();
     }
     highlight(index) {
       this.activeIndex = index;
@@ -805,6 +828,7 @@ var ChosenNative = (() => {
       this.changed();
       if (this.multiple) {
         this.input.value = "";
+        this.appliedQuery = "";
         this.activeIndex = -1;
         if (this.options.hide_results_on_select && !keepOpen) this.close();
         else this.renderResults();
@@ -828,6 +852,7 @@ var ChosenNative = (() => {
     open() {
       if (this.destroyed || this.opened || this.select.disabled || this.select.hasAttribute("readonly")) return;
       this.opened = true;
+      this.appliedQuery = this.input.value;
       this.popup.hidden = false;
       this.host.classList.add("chosen-native--open");
       this.input.setAttribute("aria-expanded", "true");
@@ -838,6 +863,9 @@ var ChosenNative = (() => {
     close() {
       if (!this.opened) return;
       this.pendingBackstrokeValue = null;
+      clearTimeout(this.searchTimer);
+      this.searchTimer = null;
+      this.appliedQuery = "";
       this.typeahead = "";
       clearTimeout(this.typeaheadTimer);
       this.opened = false;
@@ -853,6 +881,9 @@ var ChosenNative = (() => {
     keyDown(event) {
       if (event.isComposing || this.select.disabled) return;
       const key = event.key;
+      if (this.searchTimer && ["Tab", "Enter", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"].includes(key)) {
+        this.flushSearch();
+      }
       if (this.multiple && key.toLowerCase() === "a" && (event.metaKey || event.ctrlKey) && !event.altKey && !this.input.value) {
         const action = event.shiftKey ? "deselect" : "select";
         if (action === "select" && this.options.allow_select_all || action === "deselect" && this.options.allow_deselect_all) {
@@ -938,6 +969,7 @@ var ChosenNative = (() => {
       if (this.destroyed) return;
       this.close();
       clearTimeout(this.typeaheadTimer);
+      clearTimeout(this.searchTimer);
       this.destroyed = true;
       for (const label of this.boundLabels) label.removeEventListener("click", this.onLabelClick);
       this.boundLabels.clear();
