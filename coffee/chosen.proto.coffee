@@ -1,5 +1,7 @@
 class @Chosen extends AbstractChosen
 
+  @defaults: {}
+
   setup: ->
     @current_selectedIndex = @form_field.selectedIndex
     @original_tab_index = @form_field.getAttribute('tabindex')

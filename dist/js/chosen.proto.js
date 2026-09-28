@@ -325,6 +325,7 @@ var ChosenCore = (function() {
 
 (function() {
   var AbstractChosen, SelectParser,
+    hasProp = {}.hasOwnProperty,
     indexOf = [].indexOf;
 
   SelectParser = class SelectParser {
@@ -437,12 +438,33 @@ var ChosenCore = (function() {
 
   AbstractChosen = (function() {
     class AbstractChosen {
-      constructor(form_field, options1 = {}) {
-        var form_field_had_focus;
+      constructor(form_field, options = {}, defaults) {
+        var form_field_had_focus, has_defaults, key, merged_options, value;
         this.label_mousedown_handler = this.label_mousedown_handler.bind(this);
         this.label_click_handler = this.label_click_handler.bind(this);
         this.form_field = form_field;
-        this.options = options1;
+        this.options = options;
+        if (defaults == null) {
+          defaults = this.constructor.defaults;
+        }
+        if ((defaults != null) && typeof defaults === "object") {
+          merged_options = {};
+          has_defaults = false;
+          for (key in defaults) {
+            if (!hasProp.call(defaults, key)) continue;
+            value = defaults[key];
+            merged_options[key] = value;
+            has_defaults = true;
+          }
+          if (has_defaults) {
+            for (key in options) {
+              if (!hasProp.call(options, key)) continue;
+              value = options[key];
+              merged_options[key] = value;
+            }
+            this.options = merged_options;
+          }
+        }
         if (!AbstractChosen.browser_is_supported()) {
           return;
         }
@@ -3556,6 +3578,8 @@ var ChosenCore = (function() {
       }
 
     };
+
+    Chosen.defaults = {};
 
     triggerHtmlEvent = function(element, eventType) {
       var evt;

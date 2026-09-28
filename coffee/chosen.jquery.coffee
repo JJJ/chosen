@@ -13,11 +13,12 @@ chosen_interface = (options) ->
         chosen.destroy()
       return
     unless chosen instanceof Chosen
-      $this.data('chosen', new Chosen(this, options))
+      $this.data('chosen', new Chosen(this, options, chosen_interface.defaults))
 
     return
 
 $.fn.chosen = chosen_interface
+chosen_interface.defaults = {}
 chosen_interface.browser_is_supported = AbstractChosen.browser_is_supported
 chosen_interface.noConflict = ->
   $.fn.chosen = previous_chosen if $.fn.chosen is chosen_interface
