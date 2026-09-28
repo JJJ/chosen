@@ -213,6 +213,24 @@ test('search input type follows the classic default with a text override', () =>
   dom.window.close();
 });
 
+test('the generated control follows source direction and the classic RTL option', () => {
+  const { dom, select } = fixture('<select dir="rtl"><option value="a">Alpha</option></select>');
+  const chosen = new Chosen(select);
+  assert.equal(chosen.host.dir, 'rtl');
+  select.dir = 'ltr';
+  chosen.update();
+  assert.equal(chosen.host.dir, 'ltr');
+  select.classList.add('chosen-rtl');
+  chosen.update();
+  assert.equal(chosen.host.dir, 'rtl');
+  chosen.destroy();
+  select.classList.remove('chosen-rtl');
+  const optIn = new Chosen(select, { rtl: true });
+  assert.equal(optIn.host.dir, 'rtl');
+  optIn.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

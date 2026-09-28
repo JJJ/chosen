@@ -60,7 +60,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `max_shown_results` | Yes | Yes | React prop: `maxShownResults`; group headings do not count. |
 | `case_sensitive_search` | Yes | Yes | React prop: `caseSensitiveSearch`. |
 | `hide_results_on_select` | Partial | Partial | Both close single results but keep multiple results open; classic closes multiple results by default. Neither exposes the setting. |
-| `rtl` | Partial | Yes | Vanilla can inherit page direction but does not copy `dir` from its select; React has `dir`. |
+| `rtl` | Yes | Yes | Vanilla accepts `rtl: true` and follows source `dir` or the legacy `chosen-rtl` class; React has `dir`. |
 
 ## Source attributes and platform events
 

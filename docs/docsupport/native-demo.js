@@ -3,7 +3,7 @@ const project = document.getElementById('native-project');
 const skills = document.getElementById('native-skills');
 const events = document.getElementById('native-events');
 const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
-new ChosenNative.Chosen(skills, { max_selected_options: 3, multiselect_allow_tab_to_select: true });
+const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3, multiselect_allow_tab_to_select: true });
 let added = 0;
 
 for (const select of [project, skills]) {
@@ -24,6 +24,11 @@ document.getElementById('native-toggle').addEventListener('click', event => {
   project.disabled = !project.disabled;
   projectChosen.update();
   event.currentTarget.textContent = project.disabled ? 'Enable project' : 'Disable project';
+});
+document.getElementById('native-direction').addEventListener('click', event => {
+  skills.dir = skills.dir === 'rtl' ? 'ltr' : 'rtl';
+  skillsChosen.update();
+  event.currentTarget.textContent = skills.dir === 'rtl' ? 'Use left-to-right skills' : 'Use right-to-left skills';
 });
 document.getElementById('native-demo-form').addEventListener('submit', event => {
   event.preventDefault();

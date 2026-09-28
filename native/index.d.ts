@@ -24,6 +24,7 @@ export interface ChosenOptions {
   backspace_deletes_choices?: boolean;
   multiselect_allow_tab_to_select?: boolean;
   search_input_type?: 'search' | 'text';
+  rtl?: boolean;
 }
 
 export declare class Chosen {

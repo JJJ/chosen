@@ -306,6 +306,7 @@ var Chosen = class {
       max_search_length: 1e3,
       display_selected_options: true,
       display_disabled_options: true,
+      rtl: false,
       placeholder_text: select.multiple ? "Select Some Options" : "Select an Option",
       no_results_text: "No results for:",
       allow_single_deselect: false,
@@ -407,6 +408,9 @@ var Chosen = class {
   }
   update() {
     if (this.destroyed) return;
+    const direction = this.options.rtl || this.select.classList.contains("chosen-rtl") ? "rtl" : this.select.dir;
+    if (direction) this.host.dir = direction;
+    else this.host.removeAttribute("dir");
     const parsed = optionTree(this.select);
     this.entries = parsed.entries;
     this.nodes = parsed.nodes;

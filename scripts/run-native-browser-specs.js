@@ -69,7 +69,19 @@ async function check(name, engine) {
     if ((await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'))).length) {
       throw new Error(`${name}: chip removal failed`);
     }
-    await skills.press('Escape');
+    await skills.fill('typ');
+    await skills.press('Tab');
+    const tabSelection = await page.evaluate(() => ({
+      values: new FormData(document.querySelector('form')).getAll('skills'),
+      focus: document.activeElement?.textContent?.trim()
+    }));
+    if (JSON.stringify(tabSelection.values) !== '["typography"]' || tabSelection.focus !== 'Reset form') {
+      throw new Error(`${name}: opt-in Tab selection or focus navigation failed (${JSON.stringify(tabSelection)})`);
+    }
+    await page.getByRole('button', { name: 'Use right-to-left skills' }).click();
+    const direction = await skills.evaluate(node => getComputedStyle(node).direction);
+    if (direction !== 'rtl') throw new Error(`${name}: source direction was not copied to the control`);
+    await page.getByRole('button', { name: 'Use left-to-right skills' }).click();
     await page.getByRole('button', { name: 'Add a project' }).click();
     await project.click();
     if (!await page.getByRole('option', { name: 'Project 1' }).count()) throw new Error(`${name}: update failed`);
