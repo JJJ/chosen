@@ -1037,8 +1037,9 @@
   },
   {
     "number": 2651,
-    "status": "candidate",
-    "note": "Assess relative sizing and editable vector icon sources while preserving current visual defaults."
+    "status": "covered-in-fork",
+    "note": "The fork ships editable SVG icons and scoped CSS/Sass size variables, including opt-in relative icon sizing. Pixel defaults remain for visual compatibility; jQuery and Prototype demos show a rem-based recipe.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/178"
   },
   {
     "number": 2638,

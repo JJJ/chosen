@@ -788,6 +788,20 @@ footer {
   }
 }
 
+.relative-size-demo {
+  max-width: 25rem;
+  margin: 1rem 0 2rem;
+}
+
+.relative-size-demo .chosen-container {
+  --chosen-font-size: 1rem;
+  --chosen-control-line-height: 1.5rem;
+  --chosen-control-padding-block: 0.3rem;
+  --chosen-search-padding-inline-end: 2rem;
+  --chosen-result-padding-block: 0.35rem;
+  --chosen-icon-size: 1rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

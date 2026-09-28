@@ -25,6 +25,7 @@ $chosen-border-radius: 4px !default;
 $chosen-border-width: 1px !default;
 $chosen-border-style: solid !default;
 $chosen-font-size: 14px !default;
+$chosen-icon-size: 15px !default;
 $chosen-control-line-height: 24px !default;
 $chosen-control-padding-block: 2.5px !default;
 $chosen-control-padding-inline-start: 7px !default;
@@ -169,15 +170,15 @@ $chosen-highlight-text-decoration: underline !default;
 		border: none;
 		cursor: pointer;
 		display: block;
-		width: 15px;
-		height: 15px;
+		width: var(--chosen-icon-size, #{$chosen-icon-size});
+		height: var(--chosen-icon-size, #{$chosen-icon-size});
 		background: var(--chosen-icon-clear, #{$chosen-clear}) no-repeat right 0 top 50%;
-		background-size: 15px 15px;
+		background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 
 		&:hover,
 		&:active {
 			background: var(--chosen-icon-clear-active, #{$chosen-clear-active}) no-repeat right 0 top 50%;
-			background-size: 15px 15px;
+			background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 		}
 	}
 }
@@ -264,7 +265,7 @@ select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 			width: 100%;
 			height: 100%;
 			background: var(--chosen-icon-chevrons, #{$chosen-chevrons}) no-repeat right 5px top 52%;
-			background-size: 15px 15px;
+			background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 		}
 	}
 
@@ -287,7 +288,7 @@ select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 			background-image: var(--chosen-icon-search, #{$chosen-search});
 			background-position: right 5px top 50%;
 			background-repeat: no-repeat;
-			background-size: 15px 15px;
+			background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 			color: var(--chosen-search-text-color, var(--chosen-text-color, #{$chosen-text-color}));
 			font-size: 100%;
 			font-family: inherit;
@@ -543,11 +544,11 @@ select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 				position: absolute;
 				top: 50%;
 				right: 6px;
-				width: 15px;
-				height: 15px;
+				width: var(--chosen-icon-size, #{$chosen-icon-size});
+				height: var(--chosen-icon-size, #{$chosen-icon-size});
 				transform: translateY(-50%);
 				background: var(--chosen-icon-clear, #{$chosen-clear}) no-repeat center;
-				background-size: 15px 15px;
+				background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 				content: "";
 				pointer-events: none;
 			}
@@ -588,7 +589,7 @@ select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 
 		.chosen-single div b {
 			background: var(--chosen-icon-chevrons, #{$chosen-chevrons}) no-repeat right 5px top 52%;
-			background-size: 15px 15px;
+			background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 		}
 
 		&.chosen-dropup {
@@ -725,13 +726,13 @@ select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 	&.chosen-container-single {
 		.chosen-single div b {
 			background: var(--chosen-icon-chevrons, #{$chosen-chevrons}) no-repeat left 5px top 52%;
-			background-size: 15px 15px;
+			background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 		}
 
 		&.chosen-with-drop {
 			.chosen-single div b {
 				background: var(--chosen-icon-chevrons, #{$chosen-chevrons}) no-repeat left 5px top 52%;
-				background-size: 15px 15px;
+				background-size: var(--chosen-icon-size, #{$chosen-icon-size}) var(--chosen-icon-size, #{$chosen-icon-size});
 			}
 		}
 	}

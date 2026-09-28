@@ -1419,6 +1419,18 @@ chosen.destroy();</code></pre>
         </ul>
       </div>
 
+      <h2><a name="relative-size-support" class="anchor" href="#relative-size-support">Relative Sizing</a></h2>
+      <p>Chosen's default dimensions stay familiar, while CSS variables can use relative units. This select uses <code>rem</code> for text, spacing, and its SVG icons. Change your browser's root font size or zoom to see it scale. See the <a href="options.html#styling">styling reference</a> for the CSS recipe.</p>
+      <div class="relative-size-demo">
+        <label class="comparison-label" for="relative-size-select">Scalable select</label>
+        <select id="relative-size-select" class="chosen-select-relative-size" data-placeholder="Choose a project">
+          <option value=""></option>
+          <option>Atlas</option>
+          <option>Beacon</option>
+          <option>Comet</option>
+        </select>
+      </div>
+
       <h2><a name="custom-width-support" class="anchor" href="#custom-width-support">Custom Width Support</a></h2>
       <div class="side-by-side clearfix">
         <p>Using a custom width with Chosen is as easy as passing an option when you create Chosen:</p>
