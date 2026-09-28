@@ -202,6 +202,37 @@ test('multiple keyboard options preserve Backspace and Tab defaults and permit o
   dom.window.close();
 });
 
+test('two-press Backspace focuses the last chip before removing it', () => {
+  const { dom, select } = fixture('<select multiple><option value="a" selected>Alpha</option><option value="b" selected>Beta</option></select>');
+  const chosen = new Chosen(select, { single_backstroke_delete: false });
+  key(chosen.input, 'Backspace');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'b']);
+  assert.equal(chosen.chips.querySelector('.chosen-native__chip--pending').textContent.includes('Beta'), true);
+  key(chosen.input, 'ArrowDown');
+  assert.equal(chosen.chips.querySelector('.chosen-native__chip--pending'), null);
+  key(chosen.input, 'Backspace');
+  key(chosen.input, 'Backspace');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('associated labels use type defaults and an explicit open override', () => {
+  const { dom, select } = fixture('<label for="items">Items</label><select id="items" multiple><option value="a">Alpha</option></select>');
+  const label = document.querySelector('label');
+  const chosen = new Chosen(select);
+  click(label);
+  assert.equal(chosen.opened, true);
+  assert.equal(document.activeElement, chosen.input);
+  chosen.destroy();
+  const focusOnly = new Chosen(select, { open_on_label_click: false });
+  click(label);
+  assert.equal(focusOnly.opened, false);
+  assert.equal(document.activeElement, focusOnly.input);
+  focusOnly.destroy();
+  dom.window.close();
+});
+
 test('search input type follows the classic default with a text override', () => {
   const { dom, select } = fixture('<select><option value="a">Alpha</option></select>');
   const chosen = new Chosen(select);

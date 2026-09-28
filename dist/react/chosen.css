@@ -113,6 +113,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.chosen-react__chip--pending { outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb)); }
 
 .chosen-react__remove,
 .chosen-react__clear {

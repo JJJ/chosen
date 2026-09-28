@@ -28,6 +28,7 @@ export interface ChosenHandle {
 export interface ChosenProps {
   options: Array<ChosenOption | ChosenGroup>;
   multiple?: boolean;
+  openOnLabelClick?: boolean;
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[], event: SyntheticEvent) => void;
@@ -49,6 +50,7 @@ export interface ChosenProps {
   inheritOptionClasses?: boolean;
   maxSelectedOptions?: number;
   backspaceDeletesChoices?: boolean;
+  singleBackstrokeDelete?: boolean;
   multiselectAllowTabToSelect?: boolean;
   searchInputType?: 'search' | 'text';
   searchContains?: boolean;

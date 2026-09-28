@@ -18,6 +18,7 @@ function firstEnabled(items) {
 
 export const Chosen = forwardRef(function Chosen({
   options = [], multiple = false, value, defaultValue, onChange,
+  openOnLabelClick = multiple,
   open: controlledOpen, defaultOpen = false, onOpenChange,
   name, form, required = false, disabled = false, readOnly = false,
   placeholder, placeholderTextSingle, placeholderTextMultiple,
@@ -26,6 +27,7 @@ export const Chosen = forwardRef(function Chosen({
   resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
   inheritOptionClasses = false,
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
+  singleBackstrokeDelete = true,
   searchInputType = 'search',
   searchContains = false, splitSearchTerms = false, groupSearch = true,
   highlightPrefixMatches = false,
@@ -45,11 +47,13 @@ export const Chosen = forwardRef(function Chosen({
   const inputRef = useRef(null);
   const selectRef = useRef(null);
   const labelPointerDown = useRef(false);
+  const labelForwardedClick = useRef(false);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(-1);
   const [limitNotice, setLimitNotice] = useState(false);
+  const [pendingBackstrokeValue, setPendingBackstrokeValue] = useState(null);
   const selectedValues = value === undefined ? internalValues : valuesOf(value, multiple);
   const isOpen = controlledOpen === undefined ? internalOpen : controlledOpen;
   const selectedKey = selectedValues.join('\u0000');
@@ -89,6 +93,7 @@ export const Chosen = forwardRef(function Chosen({
     if (controlledOpen === undefined) setInternalOpen(next);
     if (isOpen !== next) onOpenChange?.(next);
     if (!next) {
+      setPendingBackstrokeValue(null);
       setQuery('');
       setActiveIndex(-1);
     }
@@ -107,6 +112,7 @@ export const Chosen = forwardRef(function Chosen({
     if (next.limitReached) setLimitNotice(true);
     if (!next.changed) return;
     setLimitNotice(false);
+    setPendingBackstrokeValue(null);
     commit(next.values, event);
     if (!multiple) changeOpen(false);
     else {
@@ -122,6 +128,7 @@ export const Chosen = forwardRef(function Chosen({
     });
     if (next.changed) commit(next.values, event);
     setLimitNotice(false);
+    setPendingBackstrokeValue(null);
     inputRef.current?.focus();
   };
 
@@ -148,6 +155,7 @@ export const Chosen = forwardRef(function Chosen({
 
   useEffect(() => {
     let releaseTimer;
+    let forwardedClickTimer;
     const pointerDown = event => {
       clearTimeout(releaseTimer);
       const label = event.target?.closest?.('label');
@@ -164,13 +172,27 @@ export const Chosen = forwardRef(function Chosen({
     document.addEventListener('pointerdown', pointerDown, true);
     document.addEventListener('pointerup', pointerEnd, true);
     document.addEventListener('pointercancel', pointerEnd, true);
+    const labelClick = event => {
+      if (event.target?.closest?.('a, button, input, select, textarea')) return;
+      const label = event.target?.closest?.('label');
+      if (label?.control !== inputRef.current) return;
+      labelForwardedClick.current = true;
+      clearTimeout(forwardedClickTimer);
+      forwardedClickTimer = setTimeout(() => { labelForwardedClick.current = false; }, 0);
+      if (!openOnLabelClick) return;
+      inputRef.current?.focus();
+      changeOpen(true);
+    };
+    document.addEventListener('click', labelClick, true);
     return () => {
       clearTimeout(releaseTimer);
+      clearTimeout(forwardedClickTimer);
       document.removeEventListener('pointerdown', pointerDown, true);
       document.removeEventListener('pointerup', pointerEnd, true);
       document.removeEventListener('pointercancel', pointerEnd, true);
+      document.removeEventListener('click', labelClick, true);
     };
-  }, [changeOpen]);
+  }, [changeOpen, openOnLabelClick]);
 
   useEffect(() => {
     if (!isOpen || !activeOption) return;
@@ -190,6 +212,7 @@ export const Chosen = forwardRef(function Chosen({
 
   const keyDown = (event) => {
     if (disabled) return;
+    if (event.key !== 'Backspace') setPendingBackstrokeValue(null);
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       if (!isOpen) changeOpen(true);
@@ -210,7 +233,10 @@ export const Chosen = forwardRef(function Chosen({
       if (multiple && isOpen && multiselectAllowTabToSelect && activeOption) choose(activeOption, event);
       changeOpen(false);
     } else if (event.key === 'Backspace' && multiple && backspaceDeletesChoices && !query && selectedOptions.length) {
-      remove(selectedOptions[selectedOptions.length - 1], event);
+      event.preventDefault();
+      const last = selectedOptions[selectedOptions.length - 1];
+      if (singleBackstrokeDelete || pendingBackstrokeValue === last.value) remove(last, event);
+      else setPendingBackstrokeValue(last.value);
     }
   };
 
@@ -280,7 +306,7 @@ export const Chosen = forwardRef(function Chosen({
         changeOpen(true);
       }
     }}>
-      {multiple && selectedOptions.map(item => <span className={`chosen-react__chip${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
+      {multiple && selectedOptions.map(item => <span className={`chosen-react__chip${pendingBackstrokeValue === item.value ? ' chosen-react__chip--pending' : ''}${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
         <span>{selectedDisplay(item)}</span>
         {!disabled && !readOnly && <button type="button" className="chosen-react__remove"
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}
@@ -297,8 +323,11 @@ export const Chosen = forwardRef(function Chosen({
         aria-invalid={ariaInvalid} aria-required={required || undefined}
         placeholder={visiblePlaceholder} value={query} disabled={disabled} readOnly={readOnly}
         autoComplete="off" onFocus={event => { onFocus?.(event); }}
-        onBlur={onInputBlur} onClick={() => changeOpen(true)} onKeyDown={keyDown}
-        onChange={event => { setQuery(event.target.value); setActiveIndex(-1); changeOpen(true); }} />
+        onBlur={onInputBlur} onClick={() => {
+          if (labelForwardedClick.current) { labelForwardedClick.current = false; return; }
+          changeOpen(true);
+        }} onKeyDown={keyDown}
+        onChange={event => { setPendingBackstrokeValue(null); setQuery(event.target.value); setActiveIndex(-1); changeOpen(true); }} />
       {!multiple && allowSingleDeselect && selectedValues.length > 0 && !disabled && !readOnly && <button type="button"
         className="chosen-react__clear" aria-label="Clear selection" onClick={event => {
           commit([], event); inputRef.current?.focus();

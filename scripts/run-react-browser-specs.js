@@ -63,7 +63,10 @@ async function main() {
       await page.waitForFunction(() => document.querySelector('select')?.multiple);
       await page.evaluate(() => document.querySelector('form').reset());
       await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);
-      await page.getByRole('combobox', { name: 'Fruit' }).click();
+      await page.getByText('Fruit', { exact: true }).click();
+      if (await page.getByRole('combobox', { name: 'Fruit' }).getAttribute('aria-expanded') !== 'true') {
+        throw new Error(`${name}: multiple label did not open the results`);
+      }
       await page.getByRole('option', { name: 'Apple' }).click();
       await page.getByRole('option', { name: 'Banana' }).click();
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));

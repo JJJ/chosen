@@ -46,6 +46,7 @@ export class Chosen {
       enable_split_word_search: true, case_sensitive_search: false, search_in_values: false,
       highlight_prefix_matches: false,
       backspace_deletes_choices: true, multiselect_allow_tab_to_select: false,
+      single_backstroke_delete: true,
       search_input_type: 'search',
       max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
@@ -57,10 +58,12 @@ export class Chosen {
       no_results_text: 'No results for:',
       results_count_text: count => `${count} result${count === 1 ? '' : 's'} available`,
       allow_single_deselect: false, ...options };
+    if (this.options.open_on_label_click == null) this.options.open_on_label_click = select.multiple;
     this.id = `${select.id || `chosen-native-${++nextId}`}-native`;
     this.multiple = select.multiple;
     this.opened = false;
     this.activeIndex = -1;
+    this.pendingBackstrokeValue = null;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -68,6 +71,13 @@ export class Chosen {
     this.originalAriaHidden = select.getAttribute('aria-hidden');
     this.hadSelectClass = select.classList.contains('chosen-native__select');
     this.form = select.form;
+    this.boundLabels = new Set();
+    this.onLabelClick = event => {
+      if (event.target.closest?.('a, button, input, select, textarea')) return;
+      event.preventDefault();
+      this.input.focus();
+      if (this.options.open_on_label_click) this.open();
+    };
     this.onNativeChange = () => this.update();
     this.onUpdate = () => this.update();
     this.onReset = () => setTimeout(() => { if (!this.destroyed) { this.close(); this.update(); } }, 0);
@@ -78,7 +88,7 @@ export class Chosen {
       this.close();
     };
     this.onKeyDown = event => this.keyDown(event);
-    this.onInput = () => { this.activeIndex = -1; this.open(); this.renderResults(); };
+    this.onInput = () => { this.pendingBackstrokeValue = null; this.activeIndex = -1; this.open(); this.renderSelection(); this.renderResults(); };
     this.onControlPointer = event => {
       if (event.target === this.input || event.target.closest('button')) return;
       if (event.pointerType === 'mouse') event.preventDefault();
@@ -145,6 +155,13 @@ export class Chosen {
 
   update() {
     if (this.destroyed) return;
+    const currentLabels = new Set(this.select.labels || []);
+    for (const label of this.boundLabels) {
+      if (!currentLabels.has(label)) { label.removeEventListener('click', this.onLabelClick); this.boundLabels.delete(label); }
+    }
+    for (const label of currentLabels) {
+      if (!this.boundLabels.has(label)) { label.addEventListener('click', this.onLabelClick); this.boundLabels.add(label); }
+    }
     for (const name of this.inheritedClasses) this.host.classList.remove(name);
     this.inheritedClasses.clear();
     for (const name of this.select.classList) {
@@ -184,6 +201,7 @@ export class Chosen {
     if (this.multiple) {
       for (const entry of selected) {
         const chip = element('span', 'chosen-native__chip');
+        if (entry.value === this.pendingBackstrokeValue) chip.classList.add('chosen-native__chip--pending');
         if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
         chip.append(selectedDisplay(entry));
         if (!this.select.disabled && !this.input.readOnly) {
@@ -301,6 +319,7 @@ export class Chosen {
       if (remove || option.selected) return;
       this.select.selectedIndex = Array.from(this.select.options).indexOf(option);
     }
+    this.pendingBackstrokeValue = null;
     this.changed();
     if (this.multiple) { this.input.value = ''; this.activeIndex = -1; this.renderResults(); }
     else this.close();
@@ -336,6 +355,7 @@ export class Chosen {
 
   close() {
     if (!this.opened) return;
+    this.pendingBackstrokeValue = null;
     this.opened = false;
     this.popup.hidden = true;
     this.host.classList.remove('chosen-native--open');
@@ -350,6 +370,10 @@ export class Chosen {
   keyDown(event) {
     if (event.isComposing || this.select.disabled) return;
     const key = event.key;
+    if (key !== 'Backspace' && this.pendingBackstrokeValue !== null) {
+      this.pendingBackstrokeValue = null;
+      this.renderSelection();
+    }
     if (key === 'ArrowDown' || key === 'ArrowUp') {
       event.preventDefault();
       if (!this.opened) { this.open(); return; }
@@ -372,7 +396,16 @@ export class Chosen {
       this.close();
     } else if (key === 'Backspace' && this.multiple && this.options.backspace_deletes_choices && !this.input.value) {
       const selected = this.entries.filter(entry => entry.kind === 'option' && this.nodes[entry.index]?.selected);
-      if (selected.length) { event.preventDefault(); this.choose(selected[selected.length - 1], true); }
+      if (selected.length) {
+        event.preventDefault();
+        const last = selected[selected.length - 1];
+        if (this.options.single_backstroke_delete || this.pendingBackstrokeValue === last.value) {
+          this.choose(last, true);
+        } else {
+          this.pendingBackstrokeValue = last.value;
+          this.renderSelection();
+        }
+      }
     }
   }
 
@@ -383,6 +416,8 @@ export class Chosen {
     if (this.destroyed) return;
     this.close();
     this.destroyed = true;
+    for (const label of this.boundLabels) label.removeEventListener('click', this.onLabelClick);
+    this.boundLabels.clear();
     this.input.removeEventListener('keydown', this.onKeyDown);
     this.input.removeEventListener('input', this.onInput);
     this.control.removeEventListener('pointerdown', this.onControlPointer);

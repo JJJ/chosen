@@ -75,6 +75,7 @@
   color: var(--chosen-choice-color, #333);
 }
 .chosen-native__chip > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chosen-native__chip--pending { outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb)); }
 .chosen-native__clear,
 .chosen-native__remove { border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
 .chosen-native__remove {

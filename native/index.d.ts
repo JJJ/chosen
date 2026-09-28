@@ -22,6 +22,8 @@ export interface ChosenOptions {
   min_search_length?: number;
   max_selected_options?: number;
   backspace_deletes_choices?: boolean;
+  single_backstroke_delete?: boolean;
+  open_on_label_click?: boolean;
   multiselect_allow_tab_to_select?: boolean;
   search_input_type?: 'search' | 'text';
   rtl?: boolean;

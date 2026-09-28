@@ -207,6 +207,35 @@ test('multiple keyboard settings keep defaults and allow Tab selection', () => {
   assert.equal(input.getAttribute('aria-expanded'), 'false');
 });
 
+test('React two-press Backspace focuses the last chip before removing it', () => {
+  const changes = [];
+  render(h(Chosen, { options, multiple: true, defaultValue: ['a', 'b'],
+    singleBackstrokeDelete: false, onChange: values => changes.push(values), 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.keyDown(input, { key: 'Backspace' });
+  assert.deepEqual(changes, []);
+  assert.equal(document.querySelector('.chosen-react__chip--pending')?.textContent.includes('Banana'), true);
+  fireEvent.keyDown(input, { key: 'ArrowDown' });
+  assert.equal(document.querySelector('.chosen-react__chip--pending'), null);
+  fireEvent.keyDown(input, { key: 'Backspace' });
+  fireEvent.keyDown(input, { key: 'Backspace' });
+  assert.deepEqual(changes, [['a']]);
+});
+
+test('React labels open multiple selects by default and honor the focus-only override', () => {
+  const view = render(h(React.Fragment, null,
+    h('label', { htmlFor: 'items' }, 'Items'),
+    h(Chosen, { id: 'items', options, multiple: true })));
+  fireEvent.click(screen.getByText('Items'));
+  assert.equal(screen.getByRole('combobox').getAttribute('aria-expanded'), 'true');
+  view.rerender(h(React.Fragment, null,
+    h('label', { htmlFor: 'items' }, 'Items'),
+    h(Chosen, { id: 'items', options, multiple: true, openOnLabelClick: false })));
+  fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Escape' });
+  fireEvent.click(screen.getByText('Items'));
+  assert.equal(screen.getByRole('combobox').getAttribute('aria-expanded'), 'false');
+});
+
 test('React search input type follows the classic default with a text override', () => {
   const view = render(h(Chosen, { options, 'aria-label': 'Fruit' }));
   assert.equal(screen.getByRole('combobox').type, 'search');

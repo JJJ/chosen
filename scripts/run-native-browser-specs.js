@@ -40,7 +40,10 @@ async function check(name, engine) {
     if (await project.evaluate(node => node !== document.activeElement)) throw new Error(`${name}: label did not focus input`);
 
     const skills = page.getByRole('combobox', { name: 'Skills' });
-    await skills.click();
+    await page.getByText('Skills', { exact: true }).click();
+    if (await skills.getAttribute('aria-expanded') !== 'true') {
+      throw new Error(`${name}: multiple label did not open the results`);
+    }
     await skills.fill('jav');
     await skills.press('Enter');
     const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('skills'));
@@ -97,6 +100,7 @@ async function check(name, engine) {
     if (external !== 'Comet') throw new Error(`${name}: external change did not synchronize`);
     await page.getByRole('button', { name: 'Reset form' }).click();
     await page.waitForFunction(() => document.querySelector('#native-project').value === '');
+    await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 0)));
     await project.fill('ops-42');
     if (!await page.getByRole('option', { name: 'Operations' }).count()) {
       throw new Error(`${name}: demo value search failed`);

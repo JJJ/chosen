@@ -333,6 +333,7 @@ var Chosen = class {
       highlight_prefix_matches: false,
       backspace_deletes_choices: true,
       multiselect_allow_tab_to_select: false,
+      single_backstroke_delete: true,
       search_input_type: "search",
       max_search_length: 1e3,
       display_selected_options: true,
@@ -348,10 +349,12 @@ var Chosen = class {
       allow_single_deselect: false,
       ...options
     };
+    if (this.options.open_on_label_click == null) this.options.open_on_label_click = select.multiple;
     this.id = `${select.id || `chosen-native-${++nextId}`}-native`;
     this.multiple = select.multiple;
     this.opened = false;
     this.activeIndex = -1;
+    this.pendingBackstrokeValue = null;
     this.entries = [];
     this.nodes = [];
     this.available = [];
@@ -359,6 +362,13 @@ var Chosen = class {
     this.originalAriaHidden = select.getAttribute("aria-hidden");
     this.hadSelectClass = select.classList.contains("chosen-native__select");
     this.form = select.form;
+    this.boundLabels = /* @__PURE__ */ new Set();
+    this.onLabelClick = (event) => {
+      if (event.target.closest?.("a, button, input, select, textarea")) return;
+      event.preventDefault();
+      this.input.focus();
+      if (this.options.open_on_label_click) this.open();
+    };
     this.onNativeChange = () => this.update();
     this.onUpdate = () => this.update();
     this.onReset = () => setTimeout(() => {
@@ -375,8 +385,10 @@ var Chosen = class {
     };
     this.onKeyDown = (event) => this.keyDown(event);
     this.onInput = () => {
+      this.pendingBackstrokeValue = null;
       this.activeIndex = -1;
       this.open();
+      this.renderSelection();
       this.renderResults();
     };
     this.onControlPointer = (event) => {
@@ -445,6 +457,19 @@ var Chosen = class {
   }
   update() {
     if (this.destroyed) return;
+    const currentLabels = new Set(this.select.labels || []);
+    for (const label of this.boundLabels) {
+      if (!currentLabels.has(label)) {
+        label.removeEventListener("click", this.onLabelClick);
+        this.boundLabels.delete(label);
+      }
+    }
+    for (const label of currentLabels) {
+      if (!this.boundLabels.has(label)) {
+        label.addEventListener("click", this.onLabelClick);
+        this.boundLabels.add(label);
+      }
+    }
     for (const name of this.inheritedClasses) this.host.classList.remove(name);
     this.inheritedClasses.clear();
     for (const name of this.select.classList) {
@@ -481,6 +506,7 @@ var Chosen = class {
     if (this.multiple) {
       for (const entry of selected) {
         const chip = element("span", "chosen-native__chip");
+        if (entry.value === this.pendingBackstrokeValue) chip.classList.add("chosen-native__chip--pending");
         if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
         chip.append(selectedDisplay(entry));
         if (!this.select.disabled && !this.input.readOnly) {
@@ -594,6 +620,7 @@ var Chosen = class {
       if (remove || option.selected) return;
       this.select.selectedIndex = Array.from(this.select.options).indexOf(option);
     }
+    this.pendingBackstrokeValue = null;
     this.changed();
     if (this.multiple) {
       this.input.value = "";
@@ -628,6 +655,7 @@ var Chosen = class {
   }
   close() {
     if (!this.opened) return;
+    this.pendingBackstrokeValue = null;
     this.opened = false;
     this.popup.hidden = true;
     this.host.classList.remove("chosen-native--open");
@@ -641,6 +669,10 @@ var Chosen = class {
   keyDown(event) {
     if (event.isComposing || this.select.disabled) return;
     const key = event.key;
+    if (key !== "Backspace" && this.pendingBackstrokeValue !== null) {
+      this.pendingBackstrokeValue = null;
+      this.renderSelection();
+    }
     if (key === "ArrowDown" || key === "ArrowUp") {
       event.preventDefault();
       if (!this.opened) {
@@ -668,7 +700,13 @@ var Chosen = class {
       const selected = this.entries.filter((entry) => entry.kind === "option" && this.nodes[entry.index]?.selected);
       if (selected.length) {
         event.preventDefault();
-        this.choose(selected[selected.length - 1], true);
+        const last = selected[selected.length - 1];
+        if (this.options.single_backstroke_delete || this.pendingBackstrokeValue === last.value) {
+          this.choose(last, true);
+        } else {
+          this.pendingBackstrokeValue = last.value;
+          this.renderSelection();
+        }
       }
     }
   }
@@ -682,6 +720,8 @@ var Chosen = class {
     if (this.destroyed) return;
     this.close();
     this.destroyed = true;
+    for (const label of this.boundLabels) label.removeEventListener("click", this.onLabelClick);
+    this.boundLabels.clear();
     this.input.removeEventListener("keydown", this.onKeyDown);
     this.input.removeEventListener("input", this.onInput);
     this.control.removeEventListener("pointerdown", this.onControlPointer);

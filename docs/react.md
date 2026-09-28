@@ -78,6 +78,11 @@ opt-in with `allowSingleDeselect`, matching classic Chosen; the demo enables it.
 For multiple selects, `backspaceDeletesChoices` defaults to `true` and
 `multiselectAllowTabToSelect` defaults to `false`. Enabling the latter selects
 the highlighted result on Tab and still moves focus to the next control.
+Set `singleBackstrokeDelete={false}` to focus the final chip with the first
+Backspace and remove it with the second.
+`openOnLabelClick` defaults to `true` for multiple selects and `false` for
+single selects; override it to choose whether the associated label opens the
+popup or only focuses the input. The single-select demo opts into opening.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
 

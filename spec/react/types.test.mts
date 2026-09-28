@@ -7,6 +7,8 @@ const props: ChosenProps = {
   value: ['a'],
   placeholderTextMultiple: 'Choose several',
   backspaceDeletesChoices: false, multiselectAllowTabToSelect: true,
+  singleBackstrokeDelete: false,
+  openOnLabelClick: true,
   searchInputType: 'text',
   displaySelectedValue: true, includeGroupLabelInSelected: true,
   inheritOptionClasses: true, resultsCountText: count => `${count} choices`,
