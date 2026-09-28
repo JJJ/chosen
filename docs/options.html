@@ -483,10 +483,22 @@ $(".my-select").myChosen();</code></pre>
         <tr><td><code>--chosen-focus-outline</code> and <code>--chosen-focus-outline-offset</code></td><td>Full outline override and its offset. The ring variables are used when the full outline is not set.</td></tr>
         <tr><td><code>--chosen-transition-duration</code> and <code>--chosen-transition-timing</code></td><td>Control border, background, and shadow transitions.</td></tr>
         <tr><td><code>--chosen-icon-chevrons</code>, <code>--chosen-icon-search</code>, <code>--chosen-icon-clear</code>, and <code>--chosen-icon-clear-active</code></td><td>Control icons as CSS images.</td></tr>
+        <tr><td><code>--chosen-icon-size</code></td><td>Size of the scalable control icons (15px by default). Set a relative value such as <code>1rem</code> alongside the control spacing variables.</td></tr>
       </tbody></table>
 
       <h3>Editing the control icons</h3>
       <p>The four <a href="https://github.com/JJJ/chosen/tree/master/sass/icons">source SVG icons</a> are included in the repository and npm package. Edit an SVG in <code>sass/icons/</code>, then run <code>npm run build</code> to embed it in the Sass defaults and generated CSS. The stylesheet still needs no separate image request. To customize one project without rebuilding Chosen, set the matching <code>--chosen-icon-*</code> CSS variable to a <code>url(...)</code> image.</p>
+
+      <h3>Relative sizing</h3>
+      <p>Chosen keeps its existing pixel defaults. Scope relative units to a wrapper when a form should scale with the root font size. The SVG icons remain sharp at the configured size; leave enough inline padding for a larger search icon.</p>
+<pre><code class="language-css">.relative-form .chosen-container {
+  --chosen-font-size: 1rem;
+  --chosen-control-line-height: 1.5rem;
+  --chosen-control-padding-block: 0.3rem;
+  --chosen-search-padding-inline-end: 2rem;
+  --chosen-result-padding-block: 0.35rem;
+  --chosen-icon-size: 1rem;
+}</code></pre>
 
       <h3>Tailwind CSS</h3>
       <p>Tailwind projects can map Chosen directly to their theme in the components layer. Load <code>chosen.css</code> before this application stylesheet. Chosen does not require Tailwind at runtime. The example also enables Tailwind's optional forms reset; Chosen's own selectors and variables keep the generated controls consistent under either forms-plugin strategy.</p>
