@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Read supported scalar Chosen options from per-select `data-*` attributes in both legacy adapters, with explicit JavaScript options taking precedence (harvesthq/chosen#1870).
 - Load the jQuery distribution through AMD or CommonJS while preserving plain browser-script loading and the existing `$.fn.chosen` API (harvesthq/chosen#2215).
 - Include the previous single-select value as `deselected` in jQuery `input` and `change` event data when switching or clearing a selection (harvesthq/chosen#2336).
 - Let applications set adapter-local initialization defaults through `$.fn.chosen.defaults` or `Chosen.defaults`, with per-control options taking precedence (harvesthq/chosen#2499).

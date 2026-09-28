@@ -449,7 +449,7 @@ var ChosenCore = (function() {
   AbstractChosen = (function() {
     class AbstractChosen {
       constructor(form_field, options = {}, defaults) {
-        var form_field_had_focus, has_defaults, key, merged_options, value;
+        var data_options, form_field_had_focus, has_overrides, key, merged_options, value;
         this.label_mousedown_handler = this.label_mousedown_handler.bind(this);
         this.label_click_handler = this.label_click_handler.bind(this);
         this.form_field = form_field;
@@ -457,16 +457,27 @@ var ChosenCore = (function() {
         if (defaults == null) {
           defaults = this.constructor.defaults;
         }
-        if ((defaults != null) && typeof defaults === "object") {
+        data_options = this.data_attribute_options();
+        if (((defaults != null) && typeof defaults === "object") || (data_options != null)) {
           merged_options = {};
-          has_defaults = false;
-          for (key in defaults) {
-            if (!hasProp.call(defaults, key)) continue;
-            value = defaults[key];
-            merged_options[key] = value;
-            has_defaults = true;
+          has_overrides = false;
+          if ((defaults != null) && typeof defaults === "object") {
+            for (key in defaults) {
+              if (!hasProp.call(defaults, key)) continue;
+              value = defaults[key];
+              merged_options[key] = value;
+              has_overrides = true;
+            }
           }
-          if (has_defaults) {
+          if (data_options != null) {
+            for (key in data_options) {
+              if (!hasProp.call(data_options, key)) continue;
+              value = data_options[key];
+              merged_options[key] = value;
+              has_overrides = true;
+            }
+          }
+          if (has_overrides) {
             for (key in options) {
               if (!hasProp.call(options, key)) continue;
               value = options[key];
@@ -492,6 +503,78 @@ var ChosenCore = (function() {
         }
         // instantiation done, fire ready
         this.on_ready();
+      }
+
+      data_attribute_options() {
+        var attribute, has_options, j, key, len, parsed, parsed_options, ref, type, value;
+        parsed_options = {};
+        has_options = false;
+        ref = this.form_field.attributes;
+        for (j = 0, len = ref.length; j < len; j++) {
+          attribute = ref[j];
+          if (attribute.name.indexOf('data-') !== 0) {
+            continue;
+          }
+          key = attribute.name.substr(5).replace(/-/g, '_');
+          if (attribute.name !== `data-${key.replace(/_/g, '-')}`) {
+            continue;
+          }
+          if (!Object.prototype.hasOwnProperty.call(AbstractChosen.data_attribute_types, key)) {
+            continue;
+          }
+          type = AbstractChosen.data_attribute_types[key];
+          value = attribute.value;
+          switch (type) {
+            case 'boolean':
+              if (!(value === 'true' || value === 'false')) {
+                continue;
+              }
+              parsed = value === 'true';
+              break;
+            case 'integer':
+              if (!/^[0-9]+$/.test(value)) {
+                continue;
+              }
+              parsed = Number(value);
+              if (!(isFinite(parsed) && parsed <= 9007199254740991)) {
+                continue;
+              }
+              break;
+            case 'width':
+              if (!value.length) {
+                continue;
+              }
+              parsed = value === 'false' ? false : value;
+              break;
+            case 'css-width':
+              if (!value.length) {
+                continue;
+              }
+              parsed = value;
+              break;
+            case 'search-input-type':
+              if (!(value === 'search' || value === 'text')) {
+                continue;
+              }
+              parsed = value;
+              break;
+            case 'dropdown-position':
+              if (!(value === 'absolute' || value === 'fixed')) {
+                continue;
+              }
+              parsed = value;
+              break;
+            default:
+              parsed = value;
+          }
+          parsed_options[key] = parsed;
+          has_options = true;
+        }
+        if (has_options) {
+          return parsed_options;
+        } else {
+          return null;
+        }
       }
 
       transfer_focus() {
@@ -2324,6 +2407,57 @@ var ChosenCore = (function() {
     AbstractChosen.default_select_all_text = "Select all";
 
     AbstractChosen.default_deselect_all_text = "Deselect all";
+
+    AbstractChosen.data_attribute_types = {
+      allow_single_deselect: 'boolean',
+      allow_select_all: 'boolean',
+      allow_deselect_all: 'boolean',
+      deselect_selected_results: 'boolean',
+      disable_search: 'boolean',
+      enable_split_word_search: 'boolean',
+      inherit_select_classes: 'boolean',
+      inherit_option_classes: 'boolean',
+      paste_multiple_values: 'boolean',
+      create_option: 'boolean',
+      persistent_create_option: 'boolean',
+      skip_no_results: 'boolean',
+      search_contains: 'boolean',
+      highlight_prefix_matches: 'boolean',
+      split_search_terms: 'boolean',
+      search_in_values: 'boolean',
+      group_search: 'boolean',
+      backspace_deletes_choices: 'boolean',
+      single_backstroke_delete: 'boolean',
+      multiselect_allow_tab_to_select: 'boolean',
+      open_on_label_click: 'boolean',
+      recalculate_width_on_update: 'boolean',
+      display_disabled_options: 'boolean',
+      display_selected_options: 'boolean',
+      display_selected_value: 'boolean',
+      include_group_label_in_selected: 'boolean',
+      case_sensitive_search: 'boolean',
+      hide_results_on_select: 'boolean',
+      rtl: 'boolean',
+      disable_search_threshold: 'integer',
+      max_selected_options: 'integer',
+      max_items_shown: 'integer',
+      min_search_length: 'integer',
+      max_search_length: 'integer',
+      search_delay: 'integer',
+      max_shown_results: 'integer',
+      select_all_text: 'string',
+      deselect_all_text: 'string',
+      show_fewer_items_text: 'string',
+      no_results_text: 'string',
+      create_option_text: 'string',
+      placeholder_text: 'string',
+      placeholder_text_single: 'string',
+      placeholder_text_multiple: 'string',
+      width: 'width',
+      dropdown_width: 'css-width',
+      search_input_type: 'search-input-type',
+      dropdown_position: 'dropdown-position'
+    };
 
     AbstractChosen.next_id = 0;
 

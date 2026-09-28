@@ -3,13 +3,19 @@ class AbstractChosen
   constructor: (@form_field, options={}, defaults) ->
     @options = options
     defaults ?= @constructor.defaults
-    if defaults? and typeof defaults is "object"
+    data_options = this.data_attribute_options()
+    if (defaults? and typeof defaults is "object") or data_options?
       merged_options = {}
-      has_defaults = false
-      for own key, value of defaults
-        merged_options[key] = value
-        has_defaults = true
-      if has_defaults
+      has_overrides = false
+      if defaults? and typeof defaults is "object"
+        for own key, value of defaults
+          merged_options[key] = value
+          has_overrides = true
+      if data_options?
+        for own key, value of data_options
+          merged_options[key] = value
+          has_overrides = true
+      if has_overrides
         for own key, value of options
           merged_options[key] = value
         @options = merged_options
@@ -28,6 +34,42 @@ class AbstractChosen
     this.transfer_focus() if form_field_had_focus
     # instantiation done, fire ready
     this.on_ready()
+
+  data_attribute_options: ->
+    parsed_options = {}
+    has_options = false
+    for attribute in @form_field.attributes
+      continue unless attribute.name.indexOf('data-') is 0
+      key = attribute.name.substr(5).replace(/-/g, '_')
+      continue unless attribute.name is "data-#{key.replace(/_/g, '-')}"
+      continue unless Object::hasOwnProperty.call(AbstractChosen.data_attribute_types, key)
+      type = AbstractChosen.data_attribute_types[key]
+      value = attribute.value
+      switch type
+        when 'boolean'
+          continue unless value is 'true' or value is 'false'
+          parsed = value is 'true'
+        when 'integer'
+          continue unless /^[0-9]+$/.test(value)
+          parsed = Number(value)
+          continue unless isFinite(parsed) and parsed <= 9007199254740991
+        when 'width'
+          continue unless value.length
+          parsed = if value is 'false' then false else value
+        when 'css-width'
+          continue unless value.length
+          parsed = value
+        when 'search-input-type'
+          continue unless value is 'search' or value is 'text'
+          parsed = value
+        when 'dropdown-position'
+          continue unless value is 'absolute' or value is 'fixed'
+          parsed = value
+        else
+          parsed = value
+      parsed_options[key] = parsed
+      has_options = true
+    if has_options then parsed_options else null
 
   transfer_focus: ->
     if @is_multiple
@@ -1162,4 +1204,53 @@ class AbstractChosen
   @default_remove_item_text: "Remove selection"
   @default_select_all_text: "Select all"
   @default_deselect_all_text: "Deselect all"
+  @data_attribute_types:
+    allow_single_deselect: 'boolean'
+    allow_select_all: 'boolean'
+    allow_deselect_all: 'boolean'
+    deselect_selected_results: 'boolean'
+    disable_search: 'boolean'
+    enable_split_word_search: 'boolean'
+    inherit_select_classes: 'boolean'
+    inherit_option_classes: 'boolean'
+    paste_multiple_values: 'boolean'
+    create_option: 'boolean'
+    persistent_create_option: 'boolean'
+    skip_no_results: 'boolean'
+    search_contains: 'boolean'
+    highlight_prefix_matches: 'boolean'
+    split_search_terms: 'boolean'
+    search_in_values: 'boolean'
+    group_search: 'boolean'
+    backspace_deletes_choices: 'boolean'
+    single_backstroke_delete: 'boolean'
+    multiselect_allow_tab_to_select: 'boolean'
+    open_on_label_click: 'boolean'
+    recalculate_width_on_update: 'boolean'
+    display_disabled_options: 'boolean'
+    display_selected_options: 'boolean'
+    display_selected_value: 'boolean'
+    include_group_label_in_selected: 'boolean'
+    case_sensitive_search: 'boolean'
+    hide_results_on_select: 'boolean'
+    rtl: 'boolean'
+    disable_search_threshold: 'integer'
+    max_selected_options: 'integer'
+    max_items_shown: 'integer'
+    min_search_length: 'integer'
+    max_search_length: 'integer'
+    search_delay: 'integer'
+    max_shown_results: 'integer'
+    select_all_text: 'string'
+    deselect_all_text: 'string'
+    show_fewer_items_text: 'string'
+    no_results_text: 'string'
+    create_option_text: 'string'
+    placeholder_text: 'string'
+    placeholder_text_single: 'string'
+    placeholder_text_multiple: 'string'
+    width: 'width'
+    dropdown_width: 'css-width'
+    search_input_type: 'search-input-type'
+    dropdown_position: 'dropdown-position'
   @next_id: 0

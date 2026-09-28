@@ -34,6 +34,7 @@ $.fn.chosen.defaults = { placeholder_text_single: 'Shared prompt' };
 $('.chosen-select-shared-defaults').chosen();
 $('.chosen-select-local-defaults').chosen({ placeholder_text_single: 'Local prompt' });
 $.fn.chosen.defaults = previousChosenDefaults;
+$('.chosen-select-data-options').chosen();
 
 $('#width-update-add').on('click', function() {
   var select = $('#width-update');
