@@ -76,6 +76,11 @@ Set `maxItemsShown` to a positive integer to show only that many selected
 chips until the summary button is expanded. `moreItemsText={count => text}`
 and `showFewerItemsText` customize its copy. The native selection and form
 values remain intact.
+Set `allowSelectAll` to select enabled results matching the current filter,
+up to `maxSelectedOptions`. `allowDeselectAll` removes enabled selections even
+outside the current filter. Both default to `false`; customize the action labels
+with `selectAllText` and `deselectAllText`. Ctrl/Command+A and
+Ctrl/Command+Shift+A invoke the enabled actions when search is empty.
 `displaySelectedValue` shows option values in the closed control and chips;
 `includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
 and result rows continue to show option labels. `open` and

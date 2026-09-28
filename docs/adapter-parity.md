@@ -9,11 +9,11 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | Classic option | Vanilla | React | Gap or equivalent API |
 | --- | --- | --- | --- |
 | `allow_single_deselect` | Yes | Yes | React prop: `allowSingleDeselect`, default `false`. |
-| `allow_select_all` | No | No | Filtered bulk selection and shortcut. |
-| `allow_deselect_all` | No | No | Bulk removal, disabled selection rule, and shortcut. |
+| `allow_select_all` | Yes | Yes | Filtered bulk selection with Ctrl/Command+A on an empty search. React prop: `allowSelectAll`. |
+| `allow_deselect_all` | Yes | Yes | Clear enabled selections with Ctrl/Command+Shift+A on an empty search. React prop: `allowDeselectAll`. |
 | `deselect_selected_results` | Yes | Yes | React prop: `deselectSelectedResults`; defaults to `false`. Both demos opt in to selected-row removal. |
-| `select_all_text` | No | No | Localized bulk action label. |
-| `deselect_all_text` | No | No | Localized bulk action label. |
+| `select_all_text` | Yes | Yes | Bulk action label; React prop: `selectAllText`. |
+| `deselect_all_text` | Yes | Yes | Bulk action label; React prop: `deselectAllText`. |
 | `disable_search` | Yes | Yes | Single-select search is hidden; typing prefixes navigates results. React prop: `disableSearch`. |
 | `disable_search_threshold` | Yes | Yes | Hide single-select search at or below the option count. React prop: `disableSearchThreshold`. |
 | `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |

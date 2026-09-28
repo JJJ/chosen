@@ -187,6 +187,10 @@
   max-height: var(--chosen-results-max-height, 15rem);
   overflow-y: auto;
 }
+.chosen-react__bulk-actions { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem .45rem; border-bottom: 1px solid var(--chosen-border-color, #aaa); }
+.chosen-react__bulk-action { padding: .2rem .35rem; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; color: var(--chosen-bulk-action-color, var(--chosen-text-color, #444)); font: inherit; cursor: pointer; }
+.chosen-react__bulk-action:hover,
+.chosen-react__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 
 .chosen-react__group,
 .chosen-react__option,

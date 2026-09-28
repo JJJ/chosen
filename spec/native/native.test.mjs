@@ -12,8 +12,8 @@ function fixture(markup) {
   return { dom, select, form: document.querySelector('form') };
 }
 
-function key(input, name) {
-  input.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
+function key(input, name, modifiers = {}) {
+  input.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true, ...modifiers }));
 }
 
 function click(node) {
@@ -142,6 +142,35 @@ test('selected choices collapse with customizable summary copy without changing 
   select.options[2].selected = false;
   chosen.update();
   assert.equal(chosen.chips.querySelector('.chosen-native__summary'), null);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('bulk actions select filtered options, respect limits, and preserve disabled selections', () => {
+  const { dom, select } = fixture('<select multiple><option value="locked" selected disabled>Locked</option><option value="b">Beta</option><option value="c">Charlie</option><option value="d">Delta</option></select>');
+  let changes = 0;
+  let limits = 0;
+  select.addEventListener('change', () => changes++);
+  select.addEventListener('chosen:maxselected', () => limits++);
+  const chosen = new Chosen(select, { allow_select_all: true, allow_deselect_all: true,
+    select_all_text: 'Add all', deselect_all_text: 'Clear all', max_selected_options: 2 });
+  chosen.open();
+  assert.equal(chosen.bulkActions.textContent, 'Add all');
+  click(chosen.bulkActions.querySelector('button'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['locked', 'b']);
+  assert.equal(changes, 1);
+  assert.equal(limits, 1);
+  click(Array.from(chosen.bulkActions.querySelectorAll('button')).find(button => button.textContent === 'Clear all'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['locked']);
+  key(chosen.input, 'a', { ctrlKey: true });
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['locked', 'b']);
+  key(chosen.input, 'A', { ctrlKey: true, shiftKey: true });
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['locked']);
+  chosen.input.value = 'ch';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  click(chosen.bulkActions.querySelector('button'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['locked', 'c']);
+  assert.equal(changes, 5);
   chosen.destroy();
   dom.window.close();
 });

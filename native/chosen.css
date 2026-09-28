@@ -139,6 +139,11 @@
   border-start-end-radius: 0;
 }
 .chosen-native__list { max-height: var(--chosen-results-max-height, 15rem); overflow-y: auto; padding: .25rem; }
+.chosen-native__bulk-actions:empty { display: none; }
+.chosen-native__bulk-actions { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem .45rem; border-bottom: 1px solid var(--chosen-border-color, #aaa); }
+.chosen-native__bulk-action { padding: .2rem .35rem; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; color: var(--chosen-bulk-action-color, var(--chosen-text-color, #444)); font: inherit; cursor: pointer; }
+.chosen-native__bulk-action:hover,
+.chosen-native__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
 .chosen-native__option,
 .chosen-native__group-label { padding: .3rem .5rem; }
 .chosen-native__option { position: relative; border-radius: var(--chosen-result-border-radius, 4px); cursor: pointer; }

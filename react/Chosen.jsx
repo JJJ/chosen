@@ -38,6 +38,8 @@ export const Chosen = forwardRef(function Chosen({
   displaySelectedOptions = true, displayDisabledOptions = true,
   deselectSelectedResults = false, hideResultsOnSelect = true,
   maxItemsShown = Infinity,
+  allowSelectAll = false, allowDeselectAll = false,
+  selectAllText = 'Select all', deselectAllText = 'Deselect all',
   moreItemsText = count => `Show ${count} more...`,
   showFewerItemsText = 'Show fewer...',
   displaySelectedValue = false, includeGroupLabelInSelected = false,
@@ -92,6 +94,9 @@ export const Chosen = forwardRef(function Chosen({
       (preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
   const activeOption = active >= 0 ? available[active] : null;
   const selectedOptions = entries.filter(item => item.kind === 'option' && selectedSet.has(item.value));
+  const canBulkSelect = multiple && available.some(item => item.kind === 'option' &&
+    !item.disabled && !selectedSet.has(item.value));
+  const canBulkDeselect = multiple && selectedOptions.some(item => !item.disabled);
   const itemLimit = Number.isInteger(maxItemsShown) && maxItemsShown > 0 ? maxItemsShown : Infinity;
   const hiddenChoiceCount = Math.max(0, selectedOptions.length - itemLimit);
   const showingAllChoices = hiddenChoiceCount > 0 && choicesExpanded;
@@ -149,6 +154,29 @@ export const Chosen = forwardRef(function Chosen({
     if (next.changed) commit(next.values, event);
     setLimitNotice(false);
     setPendingBackstrokeValue(null);
+    inputRef.current?.focus();
+  };
+
+  const bulk = (action, event) => {
+    if (!multiple || disabled || readOnly) return;
+    let next = [...selectedValues];
+    let limitReached = false;
+    if (action === 'select' && allowSelectAll) {
+      for (const item of available) {
+        if (item.kind !== 'option' || item.disabled || next.includes(item.value)) continue;
+        if (maxSelectedOptions != null && next.length >= maxSelectedOptions) {
+          limitReached = true;
+          break;
+        }
+        next.push(item.value);
+      }
+    } else if (action === 'deselect' && allowDeselectAll) {
+      const enabled = new Set(selectedOptions.filter(item => !item.disabled).map(item => item.value));
+      next = next.filter(item => !enabled.has(item));
+    }
+    if (next.length !== selectedValues.length) commit(next, event);
+    if (limitReached) setLimitNotice(true);
+    else setLimitNotice(false);
     inputRef.current?.focus();
   };
 
@@ -236,6 +264,15 @@ export const Chosen = forwardRef(function Chosen({
 
   const keyDown = (event) => {
     if (disabled) return;
+    if (multiple && event.key.toLowerCase() === 'a' && (event.metaKey || event.ctrlKey) &&
+      !event.altKey && !query) {
+      const action = event.shiftKey ? 'deselect' : 'select';
+      if ((action === 'select' && allowSelectAll) || (action === 'deselect' && allowDeselectAll)) {
+        event.preventDefault();
+        bulk(action, event);
+        return;
+      }
+    }
     if (searchDisabled && isOpen && event.key.length === 1 && /\S/.test(event.key) &&
       !event.altKey && !event.ctrlKey && !event.metaKey) {
       event.preventDefault();
@@ -385,6 +422,13 @@ export const Chosen = forwardRef(function Chosen({
     </div>
     <span id={statusId} className="chosen-react__sr-only" role="status" aria-live="polite">{status}</span>
     {isOpen && <div className="chosen-react__popup">
+      {multiple && ((allowSelectAll && canBulkSelect) || (allowDeselectAll && canBulkDeselect)) &&
+        <div className="chosen-react__bulk-actions">
+          {allowSelectAll && canBulkSelect && <button type="button" className="chosen-react__bulk-action"
+            onClick={event => bulk('select', event)}>{selectAllText}</button>}
+          {allowDeselectAll && canBulkDeselect && <button type="button" className="chosen-react__bulk-action"
+            onClick={event => bulk('deselect', event)}>{deselectAllText}</button>}
+        </div>}
       <div id={listId} role="listbox" aria-multiselectable={multiple || undefined} className="chosen-react__list">
         {renderedResults}
       </div>

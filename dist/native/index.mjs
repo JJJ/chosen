@@ -317,6 +317,10 @@ var Chosen = class {
       deselect_selected_results: false,
       hide_results_on_select: true,
       max_items_shown: Infinity,
+      allow_select_all: false,
+      allow_deselect_all: false,
+      select_all_text: "Select all",
+      deselect_all_text: "Deselect all",
       more_items_text: (count) => `Show ${count} more...`,
       show_fewer_items_text: "Show fewer...",
       display_selected_value: false,
@@ -418,8 +422,9 @@ var Chosen = class {
     this.list.id = `${this.id}-list`;
     this.list.setAttribute("role", "listbox");
     if (this.multiple) this.list.setAttribute("aria-multiselectable", "true");
+    this.bulkActions = element("div", "chosen-native__bulk-actions");
     this.empty = element("div", "chosen-native__empty");
-    this.popup.append(this.list, this.empty);
+    this.popup.append(this.bulkActions, this.list, this.empty);
     this.host.append(this.control, this.status, this.popup);
     select.after(this.host);
     select.classList.add("chosen-native__select");
@@ -553,6 +558,7 @@ var Chosen = class {
       minSearchLength: this.options.min_search_length || 0
     });
     this.available = result.items;
+    this.renderBulkActions();
     this.list.replaceChildren();
     let group = null;
     let groupIndex = -1;
@@ -602,6 +608,55 @@ var Chosen = class {
     }
     this.highlight(this.activeIndex);
     if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
+  }
+  renderBulkActions() {
+    this.bulkActions.replaceChildren();
+    if (!this.multiple) return;
+    const selectable = this.available.some((entry) => entry.kind === "option" && !entry.disabled && !this.nodes[entry.index]?.selected);
+    const deselectable = this.entries.some((entry) => entry.kind === "option" && !entry.disabled && this.nodes[entry.index]?.selected);
+    const add = (label, action) => {
+      const button = element("button", "chosen-native__bulk-action", label);
+      button.type = "button";
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.bulk(action);
+      });
+      this.bulkActions.append(button);
+    };
+    if (this.options.allow_select_all && selectable) add(this.options.select_all_text, "select");
+    if (this.options.allow_deselect_all && deselectable) add(this.options.deselect_all_text, "deselect");
+  }
+  bulk(action) {
+    if (!this.multiple || this.select.disabled || this.select.hasAttribute("readonly")) return;
+    if (!this.opened) this.renderResults();
+    let changed = false;
+    let limitReached = false;
+    if (action === "select" && this.options.allow_select_all) {
+      let count = Array.from(this.select.options).filter((option) => option.selected).length;
+      for (const entry of this.available) {
+        if (entry.kind !== "option" || entry.disabled) continue;
+        const option = this.nodes[entry.index];
+        if (!option || option.selected) continue;
+        if (this.options.max_selected_options != null && count >= this.options.max_selected_options) {
+          limitReached = true;
+          break;
+        }
+        option.selected = true;
+        count++;
+        changed = true;
+      }
+    } else if (action === "deselect" && this.options.allow_deselect_all) {
+      for (const entry of this.entries) {
+        if (entry.kind !== "option" || entry.disabled) continue;
+        const option = this.nodes[entry.index];
+        if (!option?.selected) continue;
+        option.selected = false;
+        changed = true;
+      }
+    }
+    if (changed) this.changed();
+    if (limitReached) emit(this.select, "chosen:maxselected", this);
+    this.input.focus();
   }
   highlight(index) {
     this.activeIndex = index;
@@ -681,6 +736,14 @@ var Chosen = class {
   keyDown(event) {
     if (event.isComposing || this.select.disabled) return;
     const key = event.key;
+    if (this.multiple && key.toLowerCase() === "a" && (event.metaKey || event.ctrlKey) && !event.altKey && !this.input.value) {
+      const action = event.shiftKey ? "deselect" : "select";
+      if (action === "select" && this.options.allow_select_all || action === "deselect" && this.options.allow_deselect_all) {
+        event.preventDefault();
+        this.bulk(action);
+        return;
+      }
+    }
     if (this.searchDisabled && this.opened && key.length === 1 && /\S/.test(key) && !event.altKey && !event.ctrlKey && !event.metaKey) {
       event.preventDefault();
       let query = this.typeahead + key;

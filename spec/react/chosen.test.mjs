@@ -120,6 +120,28 @@ test('React collapses selected chips with localized summary and keeps native val
   assert.deepEqual(new FormData(document.querySelector('form')).getAll('choices'), ['a', 'b', 'c']);
 });
 
+test('React bulk actions honor filtering, selection limits, and disabled values', () => {
+  const changes = [];
+  render(h('form', null, h(Chosen, { options: [
+    { value: 'locked', label: 'Locked', disabled: true },
+    { value: 'b', label: 'Beta' }, { value: 'c', label: 'Charlie' }, { value: 'd', label: 'Delta' }
+  ], multiple: true, defaultValue: ['locked'], name: 'choices', maxSelectedOptions: 2,
+  allowSelectAll: true, allowDeselectAll: true, selectAllText: 'Add all',
+  deselectAllText: 'Clear all', onChange: value => changes.push(value),
+  'aria-label': 'Choices' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.click(screen.getByRole('button', { name: 'Add all' }));
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('choices'), ['locked', 'b']);
+  assert.deepEqual(changes, [['locked', 'b']]);
+  fireEvent.keyDown(input, { key: 'A', ctrlKey: true, shiftKey: true });
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('choices'), ['locked']);
+  fireEvent.change(input, { target: { value: 'ch' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Add all' }));
+  assert.deepEqual(new FormData(document.querySelector('form')).getAll('choices'), ['locked', 'c']);
+  assert.equal(changes.length, 3);
+});
+
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',

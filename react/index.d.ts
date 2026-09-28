@@ -50,6 +50,10 @@ export interface ChosenProps {
   inheritOptionClasses?: boolean;
   maxSelectedOptions?: number;
   maxItemsShown?: number;
+  allowSelectAll?: boolean;
+  allowDeselectAll?: boolean;
+  selectAllText?: string;
+  deselectAllText?: string;
   moreItemsText?: (count: number) => string;
   showFewerItemsText?: string;
   backspaceDeletesChoices?: boolean;

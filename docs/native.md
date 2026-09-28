@@ -55,6 +55,10 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `min_search_length` | `0` | Wait until enough search text is entered. |
 | `max_selected_options` | unlimited | Limit multiple-select selection count. |
 | `max_items_shown` | unlimited | Show up to this many selected chips, then a button to reveal the rest. Selection and submitted values do not change. |
+| `allow_select_all` | `false` | Add enabled filtered results up to `max_selected_options`; Ctrl/Command+A works when search is empty. |
+| `allow_deselect_all` | `false` | Clear enabled selections, including ones outside the current filter; Ctrl/Command+Shift+A works when search is empty. |
+| `select_all_text` | “Select all” | Label for the bulk select action. |
+| `deselect_all_text` | “Deselect all” | Label for the bulk clear action. |
 | `more_items_text` | `count => "Show N more..."` | Localize the collapsed summary button. |
 | `show_fewer_items_text` | “Show fewer...” | Localize the expanded summary button. |
 | `backspace_deletes_choices` | `true` | Remove the final selected choice when Backspace is pressed in an empty multiple-select search field. |
