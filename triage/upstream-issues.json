@@ -1107,7 +1107,7 @@
   {
     "number": 2438,
     "status": "candidate",
-    "note": "Current phone presentation is an anchored dropdown, not a full-screen picker. A phone-sized WebKit/Chromium probe found a Prototype single-select tap bug, handled separately; the full-screen request remains a design candidate."
+    "note": "The current phone picker remains anchored. A physical iPhone showed focus zoom with the 14px search input; the touch-input font fix raises it to at least 16px. Full-screen presentation remains a separate design candidate."
   },
   {
     "number": 2397,

@@ -4,7 +4,7 @@
   <meta name="theme-color" content="#111827">
   <title>Chosen: A jQuery Plugin to Tame Unwieldy Select Boxes</title>
   <link rel="stylesheet" href="docsupport/prism.css">
-  <link rel="stylesheet" href="chosen.css?ver=3.0.4">
+  <link rel="stylesheet" href="chosen.css?ver=3.0.4-mobile">
   <link rel="stylesheet" href="docsupport/style.css?ver=3.0.4">
   <script src="docsupport/theme.js"></script>
   <style type="text/css" media="all">
@@ -452,6 +452,8 @@ $(".my-select").myChosen();</code></pre>
       <h2><a name="styling" class="anchor" href="#styling">Styling Chosen</a></h2>
       <p>Chosen's appearance is controlled with standard CSS. Load your overrides after <code>chosen.css</code> so they take precedence, and scope them to a wrapper, an inherited class, or one generated Chosen container when the change should not apply globally.</p>
       <p>A select with <code>id="my-select"</code> receives a Chosen container with <code>id="my_select_chosen"</code>. Chosen replaces punctuation in source IDs with underscores before adding the <code>_chosen</code> suffix. The <code>inherit_select_classes</code> option can also copy application classes from the original select to its Chosen container.</p>
+
+      <p>On touch devices, Chosen keeps its search inputs at least 16px so iPhone Safari does not zoom the page when they receive focus. Larger theme font sizes still apply, and users can still zoom the page normally.</p>
 
       <h3>Theme variables</h3>
       <p>Chosen accepts CSS custom properties on each <code>.chosen-container</code> or an ancestor. Override them on all Chosen controls, or use a wrapper or inherited class to scope a theme. The standalone stylesheet supplies fallback values, so no CSS framework is required.</p>

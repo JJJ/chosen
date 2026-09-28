@@ -598,6 +598,13 @@ select[aria-invalid=true] + .chosen-container:not(.chosen-disabled) .chosen-drop
 }
 
 /* @end */
+@media (any-pointer: coarse) {
+  .chosen-container-single .chosen-search input.chosen-search-input,
+  .chosen-container-multi .chosen-choices li.search-field input.chosen-search-input {
+    font-size: 16px;
+    font-size: max(16px, 1em);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .chosen-container .chosen-single,
   .chosen-container .chosen-choices {
