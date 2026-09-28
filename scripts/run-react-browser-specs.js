@@ -106,7 +106,11 @@ async function main() {
         throw new Error(`${name}: React fixed wider dropdown layout failed (${JSON.stringify(layout)})`);
       }
       await page.evaluate(() => { document.body.style.minHeight = '300vh'; window.scrollBy(0, 60); });
-      await page.waitForTimeout(30);
+      await page.waitForFunction(() => {
+        const bottom = document.querySelector('.chosen-react__control').getBoundingClientRect().bottom;
+        const top = document.querySelector('.chosen-react__popup').getBoundingClientRect().top;
+        return Math.abs(top - bottom) < 3;
+      }, null, { timeout: 1000 });
       const scrolled = await page.evaluate(() => ({
         bottom: document.querySelector('.chosen-react__control').getBoundingClientRect().bottom,
         top: document.querySelector('.chosen-react__popup').getBoundingClientRect().top

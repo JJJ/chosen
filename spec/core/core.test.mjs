@@ -85,6 +85,18 @@ test('custom matching and result caps preserve group structure and visibility ru
   assert.deepEqual(core.filterOptions(entries, '', { maxShownResults: 0 }).items, []);
 });
 
+test('pinned options remain in order beyond the result cap without becoming search matches', () => {
+  const entries = core.normalizeOptions([
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Albatross' },
+    { value: 'other', label: 'Other', alwaysVisible: true }
+  ]);
+  const result = core.filterOptions(entries, 'Al', { maxShownResults: 1 });
+  assert.deepEqual(result.items.map(item => item.label), ['Alpha', 'Other']);
+  assert.equal(result.items[1].pinnedOnly, true);
+  assert.equal(result.count, 1);
+  assert.equal(core.filterOptions(entries, 'Other', { maxShownResults: 0 }).exactMatch, true);
+});
+
 test('prefix preference is limited to visible enabled labels and built-in contains search', () => {
   const items = core.normalizeOptions([
     { value: 'react', label: 'React' },

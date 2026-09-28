@@ -131,13 +131,23 @@ async function check(name, engine) {
       throw new Error(`${name}: fixed wider dropdown layout failed (${JSON.stringify(seasonLayout)})`);
     }
     await page.evaluate(() => { document.body.style.minHeight = '300vh'; window.scrollBy(0, 60); });
-    await page.waitForTimeout(30);
+    await page.waitForFunction(() => {
+      const host = document.querySelector('#native-season').nextElementSibling;
+      const control = host.querySelector('.chosen-native__control').getBoundingClientRect();
+      const popup = host.querySelector('.chosen-native__popup').getBoundingClientRect();
+      return Math.min(Math.abs(popup.top - control.bottom), Math.abs(popup.bottom - control.top)) < 3;
+    }, null, { timeout: 1000 });
     const scrolledLayout = await page.evaluate(() => {
       const host = document.querySelector('#native-season').nextElementSibling;
       const control = host.querySelector('.chosen-native__control').getBoundingClientRect();
       const popup = host.querySelector('.chosen-native__popup').getBoundingClientRect();
+      const node = host.querySelector('.chosen-native__popup');
       return { controlBottom: control.bottom, controlTop: control.top,
-        popupTop: popup.top, popupBottom: popup.bottom };
+        popupTop: popup.top, popupBottom: popup.bottom,
+        styleTop: node.style.top, styleBottom: node.style.bottom,
+        offsetHeight: node.offsetHeight, marginTop: getComputedStyle(node).marginTop,
+        innerHeight: window.innerHeight, clientHeight: document.documentElement.clientHeight,
+        visualHeight: visualViewport.height };
     });
     if (Math.min(Math.abs(scrolledLayout.popupTop - scrolledLayout.controlBottom),
       Math.abs(scrolledLayout.popupBottom - scrolledLayout.controlTop)) > 3) {

@@ -278,6 +278,82 @@ test('creation callback can own the new native option and a selection limit prev
   dom.window.close();
 });
 
+test('always-visible options are not bulk matches and a group label selects available members', () => {
+  const { dom, select } = fixture('<select multiple select-by-group><optgroup label="Team"><option value="a">Alpha</option><option value="b" disabled>Beta</option><option value="c">Charlie</option></optgroup><option value="other" data-chosen-always-visible>Other</option></select>');
+  const chosen = new Chosen(select, { allow_select_all: true, max_selected_options: 2,
+    max_shown_results: 1, hide_results_on_select: false });
+  chosen.input.value = 'zzz';
+  chosen.open();
+  assert.deepEqual(chosen.available.map(item => item.label), ['Other']);
+  assert.equal(chosen.bulkActions.textContent, '');
+  chosen.input.value = '';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  click(chosen.list.querySelector('.chosen-native__group-label--selectable'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  chosen.options.max_shown_results = 3;
+  chosen.update();
+  chosen.highlight(0);
+  key(chosen.input, 'Enter');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'c']);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('an unmatched pinned option does not take Enter from the creation row', () => {
+  const { dom, select } = fixture('<select multiple><option value="other" data-chosen-always-visible>Other</option></select>');
+  const chosen = new Chosen(select, { create_option: true, skip_no_results: true });
+  chosen.open();
+  chosen.input.value = 'New skill';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.activeIndex, chosen.createIndex);
+  key(chosen.input, 'Enter');
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['New skill']);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('select data options use strict parsing and explicit options take precedence', () => {
+  const { dom, select } = fixture('<select data-disable-search="true" data-max-selected-options="2" data-width="false" data-search-input-type="text" data-unknown-option="yes"><option value="a">Alpha</option><option value="b">Beta</option></select>');
+  const chosen = new Chosen(select, { disable_search: false });
+  assert.equal(chosen.options.disable_search, false);
+  assert.equal(chosen.options.max_selected_options, 2);
+  assert.equal(chosen.options.width, false);
+  assert.equal(chosen.input.type, 'text');
+  assert.equal(chosen.options.unknown_option, undefined);
+  chosen.destroy();
+  select.setAttribute('data-disable-search', 'maybe');
+  select.setAttribute('data-max-selected-options', '-1');
+  const again = new Chosen(select);
+  assert.equal(again.options.disable_search, false);
+  assert.equal(again.options.max_selected_options, undefined);
+  again.destroy();
+  dom.window.close();
+});
+
+test('source ARIA and native lifecycle events reach the generated input', () => {
+  const { dom, select } = fixture('<label id="label" for="project">Project</label><span id="hint">Help</span><select id="project" aria-labelledby="label" aria-describedby="hint" aria-invalid="true"><option value="a">Alpha</option><option value="b">Beta</option></select>');
+  const events = [];
+  const chosen = new Chosen(select);
+  for (const name of ['chosen:search', 'chosen:search_updated']) {
+    select.addEventListener(name, event => events.push([name, event.detail.search_term]));
+  }
+  assert.equal(chosen.input.getAttribute('aria-labelledby'), 'label');
+  assert.equal(chosen.input.getAttribute('aria-describedby'), `hint ${chosen.status.id}`);
+  assert.equal(chosen.input.getAttribute('aria-invalid'), 'true');
+  select.dispatchEvent(new dom.window.Event('chosen:open'));
+  assert.equal(chosen.opened, true);
+  chosen.input.value = 'Bet';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.deepEqual(events, [['chosen:search', 'Bet'], ['chosen:search_updated', 'Bet']]);
+  select.dispatchEvent(new dom.window.Event('chosen:close'));
+  assert.equal(chosen.opened, false);
+  select.removeAttribute('aria-invalid');
+  chosen.update();
+  assert.equal(chosen.input.hasAttribute('aria-invalid'), false);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

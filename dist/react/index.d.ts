@@ -7,6 +7,7 @@ export interface ChosenOption {
   disabled?: boolean;
   hidden?: boolean;
   searchText?: string;
+  alwaysVisible?: boolean;
   className?: string;
   dataAttributes?: Record<string, string>;
 }
@@ -36,6 +37,13 @@ export interface ChosenProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onReady?: () => void;
+  onShowingDropdown?: () => void;
+  onHidingDropdown?: () => void;
+  onSearch?: (query: string) => void;
+  onSearchUpdated?: (query: string) => void;
+  onNoResults?: (query: string) => void;
+  onMaxSelected?: () => void;
   name?: string;
   form?: string;
   required?: boolean;
@@ -59,6 +67,7 @@ export interface ChosenProps {
   maxItemsShown?: number;
   allowSelectAll?: boolean;
   allowDeselectAll?: boolean;
+  selectByGroup?: boolean;
   pasteMultipleValues?: boolean;
   searchDelay?: number;
   selectAllText?: string;

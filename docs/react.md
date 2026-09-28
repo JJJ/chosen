@@ -77,8 +77,12 @@ Set `className` on option or group data to style result rows; set
 `dataAttributes` on an option and enable `copyOptionDataAttributes` to add its
 safe `data-*` keys to the result row. This is React's equivalent of classic
 `parser_config: {copy_data_attributes: true}`; it does not parse a source select.
-Set
-`groupSearch={false}` to search only option labels, or
+Set `alwaysVisible: true` on an option such as “Other” to keep it visible during
+search and beyond `maxShownResults`; it remains in option order and Select all
+skips it unless it matches. Set `selectByGroup` on a multiple control to make
+group headings actionable listbox rows that select their currently visible
+enabled members. Arrow keys and Enter work as well as pointer input.
+Set `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without
 removing them from the underlying native select. When selected results are
@@ -124,6 +128,12 @@ percentages use the control width. `dropdownPosition="fixed"` keeps it outside
 clipped scrolling ancestors and updates its position on scroll and resize.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
+
+For integration callbacks, use `onReady`, `onShowingDropdown`,
+`onHidingDropdown`, `onSearch(query)`, `onSearchUpdated(query)`,
+`onNoResults(query)`, and `onMaxSelected()`. `onOpenChange(open)` reports a
+requested popup state change, and `onChange(value, event)` reports selection.
+These are React callbacks; they do not dispatch jQuery events.
 
 ## Forms and accessibility
 

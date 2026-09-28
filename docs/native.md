@@ -15,6 +15,8 @@ const chosen = new Chosen(select, {
 
 For a plain browser script, load `dist/native/chosen.css` and `dist/native/chosen.native.js`, then call `new ChosenNative.Chosen(select, options)`.
 
+Supported scalar options can be set as `data-*` attributes on the select, such as `data-disable-search-threshold="5"` or `data-width="false"`. Boolean values must be exactly `true` or `false`; integer values must be nonnegative safe whole numbers. Unknown and invalid attributes are ignored. Explicit JavaScript options take precedence. Callbacks and object options still require JavaScript.
+
 The original select remains in the form. Chosen changes its option selection and dispatches bubbling native `input` and `change` events after user changes. Call `chosen.update()` after editing its options or state; a native `select.dispatchEvent(new Event('chosen:updated'))` works too. The adapter listens for native events. jQuery's `.trigger('chosen:updated')` does not dispatch a native DOM event.
 
 Selected results remain visible by default. Set `deselect_selected_results: true` to remove a selected multiple result by click or Enter; its × mark indicates this action. Otherwise selected rows have a check mark and are not actionable. Grouped options are indented under their headings. Set `display_selected_options: false` to hide selected results instead.
@@ -81,10 +83,10 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `recalculate_width_on_update` | `false` | Remeasure the source select on `update()` unless `width` is explicit or `false`. |
 | `dropdown_position` | `absolute` | Use `fixed` to escape a clipped scrolling ancestor and track scroll or resize. |
 
-The native edition also reads `data-search-text` on individual options. It does not yet implement the classic `data-*` initialization option parser. The generated `chosen-native__*` markup and CSS selectors are experimental.
+The native edition reads `data-search-text` and `data-chosen-always-visible` on individual options. An always-visible option remains in native order during search, even after the visible result limit, but Select all excludes it unless it matches. Add `select-by-group` to a multiple select to make optgroup headings select their currently visible, enabled members. Arrow keys reach a heading and Enter activates it. The generated `chosen-native__*` markup and CSS selectors are experimental. Selectable group headings use the `chosen-native__group-label--selectable` class and listbox option role.
 
 ## Events and forms
 
-Listen on the original select. Lifecycle events are native `CustomEvent`s with `event.detail.chosen` pointing to the instance: `chosen:ready`, `chosen:showing_dropdown`, `chosen:hiding_dropdown`, `chosen:no_results`, and `chosen:maxselected`. Native `input` and `change` are ordinary bubbling `Event`s. `chosen:no_results` also includes `event.detail.search_term`.
+Listen on the original select. Lifecycle events are native `CustomEvent`s with `event.detail.chosen` pointing to the instance: `chosen:ready`, `chosen:showing_dropdown`, `chosen:hiding_dropdown`, `chosen:search`, `chosen:search_updated`, `chosen:no_results`, and `chosen:maxselected`. Search events include `event.detail.search_term`. Native `input` and `change` are ordinary bubbling `Event`s. Dispatch native `chosen:activate`, `chosen:open`, `chosen:close`, or `chosen:updated` events on the select to control its instance.
 
-The adapter follows external native `change` events, native form reset, the select's `disabled` and `readonly` states on `update()`, and native constraint validation. The generated input provides the visible focus target. The select's actual options and selected values remain authoritative.
+The adapter follows external native `change` events, native form reset, the select's `disabled` and `readonly` states on `update()`, applicable source ARIA attributes, and native constraint validation. The generated input provides the visible focus target. The select's actual options and selected values remain authoritative.

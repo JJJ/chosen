@@ -49,7 +49,7 @@
         <section class="native-demo-field">
           <h2>Multiple select and groups</h2>
           <label for="native-skills">Skills</label>
-          <select id="native-skills" name="skills" multiple data-create_option_text="Add skill:">
+          <select id="native-skills" name="skills" multiple select-by-group data-create_option_text="Add skill:">
             <optgroup label="Design">
               <option value="research" data-discipline="design">Research</option>
               <option value="prototyping">Prototyping</option>
@@ -60,20 +60,21 @@
               <option value="accessibility">Accessibility</option>
               <option value="testing">Testing</option>
             </optgroup>
+            <option value="other" data-chosen-always-visible>Other</option>
           </select>
-          <p>Search the groups and select up to three items, paste “Research, Testing”, or type a new skill and choose “Add skill”. The selected chips show group names and option values, while the dropdown keeps option labels. Click a selected result or press Enter on it to remove it; Backspace removes the last chip. This example also selects the highlighted result with Tab, then moves focus onward.</p>
+          <p>Search the groups, click a group heading to select its available skills, or type a new skill and choose “Add skill”. “Other” remains visible during search. Select up to three items or paste “Research, Testing”. Click a selected result or press Enter on it to remove it; Backspace removes the last chip. This example also selects the highlighted result with Tab, then moves focus onward.</p>
         </section>
         <section class="native-demo-field">
           <h2>Search-free single select</h2>
           <label for="native-season">Season</label>
-          <select id="native-season" name="season" data-placeholder="Choose a season">
+          <select id="native-season" name="season" data-placeholder="Choose a season" data-disable-search-threshold="5">
             <option value=""></option>
             <option value="spring">Spring</option>
             <option value="summer">Summer</option>
             <option value="autumn">Autumn</option>
             <option value="winter">Winter</option>
           </select>
-          <p>Open the wider floating list and type “w” to highlight Winter. This example uses a 12rem control, an independently sized fixed dropdown, and <code>disable_search_threshold: 5</code>.</p>
+          <p>Open the wider floating list and type “w” to highlight Winter. This example uses a 12rem control, an independently sized fixed dropdown, and <code>data-disable-search-threshold="5"</code> on the original select.</p>
         </section>
         <div class="native-demo-actions">
           <button type="reset">Reset form</button>

@@ -185,6 +185,10 @@
 .chosen-react--floating .chosen-react__popup {
   border-radius: var(--chosen-border-radius, 4px);
 }
+.chosen-react--floating .chosen-react__popup--above {
+  margin-top: 0;
+  margin-bottom: var(--chosen-dropdown-offset, .125rem);
+}
 
 .chosen-react__list {
   max-height: var(--chosen-results-max-height, 15rem);
@@ -205,6 +209,8 @@
   color: var(--chosen-group-color, #666);
   font-weight: 600;
 }
+.chosen-react__group--selectable { display: block; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer; }
+.chosen-react__group--selectable:hover { background: var(--chosen-selected-background, #eef4ff); }
 
 .chosen-react__option {
   cursor: pointer;

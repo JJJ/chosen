@@ -122,6 +122,7 @@ function normalizeOptions(entries) {
       label,
       empty: value === "" && label === "",
       searchText: asText(source.searchText),
+      alwaysVisible: !!source.alwaysVisible,
       dataAttributes: optionDataAttributes(source.dataAttributes),
       className: asText(source.className),
       selected: !!source.selected,
@@ -347,15 +348,24 @@ function filterOptions(entries, query, settings) {
     }
     if (!includeOptionInResults(item, config)) continue;
     var result = customMatcher ? { matched: !!customMatcher(text, item), exact: item.label === text } : matcher(item);
-    if (!result.matched && !groupMatches) continue;
-    if (count >= maximum) break;
+    var matched = result.matched || groupMatches;
+    var pinnedOnly = !!(text.length && item.alwaysVisible && !matched);
+    if (!matched && !pinnedOnly) continue;
+    if (matched) exactMatch = exactMatch || result.exact;
+    if (count >= maximum && !pinnedOnly) continue;
     if (group && !groupIncluded) {
       items.push(group);
       groupIncluded = true;
     }
-    items.push(item);
-    count += 1;
-    exactMatch = exactMatch || result.exact;
+    if (pinnedOnly) {
+      var pinnedItem = {};
+      for (var key in item) {
+        if (Object.prototype.hasOwnProperty.call(item, key)) pinnedItem[key] = item[key];
+      }
+      pinnedItem.pinnedOnly = true;
+      items.push(pinnedItem);
+    } else items.push(item);
+    if (!pinnedOnly) count += 1;
   }
   return { items, count, exactMatch };
 }

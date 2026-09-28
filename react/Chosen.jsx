@@ -13,7 +13,8 @@ function valueFor(values, multiple) {
 }
 
 function firstEnabled(items, canAct) {
-  return items.findIndex(item => (item.kind === 'option' || item.kind === 'create') && canAct(item));
+  const firstOption = items.findIndex(item => item.kind === 'option' && canAct(item));
+  return firstOption >= 0 ? firstOption : items.findIndex(item => canAct(item));
 }
 
 function withCreation(result, query, enabled, persistent) {
@@ -26,6 +27,8 @@ export const Chosen = forwardRef(function Chosen({
   options = [], multiple = false, value, defaultValue, onChange,
   openOnLabelClick = multiple,
   open: controlledOpen, defaultOpen = false, onOpenChange,
+  onReady, onShowingDropdown, onHidingDropdown,
+  onSearch, onSearchUpdated, onNoResults, onMaxSelected,
   name, form, required = false, disabled = false, readOnly = false,
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
@@ -48,6 +51,7 @@ export const Chosen = forwardRef(function Chosen({
   deselectSelectedResults = false, hideResultsOnSelect = true,
   maxItemsShown = Infinity,
   allowSelectAll = false, allowDeselectAll = false,
+  selectByGroup = false,
   pasteMultipleValues = false,
   searchDelay = 0,
   selectAllText = 'Select all', deselectAllText = 'Deselect all',
@@ -73,6 +77,10 @@ export const Chosen = forwardRef(function Chosen({
   const typeaheadTimer = useRef(null);
   const composing = useRef(false);
   const searchTimer = useRef(null);
+  const readySent = useRef(false);
+  const lastOpen = useRef(false);
+  const lastUpdatedQuery = useRef('');
+  const lastNoResultsQuery = useRef(null);
   const [internalValues, setInternalValues] = useState(() => valuesOf(defaultValue, multiple));
   const [createdOptions, setCreatedOptions] = useState([]);
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
@@ -107,17 +115,21 @@ export const Chosen = forwardRef(function Chosen({
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
   const available = withCreation(results, appliedQuery, createOption, persistentCreateOption);
-  const canActOnResult = item => item.kind === 'create' || (!item.disabled &&
+  const canActOnResult = item => item.kind === 'create' ||
+    (item.kind === 'group' && multiple && selectByGroup && !item.disabled) ||
+    (item.kind === 'option' && !item.disabled &&
     (!multiple || !selectedSet.has(item.value) || deselectSelectedResults));
   const preferred = preferredPrefixIndex(available, appliedQuery, {
     highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
   });
-  const active = activeIndex >= 0 && ['option', 'create'].includes(available[activeIndex]?.kind)
+  const unmatchedCreation = results.count === 0 ? available.findIndex(item => item.kind === 'create') : -1;
+  const active = activeIndex >= 0 && available[activeIndex]
     && canActOnResult(available[activeIndex]) ? activeIndex :
-      (preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
+      (unmatchedCreation >= 0 ? unmatchedCreation :
+        preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
   const activeOption = active >= 0 ? available[active] : null;
   const selectedOptions = entries.filter(item => item.kind === 'option' && selectedSet.has(item.value));
-  const canBulkSelect = multiple && available.some(item => item.kind === 'option' &&
+  const canBulkSelect = multiple && available.some(item => item.kind === 'option' && !item.pinnedOnly &&
     !item.disabled && !selectedSet.has(item.value));
   const canBulkDeselect = multiple && selectedOptions.some(item => !item.disabled);
   const itemLimit = Number.isInteger(maxItemsShown) && maxItemsShown > 0 ? maxItemsShown : Infinity;
@@ -153,15 +165,17 @@ export const Chosen = forwardRef(function Chosen({
     if (value === undefined) setInternalValues(next);
     onChange?.(valueFor(next, multiple), event);
   }, [multiple, onChange, value]);
+  const reportLimit = () => { setLimitNotice(true); onMaxSelected?.(); };
 
   const choose = (option, event) => {
     if (option.kind === 'create') { createNew(option.label, event); return; }
+    if (option.kind === 'group') { chooseGroup(option.index, event); return; }
     if (!canActOnResult(option)) return;
     const next = updateSelection(selectedValues, option, {
       multiple, maxSelectedOptions, disabled, readOnly,
       action: multiple && selectedSet.has(option.value) ? 'remove' : 'select'
     });
-    if (next.limitReached) setLimitNotice(true);
+    if (next.limitReached) reportLimit();
     if (!next.changed) return;
     setLimitNotice(false);
     setPendingBackstrokeValue(null);
@@ -178,7 +192,7 @@ export const Chosen = forwardRef(function Chosen({
   const createNew = (queryText, event) => {
     if (!createOption || disabled || readOnly) return;
     if (multiple && maxSelectedOptions != null && selectedValues.length >= maxSelectedOptions) {
-      setLimitNotice(true);
+      reportLimit();
       return;
     }
     const response = onCreateOption?.(queryText, event);
@@ -211,7 +225,7 @@ export const Chosen = forwardRef(function Chosen({
     let limitReached = false;
     if (action === 'select' && allowSelectAll) {
       for (const item of available) {
-        if (item.kind !== 'option' || item.disabled || next.includes(item.value)) continue;
+        if (item.kind !== 'option' || item.pinnedOnly || item.disabled || next.includes(item.value)) continue;
         if (maxSelectedOptions != null && next.length >= maxSelectedOptions) {
           limitReached = true;
           break;
@@ -223,8 +237,28 @@ export const Chosen = forwardRef(function Chosen({
       next = next.filter(item => !enabled.has(item));
     }
     if (next.length !== selectedValues.length) commit(next, event);
-    if (limitReached) setLimitNotice(true);
+    if (limitReached) reportLimit();
     else setLimitNotice(false);
+    inputRef.current?.focus();
+  };
+
+  const chooseGroup = (groupIndex, event) => {
+    if (!multiple || !selectByGroup || disabled || readOnly) return;
+    const next = [...selectedValues];
+    let limitReached = false;
+    for (const item of available) {
+      if (item.kind !== 'option' || item.groupIndex !== groupIndex || item.disabled ||
+        item.pinnedOnly || next.includes(item.value)) continue;
+      if (maxSelectedOptions != null && next.length >= maxSelectedOptions) {
+        limitReached = true;
+        break;
+      }
+      next.push(item.value);
+    }
+    if (next.length !== selectedValues.length) commit(next, event);
+    if (limitReached) reportLimit();
+    else setLimitNotice(false);
+    if (next.length !== selectedValues.length && hideResultsOnSelect) changeOpen(false);
     inputRef.current?.focus();
   };
 
@@ -239,7 +273,7 @@ export const Chosen = forwardRef(function Chosen({
     if (!result.handled) return;
     event.preventDefault();
     if (result.changed) commit(result.values, event);
-    if (result.limitReached) setLimitNotice(true);
+    if (result.limitReached) reportLimit();
     clearTimeout(searchTimer.current);
     searchTimer.current = null;
     setQuery(result.remaining);
@@ -249,6 +283,7 @@ export const Chosen = forwardRef(function Chosen({
   };
 
   const queueSearch = text => {
+    onSearch?.(text);
     clearTimeout(searchTimer.current);
     const delay = Math.max(0, parseInt(searchDelay, 10) || 0);
     if (delay) {
@@ -273,6 +308,32 @@ export const Chosen = forwardRef(function Chosen({
   useEffect(() => {
     return () => { clearTimeout(typeaheadTimer.current); clearTimeout(searchTimer.current); };
   }, []);
+
+  useEffect(() => {
+    if (!readySent.current) { readySent.current = true; onReady?.(); }
+  }, [onReady]);
+
+  useEffect(() => {
+    if (lastOpen.current === isOpen) return;
+    lastOpen.current = isOpen;
+    if (isOpen) onShowingDropdown?.();
+    else onHidingDropdown?.();
+  }, [isOpen, onShowingDropdown, onHidingDropdown]);
+
+  useEffect(() => {
+    if (lastUpdatedQuery.current === appliedQuery) return;
+    lastUpdatedQuery.current = appliedQuery;
+    onSearchUpdated?.(appliedQuery);
+  }, [appliedQuery, onSearchUpdated]);
+
+  useEffect(() => {
+    if (!isOpen || !appliedQuery || results.count) {
+      lastNoResultsQuery.current = null;
+    } else if (lastNoResultsQuery.current !== appliedQuery) {
+      lastNoResultsQuery.current = appliedQuery;
+      onNoResults?.(appliedQuery);
+    }
+  }, [isOpen, appliedQuery, results.count, onNoResults]);
 
   useEffect(() => {
     const control = selectRef.current;
@@ -359,30 +420,43 @@ export const Chosen = forwardRef(function Chosen({
       const above = rect.bottom + popup.offsetHeight > window.innerHeight &&
         rect.top >= popup.offsetHeight;
       popup.style.position = 'fixed';
-      popup.style.top = `${above ? rect.top - popup.offsetHeight : rect.bottom}px`;
+      popup.style.top = above ? 'auto' : `${rect.bottom}px`;
       popup.style.left = rtl ? 'auto' : `${rect.left}px`;
       popup.style.right = rtl ? `${window.innerWidth - rect.right}px` : 'auto';
       popup.style.insetInlineEnd = 'auto';
-      popup.style.bottom = 'auto';
+      popup.style.bottom = above ? `${window.innerHeight - rect.top}px` : 'auto';
       popup.classList.toggle('chosen-react__popup--above', above);
       popup.style.width = dropdownWidth == null ? `${rect.width}px` :
         (typeof dropdownWidth === 'string' && dropdownWidth.trim().endsWith('%')
           ? `${rect.width * parseFloat(dropdownWidth) / 100}px`
           : (typeof dropdownWidth === 'number' ? `${dropdownWidth}px` : String(dropdownWidth)));
     };
-    position();
-    document.addEventListener('scroll', position, true);
-    window.addEventListener('scroll', position, true);
-    window.addEventListener('resize', position);
-    return () => {
-      document.removeEventListener('scroll', position, true);
-      window.removeEventListener('scroll', position, true);
-      window.removeEventListener('resize', position);
+    let frame = null;
+    let remaining = 0;
+    const settle = () => {
+      frame = null;
+      position();
+      if (--remaining > 0) frame = window.requestAnimationFrame(settle);
     };
-  }, [isOpen, dropdownPosition, dropdownWidth, dir, width, style]);
+    const reposition = () => {
+      position();
+      remaining = 8;
+      if (!frame) frame = window.requestAnimationFrame(settle);
+    };
+    position();
+    document.addEventListener('scroll', reposition, true);
+    window.addEventListener('scroll', reposition, true);
+    window.addEventListener('resize', reposition);
+    return () => {
+      document.removeEventListener('scroll', reposition, true);
+      window.removeEventListener('scroll', reposition, true);
+      window.removeEventListener('resize', reposition);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [isOpen, dropdownPosition, dropdownWidth, dir, width, style, available.length]);
 
   const move = (direction, fromEnd = false, items = available, currentIndex = activeIndex) => {
-    const enabled = items.map((item, index) => (item.kind === 'option' || item.kind === 'create') && canActOnResult(item) ? index : -1)
+    const enabled = items.map((item, index) => canActOnResult(item) ? index : -1)
       .filter(index => index >= 0);
     if (!enabled.length) return;
     const current = enabled.indexOf(currentIndex);
@@ -410,8 +484,11 @@ export const Chosen = forwardRef(function Chosen({
     const freshPreferred = freshItems ? preferredPrefixIndex(freshItems, query, {
       highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
     }) : -1;
-    const currentActive = freshItems ? (freshPreferred >= 0 && canActOnResult(freshItems[freshPreferred])
-      ? freshPreferred : firstEnabled(freshItems, canActOnResult)) : active;
+    const freshCreation = freshItems && getResults(query).count === 0
+      ? freshItems.findIndex(item => item.kind === 'create') : -1;
+    const currentActive = freshItems ? (freshCreation >= 0 ? freshCreation :
+      freshPreferred >= 0 && canActOnResult(freshItems[freshPreferred])
+        ? freshPreferred : firstEnabled(freshItems, canActOnResult)) : active;
     const currentOption = currentActive >= 0 ? currentItems[currentActive] : null;
     if (multiple && event.key.toLowerCase() === 'a' && (event.metaKey || event.ctrlKey) &&
       !event.altKey && !query) {
@@ -484,7 +561,7 @@ export const Chosen = forwardRef(function Chosen({
     placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
   const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
   const status = limitNotice ? `Maximum of ${maxSelectedOptions} selections reached.` :
-    isOpen ? String(resultsCountText(results.count)) :
+    isOpen ? String(resultsCountText(available.filter(item => item.kind === 'option' || item.kind === 'create').length)) :
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');
 
   const renderOption = (item, position) => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
@@ -500,21 +577,33 @@ export const Chosen = forwardRef(function Chosen({
     onClick={event => createNew(item.label, event)}>{createOptionText} {item.label}</div>;
   const renderedResults = [];
   let currentGroup = null;
+  let currentGroupPosition = -1;
   let groupOptions = [];
   const flushGroup = () => {
     if (!currentGroup) return;
-    const labelId = `${baseId}-group-${currentGroup.index}`;
-    renderedResults.push(<div key={currentGroup.index} role="group" aria-labelledby={labelId}>
-      <div id={labelId} className={`chosen-react__group${currentGroup.className ? ` ${currentGroup.className}` : ''}`} role="presentation">{currentGroup.label}</div>
+    const groupEntry = currentGroup;
+    const groupPosition = currentGroupPosition;
+    const labelId = `${baseId}-group-${groupEntry.index}`;
+    renderedResults.push(<div key={groupEntry.index} role="group"
+      aria-labelledby={selectByGroup && multiple ? undefined : labelId}
+      aria-label={selectByGroup && multiple ? groupEntry.label : undefined}>
+      {selectByGroup && multiple ?
+        <div id={`${baseId}-option-${groupEntry.index}`} role="option" aria-selected="false"
+          className={`chosen-react__group chosen-react__group--selectable${activeOption?.index === groupEntry.index ? ' chosen-react__option--active' : ''}${groupEntry.className ? ` ${groupEntry.className}` : ''}`}
+          onMouseEnter={() => setActiveIndex(groupPosition)} onMouseDown={event => event.preventDefault()}
+          onClick={event => chooseGroup(groupEntry.index, event)}>{groupEntry.label}</div> :
+        <div id={labelId} className={`chosen-react__group${groupEntry.className ? ` ${groupEntry.className}` : ''}`} role="presentation">{groupEntry.label}</div>}
       {groupOptions}
     </div>);
     currentGroup = null;
+    currentGroupPosition = -1;
     groupOptions = [];
   };
   for (const [position, item] of available.entries()) {
     if (item.kind === 'group') {
       flushGroup();
       currentGroup = item;
+      currentGroupPosition = position;
     } else if (item.kind === 'create') {
       flushGroup();
       renderedResults.push(renderCreate(item, position));

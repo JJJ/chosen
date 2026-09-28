@@ -2,6 +2,29 @@ import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedCho
 
 let nextId = 0;
 const instances = new WeakMap();
+const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
+const integerDataOptions = new Set('disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results'.split(' '));
+const stringDataOptions = new Set('select_all_text deselect_all_text show_fewer_items_text no_results_text create_option_text placeholder_text placeholder_text_single placeholder_text_multiple'.split(' '));
+
+function selectDataOptions(select) {
+  const parsed = {};
+  for (const attribute of select.attributes) {
+    if (!attribute.name.startsWith('data-')) continue;
+    const key = attribute.name.slice(5).replaceAll('-', '_');
+    if (attribute.name !== `data-${key.replaceAll('_', '-')}`) continue;
+    const value = attribute.value;
+    if (booleanDataOptions.has(key)) {
+      if (value === 'true' || value === 'false') parsed[key] = value === 'true';
+    } else if (integerDataOptions.has(key)) {
+      if (/^[0-9]+$/.test(value) && Number.isSafeInteger(Number(value))) parsed[key] = Number(value);
+    } else if (stringDataOptions.has(key)) parsed[key] = value;
+    else if (key === 'width' && value) parsed[key] = value === 'false' ? false : value;
+    else if (key === 'dropdown_width' && value) parsed[key] = value;
+    else if (key === 'search_input_type' && ['search', 'text'].includes(value)) parsed[key] = value;
+    else if (key === 'dropdown_position' && ['absolute', 'fixed'].includes(value)) parsed[key] = value;
+  }
+  return parsed;
+}
 
 function optionTree(select, copyDataAttributes = false) {
   const entries = [];
@@ -17,6 +40,7 @@ function optionTree(select, copyDataAttributes = false) {
           selected: option.selected, disabled: option.disabled, hidden: option.hidden,
           className: option.className,
           dataAttributes: dataAttributes(option),
+          alwaysVisible: option.hasAttribute('data-chosen-always-visible'),
           searchText: option.getAttribute('data-search-text') || '' })) });
       nodes.push(null, ...child.children);
     } else if (child.tagName === 'OPTION') {
@@ -24,6 +48,7 @@ function optionTree(select, copyDataAttributes = false) {
         disabled: child.disabled, hidden: child.hidden,
         className: child.className,
         dataAttributes: dataAttributes(child),
+        alwaysVisible: child.hasAttribute('data-chosen-always-visible'),
         searchText: child.getAttribute('data-search-text') || '' });
       nodes.push(child);
     }
@@ -76,7 +101,7 @@ export class Chosen {
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
       no_results_text: 'No results for:',
       results_count_text: count => `${count} result${count === 1 ? '' : 's'} available`,
-      allow_single_deselect: false, ...options };
+      allow_single_deselect: false, ...selectDataOptions(select), ...options };
     if (this.options.open_on_label_click == null) this.options.open_on_label_click = select.multiple;
     this.id = `${select.id || `chosen-native-${++nextId}`}-native`;
     this.multiple = select.multiple;
@@ -97,6 +122,7 @@ export class Chosen {
     this.hadSelectClass = select.classList.contains('chosen-native__select');
     this.form = select.form;
     this.boundLabels = new Set();
+    this.copiedAriaAttributes = new Set();
     this.onLabelClick = event => {
       if (event.target.closest?.('a, button, input, select, textarea')) return;
       event.preventDefault();
@@ -105,6 +131,9 @@ export class Chosen {
     };
     this.onNativeChange = () => this.update();
     this.onUpdate = () => this.update();
+    this.onActivate = () => this.focus();
+    this.onOpen = () => { this.focus(); this.open(); };
+    this.onClose = () => this.close();
     this.onReset = () => setTimeout(() => { if (!this.destroyed) { this.close(); this.update(); } }, 0);
     this.onInvalid = () => this.input.focus();
     this.onOutsidePointer = event => {
@@ -112,7 +141,18 @@ export class Chosen {
       if (Array.from(this.select.labels || []).some(label => label.contains(event.target))) return;
       this.close();
     };
-    this.onReposition = () => this.positionDropdown();
+    this.onReposition = () => {
+      this.positionDropdown();
+      this.repositionFrames = 8;
+      if (this.repositionFrame || !window.requestAnimationFrame) return;
+      const settle = () => {
+        this.repositionFrame = null;
+        if (!this.opened || this.options.dropdown_position !== 'fixed') return;
+        this.positionDropdown();
+        if (--this.repositionFrames > 0) this.repositionFrame = window.requestAnimationFrame(settle);
+      };
+      this.repositionFrame = window.requestAnimationFrame(settle);
+    };
     this.onKeyDown = event => this.keyDown(event);
     this.onInput = () => { if (!this.composing) this.queueSearch(); };
     this.onControlPointer = event => {
@@ -177,6 +217,9 @@ export class Chosen {
     this.control.addEventListener('pointerdown', this.onControlPointer);
     select.addEventListener('change', this.onNativeChange);
     select.addEventListener('chosen:updated', this.onUpdate);
+    select.addEventListener('chosen:activate', this.onActivate);
+    select.addEventListener('chosen:open', this.onOpen);
+    select.addEventListener('chosen:close', this.onClose);
     select.addEventListener('invalid', this.onInvalid);
     select.addEventListener('focus', this.onInvalid);
     this.form?.addEventListener('reset', this.onReset);
@@ -216,7 +259,22 @@ export class Chosen {
     this.input.readOnly = this.select.hasAttribute('readonly') || this.searchDisabled;
     this.input.setAttribute('aria-autocomplete', this.searchDisabled ? 'none' : 'list');
     this.host.classList.toggle('chosen-native--no-search', this.searchDisabled);
-    this.input.setAttribute('aria-required', String(this.select.required));
+    for (const name of this.copiedAriaAttributes) this.input.removeAttribute(name);
+    this.copiedAriaAttributes.clear();
+    const managedAria = new Set(['aria-hidden', 'aria-controls', 'aria-expanded', 'aria-haspopup',
+      'aria-autocomplete', 'aria-activedescendant', 'aria-describedby', 'aria-label', 'aria-required',
+      'aria-multiselectable', 'aria-selected']);
+    for (const attribute of this.select.attributes) {
+      if (!attribute.name.startsWith('aria-') || managedAria.has(attribute.name)) continue;
+      this.input.setAttribute(attribute.name, attribute.value);
+      this.copiedAriaAttributes.add(attribute.name);
+    }
+    this.input.setAttribute('aria-required', this.select.getAttribute('aria-required') ?? String(this.select.required));
+    this.input.setAttribute('aria-label', this.options.aria_label ||
+      this.select.getAttribute('aria-label') ||
+      Array.from(this.select.labels || []).map(label => label.textContent.trim()).join(' ') || 'Choose an option');
+    this.input.setAttribute('aria-describedby', [this.select.getAttribute('aria-describedby'), this.status.id]
+      .filter(Boolean).join(' '));
     this.host.classList.toggle('chosen-native--disabled', this.select.disabled);
     this.updateWidth();
     if (this.select.disabled) this.close();
@@ -282,11 +340,11 @@ export class Chosen {
     const above = rect.bottom + this.popup.offsetHeight > window.innerHeight &&
       rect.top >= this.popup.offsetHeight;
     this.popup.style.position = 'fixed';
-    this.popup.style.top = `${above ? rect.top - this.popup.offsetHeight : rect.bottom}px`;
+    this.popup.style.top = above ? 'auto' : `${rect.bottom}px`;
     this.popup.style.left = rtl ? 'auto' : `${rect.left}px`;
     this.popup.style.right = rtl ? `${window.innerWidth - rect.right}px` : 'auto';
     this.popup.style.insetInlineEnd = 'auto';
-    this.popup.style.bottom = 'auto';
+    this.popup.style.bottom = above ? `${window.innerHeight - rect.top}px` : 'auto';
     this.popup.classList.toggle('chosen-native__popup--above', above);
     this.popup.style.width = width == null ? `${rect.width}px` :
       (typeof width === 'string' && width.trim().endsWith('%')
@@ -394,7 +452,17 @@ export class Chosen {
         groupIndex = entry.index;
         group.setAttribute('role', 'group');
         group.setAttribute('aria-label', entry.label);
-        group.append(element('div', 'chosen-native__group-label', entry.label));
+        const groupLabel = element('div', 'chosen-native__group-label', entry.label);
+        if (this.multiple && this.select.hasAttribute('select-by-group')) {
+          groupLabel.classList.add('chosen-native__group-label--selectable');
+          groupLabel.id = `${this.id}-option-${entry.index}`;
+          groupLabel.setAttribute('role', 'option');
+          groupLabel.setAttribute('aria-selected', 'false');
+          groupLabel.addEventListener('pointerenter', () => this.highlight(position));
+          groupLabel.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse') event.preventDefault(); });
+          groupLabel.addEventListener('click', () => this.selectGroup(entry.index));
+        }
+        group.append(groupLabel);
         this.list.append(group);
         continue;
       }
@@ -439,19 +507,22 @@ export class Chosen {
         caseSensitiveSearch: this.options.case_sensitive_search,
         normalizeSearchText: this.options.normalize_search_text
       });
-      this.activeIndex = preferred >= 0 && (!this.multiple || !this.nodes[this.available[preferred].index]?.selected || this.options.deselect_selected_results)
-        ? preferred : this.available.findIndex(entry => entry.kind === 'option' && !entry.disabled &&
-          (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results));
+      this.activeIndex = this.createIndex >= 0 && result.count === 0 ? this.createIndex :
+        preferred >= 0 && (!this.multiple || !this.nodes[this.available[preferred].index]?.selected || this.options.deselect_selected_results)
+          ? preferred : this.available.findIndex(entry => entry.kind === 'option' && !entry.disabled &&
+            (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results));
       if (this.activeIndex < 0) this.activeIndex = this.createIndex;
     }
     this.highlight(this.activeIndex);
-    if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
+    if (this.opened) this.status.textContent = String(this.options.results_count_text(
+      this.available.filter(entry => entry.kind === 'option').length + (this.createIndex >= 0 ? 1 : 0)));
+    if (this.opened && this.options.dropdown_position === 'fixed') this.positionDropdown();
   }
 
   renderBulkActions() {
     this.bulkActions.replaceChildren();
     if (!this.multiple) return;
-    const selectable = this.available.some(entry => entry.kind === 'option' && !entry.disabled &&
+    const selectable = this.available.some(entry => entry.kind === 'option' && !entry.disabled && !entry.pinnedOnly &&
       !this.nodes[entry.index]?.selected);
     const deselectable = this.entries.some(entry => entry.kind === 'option' && !entry.disabled &&
       this.nodes[entry.index]?.selected);
@@ -473,7 +544,7 @@ export class Chosen {
     if (action === 'select' && this.options.allow_select_all) {
       let count = Array.from(this.select.options).filter(option => option.selected).length;
       for (const entry of this.available) {
-        if (entry.kind !== 'option' || entry.disabled) continue;
+        if (entry.kind !== 'option' || entry.disabled || entry.pinnedOnly) continue;
         const option = this.nodes[entry.index];
         if (!option || option.selected) continue;
         if (this.options.max_selected_options != null && count >= this.options.max_selected_options) {
@@ -495,6 +566,33 @@ export class Chosen {
     }
     if (changed) this.changed();
     if (limitReached) emit(this.select, 'chosen:maxselected', this);
+    this.input.focus();
+  }
+
+  selectGroup(groupIndex) {
+    if (!this.multiple || !this.select.hasAttribute('select-by-group') ||
+      this.select.disabled || this.select.hasAttribute('readonly')) return;
+    let count = this.select.selectedOptions.length;
+    let changed = false;
+    let limitReached = false;
+    for (const entry of this.available) {
+      if (entry.kind !== 'option' || entry.groupIndex !== groupIndex || entry.disabled || entry.pinnedOnly) continue;
+      const option = this.nodes[entry.index];
+      if (!option || option.selected) continue;
+      if (this.options.max_selected_options != null && count >= this.options.max_selected_options) {
+        limitReached = true;
+        break;
+      }
+      option.selected = true;
+      count++;
+      changed = true;
+    }
+    if (changed) this.changed();
+    if (limitReached) emit(this.select, 'chosen:maxselected', this);
+    if (changed) {
+      if (this.options.hide_results_on_select) this.close();
+      else this.renderResults();
+    }
     this.input.focus();
   }
 
@@ -542,15 +640,18 @@ export class Chosen {
     this.searchTimer = null;
     if (this.composing) return;
     this.appliedQuery = this.input.value;
+    emit(this.select, 'chosen:search', this, { search_term: this.appliedQuery });
     if (!this.opened) this.open();
     else this.renderResults();
+    emit(this.select, 'chosen:search_updated', this, { search_term: this.appliedQuery });
   }
 
   highlight(index) {
     this.activeIndex = index;
     const active = this.available[index];
     const id = index >= 0 && index === this.createIndex ? `${this.id}-option-create` :
-      (active?.kind === 'option' ? `${this.id}-option-${active.index}` : null);
+      (active?.kind === 'option' || (active?.kind === 'group' && this.select.hasAttribute('select-by-group'))
+        ? `${this.id}-option-${active.index}` : null);
     for (const row of this.list.querySelectorAll('[role="option"]')) {
       row.classList.toggle('chosen-native__option--active', row.id === id);
     }
@@ -651,6 +752,8 @@ export class Chosen {
     document.removeEventListener('scroll', this.onReposition, true);
     window.removeEventListener('scroll', this.onReposition, true);
     window.removeEventListener('resize', this.onReposition);
+    if (this.repositionFrame) window.cancelAnimationFrame(this.repositionFrame);
+    this.repositionFrame = null;
     clearTimeout(this.searchTimer);
     this.searchTimer = null;
     this.appliedQuery = '';
@@ -709,7 +812,9 @@ export class Chosen {
     if (key === 'ArrowDown' || key === 'ArrowUp') {
       event.preventDefault();
       if (!this.opened) { this.open(); return; }
-      const enabled = this.available.map((item, index) => item.kind === 'option' && !item.disabled &&
+      const enabled = this.available.map((item, index) =>
+        item.kind === 'group' && this.multiple && this.select.hasAttribute('select-by-group') && !item.disabled ||
+        item.kind === 'option' && !item.disabled &&
         (!this.multiple || !this.nodes[item.index]?.selected || this.options.deselect_selected_results) ? index : -1)
         .filter(index => index !== -1);
       if (this.createIndex >= 0) enabled.push(this.createIndex);
@@ -723,6 +828,10 @@ export class Chosen {
         return;
       }
       const entry = this.available[this.activeIndex];
+      if (entry?.kind === 'group' && this.multiple && this.select.hasAttribute('select-by-group')) {
+        this.selectGroup(entry.index);
+        return;
+      }
       if (entry?.kind === 'option' && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
         this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey);
       }
@@ -775,6 +884,9 @@ export class Chosen {
     this.control.removeEventListener('pointerdown', this.onControlPointer);
     this.select.removeEventListener('change', this.onNativeChange);
     this.select.removeEventListener('chosen:updated', this.onUpdate);
+    this.select.removeEventListener('chosen:activate', this.onActivate);
+    this.select.removeEventListener('chosen:open', this.onOpen);
+    this.select.removeEventListener('chosen:close', this.onClose);
     this.select.removeEventListener('invalid', this.onInvalid);
     this.select.removeEventListener('focus', this.onInvalid);
     this.form?.removeEventListener('reset', this.onReset);

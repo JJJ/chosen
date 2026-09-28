@@ -75,6 +75,64 @@ test('React creation callback can supply option data and a controlled parent rec
   assert.equal(document.querySelector('select').selectedOptions[0].text, 'MANG');
 });
 
+test('React pins an unmatched option and selects visible members through a group button', () => {
+  const grouped = [{ label: 'Team', options: [
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta', disabled: true },
+    { value: 'c', label: 'Charlie' }
+  ] }, { value: 'other', label: 'Other', alwaysVisible: true }];
+  const view = render(h(Chosen, { options: grouped, multiple: true, selectByGroup: true,
+    allowSelectAll: true, maxShownResults: 1, hideResultsOnSelect: false,
+    'aria-label': 'Team' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'zzz' } });
+  assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['Other']);
+  assert.equal(screen.queryByRole('button', { name: 'Select all' }), null);
+  fireEvent.change(input, { target: { value: '' } });
+  fireEvent.click(screen.getByRole('option', { name: 'Team' }));
+  assert.equal(document.querySelector('select').selectedOptions.length, 1);
+  view.rerender(h(Chosen, { options: grouped, multiple: true, selectByGroup: true,
+    allowSelectAll: true, maxShownResults: 3, hideResultsOnSelect: false,
+    'aria-label': 'Team' }));
+  fireEvent.mouseEnter(screen.getByRole('option', { name: 'Team' }));
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.deepEqual(Array.from(document.querySelector('select').selectedOptions, option => option.value), ['a', 'c']);
+});
+
+test('an unmatched pinned React option does not take Enter from the creation row', () => {
+  render(h(Chosen, { options: [{ value: 'other', label: 'Other', alwaysVisible: true }],
+    multiple: true, createOption: true, skipNoResults: true, 'aria-label': 'Skills' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'New skill' } });
+  assert.equal(input.getAttribute('aria-activedescendant')?.endsWith('-option-create'), true);
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.deepEqual(Array.from(document.querySelector('select').selectedOptions, option => option.value), ['New skill']);
+});
+
+test('React callbacks expose search, popup, empty result, and selection limit events', () => {
+  const events = [];
+  render(h(Chosen, { options, multiple: true, maxSelectedOptions: 1,
+    onReady: () => events.push('ready'),
+    onShowingDropdown: () => events.push('show'),
+    onHidingDropdown: () => events.push('hide'),
+    onSearch: query => events.push(`search:${query}`),
+    onSearchUpdated: query => events.push(`updated:${query}`),
+    onNoResults: query => events.push(`empty:${query}`),
+    onMaxSelected: () => events.push('limit'),
+    'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'zzz' } });
+  assert.deepEqual(events.slice(0, 5), ['ready', 'show', 'search:zzz', 'updated:zzz', 'empty:zzz']);
+  fireEvent.change(input, { target: { value: '' } });
+  fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+  fireEvent.click(input);
+  fireEvent.click(screen.getByRole('option', { name: 'Banana' }));
+  assert.equal(events.includes('limit'), true);
+  assert.equal(events.includes('hide'), true);
+});
+
 test('uncontrolled single selection searches and submits a native form value', () => {
   const changes = [];
   render(h('form', null, h(Chosen, { options, name: 'fruit', 'aria-label': 'Fruit', onChange: value => changes.push(value) })));
