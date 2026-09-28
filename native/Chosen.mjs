@@ -43,6 +43,7 @@ export class Chosen {
       enable_split_word_search: true, case_sensitive_search: false, search_in_values: false,
       highlight_prefix_matches: false,
       backspace_deletes_choices: true, multiselect_allow_tab_to_select: false,
+      search_input_type: 'search',
       max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
@@ -83,7 +84,7 @@ export class Chosen {
     this.value = element('span', 'chosen-native__value');
     this.value.setAttribute('aria-hidden', 'true');
     this.input = element('input', 'chosen-native__input');
-    this.input.type = 'text';
+    this.input.type = this.options.search_input_type === 'text' ? 'text' : 'search';
     this.input.autocomplete = 'off';
     this.input.id = this.id;
     this.input.setAttribute('role', 'combobox');

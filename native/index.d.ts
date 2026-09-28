@@ -23,6 +23,7 @@ export interface ChosenOptions {
   max_selected_options?: number;
   backspace_deletes_choices?: boolean;
   multiselect_allow_tab_to_select?: boolean;
+  search_input_type?: 'search' | 'text';
 }
 
 export declare class Chosen {

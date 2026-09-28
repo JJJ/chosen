@@ -44,6 +44,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ### Fixed
 - Align experimental React's default substring search, placeholder capitalization, single-clear visibility, multiple placeholder, and no-results copy with classic Chosen; apps depending on the earlier React defaults can set `searchContains`, `allowSingleDeselect`, `placeholder`, and `noResultsText` explicitly.
 - Expose classic multiple-select Backspace removal and opt-in Tab selection in the vanilla and React editions with matching defaults.
+- Use the classic `search` input type by default in the vanilla and React editions, with a `text` override and class-based styling.
 - Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.

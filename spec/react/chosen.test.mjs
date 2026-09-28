@@ -190,6 +190,13 @@ test('multiple keyboard settings keep defaults and allow Tab selection', () => {
   assert.equal(input.getAttribute('aria-expanded'), 'false');
 });
 
+test('React search input type follows the classic default with a text override', () => {
+  const view = render(h(Chosen, { options, 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('combobox').type, 'search');
+  view.rerender(h(Chosen, { options, searchInputType: 'text', 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('combobox').type, 'text');
+});
+
 test('controlled values stay controlled across option replacement and form reset', () => {
   const changes = [];
   const view = render(h('form', null, h(Chosen, { options, name: 'fruit', value: 'a', onChange: value => changes.push(value) })));

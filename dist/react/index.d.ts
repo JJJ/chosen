@@ -46,6 +46,7 @@ export interface ChosenProps {
   maxSelectedOptions?: number;
   backspaceDeletesChoices?: boolean;
   multiselectAllowTabToSelect?: boolean;
+  searchInputType?: 'search' | 'text';
   searchContains?: boolean;
   highlightPrefixMatches?: boolean;
   enableSplitWordSearch?: boolean;

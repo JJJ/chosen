@@ -54,6 +54,8 @@ or `splitSearchTerms` to match words in any order. `normalizeSearchText` and
 `searchMatcher` customize matching; the latter receives `(query, normalizedItem)`
 and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
 `maxShownResults` bound visible results and matching work. Set
+`searchInputType="text"` to use a text input instead of the classic default
+search input; the theme uses classes rather than input-type selectors. Set
 `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without

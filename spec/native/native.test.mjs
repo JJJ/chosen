@@ -202,6 +202,17 @@ test('multiple keyboard options preserve Backspace and Tab defaults and permit o
   dom.window.close();
 });
 
+test('search input type follows the classic default with a text override', () => {
+  const { dom, select } = fixture('<select><option value="a">Alpha</option></select>');
+  const chosen = new Chosen(select);
+  assert.equal(chosen.input.type, 'search');
+  chosen.destroy();
+  const textChosen = new Chosen(select, { search_input_type: 'text' });
+  assert.equal(textChosen.input.type, 'text');
+  textChosen.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

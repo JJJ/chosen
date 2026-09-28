@@ -55,6 +55,7 @@
 }
 
 .chosen-react__input {
+  appearance: none;
   flex: 1 1 5rem;
   min-width: 4rem;
   width: 100%;
@@ -65,6 +66,8 @@
   color: inherit;
   font: inherit;
 }
+.chosen-react__input::-webkit-search-cancel-button,
+.chosen-react__input::-webkit-search-decoration { display: none; }
 
 @media (any-pointer: coarse) {
   .chosen-react__input {

@@ -36,7 +36,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `search_contains` | Yes | Yes | React now defaults to `false`, matching classic. |
 | `highlight_prefix_matches` | Yes | Yes | React prop: `highlightPrefixMatches`; result order is unchanged. |
 | `search_matcher` | Yes | Yes | React prop: `searchMatcher`; both receive normalized items. |
-| `search_input_type` | No | No | Both use a fixed text input; classic defaults to search. |
+| `search_input_type` | Yes | Yes | Both default to `search` and accept `text`; React prop: `searchInputType`. |
 | `min_search_length` | Yes | Yes | React prop: `minSearchLength`. |
 | `max_search_length` | Yes | Yes | React prop: `maxSearchLength`; both default to 1000. |
 | `normalize_search_text` | Yes | Yes | React prop: `normalizeSearchText`. |

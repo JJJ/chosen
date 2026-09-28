@@ -42,6 +42,7 @@
   outline-offset: var(--chosen-focus-outline-offset, 1px);
 }
 .chosen-native__input {
+  appearance: none;
   flex: 1 1 5rem;
   min-width: 4rem;
   width: 100%;
@@ -52,6 +53,8 @@
   color: inherit;
   font: inherit;
 }
+.chosen-native__input::-webkit-search-cancel-button,
+.chosen-native__input::-webkit-search-decoration { display: none; }
 @media (any-pointer: coarse) {
   .chosen-native__input { font-size: 16px; font-size: max(16px, 1em); }
 }

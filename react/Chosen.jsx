@@ -24,6 +24,7 @@ export const Chosen = forwardRef(function Chosen({
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', maxSelectedOptions,
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
+  searchInputType = 'search',
   searchContains = false, splitSearchTerms = false, groupSearch = true,
   highlightPrefixMatches = false,
   enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
@@ -279,7 +280,8 @@ export const Chosen = forwardRef(function Chosen({
       </span>)}
       {showSingleValue && <span className="chosen-react__value" aria-hidden="true">{selectedLabel}</span>}
       <input ref={inputRef} id={baseId}
-        className={`chosen-react__input${showSingleValue ? ' chosen-react__input--has-value' : ''}`} type="text"
+        className={`chosen-react__input${showSingleValue ? ' chosen-react__input--has-value' : ''}`}
+        type={searchInputType === 'text' ? 'text' : 'search'}
         role="combobox" aria-autocomplete="list" aria-haspopup="listbox"
         aria-expanded={isOpen} aria-controls={listId}
         aria-activedescendant={isOpen && activeOption ? `${baseId}-option-${activeOption.index}` : undefined}
