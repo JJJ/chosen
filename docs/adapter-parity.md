@@ -55,8 +55,8 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `dropdown_position` | No | No | Fixed-position escape from clipped ancestors. |
 | `display_disabled_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_options` | Yes | Yes | Configurable visibility. |
-| `display_selected_value` | No | No | Value in the closed control; label remains in results. |
-| `include_group_label_in_selected` | No | No | Group name in selected text. |
+| `display_selected_value` | Yes | Yes | Value in the closed control; label remains in results. React prop: `displaySelectedValue`. |
+| `include_group_label_in_selected` | Yes | Yes | Group name in selected text. React prop: `includeGroupLabelInSelected`. |
 | `max_shown_results` | Yes | Yes | React prop: `maxShownResults`; group headings do not count. |
 | `case_sensitive_search` | Yes | Yes | React prop: `caseSensitiveSearch`. |
 | `hide_results_on_select` | Partial | Partial | Both close single results but keep multiple results open; classic closes multiple results by default. Neither exposes the setting. |

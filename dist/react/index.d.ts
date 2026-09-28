@@ -61,6 +61,8 @@ export interface ChosenProps {
   groupSearch?: boolean;
   displaySelectedOptions?: boolean;
   displayDisabledOptions?: boolean;
+  displaySelectedValue?: boolean;
+  includeGroupLabelInSelected?: boolean;
   dir?: 'ltr' | 'rtl';
   id?: string;
   className?: string;

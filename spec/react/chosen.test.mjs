@@ -197,6 +197,18 @@ test('React search input type follows the classic default with a text override',
   assert.equal(screen.getByRole('combobox').type, 'text');
 });
 
+test('selected value and group props change closed display without changing result labels', () => {
+  const grouped = [{ label: 'Team', options: [{ value: 'alpha', label: 'Alpha' }] }];
+  const props = { options: grouped, defaultValue: 'alpha', displaySelectedValue: true,
+    includeGroupLabelInSelected: true, 'aria-label': 'Team member' };
+  const view = render(h(Chosen, props));
+  assert.equal(document.querySelector('.chosen-react__value').textContent, 'Team: alpha');
+  fireEvent.click(screen.getByRole('combobox'));
+  assert.equal(screen.getByRole('option', { name: 'Alpha' }).textContent, 'Alpha');
+  view.rerender(h(Chosen, { ...props, multiple: true }));
+  assert.equal(document.querySelector('.chosen-react__chip')?.textContent, 'Team: alpha×');
+});
+
 test('controlled values stay controlled across option replacement and form reset', () => {
   const changes = [];
   const view = render(h('form', null, h(Chosen, { options, name: 'fruit', value: 'a', onChange: value => changes.push(value) })));

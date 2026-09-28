@@ -89,6 +89,7 @@
   white-space: nowrap;
   color: var(--chosen-text-color, #444);
 }
+.chosen-react__group-name { color: var(--chosen-group-color, #666); }
 
 .chosen-react__input::placeholder {
   color: var(--chosen-placeholder-color, #666);

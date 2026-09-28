@@ -60,6 +60,7 @@
 }
 .chosen-native__input::placeholder { color: var(--chosen-placeholder-color, #666); opacity: 1; }
 .chosen-native__value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chosen-native__group-name { color: var(--chosen-group-color, #666); }
 .chosen-native__chips { display: contents; }
 .chosen-native__chip {
   display: inline-flex;

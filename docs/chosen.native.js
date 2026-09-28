@@ -332,6 +332,8 @@ var ChosenNative = (() => {
         max_search_length: 1e3,
         display_selected_options: true,
         display_disabled_options: true,
+        display_selected_value: false,
+        include_group_label_in_selected: false,
         rtl: false,
         placeholder_text: select.multiple ? "Select Some Options" : "Select an Option",
         no_results_text: "No results for:",
@@ -451,10 +453,18 @@ var ChosenNative = (() => {
     renderSelection() {
       const selected = this.entries.filter((entry) => entry.kind === "option" && this.nodes[entry.index]?.selected && !(entry.value === "" && entry.label === ""));
       this.chips.replaceChildren();
+      const selectedDisplay = (entry) => {
+        const label = element("span", "chosen-native__selected-label");
+        if (this.options.include_group_label_in_selected && entry.groupLabel != null) {
+          label.append(element("span", "chosen-native__group-name", `${entry.groupLabel}: `));
+        }
+        label.append(document.createTextNode(this.options.display_selected_value ? entry.value : entry.label));
+        return label;
+      };
       if (this.multiple) {
         for (const entry of selected) {
           const chip = element("span", "chosen-native__chip");
-          chip.append(element("span", "", entry.label));
+          chip.append(selectedDisplay(entry));
           if (!this.select.disabled && !this.input.readOnly) {
             const remove = element("button", "chosen-native__remove", "\xD7");
             remove.type = "button";
@@ -468,7 +478,7 @@ var ChosenNative = (() => {
           this.chips.append(chip);
         }
       }
-      this.value.textContent = this.multiple ? "" : selected[0]?.label || "";
+      this.value.replaceChildren(...!this.multiple && selected.length ? [selectedDisplay(selected[0])] : []);
       this.value.hidden = this.multiple || !selected.length || this.opened || !!this.input.value;
       this.clearButton.hidden = this.multiple || !this.options.allow_single_deselect || !selected.length || !(this.select.options[0]?.value === "" && this.select.options[0]?.text === "") || this.select.disabled || this.input.readOnly;
       this.input.placeholder = this.opened ? this.options.search_placeholder || "Search options" : selected.length ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ?? this.options.placeholder_text;

@@ -8,6 +8,7 @@ const props: ChosenProps = {
   placeholderTextMultiple: 'Choose several',
   backspaceDeletesChoices: false, multiselectAllowTabToSelect: true,
   searchInputType: 'text',
+  displaySelectedValue: true, includeGroupLabelInSelected: true,
   searchInValues: true,
   maxShownResults: 20,
   searchMatcher: (query, item) => item.kind === 'option' && item.value === query,

@@ -50,12 +50,13 @@ function Demo() {
           <Chosen id="react-fruit" name="fruit" options={options} value={fruit}
             onChange={value => { setFruit(value); setAttempted(false); }} required
             allowSingleDeselect
+            displaySelectedValue
             searchInValues
             placeholder="Choose a fruit" searchPlaceholder="Choose a fruit"
             aria-describedby="react-fruit-help"
             aria-invalid={attempted && !fruit} dir={singleRtl ? 'rtl' : undefined}
             readOnly={singleReadOnly} disabled={singleDisabled} />
-          <p id="react-fruit-help" className="react-demo-help">Search for “orchard-42” to find Orchard by value, then choose or clear it. The form uses the underlying native select.</p>
+          <p id="react-fruit-help" className="react-demo-help">Search for “orchard-42” to find Orchard by value, then choose or clear it. The closed control shows the value while results show the label. The form uses the underlying native select.</p>
           <div className="react-demo-switches" role="group" aria-label="Single select examples">
             <label className="react-demo-switch"><input type="checkbox" checked={singleRtl}
               onChange={event => setSingleRtl(event.target.checked)} /> Right-to-left</label>
@@ -72,12 +73,13 @@ function Demo() {
           <Chosen id="react-basket" name="basket" options={options} multiple
             value={basket} onChange={setBasket} maxSelectedOptions={3}
             multiselectAllowTabToSelect
+            includeGroupLabelInSelected
             placeholder="Search fruit" searchPlaceholder="Search fruit"
             dir={basketRtl ? 'rtl' : undefined}
             displaySelectedOptions={showSelected} displayDisabledOptions={showDisabled}
             readOnly={basketReadOnly} disabled={basketDisabled}
             aria-describedby="react-basket-help" />
-          <p id="react-basket-help" className="react-demo-help">Choose up to three. Click a selected result or its chip × to remove it; Tab selects the highlighted result and moves focus onward. Try disabled Lemon or the long Dragon fruit label.</p>
+          <p id="react-basket-help" className="react-demo-help">Choose up to three. Grouped chips include their group names. Click a selected result or its chip × to remove it; Tab selects the highlighted result and moves focus onward. Try disabled Lemon or the long Dragon fruit label.</p>
           <div className="react-demo-switches" role="group" aria-label="Multiple select examples">
             <label className="react-demo-switch"><input type="checkbox" checked={basketRtl}
               onChange={event => setBasketRtl(event.target.checked)} /> Right-to-left</label>

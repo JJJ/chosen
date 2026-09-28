@@ -44,6 +44,8 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `split_search_terms` | `false` | Match whitespace-separated words in any order. |
 | `group_search` | `true` | Include optgroup labels in search. |
 | `display_selected_options` | `true` | Show selected options in multiple-select results. |
+| `display_selected_value` | `false` | Show the option value in the closed control or selected chips, while keeping its label in results. |
+| `include_group_label_in_selected` | `false` | Prefix selected text with its optgroup name when present. |
 | `display_disabled_options` | `true` | Show disabled options in results. |
 | `min_search_length` | `0` | Wait until enough search text is entered. |
 | `max_selected_options` | unlimited | Limit multiple-select selection count. |

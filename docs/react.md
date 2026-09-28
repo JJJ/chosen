@@ -61,7 +61,10 @@ search input; the theme uses classes rather than input-type selectors. Set
 mode, or `displayDisabledOptions={false}` to hide disabled results without
 removing them from the underlying native select. When selected results are
 visible, clicking one or pressing Enter on it
-removes that selection; its chip's remove button does the same. `open` and
+removes that selection; its chip's remove button does the same.
+`displaySelectedValue` shows option values in the closed control and chips;
+`includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
+and result rows continue to show option labels. `open` and
 `onOpenChange` control the popup; `defaultOpen` is its
 uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
 `maxSelectedOptions`, `placeholder`, `placeholderTextSingle`,

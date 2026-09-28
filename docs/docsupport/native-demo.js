@@ -3,7 +3,9 @@ const project = document.getElementById('native-project');
 const skills = document.getElementById('native-skills');
 const events = document.getElementById('native-events');
 const projectChosen = new ChosenNative.Chosen(project, { allow_single_deselect: true, search_in_values: true });
-const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3, multiselect_allow_tab_to_select: true });
+const skillsChosen = new ChosenNative.Chosen(skills, { max_selected_options: 3,
+  multiselect_allow_tab_to_select: true, display_selected_value: true,
+  include_group_label_in_selected: true });
 let added = 0;
 
 for (const select of [project, skills]) {

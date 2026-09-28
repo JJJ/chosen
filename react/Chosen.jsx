@@ -31,6 +31,7 @@ export const Chosen = forwardRef(function Chosen({
   maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
   normalizeSearchText, searchMatcher,
   displaySelectedOptions = true, displayDisabledOptions = true,
+  displaySelectedValue = false, includeGroupLabelInSelected = false,
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid, onBlur, onFocus
@@ -216,8 +217,12 @@ export const Chosen = forwardRef(function Chosen({
     if (!event.currentTarget.parentElement?.parentElement?.contains(event.relatedTarget)) changeOpen(false);
     onBlur?.(event);
   };
-  const selectedLabel = selectedOptions[0]?.label || '';
-  const showSingleValue = !multiple && !!selectedLabel && !isOpen && !query;
+  const selectedDisplay = item => <>
+    {includeGroupLabelInSelected && item.groupLabel != null &&
+      <span className="chosen-react__group-name">{item.groupLabel}: </span>}
+    {displaySelectedValue ? item.value : item.label}
+  </>;
+  const showSingleValue = !multiple && !!selectedOptions[0]?.label && !isOpen && !query;
   const closedPlaceholder = (multiple ? placeholderTextMultiple : placeholderTextSingle) ??
     placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
   const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
@@ -274,11 +279,11 @@ export const Chosen = forwardRef(function Chosen({
       }
     }}>
       {multiple && selectedOptions.map(item => <span className="chosen-react__chip" key={item.index}>
-        <span>{item.label}</span>
+        <span>{selectedDisplay(item)}</span>
         {!disabled && !readOnly && <button type="button" className="chosen-react__remove"
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}
       </span>)}
-      {showSingleValue && <span className="chosen-react__value" aria-hidden="true">{selectedLabel}</span>}
+      {showSingleValue && <span className="chosen-react__value" aria-hidden="true">{selectedDisplay(selectedOptions[0])}</span>}
       <input ref={inputRef} id={baseId}
         className={`chosen-react__input${showSingleValue ? ' chosen-react__input--has-value' : ''}`}
         type={searchInputType === 'text' ? 'text' : 'search'}
