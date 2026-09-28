@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).
 - Read supported scalar Chosen options from per-select `data-*` attributes in both legacy adapters, with explicit JavaScript options taking precedence (harvesthq/chosen#1870).
 - Load the jQuery distribution through AMD or CommonJS while preserving plain browser-script loading and the existing `$.fn.chosen` API (harvesthq/chosen#2215).
 - Include the previous single-select value as `deselected` in jQuery `input` and `change` event data when switching or clearing a selection (harvesthq/chosen#2336).
@@ -85,6 +86,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- The new opt-in vanilla edition renders `chosen-native__*` elements and uses native `CustomEvent` details and native `input`/`change` events; its generated selectors, roles, and attributes are separate from the classic adapters and remain experimental.
 - With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.
 
 - Setting `dropdown_width` adds `chosen-floating-dropdown` to the generated container so custom-width dropdowns can use complete corners, a gap, and independent elevation. Integrations that assert generated container classes should allow this opt-in state.

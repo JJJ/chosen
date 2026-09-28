@@ -4,15 +4,15 @@ Chosen is a library for making long, unwieldy select boxes more user friendly.
 
 - jQuery support: 1.7+ (tested with 1.7, 1.12, 3.5, and 4.0)
 - Prototype support: 1.7+ (tested with 1.7)
+- Experimental vanilla JavaScript adapter: no framework runtime dependency
 
-The automated browser suites run in Chrome. Chosen's original compatibility
-target included Firefox, Safari, and Internet Explorer 9; those browsers are not
-currently covered by this fork's automated tests. Please include your browser
+The classic adapter browser suite runs in Chrome; the native, React, and touch suites also run in WebKit. Chosen's original compatibility target included Firefox, Safari, and Internet Explorer 9; those browsers are not currently covered by this fork's automated tests. Please include your browser
 and library versions when reporting a compatibility issue.
 
 For **documentation**, usage, and examples, see the
 [jQuery demo](https://jjj.github.io/chosen/),
-[Prototype demo](https://jjj.github.io/chosen/index.proto.html), and
+[Prototype demo](https://jjj.github.io/chosen/index.proto.html),
+[vanilla demo](https://jjj.github.io/chosen/native.html), and
 [React demo](https://jjj.github.io/chosen/react.html), plus the
 [options reference](https://jjj.github.io/chosen/options.html). The
 [wiki](https://github.com/JJJ/chosen/wiki) covers setup and common workflows.
@@ -27,6 +27,7 @@ The compiled JavaScript and CSS files are located in the `/dist` directory. This
 - `chosen.proto.js` / `chosen.proto.min.js` - Prototype version
 - `chosen.css` / `chosen.min.css` - Styles
 - `chosen.css.map` - CSS source map
+- `native/chosen.native.js` / `native/chosen.css` - experimental vanilla edition
 
 The `/docs` directory also contains copies of these files for GitHub Pages.
 GitHub Pages publishes it automatically when changes reach `master`.
@@ -46,8 +47,8 @@ AMD, or CommonJS. CommonJS consumers should install jQuery alongside Chosen
 and provide a DOM before requiring the packages. Explicit entries for
 the Prototype adapter, shared CSS, Sass, and the experimental framework-neutral
 ESM/CommonJS core are described in the
-[package boundaries](docs/package-boundaries.md). The experimental native React
-component is described in the [React guide](docs/react.md).
+[package boundaries](docs/package-boundaries.md). The experimental vanilla adapter is described in the [vanilla guide](docs/native.md),
+and the native React component in the [React guide](docs/react.md).
 
 To install with Composer:
 

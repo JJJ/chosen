@@ -4,7 +4,7 @@
 
 - Preserve the native `<select>` as the source of submitted values and events.
 - Keep existing defaults unless a change is explicitly intended to change them. Prefer opt-in settings for new behavior.
-- Update both the jQuery and Prototype adapters for shared behavior.
+- Update both the jQuery and Prototype adapters for shared behavior. Keep the experimental vanilla adapter in `native/` aligned where its documented option and event contracts overlap.
 - Edit CoffeeScript and Sass sources, then regenerate the distribution and mirrored `docs/` assets with `npm run build`.
 
 ## Documentation for user-facing changes
@@ -16,5 +16,5 @@
 
 ## Verification
 
-- Run `npm test` for code changes. Run `npm run test:mobile` for touch or mobile behavior.
+- Run `npm test` for code changes. Run `npm run test:mobile` for touch or mobile behavior; the vanilla adapter also has `npm run test:native` with browser and touch checks.
 - Check generated JavaScript and CSS parity between `dist/` and `docs/`, run `node scripts/build-demo-pages.js --check`, and run `git diff --check`.
