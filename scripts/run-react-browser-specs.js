@@ -59,7 +59,8 @@ async function main() {
       });
       if (controlledReset !== 'banana') throw new Error(`${name}: controlled form reset changed the native value to ${controlledReset}`);
 
-      await page.evaluate(() => window.mountChosen({ multiple: true, required: true }));
+      await page.evaluate(() => window.mountChosen({ multiple: true, required: true,
+        deselectSelectedResults: true, hideResultsOnSelect: false }));
       await page.waitForFunction(() => document.querySelector('select')?.multiple);
       await page.evaluate(() => document.querySelector('form').reset());
       await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);

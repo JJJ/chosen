@@ -66,6 +66,8 @@ export interface ChosenProps {
   splitSearchTerms?: boolean;
   groupSearch?: boolean;
   displaySelectedOptions?: boolean;
+  deselectSelectedResults?: boolean;
+  hideResultsOnSelect?: boolean;
   displayDisabledOptions?: boolean;
   displaySelectedValue?: boolean;
   includeGroupLabelInSelected?: boolean;

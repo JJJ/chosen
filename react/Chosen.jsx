@@ -12,8 +12,8 @@ function valueFor(values, multiple) {
   return multiple ? values : (values[0] ?? '');
 }
 
-function firstEnabled(items) {
-  return items.findIndex(item => item.kind === 'option' && !item.disabled);
+function firstEnabled(items, canAct) {
+  return items.findIndex(item => item.kind === 'option' && canAct(item));
 }
 
 export const Chosen = forwardRef(function Chosen({
@@ -35,6 +35,7 @@ export const Chosen = forwardRef(function Chosen({
   maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
   normalizeSearchText, searchMatcher,
   displaySelectedOptions = true, displayDisabledOptions = true,
+  deselectSelectedResults = false, hideResultsOnSelect = true,
   displaySelectedValue = false, includeGroupLabelInSelected = false,
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
@@ -72,11 +73,14 @@ export const Chosen = forwardRef(function Chosen({
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
   const available = results.items;
+  const canActOnResult = item => !item.disabled &&
+    (!multiple || !selectedSet.has(item.value) || deselectSelectedResults);
   const preferred = preferredPrefixIndex(available, query, {
     highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
   });
   const active = activeIndex >= 0 && available[activeIndex]?.kind === 'option'
-    && !available[activeIndex].disabled ? activeIndex : (preferred >= 0 ? preferred : firstEnabled(available));
+    && canActOnResult(available[activeIndex]) ? activeIndex :
+      (preferred >= 0 && canActOnResult(available[preferred]) ? preferred : firstEnabled(available, canActOnResult));
   const activeOption = active >= 0 ? available[active] : null;
   const selectedOptions = entries.filter(item => item.kind === 'option' && selectedSet.has(item.value));
   const attachNativeSelect = useCallback(node => {
@@ -105,6 +109,7 @@ export const Chosen = forwardRef(function Chosen({
   }, [multiple, onChange, value]);
 
   const choose = (option, event) => {
+    if (!canActOnResult(option)) return;
     const next = updateSelection(selectedValues, option, {
       multiple, maxSelectedOptions, disabled, readOnly,
       action: multiple && selectedSet.has(option.value) ? 'remove' : 'select'
@@ -114,7 +119,7 @@ export const Chosen = forwardRef(function Chosen({
     setLimitNotice(false);
     setPendingBackstrokeValue(null);
     commit(next.values, event);
-    if (!multiple) changeOpen(false);
+    if (!multiple || (hideResultsOnSelect && !event?.metaKey && !event?.ctrlKey)) changeOpen(false);
     else {
       setQuery('');
       setActiveIndex(-1);
@@ -200,7 +205,7 @@ export const Chosen = forwardRef(function Chosen({
   }, [isOpen, activeOption?.index, baseId]);
 
   const move = (direction, fromEnd = false) => {
-    const enabled = available.map((item, index) => item.kind === 'option' && !item.disabled ? index : -1)
+    const enabled = available.map((item, index) => item.kind === 'option' && canActOnResult(item) ? index : -1)
       .filter(index => index >= 0);
     if (!enabled.length) return;
     const current = enabled.indexOf(activeIndex);
@@ -260,8 +265,8 @@ export const Chosen = forwardRef(function Chosen({
 
   const renderOption = (item, position) => <div id={`${baseId}-option-${item.index}`} role="option" key={item.index}
     aria-selected={selectedSet.has(item.value)} aria-disabled={item.disabled || undefined}
-    className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}${item.className ? ` ${item.className}` : ''}`}
-    onMouseEnter={() => { if (!item.disabled) setActiveIndex(position); }}
+    className={`chosen-react__option${selectedSet.has(item.value) ? ' chosen-react__option--selected' : ''}${multiple && selectedSet.has(item.value) && deselectSelectedResults ? ' chosen-react__option--deselectable' : ''}${activeOption?.index === item.index ? ' chosen-react__option--active' : ''}${item.disabled ? ' chosen-react__option--disabled' : ''}${item.className ? ` ${item.className}` : ''}`}
+    onMouseEnter={() => { if (canActOnResult(item)) setActiveIndex(position); }}
     onMouseDown={event => event.preventDefault()}
     onClick={event => choose(item, event)}>{item.label}</div>;
   const renderedResults = [];

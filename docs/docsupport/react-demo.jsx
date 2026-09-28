@@ -75,6 +75,7 @@ function Demo() {
             value={basket} onChange={setBasket} maxSelectedOptions={3}
             multiselectAllowTabToSelect
             includeGroupLabelInSelected
+            deselectSelectedResults hideResultsOnSelect={false}
             placeholder="Search fruit" searchPlaceholder="Search fruit"
             dir={basketRtl ? 'rtl' : undefined}
             displaySelectedOptions={showSelected} displayDisabledOptions={showDisabled}

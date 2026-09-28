@@ -64,8 +64,11 @@ Set `className` on option or group data to style result rows; set
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without
 removing them from the underlying native select. When selected results are
-visible, clicking one or pressing Enter on it
-removes that selection; its chip's remove button does the same.
+visible, selected rows are inert by default and have a check mark. Set
+`deselectSelectedResults` to remove a selected row by click or Enter; its
+remove mark then indicates this action. The chip's remove button always works.
+`hideResultsOnSelect` defaults to `true` for multiple choices; set it to
+`false` to keep the dropdown open. Ctrl or Command selection also keeps it open.
 `displaySelectedValue` shows option values in the closed control and chips;
 `includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
 and result rows continue to show option labels. `open` and

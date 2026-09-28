@@ -49,7 +49,7 @@ test('multiple selection handles search, keyboard, limits, removal, and reset', 
   const { dom, select, form } = fixture('<select name="items" multiple><option value="a" selected>Alpha</option><option value="b">Beta</option><option value="c">Charlie</option></select>');
   let changed = 0;
   select.addEventListener('change', () => changed++);
-  const chosen = new Chosen(select, { max_selected_options: 2 });
+  const chosen = new Chosen(select, { max_selected_options: 2, hide_results_on_select: false });
   chosen.open();
   chosen.input.value = 'be';
   chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
@@ -93,7 +93,7 @@ test('selected multiple results show removal state and toggle through pointer or
   const { dom, select } = fixture('<select multiple><optgroup label="Team"><option value="a" selected>Alpha</option><option value="b">Beta</option></optgroup></select>');
   let changes = 0;
   select.addEventListener('change', () => changes++);
-  const chosen = new Chosen(select);
+  const chosen = new Chosen(select, { deselect_selected_results: true, hide_results_on_select: false });
   chosen.open();
   let selected = chosen.list.querySelector('.chosen-native__option--selected');
   assert.equal(selected.textContent, 'Alpha');
@@ -110,6 +110,20 @@ test('selected multiple results show removal state and toggle through pointer or
   key(chosen.input, 'Enter');
   assert.equal(select.options[0].selected, false);
   assert.equal(changes, 3);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('classic multiple defaults keep selected result rows inert and close after a new choice', () => {
+  const { dom, select } = fixture('<select multiple><option value="a" selected>Alpha</option><option value="b">Beta</option></select>');
+  const chosen = new Chosen(select);
+  chosen.open();
+  click(Array.from(chosen.list.querySelectorAll('[role="option"]')).find(row => row.textContent === 'Alpha'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a']);
+  assert.equal(chosen.opened, true);
+  click(Array.from(chosen.list.querySelectorAll('[role="option"]')).find(row => row.textContent === 'Beta'));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'b']);
+  assert.equal(chosen.opened, false);
   chosen.destroy();
   dom.window.close();
 });

@@ -18,6 +18,8 @@ export interface ChosenOptions {
   split_search_terms?: boolean;
   group_search?: boolean;
   display_selected_options?: boolean;
+  deselect_selected_results?: boolean;
+  hide_results_on_select?: boolean;
   display_disabled_options?: boolean;
   min_search_length?: number;
   max_selected_options?: number;

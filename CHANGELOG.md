@@ -51,6 +51,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Carry option and optgroup classes into vanilla and React result rows, with opt-in class copying to chips; add customizable live result counts and use no-results text literally. Generated result elements now receive source option classes.
 - Add the classic two-press Backspace mode to vanilla and React, retaining immediate removal by default. The pending chip gains a focus outline.
 - Match classic label activation defaults in vanilla and React, with `open_on_label_click` / `openOnLabelClick` overrides. Generated inputs stay the visible focus target.
+- Match classic multiple-select defaults in vanilla and React: selected result rows are inert unless deselection is enabled, and a choice closes the dropdown unless configured otherwise. Both demos explicitly keep their earlier interactive behavior.
 - Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.

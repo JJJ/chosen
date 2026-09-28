@@ -11,7 +11,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `allow_single_deselect` | Yes | Yes | React prop: `allowSingleDeselect`, default `false`. |
 | `allow_select_all` | No | No | Filtered bulk selection and shortcut. |
 | `allow_deselect_all` | No | No | Bulk removal, disabled selection rule, and shortcut. |
-| `deselect_selected_results` | Partial | Partial | Both always permit removal from selected result rows; classic defaults off. |
+| `deselect_selected_results` | Yes | Yes | React prop: `deselectSelectedResults`; defaults to `false`. Both demos opt in to selected-row removal. |
 | `select_all_text` | No | No | Localized bulk action label. |
 | `deselect_all_text` | No | No | Localized bulk action label. |
 | `disable_search` | No | No | Single-select search visibility and type navigation. |
@@ -59,7 +59,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `include_group_label_in_selected` | Yes | Yes | Group name in selected text. React prop: `includeGroupLabelInSelected`. |
 | `max_shown_results` | Yes | Yes | React prop: `maxShownResults`; group headings do not count. |
 | `case_sensitive_search` | Yes | Yes | React prop: `caseSensitiveSearch`. |
-| `hide_results_on_select` | Partial | Partial | Both close single results but keep multiple results open; classic closes multiple results by default. Neither exposes the setting. |
+| `hide_results_on_select` | Yes | Yes | React prop: `hideResultsOnSelect`; defaults to `true`. Both demos keep multiple results open with the opt-out. |
 | `rtl` | Yes | Yes | Vanilla accepts `rtl: true` and follows source `dir` or the legacy `chosen-rtl` class; React has `dir`. |
 
 ## Source attributes and platform events

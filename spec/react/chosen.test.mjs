@@ -40,7 +40,8 @@ test('uncontrolled single selection searches and submits a native form value', (
 
 test('multiple selection respects limits, disabled options, and removal', () => {
   const changes = [];
-  render(h(Chosen, { options, multiple: true, maxSelectedOptions: 1, onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+  render(h(Chosen, { options, multiple: true, maxSelectedOptions: 1, hideResultsOnSelect: false,
+    onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
   const input = screen.getByRole('combobox');
   fireEvent.click(input);
   fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
@@ -53,7 +54,8 @@ test('multiple selection respects limits, disabled options, and removal', () => 
 });
 
 test('pointer target and selected result remain distinct', () => {
-  render(h(Chosen, { options, multiple: true, defaultValue: ['a'], 'aria-label': 'Fruit' }));
+  render(h(Chosen, { options, multiple: true, defaultValue: ['a'],
+    deselectSelectedResults: true, 'aria-label': 'Fruit' }));
   const input = screen.getByRole('combobox');
   fireEvent.click(input);
   const apple = screen.getByRole('option', { name: 'Apple' });
@@ -72,7 +74,8 @@ test('pointer target and selected result remain distinct', () => {
 test('selected multiple results toggle off by pointer and Enter, including at the limit', () => {
   const changes = [];
   render(h('form', null, h(Chosen, { options, name: 'fruit', multiple: true,
-    defaultValue: ['a'], maxSelectedOptions: 1, onChange: value => changes.push(value),
+    defaultValue: ['a'], maxSelectedOptions: 1, deselectSelectedResults: true,
+    hideResultsOnSelect: false, onChange: value => changes.push(value),
     'aria-label': 'Fruit' })));
   const input = screen.getByRole('combobox');
   fireEvent.click(input);
@@ -87,6 +90,20 @@ test('selected multiple results toggle off by pointer and Enter, including at th
   fireEvent.keyDown(input, { key: 'Enter' });
   assert.deepEqual(changes[2], []);
   assert.equal(apple.getAttribute('aria-selected'), 'false');
+});
+
+test('React classic multiple defaults keep selected rows inert and close after selection', () => {
+  const changes = [];
+  render(h(Chosen, { options, multiple: true, defaultValue: ['a'],
+    onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+  assert.deepEqual(changes, []);
+  assert.equal(input.getAttribute('aria-expanded'), 'true');
+  fireEvent.click(screen.getByRole('option', { name: 'Banana' }));
+  assert.deepEqual(changes, [['a', 'b']]);
+  assert.equal(input.getAttribute('aria-expanded'), 'false');
 });
 
 test('single clear and no-results messaging remain keyboard accessible', () => {

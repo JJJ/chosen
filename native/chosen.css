@@ -133,11 +133,12 @@
   content: '✓';
   font-weight: 700;
 }
-.chosen-native--multiple .chosen-native__option--selected::after {
+.chosen-native__option--deselectable::after {
   content: '×';
   font-size: 1.2em;
   line-height: 1;
 }
+.chosen-native--multiple .chosen-native__option--selected:not(.chosen-native__option--deselectable) { cursor: default; }
 .chosen-native__option--active { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
 .chosen-native__option--disabled { opacity: .5; cursor: default; }
 .chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: bold; }

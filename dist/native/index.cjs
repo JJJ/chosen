@@ -338,6 +338,8 @@ var Chosen = class {
       max_search_length: 1e3,
       display_selected_options: true,
       display_disabled_options: true,
+      deselect_selected_results: false,
+      hide_results_on_select: true,
       display_selected_value: false,
       include_group_label_in_selected: false,
       rtl: false,
@@ -562,18 +564,22 @@ var Chosen = class {
         continue;
       }
       const selected = !!this.nodes[entry.index]?.selected;
-      const row = element("div", `chosen-native__option${selected ? " chosen-native__option--selected" : ""}${entry.disabled ? " chosen-native__option--disabled" : ""}${entry.className ? ` ${entry.className}` : ""}`, entry.label);
+      const canDeselect = this.multiple && selected && this.options.deselect_selected_results;
+      const actionable = !entry.disabled && (!this.multiple || !selected || canDeselect);
+      const row = element("div", `chosen-native__option${selected ? " chosen-native__option--selected" : ""}${canDeselect ? " chosen-native__option--deselectable" : ""}${entry.disabled ? " chosen-native__option--disabled" : ""}${entry.className ? ` ${entry.className}` : ""}`, entry.label);
       row.id = `${this.id}-option-${entry.index}`;
       row.setAttribute("role", "option");
       row.setAttribute("aria-selected", String(selected));
       if (entry.disabled) row.setAttribute("aria-disabled", "true");
       row.addEventListener("pointerenter", () => {
-        if (!entry.disabled) this.highlight(position);
+        if (actionable) this.highlight(position);
       });
       row.addEventListener("pointerdown", (event) => {
         if (event.pointerType === "mouse") event.preventDefault();
       });
-      row.addEventListener("click", () => this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected));
+      row.addEventListener("click", (event) => {
+        if (actionable) this.choose(entry, canDeselect, event.metaKey || event.ctrlKey);
+      });
       (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
     }
     this.empty.hidden = !!result.count;
@@ -581,7 +587,7 @@ var Chosen = class {
     this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ""}`;
     if (!result.count && query && this.opened) emit(this.select, "chosen:no_results", this, { search_term: query });
     const active = this.available[this.activeIndex];
-    if (!active || active.kind !== "option" || active.disabled) {
+    if (!active || active.kind !== "option" || active.disabled || this.multiple && this.nodes[active.index]?.selected && !this.options.deselect_selected_results) {
       const preferred = preferredPrefixIndex(this.available, query, {
         highlightPrefixMatches: this.options.highlight_prefix_matches,
         searchContains: this.options.search_contains,
@@ -589,7 +595,7 @@ var Chosen = class {
         caseSensitiveSearch: this.options.case_sensitive_search,
         normalizeSearchText: this.options.normalize_search_text
       });
-      this.activeIndex = preferred >= 0 ? preferred : this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled);
+      this.activeIndex = preferred >= 0 && (!this.multiple || !this.nodes[this.available[preferred].index]?.selected || this.options.deselect_selected_results) ? preferred : this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results));
     }
     this.highlight(this.activeIndex);
     if (this.opened) this.status.textContent = String(this.options.results_count_text(result.count));
@@ -606,7 +612,7 @@ var Chosen = class {
       document.getElementById(id)?.scrollIntoView?.({ block: "nearest" });
     } else this.input.removeAttribute("aria-activedescendant");
   }
-  choose(entry, remove = false) {
+  choose(entry, remove = false, keepOpen = false) {
     const option = this.nodes[entry.index];
     if (!option || option.disabled || option.hidden || option.parentElement?.disabled || this.select.disabled || this.input.readOnly) return;
     if (this.multiple) {
@@ -625,7 +631,8 @@ var Chosen = class {
     if (this.multiple) {
       this.input.value = "";
       this.activeIndex = -1;
-      this.renderResults();
+      if (this.options.hide_results_on_select && !keepOpen) this.close();
+      else this.renderResults();
     } else this.close();
     this.input.focus();
   }
@@ -679,21 +686,25 @@ var Chosen = class {
         this.open();
         return;
       }
-      const enabled = this.available.map((item, index) => item.kind === "option" && !item.disabled ? index : -1).filter((index) => index !== -1);
+      const enabled = this.available.map((item, index) => item.kind === "option" && !item.disabled && (!this.multiple || !this.nodes[item.index]?.selected || this.options.deselect_selected_results) ? index : -1).filter((index) => index !== -1);
       if (!enabled.length) return;
       const current = enabled.indexOf(this.activeIndex);
       this.highlight(enabled[(current + (key === "ArrowDown" ? 1 : -1) + enabled.length) % enabled.length]);
     } else if (key === "Enter" && this.opened) {
       event.preventDefault();
       const entry = this.available[this.activeIndex];
-      if (entry?.kind === "option") this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected);
+      if (entry?.kind === "option" && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
+        this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey);
+      }
     } else if (key === "Escape" && this.opened) {
       event.preventDefault();
       this.close();
     } else if (key === "Tab") {
       if (this.multiple && this.opened && this.options.multiselect_allow_tab_to_select) {
         const entry = this.available[this.activeIndex];
-        if (entry?.kind === "option") this.choose(entry, !!this.nodes[entry.index]?.selected);
+        if (entry?.kind === "option" && (!this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
+          this.choose(entry, !!this.nodes[entry.index]?.selected);
+        }
       }
       this.close();
     } else if (key === "Backspace" && this.multiple && this.options.backspace_deletes_choices && !this.input.value) {

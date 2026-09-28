@@ -192,6 +192,8 @@
   content: "✓";
   font-weight: 700;
 }
+.chosen-react__option--deselectable::after { content: "×"; font-size: 1.2em; line-height: 1; }
+.chosen-react--multiple .chosen-react__option--selected:not(.chosen-react__option--deselectable) { cursor: default; }
 
 .chosen-react__list [role="group"] > .chosen-react__option {
   padding-inline-start: var(--chosen-group-option-indent, calc(var(--chosen-result-padding-inline, .65rem) + .75rem));

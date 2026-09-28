@@ -17,7 +17,7 @@ For a plain browser script, load `dist/native/chosen.css` and `dist/native/chose
 
 The original select remains in the form. Chosen changes its option selection and dispatches bubbling native `input` and `change` events after user changes. Call `chosen.update()` after editing its options or state; a native `select.dispatchEvent(new Event('chosen:updated'))` works too. The adapter listens for native events. jQuery's `.trigger('chosen:updated')` does not dispatch a native DOM event.
 
-Selected results remain visible by default. In a multiple select, click a selected result or press Enter on it to remove it; the × mark indicates this action. Grouped options are indented under their headings. Set `display_selected_options: false` to hide selected results instead.
+Selected results remain visible by default. Set `deselect_selected_results: true` to remove a selected multiple result by click or Enter; its × mark indicates this action. Otherwise selected rows have a check mark and are not actionable. Grouped options are indented under their headings. Set `display_selected_options: false` to hide selected results instead.
 
 Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `chosen.clear()` as needed. `chosen.destroy()` removes the generated control and listeners and restores the select's original `tabindex` and `aria-hidden` attributes. A second instance on the same select is rejected until the first is destroyed.
 
@@ -45,6 +45,8 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | `split_search_terms` | `false` | Match whitespace-separated words in any order. |
 | `group_search` | `true` | Include optgroup labels in search. |
 | `display_selected_options` | `true` | Show selected options in multiple-select results. |
+| `deselect_selected_results` | `false` | Let selected multiple results be removed from the dropdown. |
+| `hide_results_on_select` | `true` | Close the dropdown after a multiple choice; set `false` to keep it open. Ctrl or Command selection keeps it open. |
 | `display_selected_value` | `false` | Show the option value in the closed control or selected chips, while keeping its label in results. |
 | `include_group_label_in_selected` | `false` | Prefix selected text with its optgroup name when present. |
 | `display_disabled_options` | `true` | Show disabled options in results. |

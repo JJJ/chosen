@@ -89,7 +89,7 @@ async function main() {
       });
       if (resultState.activeCount !== 1 || !resultState.appleSelected || resultState.appleActive ||
         !resultState.orangeActive || resultState.descendant !== resultState.orangeId ||
-        resultState.appleBackground !== 'rgb(238, 242, 255)' || !resultState.check.includes('✓') ||
+        resultState.appleBackground !== 'rgb(238, 242, 255)' || !resultState.check.includes('×') ||
         resultState.overflow !== 'hidden') {
         throw new Error(`${name}: selected, hover, or dropdown clipping state ${JSON.stringify(resultState)}`);
       }
