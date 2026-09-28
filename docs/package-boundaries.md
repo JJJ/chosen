@@ -65,4 +65,4 @@ documented functions are not yet promised. Rendering stays in each adapter;
 React does not instantiate a jQuery or Prototype control. Its ESM entry bundles
 the core rules but leaves React external, and its stylesheet is opt-in.
 
-The vanilla DOM edition is an explicit entry and does not replace the jQuery default. It keeps the original select authoritative and uses native DOM events. Its current API covers a focused subset of classic Chosen; see [the vanilla guide](native.md).
+The vanilla DOM edition is an explicit entry and does not replace the jQuery default. It keeps the original select authoritative and uses native DOM events. Both vanilla and React are still experimental and have known gaps against the classic feature set. See the [adapter parity inventory](adapter-parity.md) before treating either as a replacement for a classic adapter.

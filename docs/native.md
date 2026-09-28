@@ -1,6 +1,6 @@
 # Vanilla JavaScript edition
 
-The experimental `chosen-jjj/native` entry enhances an existing `<select>` without jQuery, Prototype, or React. It does not change the package's default jQuery entry point. [Try the live demo](native.html).
+The experimental `chosen-jjj/native` entry enhances an existing `<select>` without jQuery, Prototype, or React. It does not change the package's default jQuery entry point. It is not yet feature complete; see the [adapter parity inventory](adapter-parity.md). [Try the live demo](native.html).
 
 ```js
 import { Chosen } from 'chosen-jjj/native';

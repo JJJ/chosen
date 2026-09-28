@@ -4,7 +4,8 @@
 
 - Preserve the native `<select>` as the source of submitted values and events.
 - Keep existing defaults unless a change is explicitly intended to change them. Prefer opt-in settings for new behavior.
-- Update both the jQuery and Prototype adapters for shared behavior. Keep the experimental vanilla adapter in `native/` aligned where its documented option and event contracts overlap.
+- Maintain feature parity across the jQuery, Prototype, vanilla JavaScript, and React editions. Translate options and events into each adapter's natural API, but preserve the same observable behavior and defaults. Document any platform-specific exception in `docs/adapter-parity.md` with a reason and an equivalent path where possible.
+- Check `docs/adapter-parity.md` for every user-facing feature change. Do not describe an adapter as feature complete or make an experimental adapter ready to merge while parity gaps remain undocumented or untested.
 - Edit CoffeeScript and Sass sources, then regenerate the distribution and mirrored `docs/` assets with `npm run build`.
 
 ## Documentation for user-facing changes

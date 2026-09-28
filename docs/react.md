@@ -1,5 +1,7 @@
 # Native React Chosen (experimental)
 
+This component is not yet feature complete with classic Chosen. The [adapter parity inventory](adapter-parity.md) tracks the remaining behavior and default differences.
+
 `chosen-jjj/react` is a React component, not a jQuery or Prototype wrapper.
 React 18 or newer is a peer dependency. Import the standalone theme separately;
 the JavaScript entry has no stylesheet side effect and is safe to import during

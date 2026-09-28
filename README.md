@@ -48,7 +48,7 @@ and provide a DOM before requiring the packages. Explicit entries for
 the Prototype adapter, shared CSS, Sass, and the experimental framework-neutral
 ESM/CommonJS core are described in the
 [package boundaries](docs/package-boundaries.md). The experimental vanilla adapter is described in the [vanilla guide](docs/native.md),
-and the native React component in the [React guide](docs/react.md).
+and the native React component in the [React guide](docs/react.md). Their remaining gaps are tracked in the [adapter parity inventory](docs/adapter-parity.md).
 
 To install with Composer:
 
