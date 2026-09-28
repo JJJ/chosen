@@ -8,7 +8,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 
 | Classic option | Vanilla | React | Gap or equivalent API |
 | --- | --- | --- | --- |
-| `allow_single_deselect` | Yes | Partial | React always shows its clear action for a selection. |
+| `allow_single_deselect` | Yes | Yes | React prop: `allowSingleDeselect`, default `false`. |
 | `allow_select_all` | No | No | Filtered bulk selection and shortcut. |
 | `allow_deselect_all` | No | No | Bulk removal, disabled selection rule, and shortcut. |
 | `deselect_selected_results` | Partial | Partial | Both always permit removal from selected result rows; classic defaults off. |
@@ -30,11 +30,11 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `persistent_create_option` | No | No | Keep creation available when results match. |
 | `skip_no_results` | No | No | Hide no-results copy during creation. |
 | `results_count_text` | Partial | Partial | Both announce counts with fixed English text; neither accepts the localization callback. |
-| `placeholder_text_multiple` | Partial | Partial | Both have one placeholder setting rather than type-specific settings. |
-| `placeholder_text` | Yes | Partial | React's `placeholder` is equivalent but has a different default and precedence. |
-| `placeholder_text_single` | Partial | Partial | Both have one placeholder setting rather than type-specific settings. |
+| `placeholder_text_multiple` | Yes | Yes | React prop: `placeholderTextMultiple`. |
+| `placeholder_text` | Yes | Yes | React prop: `placeholder`; type-specific props take precedence. |
+| `placeholder_text_single` | Yes | Yes | React prop: `placeholderTextSingle`. |
 | `search_contains` | Yes | Yes | React now defaults to `false`, matching classic. |
-| `highlight_prefix_matches` | No | No | Prefix-priority keyboard highlight. |
+| `highlight_prefix_matches` | Yes | Yes | React prop: `highlightPrefixMatches`; result order is unchanged. |
 | `search_matcher` | Yes | Yes | React prop: `searchMatcher`; both receive normalized items. |
 | `search_input_type` | No | No | Both use a fixed text input; classic defaults to search. |
 | `min_search_length` | Yes | Yes | React prop: `minSearchLength`. |

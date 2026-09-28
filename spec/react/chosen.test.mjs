@@ -92,7 +92,7 @@ test('selected multiple results toggle off by pointer and Enter, including at th
 test('single clear and no-results messaging remain keyboard accessible', () => {
   const changes = [];
   render(h(Chosen, { options, defaultValue: 'a', noResultsText: 'Nothing found',
-    onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+    allowSingleDeselect: true, onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
   assert.equal(document.querySelector('.chosen-react__value')?.textContent, 'Apple');
   fireEvent.click(screen.getByRole('button', { name: 'Clear selection' }));
   assert.deepEqual(changes, ['']);
@@ -131,6 +131,41 @@ test('classic search settings filter React results and keep native form values',
   assert.deepEqual(screen.getAllByRole('option').map(row => row.textContent), ['Café']);
   fireEvent.click(screen.getByRole('option', { name: 'Café' }));
   assert.equal(new FormData(document.querySelector('form')).get('animal'), 'special');
+});
+
+test('contains search can highlight a later prefix result without reordering options', () => {
+  render(h(Chosen, { options: [{ value: 'react', label: 'React' }, { value: 'angular', label: 'Angular' }],
+    searchContains: true, highlightPrefixMatches: true, 'aria-label': 'Framework' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'a' } });
+  const rows = screen.getAllByRole('option');
+  assert.deepEqual(rows.map(row => row.textContent), ['React', 'Angular']);
+  assert.equal(input.getAttribute('aria-activedescendant'), rows[1].id);
+});
+
+test('React defaults to classic word-start search and no-results copy', () => {
+  render(h(Chosen, { options: [{ value: 'a', label: 'Banana' }], 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'ana' } });
+  assert.equal(screen.queryByRole('option', { name: 'Banana' }), null);
+  assert.equal(screen.getByText('No results for: ana').textContent, 'No results for: ana');
+  fireEvent.change(input, { target: { value: 'Ban' } });
+  assert.ok(screen.getByRole('option', { name: 'Banana' }));
+});
+
+test('React matches classic clear and type-specific placeholder defaults', () => {
+  const view = render(h(Chosen, { options, value: 'a', 'aria-label': 'Fruit' }));
+  assert.equal(screen.queryByRole('button', { name: 'Clear selection' }), null);
+  view.rerender(h(Chosen, { options, multiple: true, value: [], 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('combobox').placeholder, 'Select Some Options');
+  view.rerender(h(Chosen, { options, multiple: true, value: [], placeholder: 'Fallback',
+    placeholderTextMultiple: 'Choose several', 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('combobox').placeholder, 'Choose several');
+  view.rerender(h(Chosen, { options, multiple: true, value: ['a'],
+    placeholderTextMultiple: 'Choose several', 'aria-label': 'Fruit' }));
+  assert.equal(screen.getByRole('combobox').placeholder, '');
 });
 
 test('controlled values stay controlled across option replacement and form reset', () => {

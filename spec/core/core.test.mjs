@@ -82,6 +82,19 @@ test('custom matching and result caps preserve group structure and visibility ru
   assert.deepEqual(core.filterOptions(entries, '', { maxShownResults: 0 }).items, []);
 });
 
+test('prefix preference is limited to visible enabled labels and built-in contains search', () => {
+  const items = core.normalizeOptions([
+    { value: 'react', label: 'React' },
+    { value: 'angular', label: 'Angular' },
+    { value: 'astro', label: 'Astro', disabled: true }
+  ]);
+  const settings = { highlightPrefixMatches: true, searchContains: true };
+  assert.equal(core.preferredPrefixIndex(items, 'a', settings), 1);
+  assert.equal(core.preferredPrefixIndex(items, 'a', { ...settings, searchMatcher: () => true }), -1);
+  assert.equal(core.preferredPrefixIndex(items, 'a', { ...settings, searchContains: false }), -1);
+  assert.equal(core.preferredPrefixIndex(items, 'A', { ...settings, caseSensitiveSearch: true }), 1);
+});
+
 for (const fixture of cases.selectionCases) {
   test(`shared selection fixture: ${fixture.name}`, () => {
     let values = fixture.initial;

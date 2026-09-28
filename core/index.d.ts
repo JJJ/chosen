@@ -53,6 +53,7 @@ export interface SearchSettings extends ResultSettings {
   enableSplitWordSearch?: boolean;
   foldAccents?: (text: string) => string;
   groupSearch?: boolean;
+  highlightPrefixMatches?: boolean;
   maxShownResults?: number;
   maxSearchLength?: number;
   minSearchLength?: number;
@@ -110,3 +111,4 @@ export function canSelectOption(option: ChosenOption | NormalizedOption, selecte
 export function updateSelection(selectedValues: readonly string[], option: ChosenOption | NormalizedOption, settings?: SelectionSettings): SelectionResult;
 export function createMatcher(query: string, settings?: SearchSettings): Matcher;
 export function filterOptions(entries: readonly (ChosenOption | ChosenGroup)[] | readonly NormalizedEntry[], query: string, settings?: SearchSettings): FilterResult;
+export function preferredPrefixIndex(items: readonly NormalizedEntry[], query: string, settings?: SearchSettings): number;

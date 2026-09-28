@@ -27,9 +27,12 @@ Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `c
 | --- | --- | --- |
 | `allow_single_deselect` | `false` | Show a clear button when the first single-select option is blank. |
 | `placeholder_text` | “Select an Option” or “Select Some Options” | Text shown before a selection; `data-placeholder` and native `placeholder` on the select take precedence. |
+| `placeholder_text_single` | type default | Override the fallback for single selects; source attributes still take precedence. |
+| `placeholder_text_multiple` | type default | Override the fallback for multiple selects; source attributes still take precedence. |
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
 | `search_contains` | `false` | Match within words. |
+| `highlight_prefix_matches` | `false` | With contains search, highlight a visible label prefix before an earlier substring result without changing result order. Does not override `search_matcher`. |
 | `enable_split_word_search` | `true` | Match at word boundaries; set `false` to require a label-start match. |
 | `case_sensitive_search` | `false` | Preserve case while matching. |
 | `search_in_values` | `false` | Also match option values. |

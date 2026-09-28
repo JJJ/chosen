@@ -46,6 +46,8 @@ and the triggering React event.
 Unlike classic Chosen, this component receives option objects directly rather
 than enhancing a `<select>` and uses camelCase props. Search matches word starts
 by default, as in classic Chosen; set `searchContains` to match within words,
+and `highlightPrefixMatches` to prefer a visible label prefix for Enter without
+reordering contains-search results. Set
 `enableSplitWordSearch={false}` to require a label-start match,
 `caseSensitiveSearch` to preserve case, `searchInValues` to search values,
 or `splitSearchTerms` to match words in any order. `normalizeSearchText` and
@@ -60,8 +62,10 @@ visible, clicking one or pressing Enter on it
 removes that selection; its chip's remove button does the same. `open` and
 `onOpenChange` control the popup; `defaultOpen` is its
 uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
-`maxSelectedOptions`, `placeholder`, `searchPlaceholder`, and `noResultsText`
-cover common form behavior without framework-specific markup hooks.
+`maxSelectedOptions`, `placeholder`, `placeholderTextSingle`,
+`placeholderTextMultiple`, `searchPlaceholder`, and `noResultsText` cover common
+form behavior without framework-specific markup hooks. Single clearing is
+opt-in with `allowSingleDeselect`, matching classic Chosen; the demo enables it.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
 

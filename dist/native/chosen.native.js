@@ -252,6 +252,21 @@ var ChosenNative = (() => {
     }
     return { items, count, exactMatch };
   }
+  function preferredPrefixIndex(items, query, settings) {
+    var config = settings || {};
+    if (!config.highlightPrefixMatches || !config.searchContains || config.searchMatcher || !query) return -1;
+    var normalize = config.normalizeSearchText || asText;
+    var term = asText(normalize(asText(query).trim()));
+    if (!config.caseSensitiveSearch) term = term.toLowerCase();
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      if (item.kind !== "option" || item.disabled) continue;
+      var label = asText(normalize(item.label));
+      if (!config.caseSensitiveSearch) label = label.toLowerCase();
+      if (label.indexOf(term) === 0) return index;
+    }
+    return -1;
+  }
 
   // native/Chosen.mjs
   var nextId = 0;
@@ -310,6 +325,7 @@ var ChosenNative = (() => {
         enable_split_word_search: true,
         case_sensitive_search: false,
         search_in_values: false,
+        highlight_prefix_matches: false,
         max_search_length: 1e3,
         display_selected_options: true,
         display_disabled_options: true,
@@ -448,7 +464,7 @@ var ChosenNative = (() => {
       this.value.textContent = this.multiple ? "" : selected[0]?.label || "";
       this.value.hidden = this.multiple || !selected.length || this.opened || !!this.input.value;
       this.clearButton.hidden = this.multiple || !this.options.allow_single_deselect || !selected.length || !(this.select.options[0]?.value === "" && this.select.options[0]?.text === "") || this.select.disabled || this.input.readOnly;
-      this.input.placeholder = this.opened ? this.options.search_placeholder || "Search options" : selected.length && !this.multiple ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? this.options.placeholder_text;
+      this.input.placeholder = this.opened ? this.options.search_placeholder || "Search options" : selected.length ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ?? this.options.placeholder_text;
       this.status.textContent = selected.length ? `Selected: ${selected.map((entry) => entry.label).join(", ")}.` : "No selection.";
     }
     renderResults() {
@@ -504,7 +520,14 @@ var ChosenNative = (() => {
       if (!result.count && query && this.opened) emit(this.select, "chosen:no_results", this, { search_term: query });
       const active = this.available[this.activeIndex];
       if (!active || active.kind !== "option" || active.disabled) {
-        this.activeIndex = this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled);
+        const preferred = preferredPrefixIndex(this.available, query, {
+          highlightPrefixMatches: this.options.highlight_prefix_matches,
+          searchContains: this.options.search_contains,
+          searchMatcher: this.options.search_matcher,
+          caseSensitiveSearch: this.options.case_sensitive_search,
+          normalizeSearchText: this.options.normalize_search_text
+        });
+        this.activeIndex = preferred >= 0 ? preferred : this.available.findIndex((entry) => entry.kind === "option" && !entry.disabled);
       }
       this.highlight(this.activeIndex);
       if (this.opened) this.status.textContent = `${result.count} result${result.count === 1 ? "" : "s"} available.`;

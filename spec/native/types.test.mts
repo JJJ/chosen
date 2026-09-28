@@ -1,5 +1,6 @@
 import { Chosen, type ChosenOptions } from 'chosen-jjj/native';
 const options: ChosenOptions = { search_contains: true, max_selected_options: 3,
+  placeholder_text_multiple: 'Choose several',
   search_in_values: true, max_shown_results: 20,
   search_matcher: (query, item) => item.kind === 'option' && item.value === query };
 const select = document.createElement('select');

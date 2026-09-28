@@ -38,10 +38,14 @@ export interface ChosenProps {
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
+  placeholderTextSingle?: string;
+  placeholderTextMultiple?: string;
+  allowSingleDeselect?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
   maxSelectedOptions?: number;
   searchContains?: boolean;
+  highlightPrefixMatches?: boolean;
   enableSplitWordSearch?: boolean;
   caseSensitiveSearch?: boolean;
   searchInValues?: boolean;

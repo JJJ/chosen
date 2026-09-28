@@ -52,6 +52,9 @@ var ChosenCore = (function() {
     normalizeOptions: function() {
       return normalizeOptions;
     },
+    preferredPrefixIndex: function() {
+      return preferredPrefixIndex;
+    },
     selectionLimitReached: function() {
       return selectionLimitReached;
     },
@@ -322,6 +325,21 @@ var ChosenCore = (function() {
       exactMatch = exactMatch || result.exact;
     }
     return { items: items, count: count, exactMatch: exactMatch };
+  }
+  function preferredPrefixIndex(items, query, settings) {
+    var config = settings || {};
+    if (!config.highlightPrefixMatches || !config.searchContains || config.searchMatcher || !query) return -1;
+    var normalize = config.normalizeSearchText || asText;
+    var term = asText(normalize(asText(query).trim()));
+    if (!config.caseSensitiveSearch) term = term.toLowerCase();
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      if (item.kind !== "option" || item.disabled) continue;
+      var label = asText(normalize(item.label));
+      if (!config.caseSensitiveSearch) label = label.toLowerCase();
+      if (label.indexOf(term) === 0) return index;
+    }
+    return -1;
   }
   return __toCommonJS(index_exports);
 })();

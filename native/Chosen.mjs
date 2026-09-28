@@ -1,4 +1,4 @@
-import { filterOptions, normalizeOptions } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex } from '../core/index.mjs';
 
 let nextId = 0;
 const instances = new WeakMap();
@@ -41,6 +41,7 @@ export class Chosen {
     this.select = select;
     this.options = { search_contains: false, split_search_terms: false, group_search: true,
       enable_split_word_search: true, case_sensitive_search: false, search_in_values: false,
+      highlight_prefix_matches: false,
       max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
@@ -169,8 +170,10 @@ export class Chosen {
       !(this.select.options[0]?.value === '' && this.select.options[0]?.text === '') ||
       this.select.disabled || this.input.readOnly;
     this.input.placeholder = this.opened ? (this.options.search_placeholder || 'Search options') :
-      (selected.length && !this.multiple ? '' : this.select.getAttribute('data-placeholder') ??
-        this.select.getAttribute('placeholder') ?? this.options.placeholder_text);
+      (selected.length ? '' : this.select.getAttribute('data-placeholder') ??
+        this.select.getAttribute('placeholder') ??
+        (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ??
+        this.options.placeholder_text);
     this.status.textContent = selected.length ? `Selected: ${selected.map(entry => entry.label).join(', ')}.` : 'No selection.';
   }
 
@@ -224,7 +227,14 @@ export class Chosen {
     if (!result.count && query && this.opened) emit(this.select, 'chosen:no_results', this, { search_term: query });
     const active = this.available[this.activeIndex];
     if (!active || active.kind !== 'option' || active.disabled) {
-      this.activeIndex = this.available.findIndex(entry => entry.kind === 'option' && !entry.disabled);
+      const preferred = preferredPrefixIndex(this.available, query, {
+        highlightPrefixMatches: this.options.highlight_prefix_matches,
+        searchContains: this.options.search_contains,
+        searchMatcher: this.options.search_matcher,
+        caseSensitiveSearch: this.options.case_sensitive_search,
+        normalizeSearchText: this.options.normalize_search_text
+      });
+      this.activeIndex = preferred >= 0 ? preferred : this.available.findIndex(entry => entry.kind === 'option' && !entry.disabled);
     }
     this.highlight(this.activeIndex);
     if (this.opened) this.status.textContent = `${result.count} result${result.count === 1 ? '' : 's'} available.`;

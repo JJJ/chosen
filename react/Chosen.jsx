@@ -1,7 +1,7 @@
 import React, {
   forwardRef, useCallback, useEffect, useId, useImperativeHandle, useMemo, useRef, useState
 } from 'react';
-import { filterOptions, normalizeOptions, updateSelection } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex, updateSelection } from '../core/index.mjs';
 
 function valuesOf(value, multiple) {
   if (value == null || value === '') return [];
@@ -20,9 +20,11 @@ export const Chosen = forwardRef(function Chosen({
   options = [], multiple = false, value, defaultValue, onChange,
   open: controlledOpen, defaultOpen = false, onOpenChange,
   name, form, required = false, disabled = false, readOnly = false,
-  placeholder = 'Select an Option', searchPlaceholder = 'Search options',
+  placeholder, placeholderTextSingle, placeholderTextMultiple,
+  searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', maxSelectedOptions,
   searchContains = false, splitSearchTerms = false, groupSearch = true,
+  highlightPrefixMatches = false,
   enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
   maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
   normalizeSearchText, searchMatcher,
@@ -61,8 +63,11 @@ export const Chosen = forwardRef(function Chosen({
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);
   const available = results.items;
+  const preferred = preferredPrefixIndex(available, query, {
+    highlightPrefixMatches, searchContains, searchMatcher, caseSensitiveSearch, normalizeSearchText
+  });
   const active = activeIndex >= 0 && available[activeIndex]?.kind === 'option'
-    && !available[activeIndex].disabled ? activeIndex : firstEnabled(available);
+    && !available[activeIndex].disabled ? activeIndex : (preferred >= 0 ? preferred : firstEnabled(available));
   const activeOption = active >= 0 ? available[active] : null;
   const selectedOptions = entries.filter(item => item.kind === 'option' && selectedSet.has(item.value));
   const attachNativeSelect = useCallback(node => {
@@ -208,7 +213,9 @@ export const Chosen = forwardRef(function Chosen({
   };
   const selectedLabel = selectedOptions[0]?.label || '';
   const showSingleValue = !multiple && !!selectedLabel && !isOpen && !query;
-  const visiblePlaceholder = isOpen ? searchPlaceholder : (showSingleValue ? '' : placeholder);
+  const closedPlaceholder = (multiple ? placeholderTextMultiple : placeholderTextSingle) ??
+    placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
+  const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
   const status = limitNotice ? `Maximum of ${maxSelectedOptions} selections reached.` :
     isOpen ? `${results.count} result${results.count === 1 ? '' : 's'} available.` :
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');
@@ -279,7 +286,7 @@ export const Chosen = forwardRef(function Chosen({
         autoComplete="off" onFocus={event => { onFocus?.(event); }}
         onBlur={onInputBlur} onClick={() => changeOpen(true)} onKeyDown={keyDown}
         onChange={event => { setQuery(event.target.value); setActiveIndex(-1); changeOpen(true); }} />
-      {!multiple && selectedValues.length > 0 && !disabled && !readOnly && <button type="button"
+      {!multiple && allowSingleDeselect && selectedValues.length > 0 && !disabled && !readOnly && <button type="button"
         className="chosen-react__clear" aria-label="Clear selection" onClick={event => {
           commit([], event); inputRef.current?.focus();
         }}>×</button>}

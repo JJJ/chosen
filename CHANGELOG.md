@@ -7,7 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
-- Expose classic search matching, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
+- Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
 - Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).
 - Read supported scalar Chosen options from per-select `data-*` attributes in both legacy adapters, with explicit JavaScript options taking precedence (harvesthq/chosen#1870).
 - Load the jQuery distribution through AMD or CommonJS while preserving plain browser-script loading and the existing `$.fn.chosen` API (harvesthq/chosen#2215).
@@ -42,7 +42,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
-- Align experimental React's default substring search, placeholder capitalization, and no-results copy with classic Chosen; apps depending on the earlier React defaults can set `searchContains`, `placeholder`, and `noResultsText` explicitly.
+- Align experimental React's default substring search, placeholder capitalization, single-clear visibility, multiple placeholder, and no-results copy with classic Chosen; apps depending on the earlier React defaults can set `searchContains`, `allowSingleDeselect`, `placeholder`, and `noResultsText` explicitly.
 - Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.

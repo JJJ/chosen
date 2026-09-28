@@ -145,6 +145,41 @@ test('classic search settings reach the shared matcher without changing select v
   dom.window.close();
 });
 
+test('contains search can prefer a label prefix without changing result order', () => {
+  const { dom, select } = fixture('<select><option value="react">React</option><option value="angular">Angular</option></select>');
+  const chosen = new Chosen(select, { search_contains: true, highlight_prefix_matches: true });
+  chosen.open();
+  chosen.input.value = 'a';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.deepEqual(chosen.available.map(item => item.label), ['React', 'Angular']);
+  assert.equal(chosen.available[chosen.activeIndex].label, 'Angular');
+  assert.equal(chosen.input.getAttribute('aria-activedescendant'), `${chosen.id}-option-1`);
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('type-specific placeholders override fallback without losing source-attribute precedence', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="a">Alpha</option></select>');
+  const chosen = new Chosen(select, { placeholder_text: 'Fallback', placeholder_text_single: 'Choose one' });
+  assert.equal(chosen.input.placeholder, 'Choose one');
+  select.setAttribute('data-placeholder', 'From markup');
+  chosen.update();
+  assert.equal(chosen.input.placeholder, 'From markup');
+  chosen.destroy();
+  dom.window.close();
+});
+
+test('a multiple selection hides its closed placeholder once a choice exists', () => {
+  const { dom, select } = fixture('<select multiple><option value="a">Alpha</option></select>');
+  const chosen = new Chosen(select, { placeholder_text_multiple: 'Choose several' });
+  assert.equal(chosen.input.placeholder, 'Choose several');
+  select.options[0].selected = true;
+  chosen.update();
+  assert.equal(chosen.input.placeholder, '');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('rejects invalid or duplicate initialization and permits reinitialization after destroy', () => {
   const { dom, select } = fixture('<select><option>One</option></select>');
   assert.throws(() => new Chosen(document.querySelector('form')), TypeError);

@@ -49,6 +49,7 @@ function Demo() {
           <label htmlFor="react-fruit">Favorite fruit <span aria-hidden="true">*</span></label>
           <Chosen id="react-fruit" name="fruit" options={options} value={fruit}
             onChange={value => { setFruit(value); setAttempted(false); }} required
+            allowSingleDeselect
             searchInValues
             placeholder="Choose a fruit" searchPlaceholder="Choose a fruit"
             aria-describedby="react-fruit-help"

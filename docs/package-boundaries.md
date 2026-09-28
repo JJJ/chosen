@@ -23,7 +23,8 @@ selection changes without touching the DOM or mutating caller data. The legacy
 adapters still parse native `<select>` elements, render their own markup, and
 own focus, events, form values, and cleanup. Both adapters use the same core
 matcher, visibility rule, and selection-limit rule that the React edition can
-call directly.
+call directly. `preferredPrefixIndex()` returns a visible, enabled label-prefix
+match for contains search without changing the filtered result order.
 
 The source of truth is `core/index.mjs`. `grunt build` copies its ESM source,
 generates CommonJS and ES5 browser formats, and includes the browser format in

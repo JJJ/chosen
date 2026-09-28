@@ -22,6 +22,7 @@ window.mountVisualChosen = ({ multiple, state, feature }) => {
   root.render(<Chosen id="visual-select" options={featureOptions} multiple={multiple}
     defaultValue={state === 'invalid' ? (multiple ? [] : '') : (multiple ? ['apple', 'banana'] : 'apple')}
     defaultOpen={state === 'open' || feature === 'rtl-multiple'} disabled={state === 'disabled'}
+    allowSingleDeselect={feature === 'single-clear'}
     required={state === 'invalid'} aria-invalid={state === 'invalid' || undefined}
     dir={feature?.startsWith('rtl-') ? 'rtl' : undefined}
     aria-label={`${multiple ? 'Multiple' : 'Single'} choice`} />);

@@ -2,9 +2,12 @@ export interface ChosenOptions {
   aria_label?: string;
   allow_single_deselect?: boolean;
   placeholder_text?: string;
+  placeholder_text_single?: string;
+  placeholder_text_multiple?: string;
   search_placeholder?: string;
   no_results_text?: string;
   search_contains?: boolean;
+  highlight_prefix_matches?: boolean;
   enable_split_word_search?: boolean;
   case_sensitive_search?: boolean;
   search_in_values?: boolean;
