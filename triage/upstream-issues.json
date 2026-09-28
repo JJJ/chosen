@@ -1146,8 +1146,8 @@
   },
   {
     "number": 2215,
-    "status": "candidate",
-    "note": "Check module-loader use with current package exports; browser UMD compatibility may remain distinct."
+    "status": "fixed-in-fork",
+    "note": "The jQuery distribution registers with AMD, exports its plugin through CommonJS, and retains browser-global loading; Prototype remains a browser-global adapter."
   },
   {
     "number": 2212,
