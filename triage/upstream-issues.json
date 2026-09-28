@@ -1107,7 +1107,7 @@
   {
     "number": 2438,
     "status": "candidate",
-    "note": "Consider mobile presentation after validating current native fallback and touch behavior."
+    "note": "Current phone presentation is an anchored dropdown, not a full-screen picker. A phone-sized WebKit/Chromium probe found a Prototype single-select tap bug, handled separately; the full-screen request remains a design candidate."
   },
   {
     "number": 2397,

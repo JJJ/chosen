@@ -137,6 +137,38 @@ async function main() {
       } finally {
         await context.close();
       }
+
+      const phoneContext = await browser.newContext(devices['iPhone SE']);
+      try {
+        const phonePage = await phoneContext.newPage();
+        phonePage.setDefaultTimeout(5000);
+        const phoneErrors = [];
+        phonePage.on('pageerror', (error) => phoneErrors.push(error.message));
+        await phonePage.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
+          <select id="phone-choice" style="width:300px"><option value="">Choose</option><option value="one">One</option><option value="two">Two</option></select>
+        </body></html>`);
+        await phonePage.addStyleTag({ path: fixture('docs/chosen.css') });
+        await phonePage.addScriptTag({ path: fixture(adapter.library) });
+        await phonePage.addScriptTag({ path: fixture(adapter.chosen) });
+        await phonePage.evaluate((name) => {
+          const select = document.querySelector('#phone-choice');
+          if (name === 'jQuery') window.jQuery(select).chosen();
+          else new window.Chosen(select);
+        }, adapter.name);
+        await phonePage.locator('#phone_choice_chosen .chosen-single').tap();
+        if (!await phonePage.locator('#phone_choice_chosen').evaluate((container) => container.classList.contains('chosen-with-drop'))) {
+          throw new Error(`${adapter.name}: phone tap closed the single-select dropdown`);
+        }
+        await phonePage.locator('#phone_choice_chosen .chosen-search-input').fill('Two');
+        await phonePage.locator('#phone_choice_chosen .active-result').tap();
+        if (await phonePage.locator('#phone-choice').inputValue() !== 'two') {
+          throw new Error(`${adapter.name}: phone tap did not select the filtered result`);
+        }
+        if (phoneErrors.length) throw new Error(`${adapter.name}: ${phoneErrors.join('; ')}`);
+        console.log(`${adapter.name}: iPhone WebKit single-select tap, filter, and select passed`);
+      } finally {
+        await phoneContext.close();
+      }
     }
   } finally {
     await browser.close();
