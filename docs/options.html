@@ -263,7 +263,7 @@
         <tr>
           <td>dropdown_width</td>
           <td>100% of the Chosen control.</td>
-          <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing.</td>
+          <td>Sets the result dropdown width independently from the Chosen control. Pass any CSS width, such as <code class="language-javascript">"320px"</code> or <code class="language-javascript">"40rem"</code>. Use <code class="language-javascript">"max-content"</code> to expand the dropdown for its longest label in browsers that support intrinsic sizing. Custom-width dropdowns float with a small gap and align to the control's reading edge.</td>
         </tr>
         <tr>
           <td>recalculate_width_on_update</td>
@@ -469,7 +469,8 @@ $(".my-select").myChosen();</code></pre>
         <tr><td><code>--chosen-control-line-height</code>, <code>--chosen-control-padding-block</code>, <code>--chosen-control-padding-inline-start</code>, and <code>--chosen-control-padding-inline-end</code></td><td>Closed single-select size and density.</td></tr>
         <tr><td><code>--chosen-rtl-control-padding-block</code></td><td>Optional right-to-left single-select block padding. It inherits an explicit control-padding override and otherwise preserves Chosen's compact RTL default.</td></tr>
         <tr><td><code>--chosen-control-shadow</code></td><td>Closed single- and multiple-select shadow.</td></tr>
-        <tr><td><code>--chosen-dropdown-shadow</code>, <code>--chosen-dropdown-offset</code>, and <code>--chosen-dropdown-z-index</code></td><td>Dropdown elevation, overlap, and stacking.</td></tr>
+        <tr><td><code>--chosen-dropdown-shadow</code>, <code>--chosen-dropdown-offset</code>, and <code>--chosen-dropdown-z-index</code></td><td>Attached dropdown elevation, overlap, and stacking.</td></tr>
+        <tr><td><code>--chosen-floating-dropdown-gap</code> and <code>--chosen-floating-dropdown-shadow</code></td><td>Separation and elevation for a custom-width dropdown (4px and a modest shadow by default).</td></tr>
         <tr><td><code>--chosen-search-text-color</code>, <code>--chosen-search-placeholder-color</code>, and <code>--chosen-search-shadow</code></td><td>Search field text, placeholder, and shadow.</td></tr>
         <tr><td><code>--chosen-search-padding-block</code>, <code>--chosen-search-padding-inline-start</code>, and <code>--chosen-search-padding-inline-end</code></td><td>Search field density and icon space.</td></tr>
         <tr><td><code>--chosen-result-padding-block</code>, <code>--chosen-result-padding-inline</code>, <code>--chosen-result-line-height</code>, and <code>--chosen-group-option-indent</code></td><td>Result density and grouped-option indentation.</td></tr>
@@ -483,10 +484,22 @@ $(".my-select").myChosen();</code></pre>
         <tr><td><code>--chosen-focus-outline</code> and <code>--chosen-focus-outline-offset</code></td><td>Full outline override and its offset. The ring variables are used when the full outline is not set.</td></tr>
         <tr><td><code>--chosen-transition-duration</code> and <code>--chosen-transition-timing</code></td><td>Control border, background, and shadow transitions.</td></tr>
         <tr><td><code>--chosen-icon-chevrons</code>, <code>--chosen-icon-search</code>, <code>--chosen-icon-clear</code>, and <code>--chosen-icon-clear-active</code></td><td>Control icons as CSS images.</td></tr>
+        <tr><td><code>--chosen-icon-size</code></td><td>Size of the scalable control icons (15px by default). Set a relative value such as <code>1rem</code> alongside the control spacing variables.</td></tr>
       </tbody></table>
 
       <h3>Editing the control icons</h3>
       <p>The four <a href="https://github.com/JJJ/chosen/tree/master/sass/icons">source SVG icons</a> are included in the repository and npm package. Edit an SVG in <code>sass/icons/</code>, then run <code>npm run build</code> to embed it in the Sass defaults and generated CSS. The stylesheet still needs no separate image request. To customize one project without rebuilding Chosen, set the matching <code>--chosen-icon-*</code> CSS variable to a <code>url(...)</code> image.</p>
+
+      <h3>Relative sizing</h3>
+      <p>Chosen keeps its existing pixel defaults. Scope relative units to a wrapper when a form should scale with the root font size. The SVG icons remain sharp at the configured size; leave enough inline padding for a larger search icon.</p>
+<pre><code class="language-css">.relative-form .chosen-container {
+  --chosen-font-size: 1rem;
+  --chosen-control-line-height: 1.5rem;
+  --chosen-control-padding-block: 0.3rem;
+  --chosen-search-padding-inline-end: 2rem;
+  --chosen-result-padding-block: 0.35rem;
+  --chosen-icon-size: 1rem;
+}</code></pre>
 
       <h3>Tailwind CSS</h3>
       <p>Tailwind projects can map Chosen directly to their theme in the components layer. Load <code>chosen.css</code> before this application stylesheet. Chosen does not require Tailwind at runtime. The example also enables Tailwind's optional forms reset; Chosen's own selectors and variables keep the generated controls consistent under either forms-plugin strategy.</p>
@@ -593,7 +606,7 @@ $(".my-select").myChosen();</code></pre>
           <td>Visually hidden live status text that announces the available result count.</td>
         </tr>
         <tr>
-          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-readonly</code>, <code>.chosen-rtl</code>, and <code>.chosen-dropup</code></td>
+          <td><code>.chosen-with-drop</code>, <code>.chosen-container-active</code>, <code>.chosen-disabled</code>, <code>.chosen-readonly</code>, <code>.chosen-rtl</code>, <code>.chosen-dropup</code>, and <code>.chosen-floating-dropdown</code></td>
           <td>Open, active, disabled, readonly, right-to-left, and upward-opening container states.</td>
         </tr>
       </tbody></table>
