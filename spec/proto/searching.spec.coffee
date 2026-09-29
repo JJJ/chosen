@@ -414,6 +414,16 @@ describe "Searching", ->
     expect(div.select(".no-results").length).toBe(1)
     expect(div.down(".no-results").innerHTML.trim()).toBe("No results for: <span>&amp;amp;</span>")
 
+  it "places the search term in a localized no-results template", ->
+    div = new Element("div")
+    div.update("<select><option>Item</option></select>")
+    new Chosen(div.down("select"), no_results_template: "For {search}, no <matches>.")
+    simulant.fire(div.down(".chosen-container"), "mousedown")
+    search_field = div.down(".chosen-search-input")
+    search_field.value = "&"
+    simulant.fire(search_field, "keyup")
+    expect(div.down(".no-results").innerHTML.trim()).toBe("For <span>&amp;</span>, no &lt;matches&gt;.")
+
   it "matches in non-ascii languages like Chinese when selecting a single item", ->
     div = new Element("div")
     div.update("""

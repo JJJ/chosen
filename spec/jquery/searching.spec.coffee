@@ -356,6 +356,15 @@ describe "Searching", ->
     expect(div.find(".no-results").length).toBe(1)
     expect(div.find(".no-results").first().html().trim()).toBe("No results for: <span>&amp;amp;</span>")
 
+  it "places the search term in a localized no-results template", ->
+    div = $("<div>").html("<select><option>Item</option></select>")
+    div.find("select").chosen(no_results_template: "For {search}, no <matches>.")
+    div.find(".chosen-container").trigger("mousedown")
+    search_field = div.find(".chosen-search-input").first()
+    search_field.val("&")
+    search_field.trigger("keyup")
+    expect(div.find(".no-results").first().html().trim()).toBe("For <span>&amp;</span>, no &lt;matches&gt;.")
+
   it "safely trims search text without relying on jQuery.trim", ->
     div = $("<div>").html("""
       <select>

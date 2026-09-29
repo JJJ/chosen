@@ -35,6 +35,7 @@ With the control focused, Enter opens a closed list and chooses its highlighted 
 | `placeholder_text_multiple` | type default | Override the fallback for multiple selects; source attributes still take precedence. |
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
+| `no_results_template` | unset | Optional plain-text message with `{search}` where the search term should appear. Overrides `no_results_text`; without the marker, omits the term. |
 | `create_option` | `false` | Offer a new option for unmatched text. `true` appends and selects a native option; a function receives the query with the Chosen instance as `this` and owns option insertion and native change events. Chosen refreshes its view after the callback. |
 | `create_option_text` | “Add Option:” | Prefix for the creation row. Source `data-create_option_text` takes precedence. Text is escaped. |
 | `persistent_create_option` | `false` | Keep the creation row when results match but none matches the full query exactly. |

@@ -32,7 +32,7 @@ export const Chosen = forwardRef(function Chosen({
   name, form, required = false, disabled = false, readOnly = false,
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
-  noResultsText = 'No results for:', maxSelectedOptions,
+  noResultsText = 'No results for:', noResultsTemplate, maxSelectedOptions,
   createOption = false, createOptionText = 'Add Option:',
   persistentCreateOption = false, skipNoResults = false, onCreateOption,
   resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
@@ -692,7 +692,10 @@ export const Chosen = forwardRef(function Chosen({
         {renderedResults}
       </div>
       {!results.count && !(skipNoResults && available.some(item => item.kind === 'create')) &&
-        <div className="chosen-react__empty">{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</div>}
+        <div className="chosen-react__empty">{typeof noResultsTemplate === 'string'
+          ? noResultsTemplate.split('{search}').map((part, index) =>
+            <React.Fragment key={index}>{index > 0 && <span>{appliedQuery}</span>}{part}</React.Fragment>)
+          : <>{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</>}</div>}
     </div>}
   </div>;
 });

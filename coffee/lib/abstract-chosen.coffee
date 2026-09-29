@@ -165,6 +165,7 @@ class AbstractChosen
     @default_text = this.unescape_html(@default_text)
 
     @results_none_found = @form_field.getAttribute("data-no_results_text") || @options.no_results_text || AbstractChosen.default_no_result_text
+    @no_results_template = @options.no_results_template
     @create_option_text = @form_field.getAttribute("data-create_option_text") || @options.create_option_text || AbstractChosen.default_create_option_text
 
   open_field: ->
@@ -1176,6 +1177,10 @@ class AbstractChosen
     """
 
   get_no_results_html: (terms) ->
+    if @no_results_template?
+      search = "<span>#{this.escape_html(terms)}</span>"
+      content = @no_results_template.split("{search}").map((part) => this.escape_html(part)).join(search)
+      return "<li class=\"no-results\">#{content}</li>"
     """
       <li class="no-results">
         #{this.escape_html(@results_none_found)} <span>#{this.escape_html(terms)}</span>
@@ -1245,6 +1250,7 @@ class AbstractChosen
     deselect_all_text: 'string'
     show_fewer_items_text: 'string'
     no_results_text: 'string'
+    no_results_template: 'string'
     create_option_text: 'string'
     placeholder_text: 'string'
     placeholder_text_single: 'string'

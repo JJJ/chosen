@@ -56,6 +56,7 @@ export interface ChosenProps {
   allowSingleDeselect?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
+  noResultsTemplate?: string;
   createOption?: boolean;
   createOptionText?: string;
   persistentCreateOption?: boolean;

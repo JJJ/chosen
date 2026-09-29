@@ -25,6 +25,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `more_items_text` | Yes | Yes | Hidden-choice count callback; React prop: `moreItemsText`. |
 | `show_fewer_items_text` | Yes | Yes | Expanded summary button copy; React prop: `showFewerItemsText`. |
 | `no_results_text` | Yes | Yes | React prop: `noResultsText`; custom text is used literally before the query. Vanilla also reads source `data-no_results_text`. |
+| `no_results_template` | Yes | Yes | React prop: `noResultsTemplate`; optional plain-text `{search}` marker places the escaped query within localized copy. |
 | `create_option` | Yes | Yes | Vanilla appends to the source select or calls a supplied function; React `createOption` adds a local option and calls optional `onCreateOption`. Controlled parents must update `value`. |
 | `create_option_text` | Yes | Yes | New-option action label; React prop: `createOptionText`. Vanilla also reads `data-create_option_text`. |
 | `persistent_create_option` | Yes | Yes | Keep creation available when results match but no exact option exists; React prop: `persistentCreateOption`. |

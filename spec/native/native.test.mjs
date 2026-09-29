@@ -69,6 +69,23 @@ test('no-results events expose the rendered row and report its removal', () => {
   dom.window.close();
 });
 
+test('localized no-results templates place and escape the search term', () => {
+  const { dom, select } = fixture('<select multiple><option>Apple</option></select>');
+  const chosen = new Chosen(select, { no_results_template: 'For {search}, no <matches>.' });
+  chosen.open();
+  chosen.input.value = '&';
+  chosen.renderResults();
+  assert.equal(chosen.empty.textContent, 'For &, no <matches>.');
+  assert.equal(chosen.empty.querySelector('span').textContent, '&');
+  assert.equal(chosen.empty.querySelector('matches'), null);
+  chosen.options.no_results_template = 'Nothing here.';
+  chosen.renderResults();
+  assert.equal(chosen.empty.textContent, 'Nothing here.');
+  assert.equal(chosen.empty.querySelector('span'), null);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('single selection preserves native values, form data, events, and update lifecycle', () => {
   const { dom, select, form } = fixture('<label for="fruit">Fruit</label><select id="fruit" name="fruit"><option value=""></option><option value="apple">Apple</option><option value="pear">Pear</option></select>');
   const events = [];
