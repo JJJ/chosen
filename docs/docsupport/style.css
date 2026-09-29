@@ -137,6 +137,17 @@ samp {
   color: #ffffff;
 }
 
+.demo-quick-tests {
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+}
+
+.demo-quick-tests h2 { margin: 0 0 .65rem; font-size: 1.15rem; }
+.demo-quick-tests ol { margin: 0; padding-inline-start: 1.4rem; }
+.demo-quick-tests li + li { margin-top: .45rem; }
+
 .theme-toggle {
   padding: 4px 8px;
   border: 1px solid #687083;
@@ -220,15 +231,29 @@ samp {
 }
 
 .button-blue {
-  border-color: #e56a23;
-  background: #e56a23;
+  border-color: #b84f16;
+  background: #b84f16;
   color: #ffffff;
 }
 
 .button-blue:hover {
-  border-color: #f07b36;
-  background: #f07b36;
+  border-color: #9b4212;
+  background: #9b4212;
 }
+
+.adapter-suite { margin: 0 0 2.5rem; }
+.adapter-suite-example .side-by-side > div { min-width: 0; }
+.adapter-suite .comparison-label { color: #56606e; }
+.adapter-suite-example .chosen-native,
+.adapter-suite-example .chosen-react { width: min(100%, 350px); max-width: 100%; }
+.adapter-suite-clip { height: 86px; overflow: hidden; }
+.adapter-suite-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
+.adapter-suite-actions > button,
+.adapter-suite-control > button { padding: .35rem .6rem; font: inherit; font-size: .85rem; cursor: pointer; }
+.adapter-case-relative .chosen-native,
+.adapter-case-relative .chosen-react { --chosen-icon-size: 1.2rem; font-size: 1.1rem; }
+.adapter-suite output { display: block; margin: 1rem 0; }
+:root[data-theme="dark"] .adapter-suite .comparison-label { color: #bdc5d0; }
 
 .text-link {
   padding: 7px 4px;
@@ -581,6 +606,8 @@ footer {
   border-color: #30363d;
   background: #1d2128;
 }
+
+:root[data-theme="dark"] .demo-quick-tests { border-color: #3d444d; }
 
 :root[data-theme="dark"] .site-header {
   background: #11151c;

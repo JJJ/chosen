@@ -1,0 +1,22 @@
+.native-demo-form { display: grid; gap: 2rem; max-width: 52rem; }
+.native-demo-field { display: grid; gap: .5rem; }
+.native-demo-field h2 { margin-bottom: .2rem; }
+.native-demo-field label { font-weight: 600; }
+.native-demo-field p { margin: .3rem 0 0; }
+.native-demo-field .chosen-native { max-width: 32rem; }
+.native-demo-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.native-demo-actions button { padding: .5rem .75rem; cursor: pointer; }
+.native-demo-events { max-width: 52rem; min-height: 5rem; white-space: pre-wrap; }
+:root[data-theme="dark"] .chosen-native {
+  --chosen-text-color: #e6edf3;
+  --chosen-placeholder-color: #c4ccd7;
+  --chosen-border-color: #68717d;
+  --chosen-control-background: #22272e;
+  --chosen-dropdown-background: #22272e;
+  --chosen-choice-background: #343b45;
+  --chosen-choice-color: #e6edf3;
+  --chosen-selected-background: #343b45;
+  --chosen-selected-color: #e6edf3;
+  --chosen-group-color: #b8c0cc;
+  --chosen-muted-color: #aeb7c3;
+}

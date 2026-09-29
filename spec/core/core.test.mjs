@@ -15,12 +15,15 @@ test('core has equivalent ESM and CommonJS package entry points', () => {
 });
 
 test('normalization preserves groups, inherited states, and caller data', () => {
-  const entries = [{ label: 'Group', disabled: true, options: [{ value: 'one', label: 'One' }] }];
+  const entries = [{ label: 'Group', className: 'group-accent', disabled: true,
+    options: [{ value: 'one', label: 'One', className: 'option-accent' }] }];
   const normalized = core.normalizeOptions(entries);
   assert.deepEqual(normalized.map((item) => item.kind), ['group', 'option']);
   assert.equal(normalized[1].groupIndex, 0);
   assert.equal(normalized[1].groupLabel, 'Group');
   assert.equal(normalized[1].disabled, true);
+  assert.equal(normalized[0].className, 'group-accent');
+  assert.equal(normalized[1].className, 'option-accent');
   assert.equal(entries[0].options[0].disabled, undefined);
   assert.equal(core.normalizeOptions([{ value: 'one', label: '' }])[0].empty, false);
 });
@@ -62,6 +65,51 @@ test('contains search still starts at the option beginning when split word searc
   assert.equal(core.createMatcher('<01M', { searchContains: true })({ label: 'Other <01M Fund' }).matched, true);
 });
 
+test('custom matching and result caps preserve group structure and visibility rules', () => {
+  const entries = core.normalizeOptions([
+    { label: 'First', options: [{ value: '1', label: 'Alpha' }, { value: '2', label: 'Beta' }] },
+    { label: 'Second', options: [{ value: '3', label: 'Gamma' }] }
+  ]);
+  const visited = [];
+  const result = core.filterOptions(entries, 'a', {
+    searchMatcher(query, item) {
+      visited.push(item.label);
+      return item.kind === 'option' && item.label.toLowerCase().includes(query);
+    },
+    maxShownResults: 2
+  });
+  assert.deepEqual(result.items.map(item => item.label), ['First', 'Alpha', 'Beta']);
+  assert.equal(result.count, 2);
+  assert.equal(result.exactMatch, false);
+  assert.deepEqual(visited, ['First', 'Alpha', 'Beta', 'Second', 'Gamma']);
+  assert.deepEqual(core.filterOptions(entries, '', { maxShownResults: 0 }).items, []);
+});
+
+test('pinned options remain in order beyond the result cap without becoming search matches', () => {
+  const entries = core.normalizeOptions([
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Albatross' },
+    { value: 'other', label: 'Other', alwaysVisible: true }
+  ]);
+  const result = core.filterOptions(entries, 'Al', { maxShownResults: 1 });
+  assert.deepEqual(result.items.map(item => item.label), ['Alpha', 'Other']);
+  assert.equal(result.items[1].pinnedOnly, true);
+  assert.equal(result.count, 1);
+  assert.equal(core.filterOptions(entries, 'Other', { maxShownResults: 0 }).exactMatch, true);
+});
+
+test('prefix preference is limited to visible enabled labels and built-in contains search', () => {
+  const items = core.normalizeOptions([
+    { value: 'react', label: 'React' },
+    { value: 'angular', label: 'Angular' },
+    { value: 'astro', label: 'Astro', disabled: true }
+  ]);
+  const settings = { highlightPrefixMatches: true, searchContains: true };
+  assert.equal(core.preferredPrefixIndex(items, 'a', settings), 1);
+  assert.equal(core.preferredPrefixIndex(items, 'a', { ...settings, searchMatcher: () => true }), -1);
+  assert.equal(core.preferredPrefixIndex(items, 'a', { ...settings, searchContains: false }), -1);
+  assert.equal(core.preferredPrefixIndex(items, 'A', { ...settings, caseSensitiveSearch: true }), 1);
+});
+
 for (const fixture of cases.selectionCases) {
   test(`shared selection fixture: ${fixture.name}`, () => {
     let values = fixture.initial;
@@ -85,4 +133,25 @@ test('selection rejects hidden and disabled options before checking the limit', 
   assert.deepEqual(core.updateSelection(['one'], { value: 'one', disabled: true }, { action: 'remove' }).values, ['one']);
   assert.equal(core.canSelectOption({ value: '', label: '' }, [], { multiple: true }), false);
   assert.equal(core.updateSelection([], { value: '', label: '' }, { multiple: true }).changed, false);
+});
+
+test('pasted tokens select unique eligible options and preserve unmatched text', () => {
+  const entries = core.normalizeOptions([
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta', disabled: true },
+    { value: 'c', label: 'Charlie' }, { value: 'd', label: 'Delta' },
+    { value: 'x', label: 'Duplicate' }, { value: 'y', label: 'Duplicate' }
+  ]);
+  const result = core.resolvePastedChoices('alpha, Beta; c\nDuplicate, unknown', entries, [], 1);
+  assert.deepEqual(result.values, ['a']);
+  assert.equal(result.remaining, 'Beta, c, Duplicate, unknown');
+  assert.equal(result.handled, true);
+  assert.equal(result.limitReached, true);
+  assert.equal(core.resolvePastedChoices('ordinary', entries, [], 1).handled, false);
+});
+
+test('normalization keeps valid option data attributes without accepting arbitrary DOM attributes', () => {
+  const [option] = core.normalizeOptions([{ value: 'a', label: 'Alpha', dataAttributes: {
+    'data-category': 'fruit', onclick: 'ignored', 'data-Bad': 'ignored'
+  } }]);
+  assert.deepEqual(option.dataAttributes, { 'data-category': 'fruit' });
 });

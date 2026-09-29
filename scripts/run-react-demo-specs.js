@@ -20,6 +20,12 @@ async function main() {
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(demo);
+      const currentNav = await page.locator('.site-nav [aria-current="page"]').allTextContents();
+      if (JSON.stringify(currentNav) !== '["React demo"]') throw new Error(`${name}: wrong active demo navigation`);
+      for (const href of ['#react-single-example', '#react-multiple-example', '#react-season-example']) {
+        if (!await page.locator(`.demo-quick-tests a[href="${href}"]`).count() ||
+          !await page.locator(href).count()) throw new Error(`${name}: broken quick-test link ${href}`);
+      }
       const single = page.getByRole('combobox', { name: 'Favorite fruit' });
       const multiple = page.getByRole('combobox', { name: 'Fruit basket' });
       const singleControls = page.getByRole('group', { name: 'Single select examples' });
@@ -50,6 +56,17 @@ async function main() {
       };
       await single.waitFor();
       await multiple.waitFor();
+      await multiple.fill('zzzz');
+      if (!await page.getByRole('option', { name: 'Other' }).count() ||
+        !(await page.locator('.react-demo-event output').textContent()).includes('no results (zzzz)')) {
+        throw new Error(`${name}: pinned result or event feedback missing in quick test`);
+      }
+      await multiple.fill('New fruit');
+      await multiple.press('Enter');
+      if (JSON.stringify(await page.evaluate(() => new FormData(document.querySelector('#react-example-form')).getAll('basket'))) !== '["apple","New fruit"]') {
+        throw new Error(`${name}: quick-test Enter did not create the new fruit`);
+      }
+      await page.reload();
       await checkChevron('.react-demo-card:first-child', 'ltr');
       await checkChevron('.react-demo-tailwind', 'ltr');
       const checkGroupIndent = async direction => {
@@ -89,7 +106,7 @@ async function main() {
       });
       if (resultState.activeCount !== 1 || !resultState.appleSelected || resultState.appleActive ||
         !resultState.orangeActive || resultState.descendant !== resultState.orangeId ||
-        resultState.appleBackground !== 'rgb(238, 242, 255)' || !resultState.check.includes('✓') ||
+        resultState.appleBackground !== 'rgb(238, 242, 255)' || !resultState.check.includes('×') ||
         resultState.overflow !== 'hidden') {
         throw new Error(`${name}: selected, hover, or dropdown clipping state ${JSON.stringify(resultState)}`);
       }
@@ -132,6 +149,26 @@ async function main() {
         throw new Error(`${name}: clicking the single select label did not open its dropdown`);
       }
       await single.press('Escape');
+      await single.fill('orchard-42');
+      if (!await page.getByRole('option', { name: 'Orchard' }).count()) {
+        throw new Error(`${name}: React demo value search failed`);
+      }
+      await single.press('Escape');
+      const season = page.getByRole('combobox', { name: 'Season' });
+      const seasonStyle = await season.evaluate(input => ({ readOnly: input.readOnly,
+        autocomplete: input.getAttribute('aria-autocomplete'), opacity: getComputedStyle(input).opacity }));
+      if (!seasonStyle.readOnly || seasonStyle.autocomplete !== 'none' || seasonStyle.opacity !== '0') {
+        throw new Error(`${name}: search-free React input styling failed (${JSON.stringify(seasonStyle)})`);
+      }
+      await season.click();
+      await season.press('w');
+      if (await season.getAttribute('aria-activedescendant') !== 'react-season-option-3') {
+        throw new Error(`${name}: search-free React prefix navigation failed`);
+      }
+      await season.press('Enter');
+      if (await page.evaluate(() => document.querySelector('select[name="season"]').value) !== 'winter') {
+        throw new Error(`${name}: search-free React selection failed`);
+      }
       if (name === 'Chromium') await page.addScriptTag({ url: pathToFileURL(path.join(root, 'node_modules/axe-core/axe.min.js')).href });
       const audit = async theme => {
         if (name !== 'Chromium') return;
@@ -266,6 +303,7 @@ async function main() {
       await basketControls.getByRole('checkbox', { name: 'Disabled', exact: true }).uncheck();
       await multiple.click();
       await page.getByRole('option', { name: 'Dragon fruit with a deliberately long option label' }).click();
+      await page.locator('.react-demo-tailwind .chosen-react__summary').click();
       const longChip = await page.evaluate(() => {
         const chip = [...document.querySelectorAll('.react-demo-tailwind .chosen-react__chip')]
           .find(item => item.textContent.includes('Dragon fruit'));

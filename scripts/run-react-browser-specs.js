@@ -59,11 +59,15 @@ async function main() {
       });
       if (controlledReset !== 'banana') throw new Error(`${name}: controlled form reset changed the native value to ${controlledReset}`);
 
-      await page.evaluate(() => window.mountChosen({ multiple: true, required: true }));
+      await page.evaluate(() => window.mountChosen({ multiple: true, required: true,
+        deselectSelectedResults: true, hideResultsOnSelect: false }));
       await page.waitForFunction(() => document.querySelector('select')?.multiple);
       await page.evaluate(() => document.querySelector('form').reset());
       await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);
-      await page.getByRole('combobox', { name: 'Fruit' }).click();
+      await page.getByText('Fruit', { exact: true }).click();
+      if (await page.getByRole('combobox', { name: 'Fruit' }).getAttribute('aria-expanded') !== 'true') {
+        throw new Error(`${name}: multiple label did not open the results`);
+      }
       await page.getByRole('option', { name: 'Apple' }).click();
       await page.getByRole('option', { name: 'Banana' }).click();
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
@@ -87,6 +91,38 @@ async function main() {
         return getComputedStyle(host.querySelector('.chosen-react__control')).backgroundColor;
       });
       if (themedBackground !== 'rgb(240, 249, 255)') throw new Error(`${name}: theme token did not apply`);
+      await page.evaluate(() => window.mountChosen({ width: '180px', dropdownWidth: '150%', dropdownPosition: 'fixed' }));
+      await page.waitForFunction(() => document.querySelector('.chosen-react')?.style.width === '180px');
+      await page.getByRole('combobox', { name: 'Fruit' }).click();
+      const layout = await page.evaluate(() => {
+        const host = document.querySelector('.chosen-react');
+        const control = host.querySelector('.chosen-react__control').getBoundingClientRect();
+        const popup = host.querySelector('.chosen-react__popup');
+        const rect = popup.getBoundingClientRect();
+        return { position: getComputedStyle(popup).position, controlWidth: control.width,
+          popupWidth: rect.width, aligned: Math.abs(rect.left - control.left) < 2 };
+      });
+      if (layout.position !== 'fixed' || Math.abs(layout.popupWidth - 270) > 2 || !layout.aligned) {
+        throw new Error(`${name}: React fixed wider dropdown layout failed (${JSON.stringify(layout)})`);
+      }
+      await page.evaluate(() => { document.body.style.minHeight = '300vh'; window.scrollBy(0, 60); });
+      await page.waitForFunction(() => {
+        const bottom = document.querySelector('.chosen-react__control').getBoundingClientRect().bottom;
+        const top = document.querySelector('.chosen-react__popup').getBoundingClientRect().top;
+        return Math.abs(top - bottom) < 3;
+      }, null, { timeout: 1000 });
+      const scrolled = await page.evaluate(() => ({
+        bottom: document.querySelector('.chosen-react__control').getBoundingClientRect().bottom,
+        top: document.querySelector('.chosen-react__popup').getBoundingClientRect().top
+      }));
+      if (Math.abs(scrolled.top - scrolled.bottom) > 3) {
+        throw new Error(`${name}: React fixed dropdown did not follow page scroll (${JSON.stringify(scrolled)})`);
+      }
+      await page.evaluate(() => window.mountChosen({ createOption: true, skipNoResults: true }));
+      await page.getByRole('combobox', { name: 'Fruit' }).fill('Mango');
+      await page.getByRole('option', { name: 'Add Option: Mango' }).click();
+      const createdValue = await page.evaluate(() => new FormData(document.querySelector('form')).get('fruit'));
+      if (createdValue !== 'Mango') throw new Error(`${name}: React option creation did not submit (${createdValue})`);
       await page.evaluate(() => window.unmountChosen());
       if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
       console.log(`${name}: React search, keyboard, form, and accessibility checks passed`);

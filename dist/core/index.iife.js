@@ -43,6 +43,12 @@ var ChosenCore = (function() {
     normalizeOptions: function() {
       return normalizeOptions;
     },
+    preferredPrefixIndex: function() {
+      return preferredPrefixIndex;
+    },
+    resolvePastedChoices: function() {
+      return resolvePastedChoices;
+    },
     selectionLimitReached: function() {
       return selectionLimitReached;
     },
@@ -111,6 +117,16 @@ var ChosenCore = (function() {
   function isEmptyOption(option) {
     return !!option.empty || asText(option.value) === "" && asText(option.label) === "";
   }
+  function optionDataAttributes(value) {
+    var attributes = {};
+    if (!value || typeof value !== "object") return attributes;
+    for (var name in value) {
+      if (Object.prototype.hasOwnProperty.call(value, name) && /^data-[a-z0-9_.:-]+$/.test(name)) {
+        attributes[name] = asText(value[name]);
+      }
+    }
+    return attributes;
+  }
   function foldAccents(value) {
     var text = asText(value);
     for (var index = 0; index < accentReplacements.length; index += 1) {
@@ -131,6 +147,9 @@ var ChosenCore = (function() {
         label: label,
         empty: value === "" && label === "",
         searchText: asText(source.searchText),
+        alwaysVisible: !!source.alwaysVisible,
+        dataAttributes: optionDataAttributes(source.dataAttributes),
+        className: asText(source.className),
         selected: !!source.selected,
         disabled: !!source.disabled || !!(group2 && group2.disabled),
         hidden: !!source.hidden || !!(group2 && group2.hidden),
@@ -146,6 +165,7 @@ var ChosenCore = (function() {
           kind: "group",
           index: groupIndex,
           label: asText(entry.label),
+          className: asText(entry.className),
           disabled: !!entry.disabled,
           hidden: !!entry.hidden
         };
@@ -198,6 +218,57 @@ var ChosenCore = (function() {
       values: config.multiple ? values.concat(value) : [value],
       changed: true,
       limitReached: false
+    };
+  }
+  function resolvePastedChoices(text, entries, selectedValues, maximum) {
+    var input = asText(text);
+    var values = selectedValues.slice();
+    var remaining = [];
+    var consumed = false;
+    var limitReached = false;
+    if (!/[,;\t\r\n]/.test(input)) {
+      return { values: values, remaining: input, handled: false, changed: false, limitReached: false };
+    }
+    var tokens = input.split(/[,;\t\r\n]/).map(function(token2) {
+      return token2.trim();
+    }).filter(Boolean);
+    if (!tokens.length) {
+      return { values: values, remaining: input, handled: false, changed: false, limitReached: false };
+    }
+    var eligible = entries.filter(function(item) {
+      return item.kind === "option" && !item.empty && !item.disabled && !item.hidden;
+    });
+    for (var index = 0; index < tokens.length; index += 1) {
+      var token = tokens[index];
+      var matches = eligible.filter(function(item) {
+        return item.value === token;
+      });
+      if (!matches.length) matches = eligible.filter(function(item) {
+        return item.label.toLowerCase() === token.toLowerCase();
+      });
+      if (matches.length !== 1) {
+        remaining.push(token);
+        continue;
+      }
+      var value = matches[0].value;
+      if (values.indexOf(value) !== -1) {
+        consumed = true;
+        continue;
+      }
+      if (selectionLimitReached(values.length, maximum)) {
+        remaining.push(token);
+        limitReached = true;
+        continue;
+      }
+      values.push(value);
+      consumed = true;
+    }
+    return {
+      values: values,
+      remaining: remaining.join(", "),
+      handled: consumed || limitReached,
+      changed: values.length !== selectedValues.length,
+      limitReached: limitReached
     };
   }
   function createMatcher(query, settings) {
@@ -279,10 +350,12 @@ var ChosenCore = (function() {
     var count = 0;
     var exactMatch = false;
     var text = asText(query).trim();
+    var customMatcher = typeof config.searchMatcher === "function" ? config.searchMatcher : null;
+    var maximum = config.maxShownResults == null ? Infinity : Math.max(0, config.maxShownResults);
     if (text.length < (config.minSearchLength || 0)) {
       return { items: items, count: count, exactMatch: exactMatch };
     }
-    var matcher = createMatcher(text, config);
+    var matcher = customMatcher ? null : createMatcher(text, config);
     var group = null;
     var groupMatches = false;
     var groupIncluded = false;
@@ -291,7 +364,7 @@ var ChosenCore = (function() {
       if (item.kind === "group") {
         group = item;
         groupIncluded = false;
-        groupMatches = !item.hidden && config.groupSearch !== false && matcher({ label: item.label }).matched;
+        groupMatches = !item.hidden && (customMatcher ? !!customMatcher(text, item) : config.groupSearch !== false && matcher({ label: item.label }).matched);
         continue;
       }
       if (item.groupIndex == null) {
@@ -299,17 +372,42 @@ var ChosenCore = (function() {
         groupMatches = false;
       }
       if (!includeOptionInResults(item, config)) continue;
-      var result = matcher(item);
-      if (!result.matched && !groupMatches) continue;
+      var result = customMatcher ? { matched: !!customMatcher(text, item), exact: item.label === text } : matcher(item);
+      var matched = result.matched || groupMatches;
+      var pinnedOnly = !!(text.length && item.alwaysVisible && !matched);
+      if (!matched && !pinnedOnly) continue;
+      if (matched) exactMatch = exactMatch || result.exact;
+      if (count >= maximum && !pinnedOnly) continue;
       if (group && !groupIncluded) {
         items.push(group);
         groupIncluded = true;
       }
-      items.push(item);
-      count += 1;
-      exactMatch = exactMatch || result.exact;
+      if (pinnedOnly) {
+        var pinnedItem = {};
+        for (var key in item) {
+          if (Object.prototype.hasOwnProperty.call(item, key)) pinnedItem[key] = item[key];
+        }
+        pinnedItem.pinnedOnly = true;
+        items.push(pinnedItem);
+      } else items.push(item);
+      if (!pinnedOnly) count += 1;
     }
     return { items: items, count: count, exactMatch: exactMatch };
+  }
+  function preferredPrefixIndex(items, query, settings) {
+    var config = settings || {};
+    if (!config.highlightPrefixMatches || !config.searchContains || config.searchMatcher || !query) return -1;
+    var normalize = config.normalizeSearchText || asText;
+    var term = asText(normalize(asText(query).trim()));
+    if (!config.caseSensitiveSearch) term = term.toLowerCase();
+    for (var index = 0; index < items.length; index += 1) {
+      var item = items[index];
+      if (item.kind !== "option" || item.disabled) continue;
+      var label = asText(normalize(item.label));
+      if (!config.caseSensitiveSearch) label = label.toLowerCase();
+      if (label.indexOf(term) === 0) return index;
+    }
+    return -1;
   }
   return __toCommonJS(index_exports);
 })();

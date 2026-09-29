@@ -9,6 +9,7 @@
     "./dist/js/**",
     "./dist/core/index.iife.js",
     "./dist/css/**",
+    "./dist/native/**",
     "./dist/scss/**",
     "./docs/**",
     "./coffee/**",
@@ -24,6 +25,12 @@
       "import": "./dist/core/index.mjs",
       "require": "./dist/core/index.cjs"
     },
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "import": "./dist/native/index.mjs",
+      "require": "./dist/native/index.cjs"
+    },
+    "./native/styles.css": "./dist/native/chosen.css",
     "./react": {
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.mjs"
@@ -66,7 +73,8 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "node scripts/build-demo-pages.js --check && grunt test && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:react-demo && npm run test:visual",
+    "test": "node scripts/build-demo-pages.js --check && grunt test && npm run test:native && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:react-demo && npm run test:visual",
+    "test:native": "node scripts/build-native.js && node --test spec/native/*.test.mjs && tsc -p spec/native/tsconfig.json && node scripts/run-native-browser-specs.js",
     "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
@@ -77,7 +85,7 @@
     "visual:fixtures": "node scripts/run-visual-fixtures.js --capture",
     "size:react": "node scripts/report-react-size.js",
     "triage:upstream": "node scripts/upstream-issues.js",
-    "build": "grunt build && node scripts/build-react.js && node scripts/build-react-demo.js",
+    "build": "grunt build && node scripts/build-native.js && node scripts/build-react.js && node scripts/build-react-demo.js",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
@@ -86,6 +94,9 @@
   },
   "peerDependenciesMeta": {
     "jquery": {
+      "optional": true
+    },
+    "react": {
       "optional": true
     }
   },

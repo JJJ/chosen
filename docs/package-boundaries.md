@@ -9,6 +9,8 @@ available. Explicit entries make new integrations easier to identify:
 | `chosen-jjj` or `chosen-jjj/jquery` | Classic jQuery adapter and its DOM lifecycle; supports browser globals, AMD, and CommonJS. |
 | `chosen-jjj/prototype` | Classic Prototype adapter and its DOM lifecycle. |
 | `chosen-jjj/core` | Framework-neutral option, search, and selection functions; ESM and CommonJS builds with TypeScript declarations. |
+| `chosen-jjj/native` | Experimental dependency-free DOM adapter for an existing native select; ESM, CommonJS, and browser builds. |
+| `chosen-jjj/native/styles.css` | Standalone vanilla adapter styles using shared `--chosen-*` tokens. |
 | `chosen-jjj/react` | Native React component; ESM build and TypeScript declarations with React as a peer dependency. |
 | `chosen-jjj/react/styles.css` | Standalone React theme using the shared `--chosen-*` tokens. |
 | `chosen-jjj/styles.css` | Standalone default CSS and shared theme variables. |
@@ -21,7 +23,8 @@ selection changes without touching the DOM or mutating caller data. The legacy
 adapters still parse native `<select>` elements, render their own markup, and
 own focus, events, form values, and cleanup. Both adapters use the same core
 matcher, visibility rule, and selection-limit rule that the React edition can
-call directly.
+call directly. `preferredPrefixIndex()` returns a visible, enabled label-prefix
+match for contains search without changing the filtered result order.
 
 The source of truth is `core/index.mjs`. `grunt build` copies its ESM source,
 generates CommonJS and ES5 browser formats, and includes the browser format in
@@ -62,3 +65,5 @@ Its exported names and types are explicit, but extension points beyond these
 documented functions are not yet promised. Rendering stays in each adapter;
 React does not instantiate a jQuery or Prototype control. Its ESM entry bundles
 the core rules but leaves React external, and its stylesheet is opt-in.
+
+The vanilla DOM edition is an explicit entry and does not replace the jQuery default. It keeps the original select authoritative and uses native DOM events. Both vanilla and React are still experimental and have known gaps against the classic feature set. See the [adapter parity inventory](adapter-parity.md) before treating either as a replacement for a classic adapter.

@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111827">
+  <title>Chosen: Vanilla JavaScript demo</title>
+  <link rel="stylesheet" href="docsupport/style.css?ver=3.0.4">
+  <link rel="stylesheet" href="chosen.native.css?ver=3.0.4">
+  <link rel="stylesheet" href="docsupport/native-demo.css?ver=3.0.4">
+  <script src="docsupport/theme.js" defer></script>
+  <script src="chosen.native.js" defer></script>
+  <script src="docsupport/adapter-demo-cases.js" defer></script>
+  <script src="docsupport/native-demo.js" defer></script>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+</head><body class="docs-reference">
+  <div id="container"><div id="content">
+    <header class="site-header">
+      <div class="site-nav-wrap">
+        <a class="site-brand" href="index.html" aria-label="Chosen home"><span class="brand-mark" aria-hidden="true">C</span><span>Chosen <small>v<span id="latest-version">3.0.4</span></small></span></a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">jQuery demo</a>
+          <a href="index.proto.html">Prototype demo</a>
+          <a class="is-current" aria-current="page" href="native.html">Vanilla demo</a>
+          <a href="react.html">React demo</a>
+          <a href="options.html">Options &amp; API</a>
+          <a href="https://github.com/JJJ/chosen">GitHub</a>
+          <button class="theme-toggle" type="button" data-theme-toggle>Dark mode</button>
+        </nav>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Vanilla JavaScript edition</p>
+        <h1>Tame unwieldy select boxes.</h1>
+        <p class="lede">Chosen makes long select boxes easier to use while preserving the native form control underneath.</p>
+        <div class="hero-actions">
+          <a class="button button-blue" href="https://github.com/JJJ/chosen/releases">Download Chosen</a>
+          <a class="button" href="options.html">Explore the API</a>
+          <a class="text-link" href="https://github.com/JJJ/chosen/blob/master/contributing.md">Contribute on GitHub <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="adapter-suite">
+        <form id="native-suite-form" class="adapter-suite-form"></form>
+        <output id="native-suite-event" role="status">Try an example above.</output>
+      </div>
+      <section class="demo-quick-tests" aria-labelledby="native-quick-tests">
+        <h2 id="native-quick-tests">Adapter quick tests</h2>
+        <ol>
+          <li><a href="#native-single-example">Single select:</a> search <code>ops-42</code>, choose Operations, then clear it.</li>
+          <li><a href="#native-multiple-example">Multiple select:</a> search <code>zzzz</code> to see Other remain visible, then type <code>New skill</code> and press Enter to create it.</li>
+          <li><a href="#native-multiple-example">Groups and limits:</a> clear the search, choose Design, then try a fourth skill. The event log reports the limit.</li>
+          <li><a href="#native-season-example">Floating dropdown:</a> open Season, then scroll the page while its wider list is open.</li>
+        </ol>
+      </section>
+      <form id="native-demo-form" class="native-demo-form">
+        <section id="native-single-example" class="native-demo-field">
+          <h2>Single select</h2>
+          <label for="native-project">Project</label>
+          <select id="native-project" name="project" required>
+            <option value=""></option>
+            <option value="atlas">Atlas</option>
+            <option value="beacon">Beacon</option>
+            <option value="comet">Comet</option>
+            <option value="ops-42">Operations</option>
+          </select>
+          <p>Search for “ops-42” to find Operations by value. Choose a project, then clear or reset it. The original select submits the value.</p>
+          <label><input id="native-slow-search" type="checkbox"> Delay search by 250 ms</label>
+        </section>
+        <section id="native-multiple-example" class="native-demo-field">
+          <h2>Multiple select and groups</h2>
+          <label for="native-skills">Skills</label>
+          <select id="native-skills" name="skills" multiple select-by-group data-create_option_text="Add skill:">
+            <optgroup label="Design">
+              <option value="research" data-discipline="design">Research</option>
+              <option value="prototyping">Prototyping</option>
+              <option value="typography">Typography</option>
+            </optgroup>
+            <optgroup label="Engineering">
+              <option value="javascript">JavaScript</option>
+              <option value="accessibility">Accessibility</option>
+              <option value="testing">Testing</option>
+            </optgroup>
+            <option value="other" data-chosen-always-visible>Other</option>
+          </select>
+          <p>Search the groups, click a group heading to select its available skills, or type a new skill and choose “Add skill”. “Other” remains visible during search. Select up to three items or paste “Research, Testing”. Click a selected result or press Enter on it to remove it; Backspace removes the last chip. This example also selects the highlighted result with Tab, then moves focus onward.</p>
+        </section>
+        <section id="native-season-example" class="native-demo-field">
+          <h2>Search-free single select</h2>
+          <label for="native-season">Season</label>
+          <select id="native-season" name="season" data-placeholder="Choose a season" data-disable-search-threshold="5">
+            <option value=""></option>
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+          </select>
+          <p>Open the wider floating list and type “w” to highlight Winter. This example uses a 12rem control, an independently sized fixed dropdown, and <code>data-disable-search-threshold="5"</code> on the original select.</p>
+        </section>
+        <div class="native-demo-actions">
+          <button type="reset">Reset form</button>
+          <button type="button" id="native-add">Add a project</button>
+          <button type="button" id="native-toggle">Disable project</button>
+          <button type="button" id="native-direction">Use right-to-left skills</button>
+          <button type="submit">Inspect submitted values</button>
+        </div>
+      </form>
+      <h2>Latest events</h2>
+      <pre id="native-events" class="native-demo-events" aria-live="polite">Try a control above.</pre>
+      <h2>Use it in your project</h2>
+      <p>The native edition is experimental. It does not load jQuery, Prototype, or React. The original select remains the source of submitted values; call <code>update()</code> after changing its options, or dispatch a native <code>chosen:updated</code> event.</p>
+      <pre tabindex="0"><code>import { Chosen } from 'chosen-jjj/native';
+import 'chosen-jjj/native/styles.css';
+
+const chosen = new Chosen(document.querySelector('#native-project'), {
+  allow_single_deselect: true
+});
+chosen.update();
+chosen.destroy();</code></pre>
+    </main>
+    <footer>© 2011–2016 <a href="https://www.getharvest.com/">Harvest</a>. © 2020–2026 <a href="https://jjj.software">JJJ</a>. Chosen is licensed under the <a href="https://github.com/JJJ/chosen/blob/master/LICENSE.md">MIT license</a>.</footer>
+  </div></div>
+</body></html>

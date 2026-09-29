@@ -1,5 +1,7 @@
 # Native React Chosen (experimental)
 
+This component is not yet feature complete with classic Chosen. The [adapter parity inventory](adapter-parity.md) tracks the remaining behavior and default differences.
+
 `chosen-jjj/react` is a React component, not a jQuery or Prototype wrapper.
 React 18 or newer is a peer dependency. Import the standalone theme separately;
 the JavaScript entry has no stylesheet side effect and is safe to import during
@@ -42,20 +44,96 @@ submission. Multiple selection uses arrays. `onChange` receives the next value
 and the triggering React event.
 
 Unlike classic Chosen, this component receives option objects directly rather
-than enhancing a `<select>`, uses camelCase props, and matches substrings by
-default (`searchContains={true}`). Set `splitSearchTerms` to match words in any
-order, `groupSearch={false}` to search only option labels, or
+than enhancing a `<select>` and uses camelCase props. Search matches word starts
+by default, as in classic Chosen; set `searchContains` to match within words,
+and `highlightPrefixMatches` to prefer a visible label prefix for Enter without
+reordering contains-search results. Set
+`enableSplitWordSearch={false}` to require a label-start match,
+`caseSensitiveSearch` to preserve case, `searchInValues` to search values,
+or `splitSearchTerms` to match words in any order. `normalizeSearchText` and
+`searchMatcher` customize matching; the latter receives `(query, normalizedItem)`
+and replaces built-in matching. `minSearchLength`, `maxSearchLength`, and
+`maxShownResults` bound visible results and matching work. Set
+`searchInputType="text"` to use a text input instead of the classic default
+search input; the theme uses classes rather than input-type selectors. Set
+`searchDelay={250}` to debounce filtering on large lists; Enter and navigation
+keys flush pending text before acting. It defaults to zero. Set
+`disableSearch` to hide search on a single select, or set
+`disableSearchThreshold` to hide it when the option count is at or below the
+threshold. Prefix typing still moves through open results. Set
+`resultsCountText={count => count + ' choices'}` to localize the live result
+count. `noResultsText` is used literally before the query, with one space.
+Set `createOption` to offer an Add Option row when no option matches.
+`persistentCreateOption` also offers it beside partial matches, unless an
+option exactly matches the query. `createOptionText` changes its prefix and
+`skipNoResults` hides the redundant empty message. `onCreateOption` receives
+the query and triggering event; it may return an option object to customize
+the new value and label, or `false` to cancel. Chosen retains new options in
+its hidden select so the value can submit. When `value` is controlled, update
+it in `onChange`; update the parent `options` array if the new option should
+remain in the application model.
+Set `className` on option or group data to style result rows; set
+`inheritOptionClasses` to copy option classes to selected chips too. Set
+`dataAttributes` on an option and enable `copyOptionDataAttributes` to add its
+safe `data-*` keys to the result row. This is React's equivalent of classic
+`parser_config: {copy_data_attributes: true}`; it does not parse a source select.
+Set `alwaysVisible: true` on an option such as “Other” to keep it visible during
+search and beyond `maxShownResults`; it remains in option order and Select all
+skips it unless it matches. Set `selectByGroup` on a multiple control to make
+group headings actionable listbox rows that select their currently visible
+enabled members. Arrow keys and Enter work as well as pointer input.
+Set `groupSearch={false}` to search only option labels, or
 `displaySelectedOptions={false}` to hide already selected results in multiple
 mode, or `displayDisabledOptions={false}` to hide disabled results without
 removing them from the underlying native select. When selected results are
-visible, clicking one or pressing Enter on it
-removes that selection; its chip's remove button does the same. `open` and
+visible, selected rows are inert by default and have a check mark. Set
+`deselectSelectedResults` to remove a selected row by click or Enter; its
+remove mark then indicates this action. The chip's remove button always works.
+`hideResultsOnSelect` defaults to `true` for multiple choices; set it to
+`false` to keep the dropdown open. Ctrl or Command selection also keeps it open.
+Set `maxItemsShown` to a positive integer to show only that many selected
+chips until the summary button is expanded. `moreItemsText={count => text}`
+and `showFewerItemsText` customize its copy. The native selection and form
+values remain intact.
+Set `allowSelectAll` to select enabled results matching the current filter,
+up to `maxSelectedOptions`. `allowDeselectAll` removes enabled selections even
+outside the current filter. Both default to `false`; customize the action labels
+with `selectAllText` and `deselectAllText`. Ctrl/Command+A and
+Ctrl/Command+Shift+A invoke the enabled actions when search is empty.
+Set `pasteMultipleValues` to accept comma, semicolon, tab, or newline-separated
+existing values or unique labels pasted into multiple search. Disabled and
+hidden options are skipped, the selection limit applies, and unmatched tokens
+remain in the search field. It defaults to `false`.
+`displaySelectedValue` shows option values in the closed control and chips;
+`includeGroupLabelInSelected` prefixes the group name. Both default to `false`,
+and result rows continue to show option labels. `open` and
 `onOpenChange` control the popup; `defaultOpen` is its
 uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
-`maxSelectedOptions`, `placeholder`, `searchPlaceholder`, and `noResultsText`
-cover common form behavior without framework-specific markup hooks.
+`maxSelectedOptions`, `placeholder`, `placeholderTextSingle`,
+`placeholderTextMultiple`, `searchPlaceholder`, and `noResultsText` cover common
+form behavior without framework-specific markup hooks. Single clearing is
+opt-in with `allowSingleDeselect`, matching classic Chosen; the demo enables it.
+For multiple selects, `backspaceDeletesChoices` defaults to `true` and
+`multiselectAllowTabToSelect` defaults to `false`. Enabling the latter selects
+the highlighted result on Tab and still moves focus to the next control.
+Set `singleBackstrokeDelete={false}` to focus the final chip with the first
+Backspace and remove it with the second.
+`openOnLabelClick` defaults to `true` for multiple selects and `false` for
+single selects; override it to choose whether the associated label opens the
+popup or only focuses the input. The single-select demo opts into opening.
+Use `width="18rem"` for an explicit control width, or `style` for responsive
+CSS sizing. React has no source select to remeasure: change the prop when the
+desired width changes. `dropdownWidth="150%"` makes a wider, separate popup;
+percentages use the control width. `dropdownPosition="fixed"` keeps it outside
+clipped scrolling ancestors and updates its position on scroll and resize.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
+
+For integration callbacks, use `onReady`, `onShowingDropdown`,
+`onHidingDropdown`, `onSearch(query)`, `onSearchUpdated(query)`,
+`onNoResults(query)`, and `onMaxSelected()`. `onOpenChange(open)` reports a
+requested popup state change, and `onChange(value, event)` reports selection.
+These are React callbacks; they do not dispatch jQuery events.
 
 ## Forms and accessibility
 
@@ -128,7 +206,8 @@ mount. `ref` exposes `focus()`, `blur()`, `open()`, and `close()`.
 // Client: hydrateRoot(node, <Chosen options={options} aria-label="Fruit" />)
 ```
 
-The initial React API is deliberately smaller than `react-select`: there are no
-async loaders, creatable options, virtualization, arbitrary component injection,
-or compatibility wrappers. Legacy option names that fit React were retained;
-React uses camelCase props and a direct value callback rather than jQuery events.
+The React API still has adapter-level differences in event and attribute
+handling; see the parity inventory. It does not aim to copy
+unrelated `react-select` features such as async loaders, virtualization, or
+arbitrary component injection. React uses camelCase props and a direct value
+callback rather than jQuery events.

@@ -7,6 +7,9 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Give the Vanilla and React demo pages working examples for the same 26 feature sections as the jQuery and Prototype pages, with matching page navigation, headers, and footers.
+- Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
+- Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).
 - Read supported scalar Chosen options from per-select `data-*` attributes in both legacy adapters, with explicit JavaScript options taking precedence (harvesthq/chosen#1870).
 - Load the jQuery distribution through AMD or CommonJS while preserving plain browser-script loading and the existing `$.fn.chosen` API (harvesthq/chosen#2215).
 - Include the previous single-select value as `deselected` in jQuery `input` and `change` event data when switching or clearing a selection (harvesthq/chosen#2336).
@@ -40,6 +43,29 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Keep demo action-button spacing off selected-choice remove buttons, and align the Vanilla and React chip borders and remove icons with classic Chosen.
+- Correct the React demo's active navigation link and add quick tests and visible event feedback to both new-edition demos.
+- Parse the classic scalar `data-*` initialization options in vanilla with strict value validation and explicit JavaScript precedence, forward applicable source ARIA attributes, and support native search/lifecycle events and open/close/activate commands. React gains callback equivalents for ready, popup, search, empty results, and selection limits.
+- Keep marked vanilla and React options visible during search without counting them as matches or selecting unmatched pinned results with Select all. Add opt-in group-heading selection through native `select-by-group` and React `selectByGroup`; selectable headings are listbox option rows with `chosen-native__group-label--selectable` and `chosen-react__group--selectable` selectors.
+- Add the classic opt-in creation settings to vanilla and React. Vanilla appends a native option or calls `create_option`; React accepts `createOption` and `onCreateOption`, retains created options in its hidden select, and passes new values through `onChange`. Creation rows use `chosen-native__option--create` and `chosen-react__option--create` selectors.
+- Match classic control width, independent dropdown width, and fixed dropdown positioning in vanilla and React. Vanilla can remeasure its source select on update; React responds to width prop changes. Custom-width or fixed popups gain separate floating borders, adding `chosen-native--floating` and `chosen-react--floating` selectors.
+- Carry opt-in option `data-*` attributes to vanilla and React result rows. Vanilla honors `parser_config.copy_data_attributes`; React uses structured `dataAttributes` and `copyOptionDataAttributes`. Generated result rows can now expose these attributes to integrations.
+- Support classic `search_delay` in vanilla and React. Pending filters are applied before Enter, Tab, or navigation keys so keyboard actions use the current query.
+- Add opt-in multi-value paste to vanilla and React through shared token resolution. Existing unique enabled options are selected, unmatched tokens remain in search, and native select values or React callbacks still drive form state.
+- Match the classic opt-in Select all and Deselect all actions in vanilla and React, including filtered selection, limits, disabled-option rules, keyboard shortcuts, and customizable labels. Generated bulk action controls use `chosen-native__bulk-*` and `chosen-react__bulk-*` selectors.
+- Add the classic selected-choice summary options to vanilla and React. A button expands hidden chips without changing the underlying selection; generated summaries use the new `chosen-native__summary` and `chosen-react__summary` selectors.
+- Match classic single-select search visibility in vanilla and React with `disable_search` / `disableSearch` and option-count thresholds. The hidden search input remains the focus target and prefix typing still navigates open results.
+- Align experimental React's default substring search, placeholder capitalization, single-clear visibility, multiple placeholder, and no-results copy with classic Chosen; apps depending on the earlier React defaults can set `searchContains`, `allowSingleDeselect`, `placeholder`, and `noResultsText` explicitly.
+- Expose classic multiple-select Backspace removal and opt-in Tab selection in the vanilla and React editions with matching defaults.
+- Use the classic `search` input type by default in the vanilla and React editions, with a `text` override and class-based styling.
+- Carry source select direction and the legacy `chosen-rtl` class into the vanilla control, and expose the classic `rtl` setting.
+- Add opt-in selected-value and optgroup-prefix display to vanilla and React; dropdown labels and submitted values are unchanged.
+- Add opt-in source-class inheritance to vanilla, with update-time synchronization. The legacy `chosen-rtl` marker also passes through by default.
+- Carry option and optgroup classes into vanilla and React result rows, with opt-in class copying to chips; add customizable live result counts and use no-results text literally. Generated result elements now receive source option classes.
+- Add the classic two-press Backspace mode to vanilla and React, retaining immediate removal by default. The pending chip gains a focus outline.
+- Match classic label activation defaults in vanilla and React, with `open_on_label_click` / `openOnLabelClick` overrides. Generated inputs stay the visible focus target.
+- Match classic multiple-select defaults in vanilla and React: selected result rows are inert unless deselection is enabled, and a choice closes the dropdown unless configured otherwise. Both demos explicitly keep their earlier interactive behavior.
+- Indent vanilla results beneath optgroup headings, distinguish selected rows with check or remove marks, and let selected multiple results toggle off by click or Enter. Tighten vanilla chip remove buttons and style the demo's dark controls.
 - Keep legacy and React search inputs at least 16px on touch devices to avoid iPhone Safari focus zoom without restricting user zoom.
 - Keep the Prototype single-select dropdown open after a phone tap, so its synthesized mouse event does not close the menu immediately.
 - Render option labels and configurable no-results/create-option messages as text, preventing nested option markup or label HTML from becoming generated Chosen elements (harvesthq/chosen#2751).
@@ -85,6 +111,8 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Selected vanilla results now gain `.chosen-native__option--selected`; the mark is CSS generated, and selected multiple results can be toggled off without changing the row's `role="option"` markup.
+- The new opt-in vanilla edition renders `chosen-native__*` elements and uses native `CustomEvent` details and native `input`/`change` events; its generated selectors, roles, and attributes are separate from the classic adapters and remain experimental.
 - With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.
 
 - Setting `dropdown_width` adds `chosen-floating-dropdown` to the generated container so custom-width dropdowns can use complete corners, a gap, and independent elevation. Integrations that assert generated container classes should allow this opt-in state.

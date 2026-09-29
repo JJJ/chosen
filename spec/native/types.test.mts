@@ -1,0 +1,21 @@
+import { Chosen, type ChosenOptions } from 'chosen-jjj/native';
+const options: ChosenOptions = { search_contains: true, max_selected_options: 3,
+  placeholder_text_multiple: 'Choose several',
+  backspace_deletes_choices: false, multiselect_allow_tab_to_select: true,
+  single_backstroke_delete: false,
+  deselect_selected_results: true, hide_results_on_select: false,
+  open_on_label_click: true,
+  search_input_type: 'text',
+  rtl: true,
+  display_selected_value: true, include_group_label_in_selected: true,
+  inherit_select_classes: true,
+  inherit_option_classes: true, results_count_text: count => `${count} choices`,
+  search_in_values: true, max_shown_results: 20,
+  search_matcher: (query, item) => item.kind === 'option' && item.value === query };
+const select = document.createElement('select');
+const chosen = new Chosen(select, options);
+chosen.update();
+chosen.open();
+chosen.close();
+chosen.clear();
+chosen.destroy();

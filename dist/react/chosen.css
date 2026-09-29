@@ -55,6 +55,7 @@
 }
 
 .chosen-react__input {
+  appearance: none;
   flex: 1 1 5rem;
   min-width: 4rem;
   width: 100%;
@@ -65,6 +66,8 @@
   color: inherit;
   font: inherit;
 }
+.chosen-react__input::-webkit-search-cancel-button,
+.chosen-react__input::-webkit-search-decoration { display: none; }
 
 @media (any-pointer: coarse) {
   .chosen-react__input {
@@ -86,21 +89,35 @@
   white-space: nowrap;
   color: var(--chosen-text-color, #444);
 }
+.chosen-react__group-name { color: var(--chosen-group-color, #666); }
 
 .chosen-react__input::placeholder {
   color: var(--chosen-placeholder-color, #666);
   opacity: 1;
 }
+.chosen-react--no-search .chosen-react__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.chosen-react--no-search .chosen-react__value { flex: 1 1 auto; }
+.chosen-react__value--placeholder { color: var(--chosen-placeholder-color, #666); }
+.chosen-react--no-search .chosen-react__clear { position: relative; z-index: 1; }
 
 .chosen-react__chip {
   display: inline-flex;
   align-items: center;
-  gap: .2rem;
+  gap: .15rem;
   max-width: 100%;
-  padding: .125rem .35rem;
+  padding: .2rem .35rem;
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-choice-border-radius, 3px);
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
+  font-size: .9em;
 }
 
 .chosen-react__chip > span {
@@ -108,6 +125,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.chosen-react__chip--pending { outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb)); }
+.chosen-react__chip[hidden] { display: none; }
+.chosen-react__summary {
+  align-self: center;
+  padding: .125rem .35rem;
+  border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
+  border-radius: var(--chosen-choice-border-radius, 3px);
+  background: var(--chosen-choice-background, #eee);
+  color: var(--chosen-choice-color, #333);
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
 }
 
 .chosen-react__remove,
@@ -123,15 +153,15 @@
   display: inline-grid;
   place-items: center;
   flex: none;
+  inline-size: 18px;
   block-size: 1.25rem;
   padding: 0;
-  line-height: 1;
+  background: var(--chosen-icon-clear, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%23888'/%3E%3Cpath d='m5.5 5.5 5 5m0-5-5 5' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")) no-repeat center / var(--chosen-icon-size, 15px);
+  font-size: 0;
 }
 
-.chosen-react__remove:hover,
-.chosen-react__clear:hover {
-  color: var(--chosen-hover-color, #3875d7);
-}
+.chosen-react__remove:hover { filter: brightness(.7); }
+.chosen-react__clear:hover { color: var(--chosen-hover-color, #3875d7); }
 
 .chosen-react__chevron {
   width: .5rem;
@@ -154,11 +184,22 @@
   background: var(--chosen-dropdown-background, var(--chosen-background, #fff));
   box-shadow: var(--chosen-dropdown-shadow, 0 .3rem .6rem rgba(0, 0, 0, .18));
 }
+.chosen-react--floating .chosen-react__popup {
+  border-radius: var(--chosen-border-radius, 4px);
+}
+.chosen-react--floating .chosen-react__popup--above {
+  margin-top: 0;
+  margin-bottom: var(--chosen-dropdown-offset, .125rem);
+}
 
 .chosen-react__list {
   max-height: var(--chosen-results-max-height, 15rem);
   overflow-y: auto;
 }
+.chosen-react__bulk-actions { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem .45rem; border-bottom: 1px solid var(--chosen-border-color, #aaa); }
+.chosen-react__bulk-action { padding: .2rem .35rem; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; color: var(--chosen-bulk-action-color, var(--chosen-text-color, #444)); font: inherit; cursor: pointer; }
+.chosen-react__bulk-action:hover,
+.chosen-react__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 
 .chosen-react__group,
 .chosen-react__option,
@@ -170,10 +211,13 @@
   color: var(--chosen-group-color, #666);
   font-weight: 600;
 }
+.chosen-react__group--selectable { display: block; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer; }
+.chosen-react__group--selectable:hover { background: var(--chosen-selected-background, #eef4ff); }
 
 .chosen-react__option {
   cursor: pointer;
 }
+.chosen-react__option--create { font-style: italic; }
 
 .chosen-react__option--selected {
   position: relative;
@@ -187,6 +231,8 @@
   content: "✓";
   font-weight: 700;
 }
+.chosen-react__option--deselectable::after { content: "×"; font-size: 1.2em; line-height: 1; }
+.chosen-react--multiple .chosen-react__option--selected:not(.chosen-react__option--deselectable) { cursor: default; }
 
 .chosen-react__list [role="group"] > .chosen-react__option {
   padding-inline-start: var(--chosen-group-option-indent, calc(var(--chosen-result-padding-inline, .65rem) + .75rem));

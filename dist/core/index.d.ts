@@ -4,6 +4,9 @@ export interface ChosenOption {
   value: string;
   label?: string;
   searchText?: string;
+  alwaysVisible?: boolean;
+  dataAttributes?: Record<string, string>;
+  className?: string;
   selected?: boolean;
   disabled?: boolean;
   hidden?: boolean;
@@ -11,6 +14,7 @@ export interface ChosenOption {
 
 export interface ChosenGroup {
   label: string;
+  className?: string;
   options: readonly ChosenOption[];
   disabled?: boolean;
   hidden?: boolean;
@@ -20,6 +24,7 @@ export interface NormalizedGroup {
   kind: 'group';
   index: number;
   label: string;
+  className: string;
   disabled: boolean;
   hidden: boolean;
 }
@@ -29,8 +34,12 @@ export interface NormalizedOption {
   index: number;
   value: string;
   label: string;
+  className: string;
   empty: boolean;
   searchText: string;
+  alwaysVisible: boolean;
+  pinnedOnly?: boolean;
+  dataAttributes: Record<string, string>;
   selected: boolean;
   disabled: boolean;
   hidden: boolean;
@@ -53,11 +62,14 @@ export interface SearchSettings extends ResultSettings {
   enableSplitWordSearch?: boolean;
   foldAccents?: (text: string) => string;
   groupSearch?: boolean;
+  highlightPrefixMatches?: boolean;
+  maxShownResults?: number;
   maxSearchLength?: number;
   minSearchLength?: number;
   normalizeSearchText?: (text: string) => string;
   searchContains?: boolean;
   searchInValues?: boolean;
+  searchMatcher?: (query: string, item: NormalizedEntry) => boolean;
   searchStringMatch?: (text: string, regex: RegExp) => RegExpExecArray | null;
   splitSearchTerms?: boolean;
 }
@@ -106,5 +118,13 @@ export function includeOptionInResults(option: Pick<NormalizedOption, 'selected'
 export function selectionLimitReached(selectedCount: number, maximum?: number): boolean;
 export function canSelectOption(option: ChosenOption | NormalizedOption, selectedValues: readonly string[], settings?: SelectionSettings): boolean;
 export function updateSelection(selectedValues: readonly string[], option: ChosenOption | NormalizedOption, settings?: SelectionSettings): SelectionResult;
+export function resolvePastedChoices(text: string, entries: readonly NormalizedEntry[], selectedValues: readonly string[], maximum?: number): {
+  values: string[];
+  remaining: string;
+  handled: boolean;
+  changed: boolean;
+  limitReached: boolean;
+};
 export function createMatcher(query: string, settings?: SearchSettings): Matcher;
 export function filterOptions(entries: readonly (ChosenOption | ChosenGroup)[] | readonly NormalizedEntry[], query: string, settings?: SearchSettings): FilterResult;
+export function preferredPrefixIndex(items: readonly NormalizedEntry[], query: string, settings?: SearchSettings): number;
