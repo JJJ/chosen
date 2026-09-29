@@ -131,7 +131,7 @@ Options under a group heading are indented on the inline start side; override
 
 For integration callbacks, use `onReady`, `onShowingDropdown`,
 `onHidingDropdown`, `onSearch(query)`, `onSearchUpdated(query)`,
-`onNoResults(query)`, and `onMaxSelected()`. `onOpenChange(open)` reports a
+`onNoResults(query)`, `onNoResultsClear(query)`, and `onMaxSelected()`. The clear callback runs when an active no-results message disappears or is replaced. `onOpenChange(open)` reports a
 requested popup state change, and `onChange(value, event)` reports selection.
 These are React callbacks; they do not dispatch jQuery events.
 

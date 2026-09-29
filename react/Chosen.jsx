@@ -28,7 +28,7 @@ export const Chosen = forwardRef(function Chosen({
   openOnLabelClick = multiple,
   open: controlledOpen, defaultOpen = false, onOpenChange,
   onReady, onShowingDropdown, onHidingDropdown,
-  onSearch, onSearchUpdated, onNoResults, onMaxSelected,
+  onSearch, onSearchUpdated, onNoResults, onNoResultsClear, onMaxSelected,
   name, form, required = false, disabled = false, readOnly = false,
   placeholder, placeholderTextSingle, placeholderTextMultiple,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
@@ -138,12 +138,13 @@ export const Chosen = forwardRef(function Chosen({
   useEffect(() => { if (!hiddenChoiceCount) setChoicesExpanded(false); }, [hiddenChoiceCount]);
   const attachNativeSelect = useCallback(node => {
     selectRef.current = node;
-    if (value === undefined || !node) return;
+    if (!node) return;
+    const defaults = new Set(valuesOf(value === undefined ? defaultValue : value, multiple));
     for (const option of node.options) {
-      option.defaultSelected = selectedSet.has(option.value) ||
-        (!multiple && option.value === '' && !selectedValues.length);
+      option.defaultSelected = defaults.has(option.value) ||
+        (!multiple && option.value === '' && !defaults.size);
     }
-  }, [value, selectedKey, entries, multiple]);
+  }, [value, defaultValue, selectedKey, entries, multiple]);
 
   const changeOpen = useCallback((next) => {
     if (disabled || (readOnly && next)) return;
@@ -327,13 +328,13 @@ export const Chosen = forwardRef(function Chosen({
   }, [appliedQuery, onSearchUpdated]);
 
   useEffect(() => {
-    if (!isOpen || !appliedQuery || results.count) {
-      lastNoResultsQuery.current = null;
-    } else if (lastNoResultsQuery.current !== appliedQuery) {
-      lastNoResultsQuery.current = appliedQuery;
-      onNoResults?.(appliedQuery);
+    const noResultsQuery = isOpen && appliedQuery && !results.count ? appliedQuery : null;
+    if (lastNoResultsQuery.current && lastNoResultsQuery.current !== noResultsQuery) {
+      onNoResultsClear?.(lastNoResultsQuery.current);
     }
-  }, [isOpen, appliedQuery, results.count, onNoResults]);
+    if (noResultsQuery && lastNoResultsQuery.current !== noResultsQuery) onNoResults?.(noResultsQuery);
+    lastNoResultsQuery.current = noResultsQuery;
+  }, [isOpen, appliedQuery, results.count, onNoResults, onNoResultsClear]);
 
   useEffect(() => {
     const control = selectRef.current;

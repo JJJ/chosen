@@ -3607,10 +3607,13 @@ var ChosenCore = (function() {
 
     no_results(terms) {
       var no_results_html;
-      no_results_html = this.get_no_results_html(terms);
+      no_results_html = $(this.get_no_results_html(terms));
       this.search_results.append(no_results_html);
+      this.last_no_results_term = terms;
       return this.form_field_jq.trigger("chosen:no_results", {
-        chosen: this
+        chosen: this,
+        search_term: terms,
+        no_results: no_results_html
       });
     }
 
@@ -3645,7 +3648,18 @@ var ChosenCore = (function() {
     }
 
     no_results_clear() {
-      return this.search_results.find(".no-results").remove();
+      var no_results_html;
+      no_results_html = this.search_results.find(".no-results");
+      if (!no_results_html.length) {
+        return;
+      }
+      this.form_field_jq.trigger("chosen:no_results_clear", {
+        chosen: this,
+        search_term: this.last_no_results_term,
+        no_results: no_results_html
+      });
+      no_results_html.remove();
+      return this.last_no_results_term = null;
     }
 
     keydown_arrow() {

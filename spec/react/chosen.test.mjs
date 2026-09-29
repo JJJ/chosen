@@ -119,6 +119,7 @@ test('React callbacks expose search, popup, empty result, and selection limit ev
     onSearch: query => events.push(`search:${query}`),
     onSearchUpdated: query => events.push(`updated:${query}`),
     onNoResults: query => events.push(`empty:${query}`),
+    onNoResultsClear: query => events.push(`clear:${query}`),
     onMaxSelected: () => events.push('limit'),
     'aria-label': 'Fruit' }));
   const input = screen.getByRole('combobox');
@@ -126,6 +127,7 @@ test('React callbacks expose search, popup, empty result, and selection limit ev
   fireEvent.change(input, { target: { value: 'zzz' } });
   assert.deepEqual(events.slice(0, 5), ['ready', 'show', 'search:zzz', 'updated:zzz', 'empty:zzz']);
   fireEvent.change(input, { target: { value: '' } });
+  assert.equal(events.includes('clear:zzz'), true);
   fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
   fireEvent.click(input);
   fireEvent.click(screen.getByRole('option', { name: 'Banana' }));

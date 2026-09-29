@@ -62,6 +62,9 @@ async function main() {
       await page.evaluate(() => window.mountChosen({ multiple: true, required: true,
         deselectSelectedResults: true, hideResultsOnSelect: false }));
       await page.waitForFunction(() => document.querySelector('select')?.multiple);
+      const staleDefaults = await page.evaluate(() => [...document.querySelector('select').options]
+        .filter(option => option.defaultSelected).map(option => option.value));
+      if (staleDefaults.length) throw new Error(`${name}: previous controlled value remained a reset default (${staleDefaults})`);
       await page.evaluate(() => document.querySelector('form').reset());
       await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);
       await page.getByText('Fruit', { exact: true }).click();

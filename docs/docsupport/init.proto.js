@@ -33,6 +33,14 @@ document.observe('dom:loaded', function(evt) {
       new Chosen(element, config[selector]);
     });
   }
+  $$('.chosen-select-no-results').each(function(select) {
+    select.observe('chosen:no_results', function(event) {
+      $('no-results-lifecycle').textContent = 'No results for: ' + event.memo.search_term;
+    });
+    select.observe('chosen:no_results_clear', function(event) {
+      $('no-results-lifecycle').textContent = 'No-results message cleared: ' + event.memo.search_term;
+    });
+  });
   var previousChosenDefaults = Chosen.defaults;
   Chosen.defaults = { placeholder_text_single: 'Shared prompt' };
   new Chosen($('defaults-shared'));

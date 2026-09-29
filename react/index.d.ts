@@ -43,6 +43,7 @@ export interface ChosenProps {
   onSearch?: (query: string) => void;
   onSearchUpdated?: (query: string) => void;
   onNoResults?: (query: string) => void;
+  onNoResultsClear?: (query: string) => void;
   onMaxSelected?: () => void;
   name?: string;
   form?: string;

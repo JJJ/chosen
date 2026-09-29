@@ -29,6 +29,11 @@ for (var selector in config) {
   config[selector].open_on_label_click = false;
   $(selector).chosen(config[selector]);
 }
+$('.chosen-select-no-results').on('chosen:no_results chosen:no_results_clear', function(event, data) {
+  $('#no-results-lifecycle').text(event.type === 'chosen:no_results'
+    ? 'No results for: ' + data.search_term
+    : 'No-results message cleared: ' + data.search_term);
+});
 var previousChosenDefaults = $.fn.chosen.defaults;
 $.fn.chosen.defaults = { placeholder_text_single: 'Shared prompt' };
 $('.chosen-select-shared-defaults').chosen();

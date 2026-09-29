@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Expose the rendered no-results row and search term in classic `chosen:no_results`, and emit `chosen:no_results_clear` before removing it. Vanilla emits equivalent native events, while React provides `onNoResultsClear(query)` (harvesthq/chosen#1011).
 - Give the Vanilla and React demo pages working examples for the same 26 feature sections as the jQuery and Prototype pages, with matching page navigation, headers, and footers.
 - Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
 - Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).
@@ -43,6 +44,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Clear a previous controlled React selection from the native select's reset defaults when switching to an uncontrolled control.
 - Keep demo action-button spacing off selected-choice remove buttons, and align the Vanilla and React chip borders and remove icons with classic Chosen.
 - Correct the React demo's active navigation link and add quick tests and visible event feedback to both new-edition demos.
 - Parse the classic scalar `data-*` initialization options in vanilla with strict value validation and explicit JavaScript precedence, forward applicable source ARIA attributes, and support native search/lifecycle events and open/close/activate commands. React gains callback equivalents for ready, popup, search, empty results, and selection limits.

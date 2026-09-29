@@ -757,7 +757,9 @@ class @Chosen extends AbstractChosen
 
   no_results: (terms) ->
     @search_results.insert this.get_no_results_html(terms)
-    @form_field.fire("chosen:no_results", { chosen: this })
+    no_results_html = @search_results.down(".no-results")
+    @last_no_results_term = terms
+    @form_field.fire("chosen:no_results", { chosen: this, search_term: terms, no_results: no_results_html })
 
   show_create_option: (terms) ->
     create_option_html = this.get_create_option_html(terms)
@@ -783,7 +785,10 @@ class @Chosen extends AbstractChosen
 
   no_results_clear: ->
     nr = null
-    nr.remove() while nr = @search_results.down(".no-results")
+    while nr = @search_results.down(".no-results")
+      @form_field.fire("chosen:no_results_clear", { chosen: this, search_term: @last_no_results_term, no_results: nr })
+      nr.remove()
+    @last_no_results_term = null
 
   keydown_arrow: ->
     if @results_showing and @result_highlight

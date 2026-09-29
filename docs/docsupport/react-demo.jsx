@@ -158,6 +158,7 @@ function SuiteExample({ example, report }) {
   const [mounted, setMounted] = useState(true);
   const [readOnly, setReadOnly] = useState(false);
   const [invalid, setInvalid] = useState(false);
+  const [noResultsStatus, setNoResultsStatus] = useState('No search yet.');
   const id = `react-suite-${example.id}`;
   const select = mounted ? <Chosen id={id} name={`suite-${example.id}`}
     options={items} multiple={!!example.multiple} defaultValue={example.defaultValue}
@@ -165,6 +166,10 @@ function SuiteExample({ example, report }) {
     placeholder={example.placeholder || (example.dataOptions ? 'Choose a project...' : undefined)}
     aria-invalid={invalid || undefined}
     onChange={value => { setInvalid(false); report(`${example.title}: ${Array.isArray(value) ? value.join(', ') : value || '(none)'}`); }}
+    {...(example.id === 'no-results-text-support' ? {
+      onNoResults: query => setNoResultsStatus(`No results for: ${query}`),
+      onNoResultsClear: query => setNoResultsStatus(`No-results message cleared: ${query}`)
+    } : {})}
     {...(example.react || {})} /> : <p>Chosen is unmounted.</p>;
   return <section id={example.id} className={`adapter-suite-example ${example.className || ''}`}>
     <h2><a className="anchor" href={`#${example.id}`}>{example.title}</a></h2>
@@ -180,6 +185,7 @@ function SuiteExample({ example, report }) {
       <div className={`adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`}>
         <label className="comparison-label" htmlFor={id}>{example.id === 'labels-work-too' ? 'Click this label' : 'Into This'}</label>
         {select}
+        {example.id === 'no-results-text-support' && <output role="status">{noResultsStatus}</output>}
     {example.dynamic && <div className="adapter-suite-actions">
       <button type="button" onClick={() => {
         const count = items.length + 1;

@@ -113,6 +113,7 @@ export class Chosen {
     this.typeaheadTimer = null;
     this.composing = false;
     this.appliedQuery = '';
+    this.noResultsQuery = null;
     this.searchTimer = null;
     this.entries = [];
     this.nodes = [];
@@ -493,10 +494,18 @@ export class Chosen {
       row.addEventListener('click', event => this.createOption(query, event.metaKey || event.ctrlKey));
       this.list.append(row);
     }
+    const noResultsQuery = !result.count && query && this.opened &&
+      !(this.createIndex >= 0 && this.options.skip_no_results) ? query : null;
+    if (this.noResultsQuery && this.noResultsQuery !== noResultsQuery) {
+      emit(this.select, 'chosen:no_results_clear', this,
+        { search_term: this.noResultsQuery, no_results: this.empty });
+    }
     this.empty.hidden = !!result.count || (this.createIndex >= 0 && this.options.skip_no_results);
     const noResultsText = this.select.getAttribute('data-no_results_text') || this.options.no_results_text;
     this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ''}`;
-    if (!result.count && query && this.opened) emit(this.select, 'chosen:no_results', this, { search_term: query });
+    this.noResultsQuery = noResultsQuery;
+    if (noResultsQuery) emit(this.select, 'chosen:no_results', this,
+      { search_term: query, no_results: this.empty });
     const active = this.available[this.activeIndex];
     if (this.activeIndex < 0 || (this.activeIndex !== this.createIndex && (!active || active.kind !== 'option' || active.disabled ||
       (this.multiple && this.nodes[active.index]?.selected && !this.options.deselect_selected_results)))) {
@@ -748,6 +757,12 @@ export class Chosen {
 
   close() {
     if (!this.opened) return;
+    if (this.noResultsQuery) {
+      emit(this.select, 'chosen:no_results_clear', this,
+        { search_term: this.noResultsQuery, no_results: this.empty });
+      this.noResultsQuery = null;
+      this.empty.hidden = true;
+    }
     this.pendingBackstrokeValue = null;
     document.removeEventListener('scroll', this.onReposition, true);
     window.removeEventListener('scroll', this.onReposition, true);
