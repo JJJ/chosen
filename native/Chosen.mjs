@@ -835,7 +835,14 @@ export class Chosen {
       if (this.createIndex >= 0) enabled.push(this.createIndex);
       if (!enabled.length) return;
       const current = enabled.indexOf(this.activeIndex);
+      if (key === 'ArrowUp' && current === 0 && this.select.selectedOptions.length) {
+        this.close();
+        return;
+      }
       this.highlight(enabled[(current + (key === 'ArrowDown' ? 1 : -1) + enabled.length) % enabled.length]);
+    } else if (key === 'Enter' && !this.opened && !this.select.hasAttribute('readonly')) {
+      event.preventDefault();
+      this.open();
     } else if (key === 'Enter' && this.opened) {
       event.preventDefault();
       if (this.activeIndex === this.createIndex && this.createIndex >= 0) {
@@ -865,6 +872,10 @@ export class Chosen {
         }
       }
       this.close();
+    } else if ((key === 'Backspace' || key === 'Delete') && !this.multiple && !this.opened &&
+      !this.input.value && !this.clearButton.hidden) {
+      event.preventDefault();
+      this.clear();
     } else if (key === 'Backspace' && this.multiple && this.options.backspace_deletes_choices && !this.input.value) {
       const selected = this.entries.filter(entry => entry.kind === 'option' && this.nodes[entry.index]?.selected);
       if (selected.length) {

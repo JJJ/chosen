@@ -24,6 +24,27 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
+test('single keyboard shortcuts open, close at the first result, and clear an allowed selection', () => {
+  const changes = [];
+  render(h(Chosen, { options, name: 'fruit', defaultValue: 'a', allowSingleDeselect: true,
+    onChange: value => changes.push(value), 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  const select = document.querySelector('select');
+
+  fireEvent.keyDown(input, { key: 'Delete' });
+  assert.equal(select.value, '');
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.equal(input.getAttribute('aria-expanded'), 'true');
+  fireEvent.keyDown(input, { key: 'ArrowUp' });
+  assert.equal(input.getAttribute('aria-expanded'), 'false');
+  fireEvent.keyDown(input, { key: 'Enter' });
+  fireEvent.keyDown(input, { key: 'Enter' });
+  assert.equal(select.value, 'a');
+  fireEvent.keyDown(input, { key: 'Backspace' });
+  assert.equal(select.value, '');
+  assert.deepEqual(changes, ['', 'a', '']);
+});
+
 test('explicit width and dropdown layout props preserve the selected value', () => {
   const view = render(h(Chosen, { options, width: '18rem', dropdownWidth: '150%',
     dropdownPosition: 'fixed', name: 'fruit', defaultValue: 'a', 'aria-label': 'Fruit' }));

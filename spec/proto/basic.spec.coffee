@@ -271,6 +271,16 @@ describe "Basic setup", ->
       expect(select.value).toBe("")
       expect(prevented).toBe(true)
 
+  it "closes a single list with Up at its first highlighted result", ->
+    div = new Element('div').update("<select><option value=''></option><option selected>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down('select'))
+    chosen.results_show()
+    chosen.result_do_highlight(chosen.search_results.select("li.active-result").first())
+    chosen.keyup_arrow()
+    expect(chosen.results_showing).toBe(false)
+    div.remove()
+
   it "refreshes single deselection when the empty option changes", ->
     div = new Element('div').update("<select><option selected>One</option></select>")
     document.body.appendChild(div)

@@ -1265,8 +1265,8 @@
   },
   {
     "number": 994,
-    "status": "candidate",
-    "note": "Assess additional keyboard shortcuts against existing shortcuts and native focus behavior."
+    "status": "fixed-in-fork",
+    "note": "Classic already supported the three shortcuts; Vanilla and React now match the applicable single-select keyboard behavior."
   },
   {
     "number": 949,

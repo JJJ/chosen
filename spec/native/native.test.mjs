@@ -20,6 +20,29 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('single keyboard shortcuts open, close at the first result, and clear an allowed selection', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="a" selected>Apple</option><option value="b">Banana</option></select>');
+  const changes = [];
+  select.addEventListener('change', () => changes.push(select.value));
+  const chosen = new Chosen(select, { allow_single_deselect: true });
+
+  key(chosen.input, 'Delete');
+  assert.equal(select.value, '');
+  key(chosen.input, 'Enter');
+  assert.equal(chosen.opened, true);
+  key(chosen.input, 'ArrowUp');
+  assert.equal(chosen.opened, false);
+  key(chosen.input, 'Enter');
+  key(chosen.input, 'Enter');
+  assert.equal(select.value, 'a');
+  key(chosen.input, 'Backspace');
+  assert.equal(select.value, '');
+  assert.deepEqual(changes, ['', 'a', '']);
+
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('no-results events expose the rendered row and report its removal', () => {
   const { dom, select } = fixture('<select multiple><option>Apple</option></select>');
   const events = [];
