@@ -1266,7 +1266,8 @@
   {
     "number": 994,
     "status": "fixed-in-fork",
-    "note": "Classic already supported the three shortcuts; Vanilla and React now match the applicable single-select keyboard behavior."
+    "note": "Classic already supported the three shortcuts; Vanilla and React now match the applicable single-select keyboard behavior.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/191"
   },
   {
     "number": 949,
