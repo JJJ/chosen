@@ -523,6 +523,8 @@ export const Chosen = forwardRef(function Chosen({
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       if (!isOpen) changeOpen(true);
+      else if (event.key === 'ArrowUp' && currentActive >= 0 &&
+        currentActive === firstEnabled(currentItems, canActOnResult) && (!multiple || selectedValues.length)) changeOpen(false);
       else move(event.key === 'ArrowDown' ? 1 : -1, false, currentItems, freshItems ? currentActive : activeIndex);
     } else if (event.key === 'Home' && isOpen) {
       event.preventDefault();
@@ -530,6 +532,9 @@ export const Chosen = forwardRef(function Chosen({
     } else if (event.key === 'End' && isOpen) {
       event.preventDefault();
       move(-1, true, currentItems, freshItems ? currentActive : activeIndex);
+    } else if (event.key === 'Enter' && !isOpen && !freshItems && !readOnly) {
+      event.preventDefault();
+      changeOpen(true);
     } else if (event.key === 'Enter' && (isOpen || freshItems)) {
       event.preventDefault();
       if (currentOption) choose(currentOption, event);
@@ -539,6 +544,10 @@ export const Chosen = forwardRef(function Chosen({
     } else if (event.key === 'Tab') {
       if (multiple && (isOpen || freshItems) && multiselectAllowTabToSelect && currentOption) choose(currentOption, event);
       changeOpen(false);
+    } else if ((event.key === 'Backspace' || event.key === 'Delete') && !multiple && !isOpen &&
+      !query && allowSingleDeselect && selectedValues.length && !readOnly) {
+      event.preventDefault();
+      commit([], event);
     } else if (event.key === 'Backspace' && multiple && backspaceDeletesChoices && !query && selectedOptions.length) {
       event.preventDefault();
       const last = selectedOptions[selectedOptions.length - 1];

@@ -23,6 +23,8 @@ Selected results remain visible by default. Set `deselect_selected_results: true
 
 Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `chosen.clear()` as needed. `chosen.destroy()` removes the generated control and listeners and restores the select's original `tabindex` and `aria-hidden` attributes. A second instance on the same select is rejected until the first is destroyed.
 
+With the control focused, Enter opens a closed list and chooses its highlighted result when open. Up from the first highlighted result closes the list when a choice is selected. On a closed single select with `allow_single_deselect: true` and a blank first option, Backspace or Delete clears the selection. Search text and multiple-choice Backspace behavior keep their usual meanings.
+
 ## Supported options
 
 | Option | Default | Effect |

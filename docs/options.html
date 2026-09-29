@@ -441,6 +441,18 @@ $(".my-select").myChosen();</code></pre>
           <th>Key</th><th>Behavior</th>
         </tr>
         <tr>
+          <td>Enter</td>
+          <td>Open a focused closed single select, or choose the highlighted result when its list is open.</td>
+        </tr>
+        <tr>
+          <td>Up / Down</td>
+          <td>Move through results. Up from the first highlighted result closes the list when the select has a selection.</td>
+        </tr>
+        <tr>
+          <td>Backspace / Delete</td>
+          <td>Clear a focused, closed single select when <code>allow_single_deselect</code> is enabled and its first option is blank. Text editing and multiple-choice Backspace behavior are preserved.</td>
+        </tr>
+        <tr>
           <td>Home / End</td>
           <td>Move to the first or last available result. When the search input contains text, these keys retain their normal text-caret behavior.</td>
         </tr>

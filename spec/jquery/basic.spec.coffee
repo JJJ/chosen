@@ -262,6 +262,15 @@ describe "Basic setup", ->
       expect(select.val()).toBe("")
       expect(event.isDefaultPrevented()).toBe(true)
 
+  it "closes a single list with Up at its first highlighted result", ->
+    div = $("<div><select><option value=''></option><option selected>One</option><option>Two</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.results_show()
+    chosen.result_do_highlight(chosen.search_results.find("li.active-result").first())
+    chosen.keyup_arrow()
+    expect(chosen.results_showing).toBe(false)
+    div.remove()
+
   it "refreshes single deselection when the empty option changes", ->
     div = $("<div><select><option selected>One</option></select></div>").appendTo("body")
     select = div.find("select").chosen(allow_single_deselect: true)

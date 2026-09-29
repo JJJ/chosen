@@ -72,12 +72,15 @@ async function main() {
         throw new Error(`${name}: multiple label did not open the results`);
       }
       await page.getByRole('option', { name: 'Apple' }).click();
+      await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple"]');
       await page.getByRole('option', { name: 'Banana' }).click();
+      await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple","banana"]');
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
       if (JSON.stringify(values) !== JSON.stringify(['apple', 'banana'])) {
         throw new Error(`${name}: multiple native form values were ${JSON.stringify(values)}`);
       }
       await page.getByRole('option', { name: 'Apple' }).click();
+      await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["banana"]');
       const toggledValues = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
       if (JSON.stringify(toggledValues) !== JSON.stringify(['banana'])) {
         throw new Error(`${name}: selected result did not toggle off (${JSON.stringify(toggledValues)})`);

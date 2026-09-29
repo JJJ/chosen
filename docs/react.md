@@ -144,7 +144,7 @@ native `<label htmlFor>` and a matching `id`, or `aria-label` /
 `--chosen-invalid-border-color` (`#dc2626` by default); native validation alone
 does not change the default theme. Pressing an associated label keeps an open
 dropdown visible. Focus remains on the input while arrow keys
-move the active result; Enter selects and Escape closes. Multiple selections
+move the active result; Enter opens a closed dropdown or selects its highlighted result, and Escape closes it. Up from the first result also closes the list when a choice is selected. With `allowSingleDeselect={true}`, Backspace or Delete clears a closed single selection. Multiple selections
 have named remove buttons. Results are announced through a polite status node.
 The highlighted result is the current keyboard or pointer target; selected
 results have a separate background and check mark. Moving the pointer to a
