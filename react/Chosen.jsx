@@ -138,12 +138,13 @@ export const Chosen = forwardRef(function Chosen({
   useEffect(() => { if (!hiddenChoiceCount) setChoicesExpanded(false); }, [hiddenChoiceCount]);
   const attachNativeSelect = useCallback(node => {
     selectRef.current = node;
-    if (value === undefined || !node) return;
+    if (!node) return;
+    const defaults = new Set(valuesOf(value === undefined ? defaultValue : value, multiple));
     for (const option of node.options) {
-      option.defaultSelected = selectedSet.has(option.value) ||
-        (!multiple && option.value === '' && !selectedValues.length);
+      option.defaultSelected = defaults.has(option.value) ||
+        (!multiple && option.value === '' && !defaults.size);
     }
-  }, [value, selectedKey, entries, multiple]);
+  }, [value, defaultValue, selectedKey, entries, multiple]);
 
   const changeOpen = useCallback((next) => {
     if (disabled || (readOnly && next)) return;

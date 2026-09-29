@@ -44,6 +44,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Clear a previous controlled React selection from the native select's reset defaults when switching to an uncontrolled control.
 - Keep demo action-button spacing off selected-choice remove buttons, and align the Vanilla and React chip borders and remove icons with classic Chosen.
 - Correct the React demo's active navigation link and add quick tests and visible event feedback to both new-edition demos.
 - Parse the classic scalar `data-*` initialization options in vanilla with strict value validation and explicit JavaScript precedence, forward applicable source ARIA attributes, and support native search/lifecycle events and open/close/activate commands. React gains callback equivalents for ready, popup, search, empty results, and selection limits.
