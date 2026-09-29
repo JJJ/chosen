@@ -1259,8 +1259,9 @@
   },
   {
     "number": 1011,
-    "status": "candidate",
-    "note": "chosen:no_results exists; assess whether a clear event or callback is still needed."
+    "status": "fixed-in-fork",
+    "note": "No-results show and clear lifecycle notifications now expose the active query and message node across adapters.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/190"
   },
   {
     "number": 994,
