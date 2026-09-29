@@ -756,10 +756,11 @@ class Chosen extends AbstractChosen
     @search_results.scrollTop(scroll_position)
 
   no_results: (terms) ->
-    no_results_html = this.get_no_results_html(terms)
+    no_results_html = $(this.get_no_results_html(terms))
 
     @search_results.append no_results_html
-    @form_field_jq.trigger("chosen:no_results", {chosen:this})
+    @last_no_results_term = terms
+    @form_field_jq.trigger("chosen:no_results", {chosen:this, search_term:terms, no_results:no_results_html})
 
   show_create_option: (terms) ->
     create_option_html = this.get_create_option_html(terms)
@@ -782,7 +783,11 @@ class Chosen extends AbstractChosen
     @search_field.trigger "focus"
 
   no_results_clear: ->
-    @search_results.find(".no-results").remove()
+    no_results_html = @search_results.find(".no-results")
+    return unless no_results_html.length
+    @form_field_jq.trigger("chosen:no_results_clear", {chosen:this, search_term:@last_no_results_term, no_results:no_results_html})
+    no_results_html.remove()
+    @last_no_results_term = null
 
   keydown_arrow: ->
     if @results_showing and @result_highlight

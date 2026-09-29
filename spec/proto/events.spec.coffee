@@ -1,4 +1,27 @@
 describe "Events", ->
+  it "exposes the no-results row and announces when it is cleared", ->
+    div = new Element('div').update("<select multiple><option>Apple</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    events = []
+    for name in ['chosen:no_results', 'chosen:no_results_clear']
+      select.observe name, (event) ->
+        events.push [event.eventName, event.memo.search_term, event.memo.no_results.isConnected]
+        event.memo.no_results.down('span').update('custom') if event.eventName is 'chosen:no_results'
+
+    chosen.no_results('missing')
+    expect(chosen.search_results.down('.no-results span').textContent).toBe('custom')
+    chosen.no_results_clear()
+    chosen.no_results_clear()
+
+    expect(events).toEqual [
+      ['chosen:no_results', 'missing', true]
+      ['chosen:no_results_clear', 'missing', true]
+    ]
+    expect(chosen.search_results.down('.no-results')).toBeUndefined()
+    div.remove()
+
   it "keeps an open dropdown active when a click lands on its container", ->
     div = new Element('div').update("<select><option></option><option>One</option></select>")
     document.body.appendChild(div)

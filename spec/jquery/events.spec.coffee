@@ -1,4 +1,25 @@
 describe "Events", ->
+  it "exposes the no-results row and announces when it is cleared", ->
+    div = $("<div><select multiple><option>Apple</option></select></div>").appendTo('body')
+    select = div.find('select').chosen()
+    chosen = select.data('chosen')
+    events = []
+    select.on 'chosen:no_results chosen:no_results_clear', (event, data) ->
+      events.push [event.type, data.search_term, data.no_results[0].isConnected]
+      data.no_results.find('span').text('custom') if event.type is 'chosen:no_results'
+
+    chosen.no_results('missing')
+    expect(chosen.search_results.find('.no-results span').text()).toBe('custom')
+    chosen.no_results_clear()
+    chosen.no_results_clear()
+
+    expect(events).toEqual [
+      ['chosen:no_results', 'missing', true]
+      ['chosen:no_results_clear', 'missing', true]
+    ]
+    expect(chosen.search_results.find('.no-results').length).toBe(0)
+    div.remove()
+
   it "reports the previous single-select value when switching or clearing", ->
     div = $("<div><select><option value=''></option><option value='one'>One</option><option value='two'>Two</option></select></div>").appendTo('body')
     select = div.find('select').chosen(allow_single_deselect: true)

@@ -20,6 +20,32 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('no-results events expose the rendered row and report its removal', () => {
+  const { dom, select } = fixture('<select multiple><option>Apple</option></select>');
+  const events = [];
+  for (const name of ['chosen:no_results', 'chosen:no_results_clear']) {
+    select.addEventListener(name, event => {
+      events.push([name, event.detail.search_term, event.detail.no_results.isConnected]);
+      if (name === 'chosen:no_results') event.detail.no_results.textContent = 'Custom empty result';
+    });
+  }
+  const chosen = new Chosen(select);
+  chosen.open();
+  chosen.input.value = 'missing';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.equal(chosen.empty.textContent, 'Custom empty result');
+  chosen.input.value = '';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  assert.deepEqual(events, [
+    ['chosen:no_results', 'missing', true],
+    ['chosen:no_results_clear', 'missing', true]
+  ]);
+  chosen.close();
+  assert.equal(events.length, 2);
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('single selection preserves native values, form data, events, and update lifecycle', () => {
   const { dom, select, form } = fixture('<label for="fruit">Fruit</label><select id="fruit" name="fruit"><option value=""></option><option value="apple">Apple</option><option value="pear">Pear</option></select>');
   const events = [];

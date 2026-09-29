@@ -1242,8 +1242,9 @@
   },
   {
     "number": 1380,
-    "status": "candidate",
-    "note": "A framework-neutral core exists, but a vanilla DOM adapter remains a separate potential edition."
+    "status": "fixed-in-fork",
+    "note": "The dependency-free vanilla adapter enhances the native select while keeping form values and events authoritative; React and vanilla demo pages now show the classic feature sections.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/189"
   },
   {
     "number": 1370,

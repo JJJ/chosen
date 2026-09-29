@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Expose the rendered no-results row and search term in classic `chosen:no_results`, and emit `chosen:no_results_clear` before removing it. Vanilla emits equivalent native events, while React provides `onNoResultsClear(query)` (harvesthq/chosen#1011).
 - Give the Vanilla and React demo pages working examples for the same 26 feature sections as the jQuery and Prototype pages, with matching page navigation, headers, and footers.
 - Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
 - Add an experimental dependency-free vanilla JavaScript edition at `chosen-jjj/native`, backed by an existing select with native form events and a live demo (harvesthq/chosen#1380).

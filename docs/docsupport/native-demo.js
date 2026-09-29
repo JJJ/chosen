@@ -132,6 +132,18 @@ for (const example of window.ChosenAdapterCases) {
   select.addEventListener('change', () => {
     suiteEvent.textContent = `${example.title}: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
   });
+  if (example.id === 'no-results-text-support') {
+    const status = document.createElement('output');
+    status.setAttribute('role', 'status');
+    status.textContent = 'No search yet.';
+    controlWrap.append(status);
+    select.addEventListener('chosen:no_results', event => {
+      status.textContent = `No results for: ${event.detail.search_term}`;
+    });
+    select.addEventListener('chosen:no_results_clear', event => {
+      status.textContent = `No-results message cleared: ${event.detail.search_term}`;
+    });
+  }
   if (example.dynamic) {
     const actions = document.createElement('div');
     actions.className = 'adapter-suite-actions';

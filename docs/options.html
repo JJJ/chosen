@@ -748,13 +748,23 @@ $(".my-select").myChosen();</code></pre>
         </tr>
         <tr>
           <td>chosen:no_results</td>
-          <td>Triggered when a search returns no matching results.</td>
+          <td>Triggered when a search returns no matching results. The event data includes <code>search_term</code> and <code>no_results</code> (a jQuery collection or Prototype element), so a listener can customize the rendered row.</td>
+        </tr>
+        <tr>
+          <td>chosen:no_results_clear</td>
+          <td>Triggered just before a visible no-results row is removed. The event data includes its previous <code>search_term</code> and connected <code>no_results</code> element. It is a notification, not a cancelable action.</td>
         </tr>
       </tbody></table>
 
       <p>
         <strong>Note:</strong> all custom Chosen events (those that begin with <code class="language-javascript">chosen:</code>) also include the <code class="language-javascript">chosen</code> object as a parameter.
       </p>
+      <pre><code class="language-javascript">$('.my_select_box').on('chosen:no_results', function(event, data) {
+  data.no_results.find('span').text('Try another spelling');
+});
+$('.my_select_box').on('chosen:no_results_clear', function(event, data) {
+  console.log('No-results message cleared for', data.search_term);
+});</code></pre>
 
       <h2><a name="triggerable-events" class="anchor" href="#triggerable-events">Triggerable Events</a></h2>
       <p>You can trigger several events on the original select field to invoke a behavior in Chosen.</p>
