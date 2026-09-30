@@ -38,6 +38,17 @@ describe "Basic setup", ->
     expect(multiple.search_field.readAttribute('placeholder')).toBe("")
     div.remove()
 
+  it "shows an opt-in hint after a multiple selection", ->
+    div = new Element('div').update("<select multiple data-placeholder='Choose items' data-placeholder-text-multiple-selected='Add another...'><option selected>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    expect(chosen.search_field.readAttribute('placeholder')).toBe('Add another...')
+    select.options[0].selected = false
+    select.fire('chosen:updated')
+    expect(chosen.search_field.readAttribute('placeholder')).toBe('Choose items')
+    div.remove()
+
   it "starts searching when typing on a focused single select", ->
     div = new Element('div').update("<select><option></option><option>Apple</option><option>Banana</option></select>")
     document.body.appendChild(div)

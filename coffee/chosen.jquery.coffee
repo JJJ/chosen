@@ -484,6 +484,8 @@ class Chosen extends AbstractChosen
   set_search_field_placeholder: ->
     if @is_multiple and this.choices_count() < 1
       @search_field.attr('placeholder', @default_text)
+    else if @is_multiple and @options.placeholder_text_multiple_selected?
+      @search_field.attr('placeholder', @options.placeholder_text_multiple_selected)
     else
       @search_field.attr('placeholder', '')
 

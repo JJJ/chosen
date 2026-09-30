@@ -117,6 +117,9 @@ uncontrolled initial state. `disabled`, `readOnly`, `dir="rtl"`,
 `placeholderTextMultiple`, `searchPlaceholder`, and `noResultsText` cover common
 form behavior without framework-specific markup hooks. Single clearing is
 opt-in with `allowSingleDeselect`, matching classic Chosen; the demo enables it.
+Set `placeholderTextMultipleSelected="Add another..."` to show a hint in a
+multiple select after its first choice. The hint is optional and does not
+change the selected values or option labels.
 For multiple selects, `backspaceDeletesChoices` defaults to `true` and
 `multiselectAllowTabToSelect` defaults to `false`. Enabling the latter selects
 the highlighted result on Tab and still moves focus to the next control.

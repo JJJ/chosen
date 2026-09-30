@@ -33,6 +33,7 @@ With the control focused, Enter opens a closed list and chooses its highlighted 
 | `placeholder_text` | “Select an Option” or “Select Some Options” | Text shown before a selection; `data-placeholder` and native `placeholder` on the select take precedence. |
 | `placeholder_text_single` | type default | Override the fallback for single selects; source attributes still take precedence. |
 | `placeholder_text_multiple` | type default | Override the fallback for multiple selects; source attributes still take precedence. |
+| `placeholder_text_multiple_selected` | unset | Optional search-input hint after at least one multiple-select choice, including while open. |
 | `search_placeholder` | “Search options” | Text in the open search input. |
 | `no_results_text` | “No results for:” | Text shown when nothing matches. |
 | `no_results_template` | unset | Optional plain-text message with `{search}` where the search term should appear. Overrides `no_results_text`; without the marker, omits the term. |

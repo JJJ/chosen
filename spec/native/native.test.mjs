@@ -503,6 +503,21 @@ test('a multiple selection hides its closed placeholder once a choice exists', (
   dom.window.close();
 });
 
+test('a multiple selection can show an opt-in add-more hint', () => {
+  const { dom, select } = fixture('<select multiple data-placeholder="Choose items" data-placeholder-text-multiple-selected="Add another..."><option selected>One</option><option>Two</option></select>');
+  const chosen = new Chosen(select);
+  assert.equal(chosen.input.placeholder, 'Add another...');
+  chosen.open();
+  assert.equal(chosen.input.placeholder, 'Add another...');
+  select.options[0].selected = false;
+  chosen.update();
+  assert.equal(chosen.input.placeholder, 'Search options');
+  chosen.close();
+  assert.equal(chosen.input.placeholder, 'Choose items');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('multiple keyboard options preserve Backspace and Tab defaults and permit opt-in Tab selection', () => {
   const { dom, select } = fixture('<select multiple><option value="a" selected>Alpha</option><option value="b">Beta</option></select>');
   const chosen = new Chosen(select, { backspace_deletes_choices: false });

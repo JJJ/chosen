@@ -193,6 +193,11 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
           <td>The text to be displayed as a placeholder when no options are selected for a multiple select.</td>
         </tr>
         <tr>
+          <td>placeholder_text_multiple_selected</td>
+          <td>unset</td>
+          <td>Optional text in a multiple select's search input after at least one item has been selected, such as <code class="language-javascript">"Add another..."</code>. It does not change option labels or submitted values. The source select can use <code class="language-html">data-placeholder-text-multiple-selected</code>; React uses <code class="language-javascript">placeholderTextMultipleSelected</code>.</td>
+        </tr>
+        <tr>
           <td>placeholder_text</td>
           <td>Not set; type-specific defaults apply.</td>
           <td>Fallback placeholder for either select type. A type-specific <code class="language-javascript">placeholder_text_single</code> or <code class="language-javascript">placeholder_text_multiple</code> takes precedence; a native <code class="language-html">placeholder</code> or <code class="language-html">data-placeholder</code> attribute on the select takes precedence over the options. Set any of these to an empty string to omit the placeholder.</td>

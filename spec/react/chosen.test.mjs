@@ -456,6 +456,20 @@ test('React matches classic clear and type-specific placeholder defaults', () =>
   assert.equal(screen.getByRole('combobox').placeholder, '');
 });
 
+test('React shows an opt-in hint after a multiple selection', () => {
+  const props = { options, multiple: true, placeholder: 'Choose items',
+    placeholderTextMultipleSelected: 'Add another...', 'aria-label': 'Fruit' };
+  const view = render(h(Chosen, { ...props, value: ['a'] }));
+  const input = screen.getByRole('combobox');
+  assert.equal(input.placeholder, 'Add another...');
+  fireEvent.click(input);
+  assert.equal(input.placeholder, 'Add another...');
+  view.rerender(h(Chosen, { ...props, value: [] }));
+  assert.equal(input.placeholder, 'Search options');
+  fireEvent.keyDown(input, { key: 'Escape' });
+  assert.equal(input.placeholder, 'Choose items');
+});
+
 test('multiple keyboard settings keep defaults and allow Tab selection', () => {
   const changes = [];
   const view = render(h(Chosen, { options, multiple: true, defaultValue: ['a'],
