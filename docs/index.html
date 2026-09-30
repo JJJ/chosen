@@ -1772,7 +1772,7 @@
       </div>
 
       <h2><a name="validation-styling" class="anchor" href="#validation-styling">Validation Styling</a></h2>
-      <p>Set <code>aria-invalid="true"</code> on the original select when your application reports an error. The red border is opt-in; a native <code>required</code> field does not change Chosen's default appearance on its own.</p>
+      <p>Set <code>aria-invalid="true"</code> on the original select when your application reports an error. The red border is opt-in; a native <code>required</code> field does not change Chosen's default appearance on its own. Use Check validity below to see where the browser places its required-field message.</p>
       <div class="side-by-side clearfix">
         <div>
           <label class="comparison-label" for="recipe-invalid-single">Single choice with an error</label>
@@ -1780,6 +1780,7 @@
             <option value="" selected>Choose a fruit</option><option>Apple</option><option>Banana</option>
           </select>
           <p id="recipe-invalid-single-error">Choose one fruit before continuing.</p>
+          <button type="button" class="button" data-check-validation="recipe-invalid-single">Check validity</button>
         </div>
         <div>
           <label class="comparison-label" for="recipe-invalid-multiple">Multiple choices with an error</label>
@@ -1787,6 +1788,7 @@
             <option>Apple</option><option>Banana</option><option>Orange</option>
           </select>
           <p id="recipe-invalid-multiple-error">Choose at least one fruit.</p>
+          <button type="button" class="button" data-check-validation="recipe-invalid-multiple">Check validity</button>
         </div>
       </div>
 

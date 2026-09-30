@@ -56,6 +56,23 @@ describe "Events", ->
       done()
     ), 10
 
+  it "restores a required select's original positioning after form reset", (done) ->
+    form = new Element('form').update("<select required style='left: 7px'><option value=''></option><option value='one' selected>One</option></select>")
+    document.body.appendChild(form)
+    select = form.down('select')
+    new Chosen(select)
+    select.value = ''
+    expect(form.reportValidity()).toBe(false)
+    expect(select.style.left).not.toBe('7px')
+    form.reset()
+    setTimeout (->
+      expect(select.value).toBe('one')
+      expect(select.style.left).toBe('7px')
+      expect(select.style.position).toBe('absolute')
+      form.remove()
+      done()
+    ), 10
+
   it "opens an already activated single or multiple select programmatically", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""

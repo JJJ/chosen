@@ -20,6 +20,29 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('positions an invalid native select over its visible control and restores its styles', async () => {
+  const { dom, select, form } = fixture('<select required style="left: 3px"><option value=""></option><option value="a" selected>Apple</option></select>');
+  const chosen = new Chosen(select);
+  select.value = '';
+  chosen.control.getBoundingClientRect = () => ({ left: 20, top: 30, width: 240, height: 40 });
+  select.dispatchEvent(new dom.window.Event('invalid'));
+  assert.equal(select.style.position, 'absolute');
+  assert.equal(select.style.left, '20px');
+  assert.equal(select.style.width, '240px');
+  select.value = 'a';
+  select.dispatchEvent(new dom.window.Event('change'));
+  assert.equal(select.style.position, '');
+  assert.equal(select.style.left, '3px');
+  select.value = '';
+  select.dispatchEvent(new dom.window.Event('invalid'));
+  form.reset();
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(select.value, 'a');
+  assert.equal(select.style.left, '3px');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('secondary pointer buttons do not open the control', () => {
   for (const multiple of [false, true]) {
     const { dom, select } = fixture(`<select${multiple ? ' multiple' : ''}><option>One</option><option>Two</option></select>`);

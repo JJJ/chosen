@@ -125,6 +125,10 @@ class @Chosen extends AbstractChosen
     @form_field.observe "chosen:activate", @form_field_observers.activate
     @form_field.observe "chosen:open", @form_field_observers.open
     @form_field.observe "chosen:close", @form_field_observers.close
+    @invalid_handler = => this.position_validation_select()
+    @validation_change_handler = => this.restore_validation_select() if not @form_field.validity? or @form_field.validity.valid
+    @form_field.addEventListener 'invalid', @invalid_handler
+    @form_field.addEventListener 'change', @validation_change_handler
 
     @search_field.observe "blur", (evt) => this.input_blur(evt)
     @search_field.observe "keyup", (evt) => this.keyup_checker(evt)
@@ -158,6 +162,9 @@ class @Chosen extends AbstractChosen
     @form_field.stopObserving "chosen:activate", @form_field_observers.activate
     @form_field.stopObserving "chosen:open", @form_field_observers.open
     @form_field.stopObserving "chosen:close", @form_field_observers.close
+    @form_field.removeEventListener 'invalid', @invalid_handler
+    @form_field.removeEventListener 'change', @validation_change_handler
+    this.restore_validation_select()
 
     # Clean up scroll handler and pending timeout if dropdown is open
     if @results_showing
