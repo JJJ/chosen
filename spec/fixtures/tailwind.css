@@ -3,6 +3,7 @@
 
 @layer components {
   .chosen-container,
+  .chosen-native,
   .chosen-react {
     --chosen-font-family: var(--font-sans);
     --chosen-font-size: var(--text-sm);
@@ -35,6 +36,7 @@
   }
 
   .dark .chosen-container,
+  .dark .chosen-native,
   .dark .chosen-react {
     color-scheme: dark;
     --chosen-text-color: var(--color-slate-100);

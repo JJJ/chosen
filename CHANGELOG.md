@@ -6,6 +6,10 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+### Changed
+- Align Vanilla and React chips, summary buttons, and selectable group headings, and connect the default React dropdown border and rounded result rows with the control. Both editions now fit narrow layouts without a fixed 12rem minimum. Vanilla active results now use `--chosen-highlight-text-color`, matching React, so theme highlight backgrounds cannot hide the result text. Vanilla's default highlight blue is slightly darker for readable white text.
+- Give Vanilla selects marked `aria-invalid="true"` the same customizable invalid border as classic and React Chosen. The generated host now gains `chosen-native--invalid`; this class is a new styling hook for integrations.
+
 ### Added
 - Add opt-in `shift_select_range` to select a visible range in multiple selects with Shift-click across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#135). React uses `shiftSelectRange`. Disabled options and selection limits still apply.
 - Add opt-in `placeholder_text_multiple_selected` to show an “Add another...” style search hint after the first multiple-selection choice across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#171). React uses `placeholderTextMultipleSelected`.
