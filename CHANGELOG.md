@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `no_results_template` with a `{search}` marker so localized no-results messages can place the search term naturally across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#943). React uses `noResultsTemplate`.
 - Expose the rendered no-results row and search term in classic `chosen:no_results`, and emit `chosen:no_results_clear` before removing it. Vanilla emits equivalent native events, while React provides `onNoResultsClear(query)` (harvesthq/chosen#1011).
 - Give the Vanilla and React demo pages working examples for the same 26 feature sections as the jQuery and Prototype pages, with matching page navigation, headers, and footers.
 - Expose classic search matching, prefix-priority highlighting, normalization, value search, result-count, and query-length settings in the experimental vanilla and React editions through the shared core.
@@ -114,6 +115,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- With opt-in `no_results_template`, the classic no-results row moves its search-term `<span>` to the `{search}` marker, or omits it when the marker is absent. Vanilla and React likewise add a `<span>` at the marker. The default generated markup is unchanged.
 - Selected vanilla results now gain `.chosen-native__option--selected`; the mark is CSS generated, and selected multiple results can be toggled off without changing the row's `role="option"` markup.
 - The new opt-in vanilla edition renders `chosen-native__*` elements and uses native `CustomEvent` details and native `input`/`change` events; its generated selectors, roles, and attributes are separate from the classic adapters and remain experimental.
 - With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.

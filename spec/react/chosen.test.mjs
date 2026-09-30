@@ -320,6 +320,23 @@ test('single clear and no-results messaging remain keyboard accessible', () => {
   assert.match(screen.getByText(/Nothing found/).textContent, /missing/);
 });
 
+test('localized no-results templates place the search term as text', () => {
+  render(h(Chosen, { options, noResultsTemplate: 'For {search}, no <matches>.', 'aria-label': 'Fruit' }));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: '&' } });
+  const empty = document.querySelector('.chosen-react__empty');
+  assert.equal(empty.textContent, 'For &, no <matches>.');
+  assert.equal(empty.querySelector('span').textContent, '&');
+  assert.equal(empty.querySelector('matches'), null);
+  cleanup();
+  render(h(Chosen, { options, noResultsTemplate: 'Nothing here.', 'aria-label': 'Fruit' }));
+  const nextInput = screen.getByRole('combobox');
+  fireEvent.click(nextInput);
+  fireEvent.change(nextInput, { target: { value: '&' } });
+  assert.equal(document.querySelector('.chosen-react__empty').textContent, 'Nothing here.');
+});
+
 test('classic search settings filter React results and keep native form values', () => {
   const options = [
     { value: 'zebra', label: 'The Zebra' },

@@ -4,7 +4,7 @@ let nextId = 0;
 const instances = new WeakMap();
 const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
 const integerDataOptions = new Set('disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results'.split(' '));
-const stringDataOptions = new Set('select_all_text deselect_all_text show_fewer_items_text no_results_text create_option_text placeholder_text placeholder_text_single placeholder_text_multiple'.split(' '));
+const stringDataOptions = new Set('select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple'.split(' '));
 
 function selectDataOptions(select) {
   const parsed = {};
@@ -502,7 +502,16 @@ export class Chosen {
     }
     this.empty.hidden = !!result.count || (this.createIndex >= 0 && this.options.skip_no_results);
     const noResultsText = this.select.getAttribute('data-no_results_text') || this.options.no_results_text;
-    this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ''}`;
+    if (typeof this.options.no_results_template === 'string') {
+      const parts = this.options.no_results_template.split('{search}');
+      this.empty.replaceChildren();
+      parts.forEach((part, index) => {
+        if (index) this.empty.append(element('span', '', query));
+        this.empty.append(document.createTextNode(part));
+      });
+    } else {
+      this.empty.textContent = `${noResultsText}${query ? ` ${query}` : ''}`;
+    }
     this.noResultsQuery = noResultsQuery;
     if (noResultsQuery) emit(this.select, 'chosen:no_results', this,
       { search_term: query, no_results: this.empty });

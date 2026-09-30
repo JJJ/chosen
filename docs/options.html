@@ -153,6 +153,11 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
            No results for: "Bad Search").</td>
         </tr>
         <tr>
+          <td>no_results_template</td>
+          <td>unset</td>
+          <td>Optional plain-text message with <code class="language-javascript">{search}</code> where the search term should appear, for example <code class="language-javascript">"No match for {search}."</code>. If the marker is omitted, the search term is omitted. Overrides <code class="language-javascript">no_results_text</code> when set. The search term and surrounding text are escaped, so HTML is shown literally. React uses <code class="language-javascript">noResultsTemplate</code>.</td>
+        </tr>
+        <tr>
           <td>create_option</td>
           <td>false</td>
           <td>When enabled, offer to add the current search as a selected option when no result matches. Pass <code class="language-javascript">true</code> for Chosen to append it, or a function called with the search text and the Chosen instance as <code class="language-javascript">this</code>. A callback takes responsibility for adding the option; it can call <code class="language-javascript">this.select_append_option({value: text, text: text})</code> after validation.</td>
@@ -406,6 +411,10 @@ $(".my-select").myChosen();</code></pre>
         <tr>
           <td>data-no_results_text</td>
           <td>Overrides <code class="language-javascript">no_results_text</code> for this select.</td>
+        </tr>
+        <tr>
+          <td>data-no-results-template</td>
+          <td>Sets <code class="language-javascript">no_results_template</code> for this select, unless an explicit JavaScript option overrides it.</td>
         </tr>
         <tr>
           <td>data-create_option_text</td>

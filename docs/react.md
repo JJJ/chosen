@@ -63,6 +63,8 @@ keys flush pending text before acting. It defaults to zero. Set
 threshold. Prefix typing still moves through open results. Set
 `resultsCountText={count => count + ' choices'}` to localize the live result
 count. `noResultsText` is used literally before the query, with one space.
+Set `noResultsTemplate="No match for {search}."` to place the escaped query
+within localized copy. Without `{search}`, the query is omitted.
 Set `createOption` to offer an Add Option row when no option matches.
 `persistentCreateOption` also offers it beside partial matches, unless an
 option exactly matches the query. `createOptionText` changes its prefix and

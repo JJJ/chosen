@@ -1252,8 +1252,8 @@
 
       <h2><a name="no-results-text-support" class="anchor" href="#no-results-text-support">No Results Text Support</a></h2>
       <div class="side-by-side clearfix">
-        <p>Set the message with <code>no_results_text</code>. Type an unmatched search, then clear it to see the <code>chosen:no_results</code> and <code>chosen:no_results_clear</code> events below.</p>
-        <pre><code class="language-javascript"> $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); </code></pre>
+        <p>Set the message with <code>no_results_text</code>, or place the search term with <code>no_results_template</code> and its <code>{search}</code> marker. Type an unmatched search, then clear it to see the <code>chosen:no_results</code> and <code>chosen:no_results_clear</code> events below.</p>
+        <pre><code class="language-javascript"> $(".chosen-select").chosen({no_results_template: "No match for {search}."}); </code></pre>
         <p></p>
         <p><output id="no-results-lifecycle" role="status">No search yet.</output></p>
         <div>

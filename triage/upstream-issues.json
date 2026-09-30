@@ -1276,8 +1276,8 @@
   },
   {
     "number": 943,
-    "status": "candidate",
-    "note": "Assess localized no-results templates that can place the search term after other words."
+    "status": "fixed-in-fork",
+    "note": "Opt-in no_results_template places an escaped search term at {search} across all four editions."
   },
   {
     "number": 918,

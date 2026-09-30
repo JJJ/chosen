@@ -774,6 +774,7 @@ var ChosenCore = (function() {
         // Unescape any HTML entities that might have been incorrectly included
         this.default_text = this.unescape_html(this.default_text);
         this.results_none_found = this.form_field.getAttribute("data-no_results_text") || this.options.no_results_text || AbstractChosen.default_no_result_text;
+        this.no_results_template = this.options.no_results_template;
         return this.create_option_text = this.form_field.getAttribute("data-create_option_text") || this.options.create_option_text || AbstractChosen.default_create_option_text;
       }
 
@@ -2459,6 +2460,14 @@ var ChosenCore = (function() {
       }
 
       get_no_results_html(terms) {
+        var content, search;
+        if (this.no_results_template != null) {
+          search = `<span>${this.escape_html(terms)}</span>`;
+          content = this.no_results_template.split("{search}").map((part) => {
+            return this.escape_html(part);
+          }).join(search);
+          return `<li class=\"no-results\">${content}</li>`;
+        }
         return `<li class="no-results">
   ${this.escape_html(this.results_none_found)} <span>${this.escape_html(terms)}</span>
 </li>`;
@@ -2537,6 +2546,7 @@ var ChosenCore = (function() {
       deselect_all_text: 'string',
       show_fewer_items_text: 'string',
       no_results_text: 'string',
+      no_results_template: 'string',
       create_option_text: 'string',
       placeholder_text: 'string',
       placeholder_text_single: 'string',

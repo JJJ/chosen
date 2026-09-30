@@ -6,6 +6,7 @@ export interface ChosenOptions {
   placeholder_text_multiple?: string;
   search_placeholder?: string;
   no_results_text?: string;
+  no_results_template?: string;
   search_contains?: boolean;
   highlight_prefix_matches?: boolean;
   enable_split_word_search?: boolean;
