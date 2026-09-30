@@ -86,9 +86,9 @@
   {
     "number": 2938,
     "title": "Resolve 1901 issue",
-    "issue_refs": [],
-    "status": "candidate",
-    "note": "Single deselection still requires the first option to have both empty text and value; assess the native placeholder contract."
+    "issue_refs": [1901],
+    "status": "declined",
+    "note": "The one-line patch changes only single-deselect eligibility from blank text to blank value; it does not address #1901's mobile placeholder display. The fork supports touch controls and keeps the first truly blank option as the clear target, avoiding a visible empty-value option being treated as an implicit placeholder."
   },
   {
     "number": 2924,
@@ -108,15 +108,15 @@
     "number": 2904,
     "title": "Use the placeholder attribute instead of faking it with value.",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Both classic adapters set the multiple-search input's native placeholder attribute, matching the behavior tracked in Harvest #3133."
   },
   {
     "number": 2903,
     "title": "Support hidden property on option and optgroup elements.",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The parser records hidden options and optgroups; the result matcher excludes them and selection guards reject hidden options."
   },
   {
     "number": 2902,
@@ -138,8 +138,9 @@
     "number": 2846,
     "title": "Multiple values pasting feature added to winnow_results method",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The opt-in paste_multiple_values setting supports comma-, semicolon-, and tab-separated known values across all four editions; see fork PR #173 and Harvest #2845.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/173"
   },
   {
     "number": 2761,
@@ -168,8 +169,8 @@
     "issue_refs": [
       495
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The clear control now uses a button instead of the old abbr element, covering the markup concern in Harvest #495."
   },
   {
     "number": 2716,
@@ -214,8 +215,9 @@
     "issue_refs": [
       2689
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "chosen:open can reopen an activated closed single select in both classic adapters; see fork PR #162 and Harvest #2689.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/162"
   },
   {
     "number": 2678,
@@ -294,8 +296,9 @@
     "number": 2346,
     "title": "Support for home and end key",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Home and End navigate results in both classic adapters, with Page Up and Page Down as well; see fork PR #132.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/132"
   },
   {
     "number": 2319,
@@ -304,8 +307,9 @@
       2232,
       2311
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "chosen:updated mirrors the source title and refreshes inherited classes when enabled; see fork PRs #124 and #126.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/126"
   },
   {
     "number": 2047,
