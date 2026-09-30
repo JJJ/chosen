@@ -1106,8 +1106,9 @@
   },
   {
     "number": 2438,
-    "status": "candidate",
-    "note": "The current phone picker remains anchored. A physical iPhone showed focus zoom with the 14px search input; the touch-input font fix raises it to at least 16px. Full-screen presentation remains a separate design candidate."
+    "status": "fixed-in-fork",
+    "note": "Opt-in mobile_fullscreen (mobileFullscreen in React) fills the visible viewport on narrow touch screens, follows the keyboard, and offers Close across all four editions. The anchored dropdown remains the default.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/198"
   },
   {
     "number": 2397,
