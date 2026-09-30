@@ -1334,7 +1334,8 @@
   {
     "number": 171,
     "status": "fixed-in-fork",
-    "note": "Opt-in placeholder_text_multiple_selected shows an add-more hint after a multiple selection across all four editions without altering native values."
+    "note": "Opt-in placeholder_text_multiple_selected shows an add-more hint after a multiple selection across all four editions without altering native values.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/194"
   },
   {
     "number": 155,
