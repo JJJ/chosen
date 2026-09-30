@@ -159,6 +159,7 @@ class Chosen extends AbstractChosen
       @selected_item.on 'keydown.chosen', (evt) => this.selected_item_keydown(evt); return
 
   destroy: ->
+    this.hide_mobile_fullscreen()
     this.cancel_pending_search()
     clearTimeout(@form_reset_timeout) if @form_reset_timeout?
     $(window).off 'pageshow.chosen', @pageshow_handler
@@ -408,13 +409,14 @@ class Chosen extends AbstractChosen
       @form_field_jq.trigger("chosen:maxselected", {chosen: this})
       return false
 
-    if this.should_dropup()
+    if not this.mobile_fullscreen_matches() and this.should_dropup()
       @container.addClass "chosen-dropup"
 
     @container.addClass "chosen-with-drop"
     @selected_item.attr("aria-expanded", true) unless @is_multiple
     @dropdown.attr("aria-hidden", false)
     @results_showing = true
+    this.show_mobile_fullscreen()
 
     @search_field.attr("aria-expanded", true)
     @search_field.trigger "focus"
@@ -440,6 +442,7 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:search_updated", {chosen: this, search_term: search_term})
 
   results_hide: ->
+    this.hide_mobile_fullscreen()
     this.cancel_pending_search()
     this.clear_typeahead()
     if @results_showing

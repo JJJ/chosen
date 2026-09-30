@@ -57,6 +57,7 @@ export interface ChosenOptions {
   width?: string | number | false;
   dropdown_width?: string | number;
   dropdown_position?: 'absolute' | 'fixed';
+  mobile_fullscreen?: boolean;
   recalculate_width_on_update?: boolean;
 }
 

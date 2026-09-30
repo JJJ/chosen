@@ -53,6 +53,27 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
+test('opt-in mobile picker closes and restores scrolling with native form values', () => {
+  const previousMatchMedia = window.matchMedia;
+  window.matchMedia = () => ({ matches: true });
+  document.body.style.overflow = 'auto';
+  try {
+    render(h('form', null, h(Chosen, { options, name: 'fruit', mobileFullscreen: true, 'aria-label': 'Fruit' })));
+    fireEvent.click(screen.getByRole('combobox'));
+    assert.equal(document.querySelector('.chosen-react--mobile-fullscreen') !== null, true);
+    assert.equal(document.body.style.overflow, 'hidden');
+    fireEvent.click(screen.getByRole('button', { name: 'Close options' }));
+    assert.equal(document.body.style.overflow, 'auto');
+    fireEvent.click(screen.getByRole('combobox'));
+    fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+    assert.equal(new FormData(document.querySelector('form')).get('fruit'), 'a');
+  } finally {
+    cleanup();
+    window.matchMedia = previousMatchMedia;
+    document.body.style.overflow = '';
+  }
+});
+
 test('single keyboard shortcuts open, close at the first result, and clear an allowed selection', () => {
   const changes = [];
   render(h(Chosen, { options, name: 'fruit', defaultValue: 'a', allowSingleDeselect: true,

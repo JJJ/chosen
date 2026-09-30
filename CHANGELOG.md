@@ -12,6 +12,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Give Vanilla selects marked `aria-invalid="true"` the same customizable invalid border as classic and React Chosen. The generated host now gains `chosen-native--invalid`; this class is a new styling hook for integrations.
 
 ### Added
+- Add opt-in `mobile_fullscreen` for a full-screen picker on narrow touch devices across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#2438). React uses `mobileFullscreen`; desktop and default mobile dropdowns are unchanged.
 - Add opt-in `shift_select_range` to select a visible range in multiple selects with Shift-click across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#135). React uses `shiftSelectRange`. Disabled options and selection limits still apply.
 - Add opt-in `placeholder_text_multiple_selected` to show an “Add another...” style search hint after the first multiple-selection choice across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#171). React uses `placeholderTextMultipleSelected`.
 - Add opt-in `inherit_optgroup_classes` to copy parent optgroup classes onto selected multiple-choice chips across jQuery, Prototype, Vanilla, and React, so applications can style selections by group (harvesthq/chosen#572). React uses `inheritOptgroupClasses`.
@@ -123,6 +124,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- Opting into `mobile_fullscreen` adds a Close button to each generated container and applies `chosen-mobile-fullscreen`, `chosen-native--mobile-fullscreen`, or `chosen-react--mobile-fullscreen` while open on a qualifying touch screen. Integrations that inspect generated children or style open containers should allow this opt-in markup and class.
 - With opt-in `placeholder_text_multiple_selected`, the generated multiple-search input's `placeholder` attribute changes after the first selection. The source select and submitted values are unchanged; the default generated attribute remains unchanged.
 - Enabling `inherit_optgroup_classes` adds the source optgroup's classes to generated selected-choice chips. Default classes and markup remain unchanged; selectors targeting those classes may now also match chips when the option is enabled.
 - With opt-in `no_results_template`, the classic no-results row moves its search-term `<span>` to the `{search}` marker, or omits it when the marker is absent. Vanilla and React likewise add a `<span>` at the marker. The default generated markup is unchanged.

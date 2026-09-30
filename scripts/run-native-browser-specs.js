@@ -207,6 +207,21 @@ async function check(name, engine) {
       if (mobile.value !== 'atlas' || mobile.fontSize < 16 || mobile.scale !== 1) {
         throw new Error(`${name}: touch selection or focus scale failed (${JSON.stringify(mobile)})`);
       }
+      const fullscreenHost = touch.locator('#native-suite-mobile-fullscreen + .chosen-native');
+      await fullscreenHost.locator('.chosen-native__input').tap();
+      const fullscreen = await fullscreenHost.evaluate(host => ({
+        active: host.classList.contains('chosen-native--mobile-fullscreen'),
+        height: host.getBoundingClientRect().height,
+        viewport: visualViewport.height,
+        scrollLocked: document.body.style.overflow === 'hidden'
+      }));
+      if (!fullscreen.active || !fullscreen.scrollLocked || Math.abs(fullscreen.height - fullscreen.viewport) > 2) {
+        throw new Error(`${name}: Vanilla full-screen picker layout failed (${JSON.stringify(fullscreen)})`);
+      }
+      await fullscreenHost.locator('.chosen-native__mobile-close').tap();
+      if (await fullscreenHost.evaluate(host => host.classList.contains('chosen-native--open') || document.body.style.overflow === 'hidden')) {
+        throw new Error(`${name}: Vanilla full-screen Close did not restore the page`);
+      }
       await touch.close();
     }
     console.log(`${name}: vanilla search, form, keyboard, update, touch, and accessibility checks passed`);

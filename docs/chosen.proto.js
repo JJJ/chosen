@@ -601,6 +601,7 @@ var ChosenCore = (function() {
         this.set_default_values();
         this.setup();
         this.set_up_html();
+        this.setup_mobile_fullscreen();
         this.register_observers();
         if (form_field_had_focus) {
           this.transfer_focus();
@@ -689,6 +690,91 @@ var ChosenCore = (function() {
         }
       }
 
+      setup_mobile_fullscreen() {
+        var container, event_name, j, len, ref;
+        if (!this.mobile_fullscreen) {
+          return;
+        }
+        container = this.container[0] || this.container;
+        this.mobile_close_button = document.createElement('button');
+        this.mobile_close_button.type = 'button';
+        this.mobile_close_button.className = 'chosen-mobile-close';
+        this.mobile_close_button.textContent = 'Close';
+        this.mobile_close_button.setAttribute('aria-label', 'Close options');
+        ref = ['mousedown', 'touchstart'];
+        for (j = 0, len = ref.length; j < len; j++) {
+          event_name = ref[j];
+          this.mobile_close_button.addEventListener(event_name, function(evt) {
+            return evt.stopPropagation();
+          });
+        }
+        this.mobile_close_button.addEventListener('click', (evt) => {
+          evt.preventDefault();
+          evt.stopPropagation();
+          return this.close_field();
+        });
+        return container.appendChild(this.mobile_close_button);
+      }
+
+      mobile_fullscreen_matches() {
+        return this.mobile_fullscreen && (window.matchMedia != null) && window.matchMedia('(max-width: 600px) and (pointer: coarse)').matches;
+      }
+
+      show_mobile_fullscreen() {
+        var base, container, lock, ref, ref1;
+        if (!this.mobile_fullscreen_matches()) {
+          return;
+        }
+        container = this.container[0] || this.container;
+        container.classList.add('chosen-mobile-fullscreen');
+        lock = (base = document.body).__chosenMobileFullscreenLock != null ? base.__chosenMobileFullscreenLock : base.__chosenMobileFullscreenLock = {
+          count: 0,
+          overflow: document.body.style.overflow
+        };
+        lock.count++;
+        document.body.style.overflow = 'hidden';
+        this.mobile_viewport_sync = () => {
+          var viewport;
+          viewport = window.visualViewport;
+          container.style.setProperty('--chosen-mobile-top', `${(viewport != null ? viewport.offsetTop : void 0) || 0}px`);
+          container.style.setProperty('--chosen-mobile-left', `${(viewport != null ? viewport.offsetLeft : void 0) || 0}px`);
+          container.style.setProperty('--chosen-mobile-width', `${(viewport != null ? viewport.width : void 0) || window.innerWidth}px`);
+          return container.style.setProperty('--chosen-mobile-height', `${(viewport != null ? viewport.height : void 0) || window.innerHeight}px`);
+        };
+        this.mobile_viewport_sync();
+        if ((ref = window.visualViewport) != null) {
+          ref.addEventListener('resize', this.mobile_viewport_sync);
+        }
+        return (ref1 = window.visualViewport) != null ? ref1.addEventListener('scroll', this.mobile_viewport_sync) : void 0;
+      }
+
+      hide_mobile_fullscreen() {
+        var container, j, len, lock, property, ref, ref1, ref2, ref3, results1;
+        container = ((ref = this.container) != null ? ref[0] : void 0) || this.container;
+        if (!(container != null ? container.classList.contains('chosen-mobile-fullscreen') : void 0)) {
+          return;
+        }
+        if ((ref1 = window.visualViewport) != null) {
+          ref1.removeEventListener('resize', this.mobile_viewport_sync);
+        }
+        if ((ref2 = window.visualViewport) != null) {
+          ref2.removeEventListener('scroll', this.mobile_viewport_sync);
+        }
+        lock = document.body.__chosenMobileFullscreenLock;
+        if ((lock != null) && --lock.count === 0) {
+          document.body.style.overflow = lock.overflow;
+          delete document.body.__chosenMobileFullscreenLock;
+        }
+        container.classList.remove('chosen-mobile-fullscreen');
+        ref3 = ['--chosen-mobile-top', '--chosen-mobile-left', '--chosen-mobile-width', '--chosen-mobile-height'];
+        results1 = [];
+        for (j = 0, len = ref3.length; j < len; j++) {
+          property = ref3[j];
+          results1.push(container.style.removeProperty(property));
+        }
+        return results1;
+      }
+
       set_default_values() {
         this.click_test_action = (evt) => {
           return this.test_active_click(evt);
@@ -718,6 +804,7 @@ var ChosenCore = (function() {
         this.search_matcher = typeof this.options.search_matcher === "function" ? this.options.search_matcher : null;
         this.search_input_type = this.options.search_input_type === "text" ? "text" : "search";
         this.fixed_dropdown = this.options.dropdown_position === "fixed";
+        this.mobile_fullscreen = this.options.mobile_fullscreen === true;
         this.recalculate_width_on_update = this.options.recalculate_width_on_update || false;
         this.split_search_terms = this.options.split_search_terms || false;
         this.paste_multiple_values = this.options.paste_multiple_values === true;
@@ -2614,6 +2701,7 @@ var ChosenCore = (function() {
       include_group_label_in_selected: 'boolean',
       case_sensitive_search: 'boolean',
       hide_results_on_select: 'boolean',
+      mobile_fullscreen: 'boolean',
       rtl: 'boolean',
       disable_search_threshold: 'integer',
       max_selected_options: 'integer',
@@ -2886,6 +2974,7 @@ var ChosenCore = (function() {
       }
 
       destroy() {
+        this.hide_mobile_fullscreen();
         this.cancel_pending_search();
         if (this.form_reset_timeout != null) {
           clearTimeout(this.form_reset_timeout);
@@ -3224,7 +3313,7 @@ var ChosenCore = (function() {
           });
           return false;
         }
-        if (this.should_dropup()) {
+        if (!this.mobile_fullscreen_matches() && this.should_dropup()) {
           this.container.addClassName("chosen-dropup");
         }
         this.container.addClassName("chosen-with-drop");
@@ -3233,6 +3322,7 @@ var ChosenCore = (function() {
         }
         this.dropdown.writeAttribute("aria-hidden", "false");
         this.results_showing = true;
+        this.show_mobile_fullscreen();
         this.search_field.writeAttribute("aria-expanded", "true");
         this.search_field.focus();
         if (!this.is_multiple) {
@@ -3276,6 +3366,7 @@ var ChosenCore = (function() {
       }
 
       results_hide() {
+        this.hide_mobile_fullscreen();
         this.cancel_pending_search();
         this.clear_typeahead();
         if (this.results_showing) {

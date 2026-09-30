@@ -88,6 +88,7 @@ With the control focused, Enter opens a closed list and chooses its highlighted 
 | `dropdown_width` | control width | Set an independent CSS width for the result dropdown; percentages use the control width. |
 | `recalculate_width_on_update` | `false` | Remeasure the source select on `update()` unless `width` is explicit or `false`. |
 | `dropdown_position` | `absolute` | Use `fixed` to escape a clipped scrolling ancestor and track scroll or resize. |
+| `mobile_fullscreen` | `false` | Fill the visible viewport on touch screens up to 600px wide while open. A Close button dismisses the picker; other screens keep the usual dropdown. |
 
 The native edition reads `data-search-text` and `data-chosen-always-visible` on individual options. An always-visible option remains in native order during search, even after the visible result limit, but Select all excludes it unless it matches. Add `select-by-group` to a multiple select to make optgroup headings select their currently visible, enabled members. Arrow keys reach a heading and Enter activates it. The generated `chosen-native__*` markup and CSS selectors are experimental. Selectable group headings use the `chosen-native__group-label--selectable` class and listbox option role.
 
