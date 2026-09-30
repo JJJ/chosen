@@ -1273,8 +1273,9 @@
   },
   {
     "number": 949,
-    "status": "covered-in-fork",
-    "note": "Right-clicking a result did not select it in current jQuery and Prototype browser fixtures."
+    "status": "fixed-in-fork",
+    "note": "Right-clicking a result was already ignored; PR #201 also prevents a secondary-button press from opening a closed control in all four editions.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/201"
   },
   {
     "number": 943,
