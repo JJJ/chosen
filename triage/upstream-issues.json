@@ -1366,7 +1366,7 @@
   {
     "number": 79,
     "status": "candidate",
-    "note": "Consider remote option population while keeping the native select authoritative."
+    "note": "The discussion asks for remote data sources to search very large collections, including optional free-text creation. Investigate a select-backed async integration that keeps selected options in the native select; chosen:updated alone is not a full remote-source API."
   },
   {
     "number": 5,
