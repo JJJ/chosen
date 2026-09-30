@@ -16,7 +16,7 @@ async function main() {
         ? { executablePath: process.env.CHROME_EXECUTABLE_PATH } : { channel: 'chrome' }) }
       : { headless: true });
     try {
-      const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      const page = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(demo);
@@ -316,7 +316,8 @@ async function main() {
       if (longChip.chipWidth > longChip.controlWidth || longChip.pageOverflow || !longChip.labelOverflow) {
         throw new Error(`${name}: long-label chip layout ${JSON.stringify(longChip)}`);
       }
-      const touchPage = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+      const touchPage = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true,
+        reducedMotion: 'reduce' });
       try {
         await touchPage.goto(demo);
         const phoneInputSizes = await touchPage.locator('.chosen-react__input').evaluateAll(inputs =>

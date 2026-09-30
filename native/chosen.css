@@ -166,19 +166,21 @@
 .chosen-native__bulk-action:hover,
 .chosen-native__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 .chosen-native__option,
-.chosen-native__group-label { padding: .3rem .5rem; }
+.chosen-native__group-label {
+  padding: var(--chosen-result-padding-block, .4rem) var(--chosen-result-padding-inline, .65rem);
+}
 .chosen-native__option { position: relative; border-radius: var(--chosen-result-border-radius, 4px); cursor: pointer; }
 .chosen-native__group > .chosen-native__option {
-  padding-inline-start: var(--chosen-group-option-indent, 1.25rem);
+  padding-inline-start: var(--chosen-group-option-indent, calc(var(--chosen-result-padding-inline, .65rem) + .75rem));
 }
 .chosen-native__option--selected {
-  padding-inline-end: 1.75rem;
-  background: var(--chosen-selected-background, #e0e0e0);
+  padding-inline-end: calc(var(--chosen-result-padding-inline, .65rem) + 1rem);
+  background: var(--chosen-selected-background, #eef4ff);
   color: var(--chosen-selected-color, var(--chosen-text-color, #444));
 }
 .chosen-native__option--selected::after {
   position: absolute;
-  inset-inline-end: .55rem;
+  inset-inline-end: var(--chosen-result-padding-inline, .65rem);
   content: '✓';
   font-weight: 700;
 }
@@ -191,9 +193,9 @@
 .chosen-native__option--active { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 .chosen-native__option--create { font-style: italic; }
 .chosen-native__option--disabled { opacity: .5; cursor: default; }
-.chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: bold; }
+.chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: 600; }
 .chosen-native__group-label--selectable { display: block; box-sizing: border-box; width: 100%; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; font: inherit; text-align: start; cursor: pointer; }
-.chosen-native__group-label--selectable:hover { background: var(--chosen-selected-background, #e0e0e0); }
+.chosen-native__group-label--selectable:hover { background: var(--chosen-selected-background, #eef4ff); }
 .chosen-native__empty { padding: .5rem .75rem; }
 .chosen-native--disabled .chosen-native__control { opacity: .6; cursor: default; }
 .chosen-native__popup[hidden],
