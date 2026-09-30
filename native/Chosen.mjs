@@ -166,6 +166,7 @@ export class Chosen {
     this.onKeyDown = event => this.keyDown(event);
     this.onInput = () => { if (!this.composing) this.queueSearch(); };
     this.onControlPointer = event => {
+      if (event.button !== 0) return;
       if (event.target === this.input || event.target.closest('button')) return;
       if (event.pointerType === 'mouse') event.preventDefault();
       this.input.focus();

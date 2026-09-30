@@ -361,8 +361,8 @@
     "issue_refs": [
       949
     ],
-    "status": "candidate",
-    "note": "A right-button mousedown appears able to activate a closed control; verify in a browser before changing pointer handling."
+    "status": "in-progress",
+    "note": "Reproduced: secondary-button presses activate closed jQuery, Prototype, Vanilla, and React controls. A four-edition guard and regressions are in progress."
   },
   {
     "number": 1487,

@@ -397,6 +397,22 @@ async function main() {
         if (darkStyles.colorScheme !== 'dark' || darkStyles.controlBackground === 'rgb(255, 255, 255)' || darkStyles.controlBackground === darkStyles.dropdownBackground) {
           errors.push(`Tailwind: Dark theme surfaces did not apply (${JSON.stringify(darkStyles)})`);
         }
+        await page.evaluate((kind) => {
+          const wrapper = document.createElement('div');
+          wrapper.id = 'secondary-button-fixture';
+          wrapper.innerHTML = '<select><option>One</option><option>Two</option></select><select multiple><option>One</option><option>Two</option></select>';
+          document.body.appendChild(wrapper);
+          for (const select of wrapper.querySelectorAll('select')) {
+            if (kind === 'jquery') window.jQuery(select).chosen();
+            else new window.Chosen(select);
+          }
+        }, suite.family);
+        for (const control of [page.locator('#secondary-button-fixture .chosen-single'), page.locator('#secondary-button-fixture .chosen-choices')]) {
+          await control.click({ button: 'right' });
+          if (await page.locator('#secondary-button-fixture .chosen-with-drop').count()) {
+            errors.push('Secondary-button click opened a closed Chosen control');
+          }
+        }
         console.log(`${suite.name}: ${result.total - result.failures.length}/${result.total} specs passed`);
         for (const error of errors) console.error(`  ${error}`);
         if (errors.length || result.total === 0) failed = true;

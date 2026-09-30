@@ -229,6 +229,7 @@ class Chosen extends AbstractChosen
 
   container_mousedown: (evt) ->
     return if @is_disabled
+    return if evt?.type is 'mousedown' and (evt.which? or evt.button?) and this.mousedown_checker(evt) isnt 'left'
     is_choice_close = evt? and $(evt.target).closest('.search-choice-close').length > 0
 
     if evt and this.mousedown_checker(evt) == 'left'

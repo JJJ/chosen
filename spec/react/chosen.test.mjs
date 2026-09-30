@@ -19,6 +19,20 @@ const options = [
   { label: 'Other', options: [{ value: 'b', label: 'Banana' }, { value: 'c', label: 'Cherry', disabled: true }] }
 ];
 
+test('secondary mouse buttons do not open the control', () => {
+  for (const multiple of [false, true]) {
+    render(h(Chosen, { options, multiple, 'aria-label': 'Fruit' }));
+    const control = document.querySelector('.chosen-react__control');
+    for (const button of [1, 2]) {
+      fireEvent.mouseDown(control, { button });
+      assert.equal(screen.getByRole('combobox').getAttribute('aria-expanded'), 'false');
+    }
+    fireEvent.mouseDown(control, { button: 0 });
+    assert.equal(screen.getByRole('combobox').getAttribute('aria-expanded'), 'true');
+    cleanup();
+  }
+});
+
 test('opt-in Shift selection adds a visible range and respects the limit', () => {
   const items = [
     { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' },

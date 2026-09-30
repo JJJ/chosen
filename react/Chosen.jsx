@@ -697,6 +697,7 @@ export const Chosen = forwardRef(function Chosen({
         <option key={item.index} value={item.value} disabled={item.disabled}>{item.label}</option>)}
     </select>
     <div ref={controlRef} className="chosen-react__control" onMouseDown={event => {
+      if (event.button !== 0) return;
       if (event.target !== inputRef.current && !event.target.closest('button') && !disabled) {
         event.preventDefault();
         inputRef.current?.focus();

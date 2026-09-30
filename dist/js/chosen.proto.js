@@ -3100,6 +3100,9 @@ var ChosenCore = (function() {
         if (this.is_disabled) {
           return;
         }
+        if ((evt != null ? evt.type : void 0) === 'mousedown' && ((evt.which != null) || (evt.button != null)) && this.mousedown_checker(evt) !== 'left') {
+          return;
+        }
         is_choice_close = (evt != null) && (evt.target.hasClassName('search-choice-close') || (evt.target.up('.search-choice-close') != null));
         if (evt && evt.type === 'touchstart' && !this.results_showing && !is_choice_close) {
           evt.stop();
