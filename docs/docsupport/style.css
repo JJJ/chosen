@@ -253,6 +253,7 @@ samp {
 .adapter-case-relative .chosen-native,
 .adapter-case-relative .chosen-react { --chosen-icon-size: 1.2rem; font-size: 1.1rem; }
 .adapter-suite output { display: block; margin: 1rem 0; }
+.docs-reference main > pre { max-width: 100%; overflow-x: auto; }
 :root[data-theme="dark"] .adapter-suite .comparison-label { color: #bdc5d0; }
 
 .text-link {

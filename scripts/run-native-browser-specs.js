@@ -16,7 +16,11 @@ async function check(name, engine) {
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(demo);
     const suiteControlWidth = await page.locator('#standard-select .chosen-native').evaluate(node => node.getBoundingClientRect().width);
-    if (suiteControlWidth < 300) throw new Error(`${name}: standard example control clipped at ${suiteControlWidth}px`);
+    if (suiteControlWidth < 300 || suiteControlWidth > 351) {
+      throw new Error(`${name}: standard example control width ${suiteControlWidth}px differs from the shared demo layout`);
+    }
+    const customControlWidth = await page.locator('#custom-width-support .chosen-native').evaluate(node => node.getBoundingClientRect().width);
+    if (Math.abs(customControlWidth - 192) > 1) throw new Error(`${name}: explicit width example changed to ${customControlWidth}px`);
     const currentNav = await page.locator('.site-nav [aria-current="page"]').allTextContents();
     if (JSON.stringify(currentNav) !== '["Vanilla demo"]') throw new Error(`${name}: wrong active demo navigation`);
     for (const href of ['#native-single-example', '#native-multiple-example', '#native-season-example']) {
@@ -190,6 +194,8 @@ async function check(name, engine) {
     if (name === 'WebKit') {
       const touch = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
       await touch.goto(demo);
+      const pageWidth = await touch.evaluate(() => document.documentElement.scrollWidth);
+      if (pageWidth > 391) throw new Error(`${name}: narrow demo overflows at ${pageWidth}px`);
       const input = touch.getByRole('combobox', { name: 'Project' });
       await input.tap();
       await touch.getByRole('option', { name: 'Atlas' }).tap();

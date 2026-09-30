@@ -127,7 +127,7 @@ for (const example of window.ChosenAdapterCases) {
   comparison.append(controlWrap);
   section.append(title, comparison);
   suite.append(section);
-  const chosenOptions = { width: '100%', ...(example.native || {}) };
+  const chosenOptions = { width: false, ...(example.native || {}) };
   let chosen = new ChosenNative.Chosen(select, chosenOptions);
   select.addEventListener('change', () => {
     suiteEvent.textContent = `${example.title}: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
