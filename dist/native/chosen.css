@@ -1,7 +1,8 @@
 .chosen-native {
   position: relative;
   width: 100%;
-  min-width: 12rem;
+  min-width: min(12rem, 100%);
+  box-sizing: border-box;
   font: var(--chosen-font-size, 14px) var(--chosen-font-family, sans-serif);
   color: var(--chosen-text-color, #444);
 }
@@ -36,6 +37,10 @@
   border-color: var(--chosen-active-border-color, #5897fb);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
+}
+.chosen-native.chosen-native--invalid:not(.chosen-native--disabled) .chosen-native__control,
+.chosen-native.chosen-native--invalid:not(.chosen-native--disabled) .chosen-native__popup {
+  border-color: var(--chosen-invalid-border-color, #dc2626);
 }
 .chosen-native:not(.chosen-native--open):focus-within .chosen-native__control {
   outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb));
@@ -85,19 +90,21 @@
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
   font-size: .9em;
+  line-height: 1.25rem;
 }
 .chosen-native__chip > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chosen-native__chip--pending { outline: var(--chosen-focus-outline, 2px solid var(--chosen-focus-ring-color, #5897fb)); }
 .chosen-native__chip[hidden] { display: none; }
 .chosen-native__summary {
   align-self: center;
-  padding: .125rem .35rem;
+  padding: .2rem .35rem;
   border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-choice-border-radius, 3px);
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
   font: inherit;
-  line-height: inherit;
+  font-size: .9em;
+  line-height: 1.25rem;
   cursor: pointer;
 }
 .chosen-native__clear,
@@ -157,7 +164,7 @@
 .chosen-native__bulk-actions { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem .45rem; border-bottom: 1px solid var(--chosen-border-color, #aaa); }
 .chosen-native__bulk-action { padding: .2rem .35rem; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; color: var(--chosen-bulk-action-color, var(--chosen-text-color, #444)); font: inherit; cursor: pointer; }
 .chosen-native__bulk-action:hover,
-.chosen-native__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
+.chosen-native__bulk-action:focus-visible { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 .chosen-native__option,
 .chosen-native__group-label { padding: .3rem .5rem; }
 .chosen-native__option { position: relative; border-radius: var(--chosen-result-border-radius, 4px); cursor: pointer; }
@@ -181,11 +188,11 @@
   line-height: 1;
 }
 .chosen-native--multiple .chosen-native__option--selected:not(.chosen-native__option--deselectable) { cursor: default; }
-.chosen-native__option--active { background: var(--chosen-highlight-background, #3875d7); color: var(--chosen-highlight-color, #fff); }
+.chosen-native__option--active { background: var(--chosen-highlight-background, #3269c6); color: var(--chosen-highlight-text-color, #fff); }
 .chosen-native__option--create { font-style: italic; }
 .chosen-native__option--disabled { opacity: .5; cursor: default; }
 .chosen-native__group-label { color: var(--chosen-group-color, #666); font-weight: bold; }
-.chosen-native__group-label--selectable { display: block; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer; }
+.chosen-native__group-label--selectable { display: block; box-sizing: border-box; width: 100%; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; font: inherit; text-align: start; cursor: pointer; }
 .chosen-native__group-label--selectable:hover { background: var(--chosen-selected-background, #e0e0e0); }
 .chosen-native__empty { padding: .5rem .75rem; }
 .chosen-native--disabled .chosen-native__control { opacity: .6; cursor: default; }

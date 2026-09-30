@@ -437,6 +437,7 @@ test('source ARIA and native lifecycle events reach the generated input', () => 
   assert.equal(chosen.input.getAttribute('aria-labelledby'), 'label');
   assert.equal(chosen.input.getAttribute('aria-describedby'), `hint ${chosen.status.id}`);
   assert.equal(chosen.input.getAttribute('aria-invalid'), 'true');
+  assert.equal(chosen.host.classList.contains('chosen-native--invalid'), true);
   select.dispatchEvent(new dom.window.Event('chosen:open'));
   assert.equal(chosen.opened, true);
   chosen.input.value = 'Bet';
@@ -447,6 +448,7 @@ test('source ARIA and native lifecycle events reach the generated input', () => 
   select.removeAttribute('aria-invalid');
   chosen.update();
   assert.equal(chosen.input.hasAttribute('aria-invalid'), false);
+  assert.equal(chosen.host.classList.contains('chosen-native--invalid'), false);
   chosen.destroy();
   dom.window.close();
 });
