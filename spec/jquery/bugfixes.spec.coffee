@@ -74,6 +74,18 @@ describe "Bugfixes", ->
       done()
     , 120
 
+  it "closes promptly when keyboard focus leaves the search field", (done) ->
+    div = $("<div><select><option>One</option><option>Two</option></select><button>Next</button></div>").appendTo("body")
+    chosen = div.find("select").chosen().data("chosen")
+    chosen.container_mousedown()
+    chosen.search_field.trigger("blur")
+
+    setTimeout ->
+      expect(chosen.results_showing).toBe(false)
+      div.remove()
+      done()
+    , 30
+
   it "does not reopen multiple selects after focus has moved", (done) ->
     div = $("<div><select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select></div>").appendTo("body")
     selects = div.find("select").chosen()

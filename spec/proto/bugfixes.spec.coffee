@@ -91,6 +91,19 @@ describe "Bugfixes", ->
       done()
     , 120
 
+  it "closes promptly when keyboard focus leaves the search field", (done) ->
+    div = new Element("div").update("<select><option>One</option><option>Two</option></select><button>Next</button>")
+    document.body.appendChild(div)
+    chosen = new Chosen(div.down("select"))
+    chosen.container_mousedown()
+    chosen.search_field.blur()
+
+    setTimeout ->
+      expect(chosen.results_showing).toBe(false)
+      div.remove()
+      done()
+    , 30
+
   it "does not reopen multiple selects after focus has moved", (done) ->
     div = new Element("div").update("<select multiple><option>One</option></select><select multiple><option>Two</option></select><select multiple><option>Three</option></select>")
     document.body.appendChild(div)

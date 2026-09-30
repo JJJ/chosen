@@ -80,8 +80,9 @@
     "number": 2990,
     "title": "Remove 100ms lag on blur by using custom blur and focus events.",
     "issue_refs": [],
-    "status": "candidate",
-    "note": "Classic focus handling still uses a 100 ms blur check; reproduce and compare keyboard, label, and pointer behavior before changing it."
+    "status": "fixed-in-fork",
+    "note": "The classic adapters now schedule their blur check on the next event loop turn rather than waiting 100 ms. Keyboard focus loss closes promptly; existing label-press and touch behavior remains covered by tests.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/204"
   },
   {
     "number": 2938,

@@ -68,13 +68,43 @@ async function main() {
         .filter(option => option.defaultSelected).map(option => option.value));
       if (staleDefaults.length) throw new Error(`${name}: previous controlled value remained a reset default (${staleDefaults})`);
       await page.evaluate(() => document.querySelector('form').reset());
-      await page.waitForFunction(() => new FormData(document.querySelector('form')).getAll('fruit').length === 0);
+      try {
+        await page.waitForFunction(() => {
+          const select = document.querySelector('select');
+          return new FormData(document.querySelector('form')).getAll('fruit').length === 0 &&
+            select.selectedOptions.length === 0 &&
+            !document.querySelector('.chosen-react__chip') &&
+            document.querySelector('[role="combobox"]')?.getAttribute('aria-expanded') === 'false';
+        }, null, { timeout: 2000 });
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          values: new FormData(document.querySelector('form')).getAll('fruit'),
+          selected: [...document.querySelector('select').selectedOptions].map(option => option.value),
+          defaults: [...document.querySelector('select').options].filter(option => option.defaultSelected).map(option => option.value),
+          chips: [...document.querySelectorAll('.chosen-react__chip')].map(chip => chip.textContent),
+          open: document.querySelector('[role="combobox"]')?.getAttribute('aria-expanded'),
+          changes: window.chosenChanges
+        }));
+        throw new Error(`${name}: React reset did not settle (${JSON.stringify(state)}; page errors: ${errors.join('; ')})`, { cause: error });
+      }
       await page.getByText('Fruit', { exact: true }).click();
       if (await page.getByRole('combobox', { name: 'Fruit' }).getAttribute('aria-expanded') !== 'true') {
         throw new Error(`${name}: multiple label did not open the results`);
       }
       await page.getByRole('option', { name: 'Apple' }).click();
-      await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple"]');
+      try {
+        await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple"]', null, { timeout: 5000 });
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          values: new FormData(document.querySelector('form')).getAll('fruit'),
+          selected: [...document.querySelector('select').selectedOptions].map(option => option.value),
+          apple: document.querySelector('[role="option"]')?.outerHTML,
+          active: document.activeElement?.outerHTML,
+          open: document.querySelector('[role="combobox"]')?.getAttribute('aria-expanded'),
+          changes: window.chosenChanges
+        }));
+        throw new Error(`${name}: multiple selection did not submit Apple (${JSON.stringify(state)}; page errors: ${errors.join('; ')})`, { cause: error });
+      }
       await page.getByRole('option', { name: 'Banana' }).click();
       await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple","banana"]');
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
