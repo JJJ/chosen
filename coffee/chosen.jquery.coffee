@@ -523,6 +523,9 @@ class Chosen extends AbstractChosen
 
     if @inherit_option_classes && item.classes
       choice.addClass item.classes
+    if @inherit_optgroup_classes && item.group_array_index?
+      group_classes = @results_data[item.group_array_index].classes
+      choice.addClass group_classes if group_classes
 
     @search_container.before  choice
     this.update_choice_visibility()

@@ -530,6 +530,11 @@ class @Chosen extends AbstractChosen
     if @inherit_option_classes && item.classes
       for class_name in item.classes.split(/\s+/) when class_name
         choice.addClassName class_name
+    if @inherit_optgroup_classes && item.group_array_index?
+      group_classes = @results_data[item.group_array_index].classes
+      if group_classes
+        for class_name in group_classes.split(/\s+/) when class_name
+          choice.addClassName class_name
 
     @search_container.insert { before: choice }
     this.update_choice_visibility()

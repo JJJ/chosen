@@ -19,6 +19,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `enable_split_word_search` | Yes | Yes | React prop: `enableSplitWordSearch`. |
 | `inherit_select_classes` | Yes | Yes | Vanilla opts into copying source classes; React uses `className` directly on its generated host. |
 | `inherit_option_classes` | Yes | Yes | Option and group classes reach result rows; opt in to copying option classes to selected chips. React uses `className` on option data and `inheritOptionClasses`. |
+| `inherit_optgroup_classes` | Yes | Yes | Opt in to copying a parent optgroup's classes to selected multiple-choice chips. React uses `inheritOptgroupClasses`. |
 | `max_selected_options` | Yes | Yes | Both enforce the limit. |
 | `max_items_shown` | Yes | Yes | Positive integer limit for visible chips; React prop: `maxItemsShown`. |
 | `paste_multiple_values` | Yes | Yes | Opt-in token paste selects unique enabled existing options and preserves unmatched text; React prop: `pasteMultipleValues`. |

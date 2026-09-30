@@ -543,6 +543,16 @@ describe "Basic setup", ->
     expect(div.find(".search-choice").hasClass("first")).toBe(true)
     expect(div.find(".search-choice").hasClass("second")).toBe(true)
 
+  it "optionally inherits optgroup classes on selected choices", ->
+    div = $("<div>").html("<select multiple><optgroup class='cars red' label='Cars'><option selected>Coupe</option></optgroup><option selected>Other</option></select>")
+    select = div.find("select").chosen()
+    expect(div.find(".search-choice").first().hasClass("cars")).toBe(false)
+    select.data("chosen").destroy()
+    select.chosen(inherit_optgroup_classes: true)
+    expect(div.find(".search-choice").first().hasClass("cars")).toBe(true)
+    expect(div.find(".search-choice").first().hasClass("red")).toBe(true)
+    expect(div.find(".search-choice").last().hasClass("cars")).toBe(false)
+
   it "appends literal option values and labels", ->
     div = $("<div>").html("<select multiple><option>One</option></select>")
     select = div.find("select").chosen()

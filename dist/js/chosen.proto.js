@@ -723,6 +723,7 @@ var ChosenCore = (function() {
         this.choices_expanded = false;
         this.inherit_select_classes = this.options.inherit_select_classes || false;
         this.inherit_option_classes = this.options.inherit_option_classes || false;
+        this.inherit_optgroup_classes = this.options.inherit_optgroup_classes || false;
         this.display_selected_options = this.options.display_selected_options != null ? this.options.display_selected_options : true;
         this.display_disabled_options = this.options.display_disabled_options != null ? this.options.display_disabled_options : true;
         this.display_selected_value = this.options.display_selected_value || false;
@@ -2514,6 +2515,7 @@ var ChosenCore = (function() {
       enable_split_word_search: 'boolean',
       inherit_select_classes: 'boolean',
       inherit_option_classes: 'boolean',
+      inherit_optgroup_classes: 'boolean',
       paste_multiple_values: 'boolean',
       create_option: 'boolean',
       persistent_create_option: 'boolean',
@@ -3300,7 +3302,7 @@ var ChosenCore = (function() {
       }
 
       choice_build(item) {
-        var choice, class_name, close_link, j, len, ref;
+        var choice, class_name, close_link, group_classes, j, k, len, len1, ref, ref1;
         choice = new Element('li', {
           class: "search-choice",
           "data-value": item.value,
@@ -3329,6 +3331,18 @@ var ChosenCore = (function() {
             class_name = ref[j];
             if (class_name) {
               choice.addClassName(class_name);
+            }
+          }
+        }
+        if (this.inherit_optgroup_classes && (item.group_array_index != null)) {
+          group_classes = this.results_data[item.group_array_index].classes;
+          if (group_classes) {
+            ref1 = group_classes.split(/\s+/);
+            for (k = 0, len1 = ref1.length; k < len1; k++) {
+              class_name = ref1[k];
+              if (class_name) {
+                choice.addClassName(class_name);
+              }
             }
           }
         }

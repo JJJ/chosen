@@ -119,7 +119,12 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
         <tr>
           <td>inherit_option_classes</td>
           <td>false</td>
-          <td>When set to <code class="language-javascript">true</code>, Chosen will grab any classes on the original option tags and add them to Chosen’s container li.</td>
+          <td>When set to <code class="language-javascript">true</code>, Chosen copies each selected option's classes to its selected-choice chip. Option result rows already have their option classes.</td>
+        </tr>
+        <tr>
+          <td>inherit_optgroup_classes</td>
+          <td>false</td>
+          <td>When set to <code class="language-javascript">true</code>, Chosen copies the parent optgroup's classes to each selected-choice chip in a multiple select. Use this to style selected items by group without changing their labels or values. React uses <code class="language-javascript">inheritOptgroupClasses</code>.</td>
         </tr>
         <tr>
           <td>max_selected_options</td>

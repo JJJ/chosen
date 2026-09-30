@@ -1277,7 +1277,8 @@
   {
     "number": 943,
     "status": "fixed-in-fork",
-    "note": "Opt-in no_results_template places an escaped search term at {search} across all four editions."
+    "note": "Opt-in no_results_template places an escaped search term at {search} across all four editions.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/192"
   },
   {
     "number": 918,
@@ -1311,8 +1312,9 @@
   },
   {
     "number": 572,
-    "status": "candidate",
-    "note": "Consider exposing optgroup identity on selected chips for CSS customization."
+    "status": "fixed-in-fork",
+    "note": "Opt-in inherit_optgroup_classes copies source optgroup classes to selected multiple-choice chips across all four editions.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/193"
   },
   {
     "number": 495,

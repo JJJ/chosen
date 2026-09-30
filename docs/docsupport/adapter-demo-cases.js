@@ -5,6 +5,10 @@ window.ChosenAdapterCases = [
   { id: 'optgroup-support', title: '<optgroup> Support', help: 'Search and choose an item under a group heading.', options: [
     { label: 'Football', options: ['Bears', 'Lions', 'Packers'] }, { label: 'Baseball', options: ['Cubs', 'White Sox'] }
   ] },
+  { id: 'style-selected-by-optgroup', title: 'Style Selected Items by Optgroup', help: 'Choose a car and a bike; their chips inherit their optgroup classes.', multiple: true, options: [
+    { label: 'Cars', className: 'group-cars', options: ['Coupe', 'Convertible'] },
+    { label: 'Bikes', className: 'group-bikes', options: ['Road bike', 'Mountain bike'] }
+  ], native: { inherit_optgroup_classes: true }, react: { inheritOptgroupClasses: true } },
   { id: 'selected-and-disabled-support', title: 'Selected, Disabled and Hidden Support', help: 'Brown Bear starts selected. Giant Panda is disabled; Sun Bear is hidden.', multiple: true, defaultValue: ['Brown Bear'], options: [
     'American Black Bear', 'Brown Bear', { label: 'Giant Panda', disabled: true }, { label: 'Sun Bear', hidden: true }, 'Polar Bear'
   ] },

@@ -64,6 +64,7 @@ export interface ChosenProps {
   onCreateOption?: (query: string, event: SyntheticEvent) => ChosenOption | false | void;
   resultsCountText?: (count: number) => string;
   inheritOptionClasses?: boolean;
+  inheritOptgroupClasses?: boolean;
   copyOptionDataAttributes?: boolean;
   maxSelectedOptions?: number;
   maxItemsShown?: number;

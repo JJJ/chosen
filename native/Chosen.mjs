@@ -2,7 +2,7 @@ import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedCho
 
 let nextId = 0;
 const instances = new WeakMap();
-const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
+const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
 const integerDataOptions = new Set('disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results'.split(' '));
 const stringDataOptions = new Set('select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple'.split(' '));
 
@@ -98,6 +98,7 @@ export class Chosen {
       rtl: false,
       inherit_select_classes: false,
       inherit_option_classes: false,
+      inherit_optgroup_classes: false,
       placeholder_text: select.multiple ? 'Select Some Options' : 'Select an Option',
       no_results_text: 'No results for:',
       results_count_text: count => `${count} result${count === 1 ? '' : 's'} available`,
@@ -375,6 +376,9 @@ export class Chosen {
         chip.hidden = hiddenCount > 0 && !this.choicesExpanded && index >= itemLimit;
         if (entry.value === this.pendingBackstrokeValue) chip.classList.add('chosen-native__chip--pending');
         if (this.options.inherit_option_classes && entry.className) chip.className += ` ${entry.className}`;
+        const groupClass = this.options.inherit_optgroup_classes && entry.groupIndex != null
+          ? this.entries[entry.groupIndex]?.className : '';
+        if (groupClass) chip.className += ` ${groupClass}`;
         chip.append(selectedDisplay(entry));
         if (!this.select.disabled && !this.select.hasAttribute('readonly')) {
           const remove = element('button', 'chosen-native__remove', '×');

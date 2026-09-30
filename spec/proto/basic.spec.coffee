@@ -605,6 +605,19 @@ describe "Basic setup", ->
     expect(div.down('.search-choice').hasClassName('second')).toBe(true)
     div.remove()
 
+  it "optionally inherits optgroup classes on selected choices", ->
+    div = new Element('div').update("<select multiple><optgroup class='cars red' label='Cars'><option selected>Coupe</option></optgroup><option selected>Other</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    expect(div.down('.search-choice').hasClassName('cars')).toBe(false)
+    chosen.destroy()
+    new Chosen(select, inherit_optgroup_classes: true)
+    expect(div.down('.search-choice').hasClassName('cars')).toBe(true)
+    expect(div.down('.search-choice').hasClassName('red')).toBe(true)
+    expect(div.select('.search-choice').last().hasClassName('cars')).toBe(false)
+    div.remove()
+
   it "appends literal option values and labels", ->
     div = new Element('div').update("<select multiple><option>One</option></select>")
     document.body.appendChild(div)

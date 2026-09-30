@@ -834,6 +834,34 @@ footer {
   max-width: 100%;
 }
 
+.chosen-container-multi .chosen-choices li.search-choice.group-cars,
+.chosen-native__chip.group-cars,
+.chosen-react__chip.group-cars {
+  background: #e4f2fb;
+  border-color: #81b7d6;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice.group-bikes,
+.chosen-native__chip.group-bikes,
+.chosen-react__chip.group-bikes {
+  background: #fceee4;
+  border-color: #d8a987;
+}
+
+:root[data-theme="dark"] .chosen-container-multi .chosen-choices li.search-choice.group-cars,
+:root[data-theme="dark"] .chosen-native__chip.group-cars,
+:root[data-theme="dark"] .chosen-react__chip.group-cars {
+  background: #223b4a;
+  border-color: #5b9abb;
+}
+
+:root[data-theme="dark"] .chosen-container-multi .chosen-choices li.search-choice.group-bikes,
+:root[data-theme="dark"] .chosen-native__chip.group-bikes,
+:root[data-theme="dark"] .chosen-react__chip.group-bikes {
+  background: #453326;
+  border-color: #c18d67;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
