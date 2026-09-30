@@ -248,8 +248,8 @@
       1037,
       2028
     ],
-    "status": "candidate",
-    "note": "An opt-in unordered substring-term search may add something beyond split_search_terms plus search_contains. The old patch mixes matching and HTML highlighting and needs a safe four-edition design."
+    "status": "covered-in-fork",
+    "note": "Combining split_search_terms: true with search_contains: true already matches every whitespace-separated substring in any order and highlights each match across all four editions. The old patch adds a separate regex path for the same behavior."
   },
   {
     "number": 2596,
