@@ -103,7 +103,11 @@ Set `allowSelectAll` to select enabled results matching the current filter,
 up to `maxSelectedOptions`. `allowDeselectAll` removes enabled selections even
 outside the current filter. Both default to `false`; customize the action labels
 with `selectAllText` and `deselectAllText`. Ctrl/Command+A and
-Ctrl/Command+Shift+A invoke the enabled actions when search is empty.
+Ctrl/Command+Shift+A invoke the enabled actions when search is empty. Set
+`shiftSelectRange` to `true` on a multiple select to add the visible options
+between the last selected row and a Shift-clicked row. The anchor must remain
+visible under the current filter; disabled options and selection limits still
+apply. The default is `false`.
 Set `pasteMultipleValues` to accept comma, semicolon, tab, or newline-separated
 existing values or unique labels pasted into multiple search. Disabled and
 hidden options are skipped, the selection limit applies, and unmatched tokens

@@ -611,6 +611,30 @@ describe "Basic setup", ->
     expect(changes).toBe(2)
     div.remove()
 
+  it "selects a visible Shift range only when opted in", ->
+    div = $("<div>").html("<select multiple><option value='a'>Alpha</option><option value='b'>Beta</option><option value='c' disabled>Charlie</option><option value='d'>Delta</option><option value='e'>Echo</option></select>").appendTo("body")
+    select = div.find("select")
+    changes = 0
+    select.on "change", -> changes++
+    chosen = select.chosen(shift_select_range: true, hide_results_on_select: false).data("chosen")
+    chosen.results_show()
+    click = (index, shift = false) ->
+      row = div.find(".chosen-results li[data-option-array-index='#{index}']")[0]
+      chosen.search_results_mouseup($.Event("mouseup", target: row, which: 1, shiftKey: shift))
+    click(0)
+    click(4, true)
+    expect(select.find(":selected").map(-> @value).get()).toEqual(["a", "b", "d", "e"])
+    expect(changes).toBe(2)
+    div.remove()
+
+    other = $("<div>").html("<select multiple><option value='a'>Alpha</option><option value='b'>Beta</option><option value='c'>Charlie</option></select>").appendTo("body")
+    plain = other.find("select").chosen(hide_results_on_select: false).data("chosen")
+    plain.results_show()
+    plain.search_results_mouseup($.Event("mouseup", target: other.find(".chosen-results li[data-option-array-index='0']")[0], which: 1))
+    plain.search_results_mouseup($.Event("mouseup", target: other.find(".chosen-results li[data-option-array-index='2']")[0], which: 1, shiftKey: true))
+    expect(other.find("select :selected").map(-> @value).get()).toEqual(["a", "c"])
+    other.remove()
+
   it "respects the selection limit during bulk selection", ->
     div = $("<div>").html("<select multiple><option>One</option><option>Two</option><option>Three</option></select>")
     select = div.find("select")

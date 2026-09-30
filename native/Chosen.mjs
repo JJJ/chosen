@@ -1,8 +1,8 @@
-import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedChoices } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex, rangeOptions, resolvePastedChoices } from '../core/index.mjs';
 
 let nextId = 0;
 const instances = new WeakMap();
-const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
+const booleanDataOptions = new Set('allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results shift_select_range disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl'.split(' '));
 const integerDataOptions = new Set('disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results'.split(' '));
 const stringDataOptions = new Set('select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple placeholder_text_multiple_selected'.split(' '));
 
@@ -83,7 +83,7 @@ export class Chosen {
       disable_search: false, disable_search_threshold: 0,
       max_search_length: 1000,
       display_selected_options: true, display_disabled_options: true,
-      deselect_selected_results: false, hide_results_on_select: true,
+      deselect_selected_results: false, shift_select_range: false, hide_results_on_select: true,
       max_items_shown: Infinity,
       allow_select_all: false, allow_deselect_all: false,
       paste_multiple_values: false,
@@ -109,6 +109,7 @@ export class Chosen {
     this.opened = false;
     this.activeIndex = -1;
     this.pendingBackstrokeValue = null;
+    this.rangeAnchorIndex = null;
     this.choicesExpanded = false;
     this.typeahead = '';
     this.typeaheadTimer = null;
@@ -484,7 +485,7 @@ export class Chosen {
       row.addEventListener('pointerenter', () => { if (actionable) this.highlight(position); });
       row.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse') event.preventDefault(); });
       row.addEventListener('click', event => {
-        if (actionable) this.choose(entry, canDeselect, event.metaKey || event.ctrlKey);
+        if (actionable) this.choose(entry, canDeselect, event.metaKey || event.ctrlKey, event.shiftKey);
       });
       (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
     }
@@ -684,9 +685,36 @@ export class Chosen {
     } else this.input.removeAttribute('aria-activedescendant');
   }
 
-  choose(entry, remove = false, keepOpen = false) {
+  selectRange(entry) {
+    const anchor = this.nodes[this.rangeAnchorIndex];
+    if (!this.multiple || !this.options.shift_select_range || !anchor?.selected) return false;
+    const range = rangeOptions(this.available, this.rangeAnchorIndex, entry.index);
+    if (!range.length) return false;
+    let count = this.select.selectedOptions.length;
+    let changed = false;
+    let limitReached = false;
+    for (const item of range) {
+      const option = this.nodes[item.index];
+      if (!option || item.disabled || item.pinnedOnly || option.disabled || option.hidden || option.selected) continue;
+      if (this.options.max_selected_options != null && count >= this.options.max_selected_options) {
+        limitReached = true;
+        break;
+      }
+      option.selected = true;
+      count++;
+      changed = true;
+    }
+    if (this.nodes[entry.index]?.selected) this.rangeAnchorIndex = entry.index;
+    if (changed) { this.changed(); this.renderResults(); }
+    if (limitReached) emit(this.select, 'chosen:maxselected', this);
+    this.input.focus();
+    return true;
+  }
+
+  choose(entry, remove = false, keepOpen = false, shift = false) {
     const option = this.nodes[entry.index];
     if (!option || option.disabled || option.hidden || option.parentElement?.disabled || this.select.disabled || this.select.hasAttribute('readonly')) return;
+    if (shift && this.selectRange(entry)) return;
     if (this.multiple) {
       if (!remove && !option.selected && this.options.max_selected_options != null &&
         Array.from(this.select.options).filter(item => item.selected).length >= this.options.max_selected_options) {
@@ -695,6 +723,7 @@ export class Chosen {
       }
       if (option.selected === !remove) return;
       option.selected = !remove;
+      this.rangeAnchorIndex = remove ? null : entry.index;
     } else {
       if (remove || option.selected) return;
       this.select.selectedIndex = Array.from(this.select.options).indexOf(option);
@@ -869,7 +898,7 @@ export class Chosen {
         return;
       }
       if (entry?.kind === 'option' && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
-        this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey);
+        this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey, event.shiftKey);
       }
     } else if (key === 'Escape' && this.opened) {
       event.preventDefault(); this.close();

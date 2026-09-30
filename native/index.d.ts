@@ -21,6 +21,7 @@ export interface ChosenOptions {
   group_search?: boolean;
   display_selected_options?: boolean;
   deselect_selected_results?: boolean;
+  shift_select_range?: boolean;
   hide_results_on_select?: boolean;
   display_disabled_options?: boolean;
   min_search_length?: number;

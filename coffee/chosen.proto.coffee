@@ -613,6 +613,11 @@ class @Chosen extends AbstractChosen
         this.results_update_field()
         return false
 
+      array_index = Number(high.getAttribute("data-option-array-index"))
+      if evt.shiftKey and this.select_range_results(array_index)
+        evt.preventDefault()
+        return
+
       if @is_multiple and @deselect_selected_results and item.selected
         this.results_update_field() if this.result_deselect(high.getAttribute("data-option-array-index"))
         evt.preventDefault()
@@ -636,6 +641,7 @@ class @Chosen extends AbstractChosen
       item.selected = true
 
       option.selected = true
+      @range_anchor_index = array_index if @is_multiple
       @selected_option_count = null
 
       if @is_multiple
@@ -687,6 +693,7 @@ class @Chosen extends AbstractChosen
 
     if not option.disabled
       result_data.selected = false
+      @range_anchor_index = null if @range_anchor_index is Number(pos)
 
       option.selected = false
       @selected_option_count = null

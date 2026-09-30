@@ -87,6 +87,11 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
           <td>When set to <code class="language-javascript">true</code> on a multiple select, selected results show a remove mark and can be deselected by clicking them, Ctrl/Command-clicking them, or pressing Enter while highlighted. Disabled selected options remain unchanged. Selected results must be visible (<code class="language-javascript">display_selected_options</code> defaults to <code class="language-javascript">true</code>).</td>
         </tr>
         <tr>
+          <td>shift_select_range</td>
+          <td>false</td>
+          <td>On a multiple select, click one option, then Shift-click another to add the visible options between them. Disabled options are skipped, existing choices remain selected, and <code class="language-javascript">max_selected_options</code> still applies. The anchor must remain visible in the current filtered results. React uses <code class="language-javascript">shiftSelectRange</code>.</td>
+        </tr>
+        <tr>
           <td>select_all_text</td>
           <td>"Select all"</td>
           <td>Sets the text for the opt-in Select all action.</td>

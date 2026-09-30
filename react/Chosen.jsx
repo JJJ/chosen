@@ -1,7 +1,7 @@
 import React, {
   forwardRef, useCallback, useEffect, useId, useImperativeHandle, useMemo, useRef, useState
 } from 'react';
-import { filterOptions, normalizeOptions, preferredPrefixIndex, resolvePastedChoices, updateSelection } from '../core/index.mjs';
+import { filterOptions, normalizeOptions, preferredPrefixIndex, rangeOptions, resolvePastedChoices, updateSelection } from '../core/index.mjs';
 
 function valuesOf(value, multiple) {
   if (value == null || value === '') return [];
@@ -49,7 +49,7 @@ export const Chosen = forwardRef(function Chosen({
   maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
   normalizeSearchText, searchMatcher,
   displaySelectedOptions = true, displayDisabledOptions = true,
-  deselectSelectedResults = false, hideResultsOnSelect = true,
+  deselectSelectedResults = false, shiftSelectRange = false, hideResultsOnSelect = true,
   maxItemsShown = Infinity,
   allowSelectAll = false, allowDeselectAll = false,
   selectByGroup = false,
@@ -72,6 +72,7 @@ export const Chosen = forwardRef(function Chosen({
   const controlRef = useRef(null);
   const popupRef = useRef(null);
   const selectRef = useRef(null);
+  const rangeAnchorIndex = useRef(null);
   const labelPointerDown = useRef(false);
   const labelForwardedClick = useRef(false);
   const typeahead = useRef('');
@@ -173,12 +174,37 @@ export const Chosen = forwardRef(function Chosen({
     if (option.kind === 'create') { createNew(option.label, event); return; }
     if (option.kind === 'group') { chooseGroup(option.index, event); return; }
     if (!canActOnResult(option)) return;
+    if (multiple && shiftSelectRange && event?.shiftKey) {
+      const anchor = available.find(item => item.kind === 'option' && item.index === rangeAnchorIndex.current);
+      const range = anchor && selectedSet.has(anchor.value)
+        ? rangeOptions(available, anchor.index, option.index) : [];
+      if (range.length) {
+        const next = [...selectedValues];
+        let limitReached = false;
+        for (const item of range) {
+          if (item.disabled || item.pinnedOnly || next.includes(item.value)) continue;
+          if (maxSelectedOptions != null && next.length >= maxSelectedOptions) {
+            limitReached = true;
+            break;
+          }
+          next.push(item.value);
+        }
+        if (next.includes(option.value)) rangeAnchorIndex.current = option.index;
+        if (next.length !== selectedValues.length) commit(next, event);
+        if (limitReached) reportLimit();
+        else setLimitNotice(false);
+        setPendingBackstrokeValue(null);
+        inputRef.current?.focus();
+        return;
+      }
+    }
     const next = updateSelection(selectedValues, option, {
       multiple, maxSelectedOptions, disabled, readOnly,
       action: multiple && selectedSet.has(option.value) ? 'remove' : 'select'
     });
     if (next.limitReached) reportLimit();
     if (!next.changed) return;
+    if (multiple) rangeAnchorIndex.current = next.values.includes(option.value) ? option.index : null;
     setLimitNotice(false);
     setPendingBackstrokeValue(null);
     commit(next.values, event);
@@ -215,7 +241,7 @@ export const Chosen = forwardRef(function Chosen({
     const next = updateSelection(selectedValues, option, {
       multiple, action: 'remove', disabled, readOnly
     });
-    if (next.changed) commit(next.values, event);
+    if (next.changed) { rangeAnchorIndex.current = null; commit(next.values, event); }
     setLimitNotice(false);
     setPendingBackstrokeValue(null);
     inputRef.current?.focus();

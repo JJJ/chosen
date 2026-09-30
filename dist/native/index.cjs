@@ -344,11 +344,24 @@ function preferredPrefixIndex(items, query, settings) {
   }
   return -1;
 }
+function rangeOptions(items, anchorIndex, targetIndex) {
+  var anchor = -1;
+  var target = -1;
+  for (var index = 0; index < items.length; index += 1) {
+    if (items[index].kind !== "option") continue;
+    if (items[index].index === anchorIndex) anchor = index;
+    if (items[index].index === targetIndex) target = index;
+  }
+  if (anchor < 0 || target < 0) return [];
+  return items.slice(Math.min(anchor, target), Math.max(anchor, target) + 1).filter(function(item) {
+    return item.kind === "option";
+  });
+}
 
 // native/Chosen.mjs
 var nextId = 0;
 var instances = /* @__PURE__ */ new WeakMap();
-var booleanDataOptions = new Set("allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl".split(" "));
+var booleanDataOptions = new Set("allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results shift_select_range disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl".split(" "));
 var integerDataOptions = new Set("disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results".split(" "));
 var stringDataOptions = new Set("select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple placeholder_text_multiple_selected".split(" "));
 function selectDataOptions(select) {
@@ -447,6 +460,7 @@ var Chosen = class {
       display_selected_options: true,
       display_disabled_options: true,
       deselect_selected_results: false,
+      shift_select_range: false,
       hide_results_on_select: true,
       max_items_shown: Infinity,
       allow_select_all: false,
@@ -482,6 +496,7 @@ var Chosen = class {
     this.opened = false;
     this.activeIndex = -1;
     this.pendingBackstrokeValue = null;
+    this.rangeAnchorIndex = null;
     this.choicesExpanded = false;
     this.typeahead = "";
     this.typeaheadTimer = null;
@@ -867,7 +882,7 @@ var Chosen = class {
         if (event.pointerType === "mouse") event.preventDefault();
       });
       row.addEventListener("click", (event) => {
-        if (actionable) this.choose(entry, canDeselect, event.metaKey || event.ctrlKey);
+        if (actionable) this.choose(entry, canDeselect, event.metaKey || event.ctrlKey, event.shiftKey);
       });
       (group && entry.groupIndex === groupIndex ? group : this.list).append(row);
     }
@@ -1065,9 +1080,38 @@ var Chosen = class {
       document.getElementById(id)?.scrollIntoView?.({ block: "nearest" });
     } else this.input.removeAttribute("aria-activedescendant");
   }
-  choose(entry, remove = false, keepOpen = false) {
+  selectRange(entry) {
+    const anchor = this.nodes[this.rangeAnchorIndex];
+    if (!this.multiple || !this.options.shift_select_range || !anchor?.selected) return false;
+    const range = rangeOptions(this.available, this.rangeAnchorIndex, entry.index);
+    if (!range.length) return false;
+    let count = this.select.selectedOptions.length;
+    let changed = false;
+    let limitReached = false;
+    for (const item of range) {
+      const option = this.nodes[item.index];
+      if (!option || item.disabled || item.pinnedOnly || option.disabled || option.hidden || option.selected) continue;
+      if (this.options.max_selected_options != null && count >= this.options.max_selected_options) {
+        limitReached = true;
+        break;
+      }
+      option.selected = true;
+      count++;
+      changed = true;
+    }
+    if (this.nodes[entry.index]?.selected) this.rangeAnchorIndex = entry.index;
+    if (changed) {
+      this.changed();
+      this.renderResults();
+    }
+    if (limitReached) emit(this.select, "chosen:maxselected", this);
+    this.input.focus();
+    return true;
+  }
+  choose(entry, remove = false, keepOpen = false, shift = false) {
     const option = this.nodes[entry.index];
     if (!option || option.disabled || option.hidden || option.parentElement?.disabled || this.select.disabled || this.select.hasAttribute("readonly")) return;
+    if (shift && this.selectRange(entry)) return;
     if (this.multiple) {
       if (!remove && !option.selected && this.options.max_selected_options != null && Array.from(this.select.options).filter((item) => item.selected).length >= this.options.max_selected_options) {
         emit(this.select, "chosen:maxselected", this);
@@ -1075,6 +1119,7 @@ var Chosen = class {
       }
       if (option.selected === !remove) return;
       option.selected = !remove;
+      this.rangeAnchorIndex = remove ? null : entry.index;
     } else {
       if (remove || option.selected) return;
       this.select.selectedIndex = Array.from(this.select.options).indexOf(option);
@@ -1245,7 +1290,7 @@ var Chosen = class {
         return;
       }
       if (entry?.kind === "option" && (!this.multiple || !this.nodes[entry.index]?.selected || this.options.deselect_selected_results)) {
-        this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey);
+        this.choose(entry, this.multiple && !!this.nodes[entry.index]?.selected, event.metaKey || event.ctrlKey, event.shiftKey);
       }
     } else if (key === "Escape" && this.opened) {
       event.preventDefault();

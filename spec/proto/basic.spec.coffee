@@ -692,6 +692,33 @@ describe "Basic setup", ->
     expect(changes).toBe(2)
     div.remove()
 
+  it "selects a visible Shift range only when opted in", ->
+    div = new Element('div').update("<select multiple><option value='a'>Alpha</option><option value='b'>Beta</option><option value='c' disabled>Charlie</option><option value='d'>Delta</option><option value='e'>Echo</option></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    changes = 0
+    select.observe "change", -> changes++
+    chosen = new Chosen(select, shift_select_range: true, hide_results_on_select: false)
+    chosen.results_show()
+    click = (index, shift = false) ->
+      row = div.down(".chosen-results li[data-option-array-index='#{index}']")
+      chosen.search_results_mouseup(target: row, type: 'mouseup', which: 1, shiftKey: shift, preventDefault: ->)
+    click(0)
+    click(4, true)
+    expect((option.value for option in select.options when option.selected)).toEqual(["a", "b", "d", "e"])
+    expect(changes).toBe(2)
+    div.remove()
+
+    other = new Element('div').update("<select multiple><option value='a'>Alpha</option><option value='b'>Beta</option><option value='c'>Charlie</option></select>")
+    document.body.appendChild(other)
+    plain_select = other.down('select')
+    plain = new Chosen(plain_select, hide_results_on_select: false)
+    plain.results_show()
+    plain.search_results_mouseup(target: other.down(".chosen-results li[data-option-array-index='0']"), type: 'mouseup', which: 1, preventDefault: ->)
+    plain.search_results_mouseup(target: other.down(".chosen-results li[data-option-array-index='2']"), type: 'mouseup', which: 1, shiftKey: true, preventDefault: ->)
+    expect((option.value for option in plain_select.options when option.selected)).toEqual(["a", "c"])
+    other.remove()
+
   it "respects the selection limit during bulk selection", ->
     div = new Element('div').update("<select multiple><option>One</option><option>Two</option><option>Three</option></select>")
     document.body.appendChild(div)

@@ -98,6 +98,7 @@ export interface ChosenProps {
   groupSearch?: boolean;
   displaySelectedOptions?: boolean;
   deselectSelectedResults?: boolean;
+  shiftSelectRange?: boolean;
   hideResultsOnSelect?: boolean;
   displayDisabledOptions?: boolean;
   displaySelectedValue?: boolean;

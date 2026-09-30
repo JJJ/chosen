@@ -46,6 +46,9 @@ var ChosenCore = (function() {
     preferredPrefixIndex: function() {
       return preferredPrefixIndex;
     },
+    rangeOptions: function() {
+      return rangeOptions;
+    },
     resolvePastedChoices: function() {
       return resolvePastedChoices;
     },
@@ -408,6 +411,19 @@ var ChosenCore = (function() {
       if (label.indexOf(term) === 0) return index;
     }
     return -1;
+  }
+  function rangeOptions(items, anchorIndex, targetIndex) {
+    var anchor = -1;
+    var target = -1;
+    for (var index = 0; index < items.length; index += 1) {
+      if (items[index].kind !== "option") continue;
+      if (items[index].index === anchorIndex) anchor = index;
+      if (items[index].index === targetIndex) target = index;
+    }
+    if (anchor < 0 || target < 0) return [];
+    return items.slice(Math.min(anchor, target), Math.max(anchor, target) + 1).filter(function(item) {
+      return item.kind === "option";
+    });
   }
   return __toCommonJS(index_exports);
 })();

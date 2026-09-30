@@ -12,6 +12,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `allow_select_all` | Yes | Yes | Filtered bulk selection with Ctrl/Command+A on an empty search. React prop: `allowSelectAll`. |
 | `allow_deselect_all` | Yes | Yes | Clear enabled selections with Ctrl/Command+Shift+A on an empty search. React prop: `allowDeselectAll`. |
 | `deselect_selected_results` | Yes | Yes | React prop: `deselectSelectedResults`; defaults to `false`. Both demos opt in to selected-row removal. |
+| `shift_select_range` | Yes | Yes | Visible Shift-click range selection for multiple selects, off by default. React prop: `shiftSelectRange`. |
 | `select_all_text` | Yes | Yes | Bulk action label; React prop: `selectAllText`. |
 | `deselect_all_text` | Yes | Yes | Bulk action label; React prop: `deselectAllText`. |
 | `disable_search` | Yes | Yes | Single-select search is hidden; typing prefixes navigates results. React prop: `disableSearch`. |

@@ -43,6 +43,37 @@ test('single keyboard shortcuts open, close at the first result, and clear an al
   dom.window.close();
 });
 
+test('opt-in Shift selection adds a visible range to the native select', () => {
+  const markup = '<select multiple><option value="a">Alpha</option><option value="b">Beta</option><option value="c" disabled>Charlie</option><option value="d">Delta</option><option value="e">Echo</option></select>';
+  const { dom, select } = fixture(markup);
+  let changes = 0;
+  select.addEventListener('change', () => changes++);
+  const chosen = new Chosen(select, { shift_select_range: true, max_selected_options: 3 });
+  let limits = 0;
+  select.addEventListener('chosen:maxselected', () => limits++);
+  chosen.open();
+  click(chosen.list.querySelector('#' + chosen.id + '-option-0'));
+  chosen.open();
+  chosen.list.querySelector('#' + chosen.id + '-option-4').dispatchEvent(
+    new dom.window.MouseEvent('click', { bubbles: true, shiftKey: true }));
+  assert.deepEqual(Array.from(select.selectedOptions, option => option.value), ['a', 'b', 'd']);
+  assert.equal(changes, 2);
+  assert.equal(limits, 1);
+  chosen.destroy();
+  dom.window.close();
+
+  const second = fixture(markup);
+  const plain = new Chosen(second.select);
+  plain.open();
+  click(plain.list.querySelector('#' + plain.id + '-option-0'));
+  plain.open();
+  plain.list.querySelector('#' + plain.id + '-option-4').dispatchEvent(
+    new second.dom.window.MouseEvent('click', { bubbles: true, shiftKey: true }));
+  assert.deepEqual(Array.from(second.select.selectedOptions, option => option.value), ['a', 'e']);
+  plain.destroy();
+  second.dom.window.close();
+});
+
 test('no-results events expose the rendered row and report its removal', () => {
   const { dom, select } = fixture('<select multiple><option>Apple</option></select>');
   const events = [];

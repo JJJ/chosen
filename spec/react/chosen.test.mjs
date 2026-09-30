@@ -19,6 +19,35 @@ const options = [
   { label: 'Other', options: [{ value: 'b', label: 'Banana' }, { value: 'c', label: 'Cherry', disabled: true }] }
 ];
 
+test('opt-in Shift selection adds a visible range and respects the limit', () => {
+  const items = [
+    { value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' },
+    { value: 'c', label: 'Charlie', disabled: true }, { value: 'd', label: 'Delta' },
+    { value: 'e', label: 'Echo' }
+  ];
+  let changes = 0;
+  let limits = 0;
+  render(h(Chosen, { options: items, multiple: true, shiftSelectRange: true,
+    maxSelectedOptions: 3, onChange: () => changes++, onMaxSelected: () => limits++ }));
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: 'Alpha' }));
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: 'Echo' }), { shiftKey: true });
+  assert.deepEqual(Array.from(document.querySelector('select').selectedOptions, option => option.value), ['a', 'b', 'd']);
+  assert.equal(changes, 2);
+  assert.equal(limits, 1);
+});
+
+test('Shift click keeps its original single-row behavior by default', () => {
+  const items = [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'c', label: 'Charlie' }];
+  render(h(Chosen, { options: items, multiple: true }));
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: 'Alpha' }));
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: 'Charlie' }), { shiftKey: true });
+  assert.deepEqual(Array.from(document.querySelector('select').selectedOptions, option => option.value), ['a', 'c']);
+});
+
 afterEach(() => {
   cleanup();
   document.body.innerHTML = '';

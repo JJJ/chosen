@@ -12,6 +12,7 @@ var config = {
   '.chosen-select-matcher-recipe': { search_matcher: function(query, item) { return !item.group && item.value.indexOf('SKU-') === 0 && item.text.toLowerCase().indexOf(query.toLowerCase()) !== -1; }, width: '100%' },
   '.chosen-select-create-recipe': { create_option: true, persistent_create_option: true, skip_no_results: true, width: '100%' },
   '.chosen-select-selected-recipe': { display_selected_value: true, deselect_selected_results: true, hide_results_on_select: false, width: '100%' },
+  '.chosen-select-shift-range': { shift_select_range: true, width: '100%' },
   '.chosen-select-group-recipe': { width: '100%' },
   '.chosen-select-group-chips': { inherit_optgroup_classes: true, width: '100%' },
   '.chosen-select-readonly-recipe': { width: '100%' },
