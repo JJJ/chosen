@@ -29,17 +29,18 @@ class SelectParser
 
   add_option: (option, group_position, group_disabled) ->
     if option.nodeName.toUpperCase() is "OPTION"
-      if option.text != "" or option.value != ""
+      option_text = if option.text != "" then option.text else option.getAttribute('label') or ""
+      if option_text != "" or option.value != ""
         if group_position?
           @parsed[group_position].children += 1
         @parsed.push
           options_index: @options_index
           option_element: option
           value: option.value
-          text: option.text
+          text: option_text
           search_text: option.getAttribute('data-search-text') || ''
           always_visible: option.hasAttribute('data-chosen-always-visible')
-          html: this.escape_html(option.text).replace(/^\s+|\s+$/g, '')
+          html: this.escape_html(option_text).replace(/^\s+|\s+$/g, '')
           title: option.title if option.title
           selected: option.selected
           disabled: if group_disabled is true then group_disabled else option.disabled

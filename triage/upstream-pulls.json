@@ -1,0 +1,398 @@
+[
+  {
+    "number": 3134,
+    "title": "Issue #3133: Use placeholder attribute for placeholder text.",
+    "issue_refs": [
+      3133
+    ],
+    "status": "covered-in-fork",
+    "note": "The related placeholder issue #3133 is fixed in this fork."
+  },
+  {
+    "number": 3132,
+    "title": "Speed up rendering when there are lot of select choen",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 3122,
+    "title": "Add testing",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 3112,
+    "title": "support options with labels only",
+    "issue_refs": [],
+    "status": "in-progress",
+    "note": "The classic parser drops label-only options; this branch adds the fallback and tests all affected editions."
+  },
+  {
+    "number": 3048,
+    "title": "include special character with insensitive search",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 3032,
+    "title": "correctly show/hide when used inside shadow DOM",
+    "issue_refs": [
+      3031
+    ],
+    "status": "covered-in-fork",
+    "note": "Both classic adapters bind outside-click handling to getRootNode() when available; upstream issue #3031 is also marked covered."
+  },
+  {
+    "number": 3029,
+    "title": "form_field_jq.hide(...).after is not a function",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 3026,
+    "title": "Colors moved to variables in SCSS",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 3006,
+    "title": "Updated \"prism.js\" to un-minified v1.15.0 (Closes: #3005)",
+    "issue_refs": [
+      3005
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2992,
+    "title": "Change setup documentation",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2990,
+    "title": "Remove 100ms lag on blur by using custom blur and focus events.",
+    "issue_refs": [],
+    "status": "candidate",
+    "note": "Classic focus handling still uses a 100 ms blur check; reproduce and compare keyboard, label, and pointer behavior before changing it."
+  },
+  {
+    "number": 2938,
+    "title": "Resolve 1901 issue",
+    "issue_refs": [],
+    "status": "candidate",
+    "note": "Single deselection still requires the first option to have both empty text and value; assess the native placeholder contract."
+  },
+  {
+    "number": 2924,
+    "title": "Make hide_results_on_select option apply for deselecting as well",
+    "issue_refs": [],
+    "status": "covered-in-fork",
+    "note": "Choice removal in both classic adapters already honors hide_results_on_select."
+  },
+  {
+    "number": 2923,
+    "title": "Add `option` class passthrough for multi-select",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2904,
+    "title": "Use the placeholder attribute instead of faking it with value.",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2903,
+    "title": "Support hidden property on option and optgroup elements.",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2902,
+    "title": "Refactor jasmine tests",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2898,
+    "title": "Add new option: search_word_boundary",
+    "issue_refs": [
+      2862
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2846,
+    "title": "Multiple values pasting feature added to winnow_results method",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2761,
+    "title": "Implement the ability to search with true regexes",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2738,
+    "title": "WIP: Add Coffeelint",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2733,
+    "title": "General touchup",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2726,
+    "title": "use a tag instead of abbr tag for search-choice-close",
+    "issue_refs": [
+      495
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2716,
+    "title": "WIP: focus before selecting result",
+    "issue_refs": [
+      1526
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2715,
+    "title": "add shortcut for deselect",
+    "issue_refs": [
+      994,
+      2563
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2703,
+    "title": "Make search match against text instead of html",
+    "issue_refs": [
+      2548
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2702,
+    "title": "Make results_search run after keyup of Cmd key",
+    "issue_refs": [
+      2521
+    ],
+    "status": "covered-in-fork",
+    "note": "Both classic adapters listen to input events, including edits made with Command-Delete."
+  },
+  {
+    "number": 2701,
+    "title": "Allow activated instance to be programatically opened",
+    "issue_refs": [
+      2689
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2678,
+    "title": "adds the ability to select all options under a group",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2618,
+    "title": "Allow for a transliteration callback",
+    "issue_refs": [
+      536,
+      2523
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2599,
+    "title": "Support for Fuzzy Searching Strings #2028 rebased against current master branch to fix merge conflict",
+    "issue_refs": [
+      858,
+      867,
+      1037,
+      2028
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2596,
+    "title": "Accessibility updates #264 - Add aria attributes to better support screen readers and keyboard navigation",
+    "issue_refs": [
+      264
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2594,
+    "title": "Issue #2075: Fix client-side validation",
+    "issue_refs": [
+      2075
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2574,
+    "title": "Custom data-attributes for chosen generated options.",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2495,
+    "title": "use inherit for width when offsetWidth is 0",
+    "issue_refs": [
+      92,
+      1272,
+      1329,
+      2309
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2356,
+    "title": "Added event chosen:search",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2346,
+    "title": "Support for home and end key",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2319,
+    "title": "Update title and classnames (when option enabled) from select on update",
+    "issue_refs": [
+      2232,
+      2311
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2047,
+    "title": "Adding accessibility to chosen:",
+    "issue_refs": [
+      2013
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2036,
+    "title": "Add screen edge detection",
+    "issue_refs": [
+      1330
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 2013,
+    "title": "Accessible `<select>` elem solution",
+    "issue_refs": [
+      264
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 1683,
+    "title": "Add a way to do left bound word search to chosen for arbitrary word bounardies",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 1630,
+    "title": "SearchChoice pill: inherit classes on the option",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 1606,
+    "title": "Add CSS selector to make sure full placeholder text is visible after deselecting",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 1583,
+    "title": "Ignore context (right click) mousedown events",
+    "issue_refs": [
+      949
+    ],
+    "status": "candidate",
+    "note": "A right-button mousedown appears able to activate a closed control; verify in a browser before changing pointer handling."
+  },
+  {
+    "number": 1487,
+    "title": "search_string_match testing",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 1415,
+    "title": "added enable, disable and deselect",
+    "issue_refs": [
+      1131
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 900,
+    "title": "Fixes position of invalid error flag on required selects - fixes #515",
+    "issue_refs": [
+      515
+    ],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  },
+  {
+    "number": 166,
+    "title": "Feature: Option adding (with custom callback)",
+    "issue_refs": [],
+    "status": "unreviewed",
+    "note": "Compare the patch and reported behavior with the current fork."
+  }
+]

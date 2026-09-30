@@ -20,6 +20,21 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('label-only options remain searchable and submit their native values', () => {
+  const { dom, select, form } = fixture('<select name="fruit"><option value=""></option><option value="a" label="Apple &amp; Pear"></option><optgroup label="Citrus"><option value="o" label="Orange"></option></optgroup></select>');
+  const chosen = new Chosen(select);
+  chosen.open();
+  assert.equal(chosen.list.textContent.includes('Apple & Pear'), true);
+  chosen.input.value = 'Orange';
+  chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));
+  const row = Array.from(chosen.list.querySelectorAll('[role="option"]')).find(node => node.textContent === 'Orange');
+  assert.ok(row);
+  click(row);
+  assert.equal(new dom.window.FormData(form).get('fruit'), 'o');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('opt-in mobile picker closes and restores page scrolling without changing the select value', () => {
   const { dom, select, form } = fixture('<select name="project"><option value=""></option><option value="atlas">Atlas</option></select>');
   window.matchMedia = () => ({ matches: true });

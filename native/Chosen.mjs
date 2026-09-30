@@ -36,7 +36,7 @@ function optionTree(select, copyDataAttributes = false) {
     if (child.tagName === 'OPTGROUP') {
       entries.push({ label: child.label, disabled: child.disabled, hidden: child.hidden,
         className: child.className,
-        options: Array.from(child.children, option => ({ value: option.value, label: option.text,
+        options: Array.from(child.children, option => ({ value: option.value, label: option.text || option.getAttribute('label') || '',
           selected: option.selected, disabled: option.disabled, hidden: option.hidden,
           className: option.className,
           dataAttributes: dataAttributes(option),
@@ -44,7 +44,7 @@ function optionTree(select, copyDataAttributes = false) {
           searchText: option.getAttribute('data-search-text') || '' })) });
       nodes.push(null, ...child.children);
     } else if (child.tagName === 'OPTION') {
-      entries.push({ value: child.value, label: child.text, selected: child.selected,
+      entries.push({ value: child.value, label: child.text || child.getAttribute('label') || '', selected: child.selected,
         disabled: child.disabled, hidden: child.hidden,
         className: child.className,
         dataAttributes: dataAttributes(child),
