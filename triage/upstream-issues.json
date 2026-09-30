@@ -1164,7 +1164,8 @@
   {
     "number": 2125,
     "status": "support-question",
-    "note": "Use a valid empty option with a label attribute, such as <option value=\"\" label=\" \"></option>; Chosen treats it as the placeholder entry."
+    "note": "An empty first option with an empty value and whitespace-only label remains a placeholder; PR #200 adds regression coverage alongside label-only option support.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/200"
   },
   {
     "number": 2114,
