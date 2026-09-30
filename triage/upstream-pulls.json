@@ -26,8 +26,9 @@
     "number": 3112,
     "title": "support options with labels only",
     "issue_refs": [],
-    "status": "in-progress",
-    "note": "The classic parser drops label-only options; this branch adds the fallback and tests all affected editions."
+    "status": "fixed-in-fork",
+    "note": "Label-only native options now display and search correctly in the classic and Vanilla editions while retaining source select values; React already accepts structured labels.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/199"
   },
   {
     "number": 3048,
