@@ -1,5 +1,4 @@
 .react-demo-intro { margin-bottom: 1.5rem; }
-.docs-reference main > pre { max-width: 100%; overflow-x: auto; }
 .docs-reference footer { color: #667085; }
 .react-demo-switches { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1rem; }
 .react-demo-switch { display: inline-flex; align-items: center; gap: .5rem; font-size: .9rem; }
