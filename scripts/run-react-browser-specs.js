@@ -74,7 +74,18 @@ async function main() {
         throw new Error(`${name}: multiple label did not open the results`);
       }
       await page.getByRole('option', { name: 'Apple' }).click();
-      await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple"]');
+      try {
+        await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple"]', null, { timeout: 2000 });
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          values: new FormData(document.querySelector('form')).getAll('fruit'),
+          selected: [...document.querySelector('select').selectedOptions].map(option => option.value),
+          apple: document.querySelector('[role="option"]')?.outerHTML,
+          active: document.activeElement?.outerHTML,
+          open: document.querySelector('[role="combobox"]')?.getAttribute('aria-expanded')
+        }));
+        throw new Error(`${name}: multiple selection did not submit Apple (${JSON.stringify(state)}; page errors: ${errors.join('; ')})`, { cause: error });
+      }
       await page.getByRole('option', { name: 'Banana' }).click();
       await page.waitForFunction(() => JSON.stringify(new FormData(document.querySelector('form')).getAll('fruit')) === '["apple","banana"]');
       const values = await page.evaluate(() => new FormData(document.querySelector('form')).getAll('fruit'));
