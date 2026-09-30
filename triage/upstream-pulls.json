@@ -12,15 +12,15 @@
     "number": 3132,
     "title": "Speed up rendering when there are lot of select choen",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "Replacing .html() with .text() would render escaped entities literally and discard intentional selected optgroup markup; the patch does not change result rendering."
   },
   {
     "number": 3122,
     "title": "Add testing",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "This patch adds tests to the old Grunt and QUnit setup; the fork now has maintained Jasmine, core, and browser suites across four editions."
   },
   {
     "number": 3112,
@@ -34,8 +34,8 @@
     "number": 3048,
     "title": "include special character with insensitive search",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The shared matcher already folds accented characters for case-insensitive search. The upstream patch also discards its replace() result, so it would not apply its proposed folding."
   },
   {
     "number": 3032,
@@ -50,15 +50,15 @@
     "number": 3029,
     "title": "form_field_jq.hide(...).after is not a function",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The jQuery adapter hides the source select and inserts the Chosen container in separate operations, avoiding the reported .hide(...).after failure."
   },
   {
     "number": 3026,
     "title": "Colors moved to variables in SCSS",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Sass colors are configurable through !default variables and CSS custom properties; see fork PR #150 and Harvest issue #3053."
   },
   {
     "number": 3006,
@@ -66,15 +66,15 @@
     "issue_refs": [
       3005
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The docs bundle includes Prism source, its license, and a source URL file; no historical Prism 1.15.0 upgrade is needed."
   },
   {
     "number": 2992,
     "title": "Change setup documentation",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Current README and demo setup sections explain package installation and distributed assets. The Visual Studio metadata in this old patch is not needed."
   },
   {
     "number": 2990,
@@ -86,7 +86,9 @@
   {
     "number": 2938,
     "title": "Resolve 1901 issue",
-    "issue_refs": [1901],
+    "issue_refs": [
+      1901
+    ],
     "status": "declined",
     "note": "The one-line patch changes only single-deselect eligibility from blank text to blank value; it does not address #1901's mobile placeholder display. The fork supports touch controls and keeps the first truly blank option as the clear target, avoiding a visible empty-value option being treated as an implicit placeholder."
   },
@@ -101,8 +103,8 @@
     "number": 2923,
     "title": "Add `option` class passthrough for multi-select",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The opt-in inherit_option_classes setting copies source option classes to selected chips across the maintained editions."
   },
   {
     "number": 2904,
@@ -122,8 +124,8 @@
     "number": 2902,
     "title": "Refactor jasmine tests",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "The proposed historical Jasmine migration no longer matches the fork test tree, which already has shared core and adapter coverage."
   },
   {
     "number": 2898,
@@ -131,8 +133,8 @@
     "issue_refs": [
       2862
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "candidate",
+    "note": "Configurable Unicode-aware word boundaries may help languages where JavaScript regex word boundaries split accented words. The old regex-string patch needs a four-edition design and regression tests."
   },
   {
     "number": 2846,
@@ -146,22 +148,22 @@
     "number": 2761,
     "title": "Implement the ability to search with true regexes",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The opt-in search_matcher callback accepts application-supplied regex matching without changing the default literal search; see fork PR #155."
   },
   {
     "number": 2738,
     "title": "WIP: Add Coffeelint",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "This WIP adds an obsolete CoffeeLint configuration and a large formatting pass without a demonstrated behavior fix."
   },
   {
     "number": 2733,
     "title": "General touchup",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "This broad historical event-binding refactor has no isolated bug and conflicts with subsequent focus and event work in the fork."
   },
   {
     "number": 2726,
@@ -178,8 +180,8 @@
     "issue_refs": [
       1526
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The current result handler retains search focus when a multiple select stays open and avoids refocusing a closed single select after selection."
   },
   {
     "number": 2715,
@@ -188,8 +190,8 @@
       994,
       2563
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Single deselection and keyboard removal are supported, including the documented Backspace behavior."
   },
   {
     "number": 2703,
@@ -197,8 +199,8 @@
     "issue_refs": [
       2548
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The shared search matcher matches parsed option text rather than generated escaped HTML."
   },
   {
     "number": 2702,
@@ -223,8 +225,8 @@
     "number": 2678,
     "title": "adds the ability to select all options under a group",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Opt-in select_by_group makes multiple-select optgroup headings selectable across editions; see fork PR #171."
   },
   {
     "number": 2618,
@@ -233,8 +235,8 @@
       536,
       2523
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The normalize_search_text callback transforms queries and option labels for built-in matching, including transliteration."
   },
   {
     "number": 2599,
@@ -245,8 +247,8 @@
       1037,
       2028
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "candidate",
+    "note": "An opt-in unordered substring-term search may add something beyond split_search_terms plus search_contains. The old patch mixes matching and HTML highlighting and needs a safe four-edition design."
   },
   {
     "number": 2596,
@@ -254,8 +256,8 @@
     "issue_refs": [
       264
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Combobox and listbox roles, accessible state, and keyboard navigation are implemented and tested in the current fork."
   },
   {
     "number": 2594,
@@ -263,15 +265,15 @@
     "issue_refs": [
       2075
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Required native selects remain available for browser validation; the adapters preserve the source select as the form value and validation source."
   },
   {
     "number": 2574,
     "title": "Custom data-attributes for chosen generated options.",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Opt-in data attribute passthrough from source options is available across the editions; see fork PR #187."
   },
   {
     "number": 2495,
@@ -282,15 +284,15 @@
       1329,
       2309
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Width calculation falls back to computed styles when a hidden select has zero offsetWidth; see the fork fixes for hidden select sizing."
   },
   {
     "number": 2356,
     "title": "Added event chosen:search",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Chosen emits chosen:search and chosen:search_updated events for search interaction and result refreshes."
   },
   {
     "number": 2346,
@@ -317,8 +319,8 @@
     "issue_refs": [
       2013
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The current controls expose combobox/listbox roles, unique result identifiers, and ARIA selection state."
   },
   {
     "number": 2036,
@@ -326,8 +328,8 @@
     "issue_refs": [
       1330
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Dropdown placement detects available space and supports opt-in positioning for clipped containers."
   },
   {
     "number": 2013,
@@ -335,29 +337,29 @@
     "issue_refs": [
       264
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "Keeping a second accessible native select alongside the custom combobox duplicates the control for assistive technology. The fork instead exposes accessible state on Chosen while retaining the original select for values and validation."
   },
   {
     "number": 1683,
     "title": "Add a way to do left bound word search to chosen for arbitrary word bounardies",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "A custom search_matcher can implement application-specific separators or word boundaries without adding an unsafe regex-string option."
   },
   {
     "number": 1630,
     "title": "SearchChoice pill: inherit classes on the option",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Opt-in inherit_option_classes copies option classes to the selected pill."
   },
   {
     "number": 1606,
     "title": "Add CSS selector to make sure full placeholder text is visible after deselecting",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "The Sass selector already applies overflow and ellipsis rules to .chosen-single-with-deselect.chosen-default as well as ordinary single selects."
   },
   {
     "number": 1583,
@@ -373,8 +375,8 @@
     "number": 1487,
     "title": "search_string_match testing",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "declined",
+    "note": "The old search_string_match test refactor targets a superseded test layout; the current matcher has shared core and adapter coverage."
   },
   {
     "number": 1415,
@@ -382,8 +384,8 @@
     "issue_refs": [
       1131
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Applications can change native disabled or selected state and trigger chosen:updated; native values and events remain authoritative. Separate command events would duplicate that API."
   },
   {
     "number": 900,
@@ -391,14 +393,14 @@
     "issue_refs": [
       515
     ],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "candidate",
+    "note": "Required-select validation tooltip placement merits a current browser reproduction. The patch repositions the hidden native select on invalid, which may conflict with current focus and layout behavior."
   },
   {
     "number": 166,
     "title": "Feature: Option adding (with custom callback)",
     "issue_refs": [],
-    "status": "unreviewed",
-    "note": "Compare the patch and reported behavior with the current fork."
+    "status": "covered-in-fork",
+    "note": "Opt-in create_option adds to the native select and supports a callback, preserving the submitted value source."
   }
 ]
