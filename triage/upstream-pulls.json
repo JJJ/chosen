@@ -361,8 +361,9 @@
     "issue_refs": [
       949
     ],
-    "status": "candidate",
-    "note": "A right-button mousedown appears able to activate a closed control; verify in a browser before changing pointer handling."
+    "status": "fixed-in-fork",
+    "note": "Secondary-button presses no longer open closed jQuery, Prototype, Vanilla, or React controls. Adapter and real-browser regressions cover PR #201.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/201"
   },
   {
     "number": 1487,

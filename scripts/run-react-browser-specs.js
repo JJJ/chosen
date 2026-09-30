@@ -29,6 +29,8 @@ async function main() {
       await page.addScriptTag({ content: bundle.outputFiles[0].text });
       const input = page.getByRole('combobox', { name: 'Fruit' });
       await input.waitFor();
+      await page.locator('.chosen-react__control').click({ button: 'right' });
+      if (await input.getAttribute('aria-expanded') !== 'false') throw new Error(`${name}: right-click opened the React control`);
       await input.click();
       await input.fill('ban');
       if (await page.getByRole('option', { name: 'Apple' }).count()) throw new Error(`${name}: search did not filter`);

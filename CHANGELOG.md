@@ -6,6 +6,9 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+### Fixed
+- Ignore secondary mouse buttons when activating a closed Chosen control in jQuery, Prototype, Vanilla, and React. Primary clicks and touch activation continue to open it. This follows [Harvest PR #1583](https://github.com/harvesthq/chosen/pull/1583).
+
 ### Changed
 - Let the Vanilla demo's standard controls use the same CSS width as the React demo; examples that demonstrate an explicit width keep their own setting. Keep code examples scrollable within both demo pages on narrow screens.
 - Align Vanilla and React chips, summary buttons, result spacing, and selectable group headings, and connect the default React dropdown border and rounded result rows with the control. Both editions now fit narrow layouts without a fixed 12rem minimum. Vanilla active results now use `--chosen-highlight-text-color`, matching React, so theme highlight backgrounds cannot hide the result text. Vanilla's default highlight blue is slightly darker for readable white text.

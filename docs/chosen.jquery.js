@@ -3107,6 +3107,9 @@ var ChosenCore = (function() {
       if (this.is_disabled) {
         return;
       }
+      if ((evt != null ? evt.type : void 0) === 'mousedown' && ((evt.which != null) || (evt.button != null)) && this.mousedown_checker(evt) !== 'left') {
+        return;
+      }
       is_choice_close = (evt != null) && $(evt.target).closest('.search-choice-close').length > 0;
       if (evt && this.mousedown_checker(evt) === 'left') {
         if (evt && evt.type === "mousedown" && !this.results_showing) {

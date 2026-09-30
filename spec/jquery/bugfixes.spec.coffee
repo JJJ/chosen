@@ -1,4 +1,17 @@
 describe "Bugfixes", ->
+  it "does not activate a closed control on a secondary mouse button", ->
+    div = $("<div><select><option>One</option><option>Two</option></select><select multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
+    div.find("select").chosen()
+
+    for select in div.find("select")
+      chosen = $(select).data("chosen")
+      for button in [2, 3]
+        chosen.container.trigger($.Event("mousedown", which: button))
+        expect(chosen.results_showing).toBe(false)
+        expect(chosen.active_field).toBe(false)
+
+    div.remove()
+
   it "focuses a closed multiple select without opening it when open_on_label_click is false", ->
     div = $("<div><label for='label-focus-jquery'>Choices</label><select id='label-focus-jquery' multiple><option>One</option><option>Two</option></select></div>").appendTo("body")
     chosen = div.find("select").chosen(open_on_label_click: false).data("chosen")

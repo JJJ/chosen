@@ -1,4 +1,17 @@
 describe "Bugfixes", ->
+  it "does not activate a closed control on a secondary mouse button", ->
+    div = new Element("div").update("<select><option>One</option><option>Two</option></select><select multiple><option>One</option><option>Two</option></select>")
+    document.body.appendChild(div)
+
+    for select in div.select("select")
+      chosen = new Chosen(select)
+      for button in [2, 3]
+        chosen.container_mousedown(target: chosen.container, type: 'mousedown', which: button, stop: ->)
+        expect(chosen.results_showing).toBe(false)
+        expect(chosen.active_field).toBe(false)
+
+    div.remove()
+
   it "focuses a closed multiple select without opening it when open_on_label_click is false", ->
     div = new Element("div").update("<label for='label-focus-proto'>Choices</label><select id='label-focus-proto' multiple><option>One</option><option>Two</option></select>")
     document.body.appendChild(div)

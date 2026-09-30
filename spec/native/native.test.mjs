@@ -20,6 +20,21 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('secondary pointer buttons do not open the control', () => {
+  for (const multiple of [false, true]) {
+    const { dom, select } = fixture(`<select${multiple ? ' multiple' : ''}><option>One</option><option>Two</option></select>`);
+    const chosen = new Chosen(select);
+    for (const button of [1, 2]) {
+      chosen.control.dispatchEvent(new dom.window.MouseEvent('pointerdown', { bubbles: true, button }));
+      assert.equal(chosen.opened, false);
+    }
+    chosen.control.dispatchEvent(new dom.window.MouseEvent('pointerdown', { bubbles: true, button: 0 }));
+    assert.equal(chosen.opened, true);
+    chosen.destroy();
+    dom.window.close();
+  }
+});
+
 test('label-only options remain searchable and submit their native values', () => {
   const { dom, select, form } = fixture('<select name="fruit"><option value="" label=" "></option><option value="a" label="Apple &amp; Pear"></option><optgroup label="Citrus"><option value="o" label="Orange"></option></optgroup></select>');
   const chosen = new Chosen(select);

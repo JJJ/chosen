@@ -15,6 +15,11 @@ async function check(name, engine) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(demo);
+    const closedControl = page.locator('#standard-select .chosen-native__control');
+    await closedControl.click({ button: 'right' });
+    if (await page.locator('#standard-select [role="combobox"]').getAttribute('aria-expanded') !== 'false') {
+      throw new Error(`${name}: right-click opened the vanilla control`);
+    }
     const suiteControlWidth = await page.locator('#standard-select .chosen-native').evaluate(node => node.getBoundingClientRect().width);
     if (suiteControlWidth < 300 || suiteControlWidth > 351) {
       throw new Error(`${name}: standard example control width ${suiteControlWidth}px differs from the shared demo layout`);
