@@ -1,7 +1,8 @@
 .chosen-react {
   position: relative;
   width: 100%;
-  min-width: 12rem;
+  min-width: min(12rem, 100%);
+  box-sizing: border-box;
   font: var(--chosen-font-size, 14px) var(--chosen-font-family, sans-serif);
   color: var(--chosen-text-color, #444);
 }
@@ -42,9 +43,11 @@
 
 .chosen-react--open:not(.chosen-react--disabled) .chosen-react__control {
   border-color: var(--chosen-active-border-color, #5897fb);
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
 }
 
-.chosen-react:focus-within .chosen-react__control {
+.chosen-react:not(.chosen-react--open):focus-within .chosen-react__control {
   outline: var(--chosen-focus-outline, var(--chosen-focus-ring-width, 2px) solid var(--chosen-focus-ring-color, #5897fb));
   outline-offset: var(--chosen-focus-outline-offset, 1px);
 }
@@ -118,6 +121,7 @@
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
   font-size: .9em;
+  line-height: 1.25rem;
 }
 
 .chosen-react__chip > span {
@@ -130,13 +134,14 @@
 .chosen-react__chip[hidden] { display: none; }
 .chosen-react__summary {
   align-self: center;
-  padding: .125rem .35rem;
+  padding: .2rem .35rem;
   border: var(--chosen-border-width, 1px) var(--chosen-border-style, solid) var(--chosen-choice-border-color, var(--chosen-border-color, #aaa));
   border-radius: var(--chosen-choice-border-radius, 3px);
   background: var(--chosen-choice-background, #eee);
   color: var(--chosen-choice-color, #333);
   font: inherit;
-  line-height: inherit;
+  font-size: .9em;
+  line-height: 1.25rem;
   cursor: pointer;
 }
 
@@ -184,7 +189,18 @@
   background: var(--chosen-dropdown-background, var(--chosen-background, #fff));
   box-shadow: var(--chosen-dropdown-shadow, 0 .3rem .6rem rgba(0, 0, 0, .18));
 }
+.chosen-react--open .chosen-react__popup {
+  margin-top: -1px;
+  border-color: var(--chosen-active-border-color, #5897fb);
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+}
+.chosen-react--floating.chosen-react--open .chosen-react__control {
+  border-end-start-radius: var(--chosen-border-radius, 4px);
+  border-end-end-radius: var(--chosen-border-radius, 4px);
+}
 .chosen-react--floating .chosen-react__popup {
+  margin-top: var(--chosen-dropdown-offset, .125rem);
   border-radius: var(--chosen-border-radius, 4px);
 }
 .chosen-react--floating .chosen-react__popup--above {
@@ -195,6 +211,7 @@
 .chosen-react__list {
   max-height: var(--chosen-results-max-height, 15rem);
   overflow-y: auto;
+  padding: .25rem;
 }
 .chosen-react__bulk-actions { display: flex; flex-wrap: wrap; gap: .25rem; padding: .35rem .5rem .45rem; border-bottom: 1px solid var(--chosen-border-color, #aaa); }
 .chosen-react__bulk-action { padding: .2rem .35rem; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; color: var(--chosen-bulk-action-color, var(--chosen-text-color, #444)); font: inherit; cursor: pointer; }
@@ -211,10 +228,11 @@
   color: var(--chosen-group-color, #666);
   font-weight: 600;
 }
-.chosen-react__group--selectable { display: block; width: 100%; border: 0; background: transparent; font: inherit; text-align: start; cursor: pointer; }
+.chosen-react__group--selectable { display: block; box-sizing: border-box; width: 100%; border: 0; border-radius: var(--chosen-result-border-radius, 4px); background: transparent; font: inherit; text-align: start; cursor: pointer; }
 .chosen-react__group--selectable:hover { background: var(--chosen-selected-background, #eef4ff); }
 
 .chosen-react__option {
+  border-radius: var(--chosen-result-border-radius, 4px);
   cursor: pointer;
 }
 .chosen-react__option--create { font-style: italic; }

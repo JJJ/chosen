@@ -279,6 +279,7 @@ export class Chosen {
     this.input.setAttribute('aria-describedby', [this.select.getAttribute('aria-describedby'), this.status.id]
       .filter(Boolean).join(' '));
     this.host.classList.toggle('chosen-native--disabled', this.select.disabled);
+    this.host.classList.toggle('chosen-native--invalid', this.select.getAttribute('aria-invalid') === 'true');
     this.updateWidth();
     if (this.select.disabled) this.close();
     this.renderSelection();

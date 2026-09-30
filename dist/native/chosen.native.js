@@ -692,6 +692,7 @@ var ChosenNative = (() => {
       this.input.setAttribute("aria-label", this.options.aria_label || this.select.getAttribute("aria-label") || Array.from(this.select.labels || []).map((label) => label.textContent.trim()).join(" ") || "Choose an option");
       this.input.setAttribute("aria-describedby", [this.select.getAttribute("aria-describedby"), this.status.id].filter(Boolean).join(" "));
       this.host.classList.toggle("chosen-native--disabled", this.select.disabled);
+      this.host.classList.toggle("chosen-native--invalid", this.select.getAttribute("aria-invalid") === "true");
       this.updateWidth();
       if (this.select.disabled) this.close();
       this.renderSelection();
