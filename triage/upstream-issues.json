@@ -284,7 +284,8 @@
   {
     "number": 515,
     "status": "fixed-in-fork",
-    "note": "Required selects remain programmatically focusable so native constraint validation can focus the invalid control and display its message."
+    "note": "Required selects remain the native validation source. While invalid, the select aligns with the visible control so the browser message appears beside it; original styles return after a valid choice, form reset, or teardown.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/206"
   },
   {
     "number": 3155,
@@ -562,7 +563,8 @@
   {
     "number": 3084,
     "status": "covered-in-fork",
-    "note": "A required native select blocks form submission, receives focus, and shows the browser validation message in Chrome with both adapters; adapter specs cover reportValidity. Custom framework error styling remains an integration choice."
+    "note": "A required native select blocks form submission and shows its browser validation message beside the visible Chosen control across all four editions. Application-specific error styling remains a separate choice.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/206"
   },
   {
     "number": 3081,
@@ -668,7 +670,7 @@
   {
     "number": 3008,
     "status": "duplicate",
-    "note": "Required-select validation is covered by the better-described #3084."
+    "note": "Required-select validation and message placement are covered by the better-described #3084 and fork PR #206."
   },
   {
     "number": 2994,
@@ -899,7 +901,7 @@
   {
     "number": 2789,
     "status": "fixed-in-fork",
-    "note": "Native form reset refreshes selected text and chips in both adapters. The separate required-field validation question remains tracked by #3084.",
+    "note": "Native form reset refreshes selected text and chips in the classic adapters. Required-field message placement is now covered by #3084 and fork PR #206.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/162"
   },
   {
@@ -964,7 +966,7 @@
   {
     "number": 2765,
     "status": "duplicate",
-    "note": "Native required-field validation placement is tracked in #3084."
+    "note": "Native required-field validation placement is covered by #3084 and fixed in fork PR #206."
   },
   {
     "number": 2755,
