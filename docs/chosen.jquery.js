@@ -497,7 +497,7 @@ var ChosenCore = (function() {
       var option_text;
       if (option.nodeName.toUpperCase() === "OPTION") {
         option_text = option.text !== "" ? option.text : option.getAttribute('label') || "";
-        if (option_text !== "" || option.value !== "") {
+        if (option.text !== "" || option.value !== "" || option_text.trim() !== "") {
           if (group_position != null) {
             this.parsed[group_position].children += 1;
           }

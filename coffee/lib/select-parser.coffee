@@ -30,7 +30,7 @@ class SelectParser
   add_option: (option, group_position, group_disabled) ->
     if option.nodeName.toUpperCase() is "OPTION"
       option_text = if option.text != "" then option.text else option.getAttribute('label') or ""
-      if option_text != "" or option.value != ""
+      if option.text != "" or option.value != "" or option_text.trim() != ""
         if group_position?
           @parsed[group_position].children += 1
         @parsed.push
