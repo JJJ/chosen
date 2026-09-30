@@ -21,9 +21,10 @@ function click(node) {
 }
 
 test('label-only options remain searchable and submit their native values', () => {
-  const { dom, select, form } = fixture('<select name="fruit"><option value=""></option><option value="a" label="Apple &amp; Pear"></option><optgroup label="Citrus"><option value="o" label="Orange"></option></optgroup></select>');
+  const { dom, select, form } = fixture('<select name="fruit"><option value="" label=" "></option><option value="a" label="Apple &amp; Pear"></option><optgroup label="Citrus"><option value="o" label="Orange"></option></optgroup></select>');
   const chosen = new Chosen(select);
   chosen.open();
+  assert.deepEqual(Array.from(chosen.list.querySelectorAll('[role="option"]'), row => row.textContent), ['Apple & Pear', 'Orange']);
   assert.equal(chosen.list.textContent.includes('Apple & Pear'), true);
   chosen.input.value = 'Orange';
   chosen.input.dispatchEvent(new dom.window.Event('input', { bubbles: true }));

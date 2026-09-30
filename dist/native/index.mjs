@@ -357,6 +357,11 @@ function selectDataOptions(select) {
   }
   return parsed;
 }
+function optionLabel(option) {
+  if (option.text) return option.text;
+  const label = option.getAttribute("label") || "";
+  return !option.value && !label.trim() ? "" : label;
+}
 function optionTree(select, copyDataAttributes = false) {
   const entries = [];
   const nodes = [];
@@ -372,7 +377,7 @@ function optionTree(select, copyDataAttributes = false) {
         className: child.className,
         options: Array.from(child.children, (option) => ({
           value: option.value,
-          label: option.text || option.getAttribute("label") || "",
+          label: optionLabel(option),
           selected: option.selected,
           disabled: option.disabled,
           hidden: option.hidden,
@@ -386,7 +391,7 @@ function optionTree(select, copyDataAttributes = false) {
     } else if (child.tagName === "OPTION") {
       entries.push({
         value: child.value,
-        label: child.text || child.getAttribute("label") || "",
+        label: optionLabel(child),
         selected: child.selected,
         disabled: child.disabled,
         hidden: child.hidden,

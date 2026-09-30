@@ -26,6 +26,12 @@ function selectDataOptions(select) {
   return parsed;
 }
 
+function optionLabel(option) {
+  if (option.text) return option.text;
+  const label = option.getAttribute('label') || '';
+  return !option.value && !label.trim() ? '' : label;
+}
+
 function optionTree(select, copyDataAttributes = false) {
   const entries = [];
   const nodes = [];
@@ -36,7 +42,7 @@ function optionTree(select, copyDataAttributes = false) {
     if (child.tagName === 'OPTGROUP') {
       entries.push({ label: child.label, disabled: child.disabled, hidden: child.hidden,
         className: child.className,
-        options: Array.from(child.children, option => ({ value: option.value, label: option.text || option.getAttribute('label') || '',
+        options: Array.from(child.children, option => ({ value: option.value, label: optionLabel(option),
           selected: option.selected, disabled: option.disabled, hidden: option.hidden,
           className: option.className,
           dataAttributes: dataAttributes(option),
@@ -44,7 +50,7 @@ function optionTree(select, copyDataAttributes = false) {
           searchText: option.getAttribute('data-search-text') || '' })) });
       nodes.push(null, ...child.children);
     } else if (child.tagName === 'OPTION') {
-      entries.push({ value: child.value, label: child.text || child.getAttribute('label') || '', selected: child.selected,
+      entries.push({ value: child.value, label: optionLabel(child), selected: child.selected,
         disabled: child.disabled, hidden: child.hidden,
         className: child.className,
         dataAttributes: dataAttributes(child),

@@ -1,9 +1,10 @@
 describe "Basic setup", ->
   it "shows and searches label-only options without changing their values", ->
-    div = $("<div><select name='fruit'><option value=''></option><option value='a' label='Apple &amp; Pear'></option><optgroup label='Citrus'><option value='o' label='Orange'></option></optgroup></select></div>").appendTo("body")
+    div = $("<div><select name='fruit'><option value='' label=' '></option><option value='a' label='Apple &amp; Pear'></option><optgroup label='Citrus'><option value='o' label='Orange'></option></optgroup></select></div>").appendTo("body")
     select = div.find("select")
     chosen = select.chosen().data("chosen")
     chosen.results_show()
+    expect(div.find(".active-result").length).toBe(2)
     expect(div.find(".active-result").first().text()).toBe("Apple & Pear")
     chosen.search_field.val("Orange").trigger("input")
     expect(div.find(".active-result").text()).toBe("Orange")
