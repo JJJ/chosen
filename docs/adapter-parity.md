@@ -57,6 +57,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `dropdown_width` | Yes | Yes | Independent result width with a floating border; React prop: `dropdownWidth`. |
 | `recalculate_width_on_update` | Yes | Yes | Vanilla remeasures its source select on `update()` when enabled. React has no source select to remeasure; change its `width` or `style` prop when layout changes. |
 | `dropdown_position` | Yes | Yes | Fixed dropdown tracks scroll and resize; React prop: `dropdownPosition`. |
+| `mobile_fullscreen` | Yes | Yes | Opt-in full-screen picker on touch screens up to 600px wide; React prop: `mobileFullscreen`. The native select still owns form values. |
 | `display_disabled_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_options` | Yes | Yes | Configurable visibility. |
 | `display_selected_value` | Yes | Yes | Value in the closed control; label remains in results. React prop: `displaySelectedValue`. |

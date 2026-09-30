@@ -22,6 +22,7 @@ var config = {
   '.chosen-select-dropdown-width': { width: '180px', dropdown_width: '300px' },
   '.chosen-select-update-width': { recalculate_width_on_update: true },
   '.chosen-select-fixed-dropdown': { width: '240px', dropdown_position: 'fixed' },
+  '.chosen-select-mobile-fullscreen': { width: '100%', mobile_fullscreen: true },
   '.chosen-select-no-single' : { disable_search_threshold: 10 },
   '.chosen-select-no-results': { no_results_template: 'No match for {search}.' },
   '.chosen-select-rtl'       : { rtl: true },

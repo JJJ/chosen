@@ -1,4 +1,23 @@
 describe "Mobile support", ->
+  it "keeps the opt-in picker open in the visible phone viewport and restores scrolling", ->
+    previous_match_media = window.matchMedia
+    previous_overflow = document.body.style.overflow
+    window.matchMedia = -> { matches: true }
+    document.body.style.overflow = 'auto'
+    select = new Element('select').update("<option value=''></option><option value='a'>Atlas</option>")
+    document.body.insert(select)
+    chosen = new Chosen(select, mobile_fullscreen: true)
+    chosen.results_show()
+    expect(chosen.container.hasClassName('chosen-mobile-fullscreen')).toBe true
+    expect(document.body.style.overflow).toBe 'hidden'
+    chosen.container.down('.chosen-mobile-close').click()
+    expect(chosen.results_showing).toBe false
+    expect(document.body.style.overflow).toBe 'auto'
+    chosen.destroy()
+    select.remove()
+    window.matchMedia = previous_match_media
+    document.body.style.overflow = previous_overflow
+
   describe "mobile interactions", ->
     it "should initialize chosen on mobile device", ->
       # Mock iPhone user agent

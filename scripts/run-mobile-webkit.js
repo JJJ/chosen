@@ -147,14 +147,19 @@ async function main() {
         await phonePage.setContent(`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
           <select id="phone-choice" style="width:300px"><option value="">Choose</option><option value="one">One</option><option value="two">Two</option></select>
           <select id="phone-multiple" style="width:300px" multiple><option>One</option><option>Two</option></select>
+          <select id="phone-fullscreen" style="width:300px"><option value="">Choose a project</option></select>
         </body></html>`);
         await phonePage.addStyleTag({ path: fixture('docs/chosen.css') });
         await phonePage.addScriptTag({ path: fixture(adapter.library) });
         await phonePage.addScriptTag({ path: fixture(adapter.chosen) });
         await phonePage.evaluate((name) => {
           for (const select of document.querySelectorAll('select')) {
-            if (name === 'jQuery') window.jQuery(select).chosen();
-            else new window.Chosen(select);
+            const options = select.id === 'phone-fullscreen' ? { mobile_fullscreen: true } : {};
+            if (select.id === 'phone-fullscreen') {
+              for (let number = 1; number <= 40; number++) select.add(new Option(`Project ${number}`, `project-${number}`));
+            }
+            if (name === 'jQuery') window.jQuery(select).chosen(options);
+            else new window.Chosen(select, options);
           }
         }, adapter.name);
         const phoneInputSizes = await phonePage.evaluate(() => [
@@ -173,8 +178,24 @@ async function main() {
         if (await phonePage.locator('#phone-choice').inputValue() !== 'two') {
           throw new Error(`${adapter.name}: phone tap did not select the filtered result`);
         }
+        await phonePage.locator('#phone_fullscreen_chosen .chosen-single').tap();
+        const fullscreen = await phonePage.locator('#phone_fullscreen_chosen').evaluate((container) => ({
+          active: container.classList.contains('chosen-mobile-fullscreen'),
+          height: container.getBoundingClientRect().height,
+          viewport: window.visualViewport.height,
+          scrollLocked: document.body.style.overflow === 'hidden'
+        }));
+        if (!fullscreen.active || !fullscreen.scrollLocked || Math.abs(fullscreen.height - fullscreen.viewport) > 2) {
+          throw new Error(`${adapter.name}: phone picker did not fill visible viewport (${JSON.stringify(fullscreen)})`);
+        }
+        await phonePage.locator('#phone_fullscreen_chosen .chosen-mobile-close').tap();
+        if (await phonePage.locator('#phone_fullscreen_chosen').evaluate((container) =>
+          container.classList.contains('chosen-with-drop') || document.body.style.overflow === 'hidden')) {
+          throw new Error(`${adapter.name}: Close did not restore the phone page`);
+        }
         if (phoneErrors.length) throw new Error(`${adapter.name}: ${phoneErrors.join('; ')}`);
         console.log(`${adapter.name}: iPhone WebKit single-select tap, filter, and select passed`);
+        console.log(`${adapter.name}: iPhone WebKit full-screen picker and Close passed`);
       } finally {
         await phoneContext.close();
       }

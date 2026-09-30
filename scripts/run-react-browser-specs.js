@@ -131,6 +131,32 @@ async function main() {
       if (createdValue !== 'Mango') throw new Error(`${name}: React option creation did not submit (${createdValue})`);
       await page.evaluate(() => window.unmountChosen());
       if (errors.length) throw new Error(`${name}: ${errors.join('; ')}`);
+      if (name === 'WebKit') {
+        const touch = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
+        const touchErrors = [];
+        touch.on('pageerror', error => touchErrors.push(error.message));
+        await touch.setContent('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="root"></div></body></html>');
+        await touch.addStyleTag({ path: path.join(root, 'dist/react/chosen.css') });
+        await touch.addScriptTag({ content: bundle.outputFiles[0].text });
+        await touch.evaluate(() => window.mountChosen({ mobileFullscreen: true }));
+        const input = touch.getByRole('combobox', { name: 'Fruit' });
+        await input.tap();
+        const fullscreen = await touch.locator('.chosen-react').evaluate(host => ({
+          active: host.classList.contains('chosen-react--mobile-fullscreen'),
+          height: host.getBoundingClientRect().height,
+          viewport: visualViewport.height,
+          scrollLocked: document.body.style.overflow === 'hidden'
+        }));
+        if (!fullscreen.active || !fullscreen.scrollLocked || Math.abs(fullscreen.height - fullscreen.viewport) > 2) {
+          throw new Error(`${name}: React full-screen picker layout failed (${JSON.stringify(fullscreen)})`);
+        }
+        await touch.getByRole('button', { name: 'Close options' }).tap();
+        if (await touch.locator('.chosen-react').evaluate(host => host.classList.contains('chosen-react--open') || document.body.style.overflow === 'hidden')) {
+          throw new Error(`${name}: React full-screen Close did not restore the page`);
+        }
+        if (touchErrors.length) throw new Error(`${name}: React full-screen page errors: ${touchErrors.join('; ')}`);
+        await touch.close();
+      }
       console.log(`${name}: React search, keyboard, form, and accessibility checks passed`);
     } finally {
       await browser.close();

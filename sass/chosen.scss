@@ -216,6 +216,67 @@ $chosen-highlight-text-decoration: underline !default;
 }
 /* @end */
 
+.chosen-mobile-close { display: none; }
+.chosen-container.chosen-mobile-fullscreen.chosen-with-drop {
+	position: fixed !important;
+	top: var(--chosen-mobile-top, 0px) !important;
+	left: var(--chosen-mobile-left, 0px) !important;
+	width: var(--chosen-mobile-width, 100vw) !important;
+	height: var(--chosen-mobile-height, 100dvh) !important;
+	z-index: var(--chosen-mobile-z-index, 10000);
+	display: flex;
+	flex-direction: column;
+	padding-block: env(safe-area-inset-top) env(safe-area-inset-bottom);
+	background: var(--chosen-control-background, #fff);
+
+	.chosen-single,
+	.chosen-choices {
+		flex: none;
+		max-height: 30%;
+		overflow-y: auto;
+		padding-inline-end: 4.5rem;
+		border-radius: 0;
+	}
+
+	.chosen-drop {
+		position: relative !important;
+		top: auto !important;
+		bottom: auto !important;
+		left: auto !important;
+		right: auto !important;
+		flex: 1;
+		display: flex !important;
+		flex-direction: column;
+		min-height: 0;
+		width: 100% !important;
+		margin: 0 !important;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	.chosen-results {
+		flex: 1;
+		min-height: 0;
+		max-height: none;
+		overscroll-behavior: contain;
+	}
+
+	.chosen-mobile-close {
+		position: absolute;
+		top: calc(env(safe-area-inset-top) + .15rem);
+		right: .5rem;
+		z-index: calc(var(--chosen-dropdown-z-index, #{$chosen-dropdown-z-index}) + 1);
+		display: block;
+		padding: .15rem .45rem;
+		border: 1px solid currentColor;
+		border-radius: .25rem;
+		background: var(--chosen-control-background, #fff);
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+	}
+}
+
 /* Explicit invalid state; native :invalid alone does not change existing defaults. */
 select[aria-invalid="true"] + .chosen-container:not(.chosen-disabled) {
 	.chosen-single,

@@ -60,6 +60,7 @@ export const Chosen = forwardRef(function Chosen({
   showFewerItemsText = 'Show fewer...',
   displaySelectedValue = false, includeGroupLabelInSelected = false,
   width, dropdownWidth, dropdownPosition = 'absolute',
+  mobileFullscreen = false,
   dir, id, className = '', style, 'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy, 'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid, onBlur, onFocus
@@ -69,6 +70,7 @@ export const Chosen = forwardRef(function Chosen({
   const listId = `${baseId}-list`;
   const statusId = `${baseId}-status`;
   const inputRef = useRef(null);
+  const hostRef = useRef(null);
   const controlRef = useRef(null);
   const popupRef = useRef(null);
   const selectRef = useRef(null);
@@ -347,6 +349,37 @@ export const Chosen = forwardRef(function Chosen({
     if (isOpen) onShowingDropdown?.();
     else onHidingDropdown?.();
   }, [isOpen, onShowingDropdown, onHidingDropdown]);
+
+  useEffect(() => {
+    if (!isOpen || !mobileFullscreen || !window.matchMedia?.('(max-width: 600px) and (pointer: coarse)').matches) return;
+    const host = hostRef.current;
+    const lock = document.body.__chosenMobileFullscreenLock ??= { count: 0, overflow: document.body.style.overflow };
+    lock.count++;
+    const syncViewport = () => {
+      const viewport = window.visualViewport;
+      host.style.setProperty('--chosen-mobile-top', `${viewport?.offsetTop || 0}px`);
+      host.style.setProperty('--chosen-mobile-left', `${viewport?.offsetLeft || 0}px`);
+      host.style.setProperty('--chosen-mobile-width', `${viewport?.width || window.innerWidth}px`);
+      host.style.setProperty('--chosen-mobile-height', `${viewport?.height || window.innerHeight}px`);
+    };
+    host.classList.add('chosen-react--mobile-fullscreen');
+    document.body.style.overflow = 'hidden';
+    syncViewport();
+    window.visualViewport?.addEventListener('resize', syncViewport);
+    window.visualViewport?.addEventListener('scroll', syncViewport);
+    return () => {
+      window.visualViewport?.removeEventListener('resize', syncViewport);
+      window.visualViewport?.removeEventListener('scroll', syncViewport);
+      if (--lock.count === 0) {
+        document.body.style.overflow = lock.overflow;
+        delete document.body.__chosenMobileFullscreenLock;
+      }
+      host.classList.remove('chosen-react--mobile-fullscreen');
+      for (const property of ['--chosen-mobile-top', '--chosen-mobile-left', '--chosen-mobile-width', '--chosen-mobile-height']) {
+        host.style.removeProperty(property);
+      }
+    };
+  }, [isOpen, mobileFullscreen]);
 
   useEffect(() => {
     if (lastUpdatedQuery.current === appliedQuery) return;
@@ -654,7 +687,7 @@ export const Chosen = forwardRef(function Chosen({
   }
   flushGroup();
 
-  return <div className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${dropdownWidth != null || dropdownPosition === 'fixed' ? ' chosen-react--floating' : ''}${searchDisabled ? ' chosen-react--no-search' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={width == null || width === false ? style : { ...style, width, minWidth: 0 }}>
+  return <div ref={hostRef} className={`chosen-react${multiple ? ' chosen-react--multiple' : ''}${isOpen ? ' chosen-react--open' : ''}${dropdownWidth != null || dropdownPosition === 'fixed' ? ' chosen-react--floating' : ''}${searchDisabled ? ' chosen-react--no-search' : ''}${disabled ? ' chosen-react--disabled' : ''}${ariaInvalid === true || ariaInvalid === 'true' ? ' chosen-react--invalid' : ''} ${className}`.trim()} dir={dir} style={width == null || width === false ? style : { ...style, width, minWidth: 0 }}>
     <select ref={attachNativeSelect} className="chosen-react__native" tabIndex={-1} aria-hidden="true"
       name={name} form={form} required={required} disabled={disabled} multiple={multiple}
       value={multiple ? selectedValues : selectedValues[0] ?? ''} onChange={() => {}}
@@ -725,6 +758,9 @@ export const Chosen = forwardRef(function Chosen({
             <React.Fragment key={index}>{index > 0 && <span>{appliedQuery}</span>}{part}</React.Fragment>)
           : <>{noResultsText}{appliedQuery ? ` ${appliedQuery}` : ''}</>}</div>}
     </div>}
+    {mobileFullscreen && <button type="button" className="chosen-react__mobile-close"
+      aria-label="Close options" onMouseDown={event => event.stopPropagation()}
+      onClick={() => changeOpen(false)}>Close</button>}
   </div>;
 });
 

@@ -20,6 +20,24 @@ function click(node) {
   node.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 }
 
+test('opt-in mobile picker closes and restores page scrolling without changing the select value', () => {
+  const { dom, select, form } = fixture('<select name="project"><option value=""></option><option value="atlas">Atlas</option></select>');
+  window.matchMedia = () => ({ matches: true });
+  document.body.style.overflow = 'auto';
+  const chosen = new Chosen(select, { mobile_fullscreen: true });
+  chosen.open();
+  assert.equal(chosen.host.classList.contains('chosen-native--mobile-fullscreen'), true);
+  assert.equal(document.body.style.overflow, 'hidden');
+  click(chosen.mobileClose);
+  assert.equal(chosen.opened, false);
+  assert.equal(document.body.style.overflow, 'auto');
+  chosen.open();
+  click(Array.from(chosen.list.querySelectorAll('[role="option"]')).find(row => row.textContent === 'Atlas'));
+  assert.equal(new dom.window.FormData(form).get('project'), 'atlas');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('single keyboard shortcuts open, close at the first result, and clear an allowed selection', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="a" selected>Apple</option><option value="b">Banana</option></select>');
   const changes = [];

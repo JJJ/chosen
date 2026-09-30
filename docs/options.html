@@ -313,6 +313,11 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
           <td>Set to <code class="language-javascript">"fixed"</code> when an ancestor with <code class="language-css">overflow: hidden</code> clips the results. Chosen keeps the dropdown aligned while the page or a containing element scrolls and on window resize. Percentage <code class="language-javascript">dropdown_width</code> values stay relative to the Chosen control. A transformed or paint-contained ancestor can still establish a clipping containing block; remove that ancestor style or use a different layout in that case.</td>
         </tr>
         <tr>
+          <td>mobile_fullscreen</td>
+          <td>false</td>
+          <td>When <code class="language-javascript">true</code>, an open picker fills the visible viewport on touch screens up to 600px wide. It follows the on-screen keyboard, lets results scroll, and adds a Close button. The original select still owns form values and events. Wider screens and non-touch pointers keep the usual dropdown. React uses <code class="language-javascript">mobileFullscreen</code>.</td>
+        </tr>
+        <tr>
           <td>display_disabled_options</td>
           <td>true</td>
           <td>By default, Chosen includes disabled options in search results with a special styling. Setting this option to false will hide disabled results and exclude them from searches.</td>

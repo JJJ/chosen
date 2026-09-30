@@ -335,7 +335,7 @@ function rangeOptions(items, anchorIndex, targetIndex) {
 // native/Chosen.mjs
 var nextId = 0;
 var instances = /* @__PURE__ */ new WeakMap();
-var booleanDataOptions = new Set("allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results shift_select_range disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl".split(" "));
+var booleanDataOptions = new Set("allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results shift_select_range disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select mobile_fullscreen rtl".split(" "));
 var integerDataOptions = new Set("disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results".split(" "));
 var stringDataOptions = new Set("select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple placeholder_text_multiple_selected".split(" "));
 function selectDataOptions(select) {
@@ -447,6 +447,7 @@ var Chosen = class {
       skip_no_results: false,
       dropdown_position: "absolute",
       recalculate_width_on_update: false,
+      mobile_fullscreen: false,
       select_all_text: "Select all",
       deselect_all_text: "Deselect all",
       more_items_text: (count) => `Show ${count} more...`,
@@ -576,6 +577,13 @@ var Chosen = class {
     this.empty = element("div", "chosen-native__empty");
     this.popup.append(this.bulkActions, this.list, this.empty);
     this.host.append(this.control, this.status, this.popup);
+    if (this.options.mobile_fullscreen) {
+      this.mobileClose = element("button", "chosen-native__mobile-close", "Close");
+      this.mobileClose.type = "button";
+      this.mobileClose.setAttribute("aria-label", "Close options");
+      this.mobileClose.addEventListener("click", () => this.close());
+      this.host.append(this.mobileClose);
+    }
     select.after(this.host);
     select.classList.add("chosen-native__select");
     select.setAttribute("tabindex", "-1");
@@ -1145,6 +1153,38 @@ var Chosen = class {
     this.select.dispatchEvent(new Event("input", { bubbles: true }));
     this.select.dispatchEvent(new Event("change", { bubbles: true }));
   }
+  openMobileFullscreen() {
+    var _a;
+    if (!this.options.mobile_fullscreen || !window.matchMedia?.("(max-width: 600px) and (pointer: coarse)").matches) return;
+    this.host.classList.add("chosen-native--mobile-fullscreen");
+    const lock = (_a = document.body).__chosenMobileFullscreenLock ?? (_a.__chosenMobileFullscreenLock = { count: 0, overflow: document.body.style.overflow });
+    lock.count++;
+    document.body.style.overflow = "hidden";
+    this.syncMobileViewport = () => {
+      const viewport = window.visualViewport;
+      this.host.style.setProperty("--chosen-mobile-top", `${viewport?.offsetTop || 0}px`);
+      this.host.style.setProperty("--chosen-mobile-left", `${viewport?.offsetLeft || 0}px`);
+      this.host.style.setProperty("--chosen-mobile-width", `${viewport?.width || window.innerWidth}px`);
+      this.host.style.setProperty("--chosen-mobile-height", `${viewport?.height || window.innerHeight}px`);
+    };
+    this.syncMobileViewport();
+    window.visualViewport?.addEventListener("resize", this.syncMobileViewport);
+    window.visualViewport?.addEventListener("scroll", this.syncMobileViewport);
+  }
+  closeMobileFullscreen() {
+    if (!this.host.classList.contains("chosen-native--mobile-fullscreen")) return;
+    window.visualViewport?.removeEventListener("resize", this.syncMobileViewport);
+    window.visualViewport?.removeEventListener("scroll", this.syncMobileViewport);
+    const lock = document.body.__chosenMobileFullscreenLock;
+    if (lock && --lock.count === 0) {
+      document.body.style.overflow = lock.overflow;
+      delete document.body.__chosenMobileFullscreenLock;
+    }
+    this.host.classList.remove("chosen-native--mobile-fullscreen");
+    for (const property of ["--chosen-mobile-top", "--chosen-mobile-left", "--chosen-mobile-width", "--chosen-mobile-height"]) {
+      this.host.style.removeProperty(property);
+    }
+  }
   open() {
     if (this.destroyed || this.opened || this.select.disabled || this.select.hasAttribute("readonly")) return;
     this.opened = true;
@@ -1157,6 +1197,7 @@ var Chosen = class {
       window.addEventListener("resize", this.onReposition);
     }
     this.host.classList.add("chosen-native--open");
+    this.openMobileFullscreen();
     this.input.setAttribute("aria-expanded", "true");
     this.renderSelection();
     this.renderResults();
@@ -1164,6 +1205,7 @@ var Chosen = class {
   }
   close() {
     if (!this.opened) return;
+    this.closeMobileFullscreen();
     if (this.noResultsQuery) {
       emit(
         this.select,

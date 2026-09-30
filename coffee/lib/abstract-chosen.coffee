@@ -30,6 +30,7 @@ class AbstractChosen
     this.setup()
 
     this.set_up_html()
+    this.setup_mobile_fullscreen()
     this.register_observers()
     this.transfer_focus() if form_field_had_focus
     # instantiation done, fire ready
@@ -77,6 +78,55 @@ class AbstractChosen
     else
       (@selected_item[0] or @selected_item).focus()
 
+  setup_mobile_fullscreen: ->
+    return unless @mobile_fullscreen
+    container = @container[0] or @container
+    @mobile_close_button = document.createElement('button')
+    @mobile_close_button.type = 'button'
+    @mobile_close_button.className = 'chosen-mobile-close'
+    @mobile_close_button.textContent = 'Close'
+    @mobile_close_button.setAttribute('aria-label', 'Close options')
+    for event_name in ['mousedown', 'touchstart']
+      @mobile_close_button.addEventListener event_name, (evt) -> evt.stopPropagation()
+    @mobile_close_button.addEventListener 'click', (evt) =>
+      evt.preventDefault()
+      evt.stopPropagation()
+      this.close_field()
+    container.appendChild(@mobile_close_button)
+
+  mobile_fullscreen_matches: ->
+    @mobile_fullscreen and window.matchMedia? and window.matchMedia('(max-width: 600px) and (pointer: coarse)').matches
+
+  show_mobile_fullscreen: ->
+    return unless this.mobile_fullscreen_matches()
+    container = @container[0] or @container
+    container.classList.add('chosen-mobile-fullscreen')
+    lock = document.body.__chosenMobileFullscreenLock ?= {count: 0, overflow: document.body.style.overflow}
+    lock.count++
+    document.body.style.overflow = 'hidden'
+    @mobile_viewport_sync = =>
+      viewport = window.visualViewport
+      container.style.setProperty('--chosen-mobile-top', "#{viewport?.offsetTop or 0}px")
+      container.style.setProperty('--chosen-mobile-left', "#{viewport?.offsetLeft or 0}px")
+      container.style.setProperty('--chosen-mobile-width', "#{viewport?.width or window.innerWidth}px")
+      container.style.setProperty('--chosen-mobile-height', "#{viewport?.height or window.innerHeight}px")
+    @mobile_viewport_sync()
+    window.visualViewport?.addEventListener('resize', @mobile_viewport_sync)
+    window.visualViewport?.addEventListener('scroll', @mobile_viewport_sync)
+
+  hide_mobile_fullscreen: ->
+    container = @container?[0] or @container
+    return unless container?.classList.contains('chosen-mobile-fullscreen')
+    window.visualViewport?.removeEventListener('resize', @mobile_viewport_sync)
+    window.visualViewport?.removeEventListener('scroll', @mobile_viewport_sync)
+    lock = document.body.__chosenMobileFullscreenLock
+    if lock? and --lock.count is 0
+      document.body.style.overflow = lock.overflow
+      delete document.body.__chosenMobileFullscreenLock
+    container.classList.remove('chosen-mobile-fullscreen')
+    for property in ['--chosen-mobile-top', '--chosen-mobile-left', '--chosen-mobile-width', '--chosen-mobile-height']
+      container.style.removeProperty(property)
+
   set_default_values: ->
     @click_test_action = (evt) => this.test_active_click(evt)
     @activate_action = (evt) => this.activate_field(evt)
@@ -102,6 +152,7 @@ class AbstractChosen
     @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
     @fixed_dropdown = @options.dropdown_position is "fixed"
+    @mobile_fullscreen = @options.mobile_fullscreen is true
     @recalculate_width_on_update = @options.recalculate_width_on_update || false
     @split_search_terms = @options.split_search_terms || false
     @paste_multiple_values = @options.paste_multiple_values is true
@@ -1274,6 +1325,7 @@ class AbstractChosen
     include_group_label_in_selected: 'boolean'
     case_sensitive_search: 'boolean'
     hide_results_on_select: 'boolean'
+    mobile_fullscreen: 'boolean'
     rtl: 'boolean'
     disable_search_threshold: 'integer'
     max_selected_options: 'integer'

@@ -137,6 +137,9 @@ CSS sizing. React has no source select to remeasure: change the prop when the
 desired width changes. `dropdownWidth="150%"` makes a wider, separate popup;
 percentages use the control width. `dropdownPosition="fixed"` keeps it outside
 clipped scrolling ancestors and updates its position on scroll and resize.
+Set `mobileFullscreen` to fill the visible viewport on touch screens up to
+600px wide while open. The opt-in picker follows the on-screen keyboard and
+offers a Close button; the underlying native select still submits the value.
 Options under a group heading are indented on the inline start side; override
 `--chosen-group-option-indent` to adjust that spacing in either direction.
 

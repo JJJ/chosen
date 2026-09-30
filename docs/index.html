@@ -1569,6 +1569,23 @@
         </div>
       </div>
 
+      <h2><a name="mobile-fullscreen" class="anchor" href="#mobile-fullscreen">Mobile Full-Screen Picker</a></h2>
+      <div class="side-by-side clearfix">
+        <p>On a narrow touch screen, this opt-in picker fills the visible viewport. Search or scroll the longer list, then choose a project or use Close. On desktop it remains a regular dropdown.</p>
+        <pre><code class="language-javascript">$("#mobile-project").chosen({mobile_fullscreen: true});</code></pre>
+        <div>
+          <label class="comparison-label" for="mobile-project">Choose a project</label>
+          <select id="mobile-project" class="chosen-select-mobile-fullscreen" data-placeholder="Choose a project">
+            <option value=""></option>
+            <option>Atlas</option><option>Beacon</option><option>Comet</option><option>Delta</option>
+            <option>Echo</option><option>Foxtrot</option><option>Gamma</option><option>Harbor</option>
+            <option>Indigo</option><option>Juniper</option><option>Kite</option><option>Lumen</option>
+            <option>Maple</option><option>North</option><option>Orion</option><option>Prairie</option>
+            <option>Quartz</option><option>River</option><option>Summit</option><option>Timber</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="labels-work-too" class="anchor" href="#labels-work-too">Labels work, too</a></h2>
       <div class="side-by-side clearfix">
         <p>Use labels just like you would with a standard select. This demo sets <code class="language-javascript">open_on_label_click: false</code>, so clicking either label focuses its closed Chosen control without opening the dropdown. You can also drag across a label to select its text without activating Chosen.</p>

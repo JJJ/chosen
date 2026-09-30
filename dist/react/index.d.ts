@@ -106,6 +106,7 @@ export interface ChosenProps {
   width?: string | number | false;
   dropdownWidth?: string | number;
   dropdownPosition?: 'absolute' | 'fixed';
+  mobileFullscreen?: boolean;
   dir?: 'ltr' | 'rtl';
   id?: string;
   className?: string;
