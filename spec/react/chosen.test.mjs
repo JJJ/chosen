@@ -419,6 +419,17 @@ test('React carries option classes and uses literal localized result copy', () =
   assert.equal(screen.getByText('No matches missing').textContent, 'No matches missing');
 });
 
+test('React optionally copies optgroup classes to selected chips', () => {
+  const styled = [{ label: 'Cars', className: 'cars', options: [{ value: 'coupe', label: 'Coupe' }] },
+    { value: 'other', label: 'Other' }];
+  const props = { options: styled, multiple: true, defaultValue: ['coupe', 'other'], 'aria-label': 'Vehicles' };
+  const view = render(h(Chosen, props));
+  assert.equal(document.querySelector('.chosen-react__chip').classList.contains('cars'), false);
+  view.rerender(h(Chosen, { ...props, inheritOptgroupClasses: true }));
+  assert.equal(document.querySelector('.chosen-react__chip').classList.contains('cars'), true);
+  assert.equal(document.querySelectorAll('.chosen-react__chip')[1].classList.contains('cars'), false);
+});
+
 test('React opts into forwarding safe option data attributes to result rows', () => {
   const withData = [{ value: 'a', label: 'Alpha', dataAttributes: {
     'data-category': 'fruit', onclick: 'ignored'

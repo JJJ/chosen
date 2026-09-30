@@ -618,6 +618,21 @@ test('option classes and localized result copy follow classic behavior', () => {
   dom.window.close();
 });
 
+test('optgroup classes reach selected chips only when enabled and refresh on update', () => {
+  const { dom, select } = fixture('<select multiple><optgroup class="cars" label="Cars"><option selected>Coupe</option></optgroup><option selected>Other</option></select>');
+  const chosen = new Chosen(select);
+  assert.equal(chosen.chips.querySelector('.chosen-native__chip').classList.contains('cars'), false);
+  chosen.destroy();
+  const styled = new Chosen(select, { inherit_optgroup_classes: true });
+  assert.equal(styled.chips.querySelector('.chosen-native__chip').classList.contains('cars'), true);
+  assert.equal(styled.chips.querySelectorAll('.chosen-native__chip')[1].classList.contains('cars'), false);
+  select.querySelector('optgroup').className = 'new-cars';
+  styled.update();
+  assert.equal(styled.chips.querySelector('.chosen-native__chip').classList.contains('new-cars'), true);
+  styled.destroy();
+  dom.window.close();
+});
+
 test('parser config opts into copying source option data attributes to result rows', () => {
   const { dom, select } = fixture('<select><option value="a" data-category="fruit">Alpha</option></select>');
   const chosen = new Chosen(select);

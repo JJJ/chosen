@@ -37,6 +37,7 @@ export const Chosen = forwardRef(function Chosen({
   persistentCreateOption = false, skipNoResults = false, onCreateOption,
   resultsCountText = count => `${count} result${count === 1 ? '' : 's'} available`,
   inheritOptionClasses = false,
+  inheritOptgroupClasses = false,
   copyOptionDataAttributes = false,
   backspaceDeletesChoices = true, multiselectAllowTabToSelect = false,
   singleBackstrokeDelete = true,
@@ -642,7 +643,7 @@ export const Chosen = forwardRef(function Chosen({
         changeOpen(true);
       }
     }}>
-      {multiple && selectedOptions.map((item, index) => <span hidden={hiddenChoiceCount > 0 && !showingAllChoices && index >= itemLimit} className={`chosen-react__chip${pendingBackstrokeValue === item.value ? ' chosen-react__chip--pending' : ''}${inheritOptionClasses && item.className ? ` ${item.className}` : ''}`} key={item.index}>
+      {multiple && selectedOptions.map((item, index) => <span hidden={hiddenChoiceCount > 0 && !showingAllChoices && index >= itemLimit} className={`chosen-react__chip${pendingBackstrokeValue === item.value ? ' chosen-react__chip--pending' : ''}${inheritOptionClasses && item.className ? ` ${item.className}` : ''}${inheritOptgroupClasses && item.groupIndex != null && entries[item.groupIndex]?.className ? ` ${entries[item.groupIndex].className}` : ''}`} key={item.index}>
         <span>{selectedDisplay(item)}</span>
         {!disabled && !readOnly && <button type="button" className="chosen-react__remove"
           aria-label={`Remove ${item.label}`} onClick={event => remove(item, event)}>×</button>}

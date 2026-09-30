@@ -43,6 +43,7 @@ export interface ChosenOptions {
   rtl?: boolean;
   inherit_select_classes?: boolean;
   inherit_option_classes?: boolean;
+  inherit_optgroup_classes?: boolean;
   parser_config?: { copy_data_attributes?: boolean };
   results_count_text?: (count: number) => string;
   display_selected_value?: boolean;

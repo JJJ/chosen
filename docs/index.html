@@ -1188,6 +1188,25 @@
         </div>
       </div>
 
+      <h2><a name="style-selected-by-optgroup" class="anchor" href="#style-selected-by-optgroup">Style Selected Items by Optgroup</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Give each <code>optgroup</code> a class and set <code>inherit_optgroup_classes: true</code>. Selected chips then carry their group class for styling. Try selecting one item from each group.</p>
+        <pre><code class="language-javascript">$(".chosen-select-group-chips").chosen({inherit_optgroup_classes: true, width: "100%"});</code></pre>
+        <div>
+          <label class="comparison-label" for="group-chip-multiple">Multiple Select</label>
+          <select id="group-chip-multiple" class="chosen-select-group-chips" data-placeholder="Choose vehicles" multiple>
+            <optgroup class="group-cars" label="Cars">
+              <option>Coupe</option>
+              <option>Convertible</option>
+            </optgroup>
+            <optgroup class="group-bikes" label="Bikes">
+              <option>Road bike</option>
+              <option>Mountain bike</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="selected-and-disabled-support" class="anchor" href="#selected-and-disabled-support">Selected, Disabled and Hidden Support</a></h2>
       <div class="side-by-side clearfix">
         <p>Chosen automatically highlights selected options and removes disabled and / or hidden options.</p>

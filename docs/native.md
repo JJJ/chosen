@@ -79,6 +79,7 @@ With the control focused, Enter opens a closed list and chooses its highlighted 
 | `rtl` | `false` | Set right-to-left direction on the generated control; source `dir` and legacy `chosen-rtl` class also work. Call `update()` after changing source direction. |
 | `inherit_select_classes` | `false` | Copy source select classes to the generated host. The legacy `chosen-rtl` marker passes through even when this is off; internal `chosen-native` classes are not copied. Call `update()` after changing classes. |
 | `inherit_option_classes` | `false` | Option and optgroup classes appear on result rows; set this to also copy option classes to selected chips. |
+| `inherit_optgroup_classes` | `false` | Copy a selected option's parent optgroup classes to its chip in a multiple select. |
 | `parser_config` | `{}` | Set `{copy_data_attributes: true}` to copy source option `data-*` attributes onto result rows. `data-search-text` still works without this setting. |
 | `aria_label` | associated label or select label | Accessible name for the generated search input. |
 | `width` | source select width | Explicit CSS width for the generated control; `false` leaves sizing to CSS. |

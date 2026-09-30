@@ -733,6 +733,7 @@ var ChosenCore = (function() {
         this.choices_expanded = false;
         this.inherit_select_classes = this.options.inherit_select_classes || false;
         this.inherit_option_classes = this.options.inherit_option_classes || false;
+        this.inherit_optgroup_classes = this.options.inherit_optgroup_classes || false;
         this.display_selected_options = this.options.display_selected_options != null ? this.options.display_selected_options : true;
         this.display_disabled_options = this.options.display_disabled_options != null ? this.options.display_disabled_options : true;
         this.display_selected_value = this.options.display_selected_value || false;
@@ -2524,6 +2525,7 @@ var ChosenCore = (function() {
       enable_split_word_search: 'boolean',
       inherit_select_classes: 'boolean',
       inherit_option_classes: 'boolean',
+      inherit_optgroup_classes: 'boolean',
       paste_multiple_values: 'boolean',
       create_option: 'boolean',
       persistent_create_option: 'boolean',
@@ -3304,7 +3306,7 @@ var ChosenCore = (function() {
     }
 
     choice_build(item) {
-      var choice, close_link;
+      var choice, close_link, group_classes;
       choice = $('<li />', {
         class: "search-choice",
         "data-value": item.value,
@@ -3329,6 +3331,12 @@ var ChosenCore = (function() {
       }
       if (this.inherit_option_classes && item.classes) {
         choice.addClass(item.classes);
+      }
+      if (this.inherit_optgroup_classes && (item.group_array_index != null)) {
+        group_classes = this.results_data[item.group_array_index].classes;
+        if (group_classes) {
+          choice.addClass(group_classes);
+        }
       }
       this.search_container.before(choice);
       return this.update_choice_visibility();

@@ -13,6 +13,7 @@ var config = {
   '.chosen-select-create-recipe': { create_option: true, persistent_create_option: true, skip_no_results: true, width: '100%' },
   '.chosen-select-selected-recipe': { display_selected_value: true, deselect_selected_results: true, hide_results_on_select: false, width: '100%' },
   '.chosen-select-group-recipe': { width: '100%' },
+  '.chosen-select-group-chips': { inherit_optgroup_classes: true, width: '100%' },
   '.chosen-select-readonly-recipe': { width: '100%' },
   '.chosen-select-invalid-recipe': { width: '100%' },
   '.chosen-select-relative-size': { width: '100%' },

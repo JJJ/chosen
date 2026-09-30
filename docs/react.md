@@ -76,6 +76,8 @@ it in `onChange`; update the parent `options` array if the new option should
 remain in the application model.
 Set `className` on option or group data to style result rows; set
 `inheritOptionClasses` to copy option classes to selected chips too. Set
+`inheritOptgroupClasses` to copy the parent group's `className` to selected
+chips in a multiple select. Both settings default to `false`. Set
 `dataAttributes` on an option and enable `copyOptionDataAttributes` to add its
 safe `data-*` keys to the result row. This is React's equivalent of classic
 `parser_config: {copy_data_attributes: true}`; it does not parse a source select.

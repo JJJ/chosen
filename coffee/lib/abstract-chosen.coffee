@@ -121,6 +121,7 @@ class AbstractChosen
     @choices_expanded = false
     @inherit_select_classes = @options.inherit_select_classes || false
     @inherit_option_classes = @options.inherit_option_classes || false
+    @inherit_optgroup_classes = @options.inherit_optgroup_classes || false
     @display_selected_options = if @options.display_selected_options? then @options.display_selected_options else true
     @display_disabled_options = if @options.display_disabled_options? then @options.display_disabled_options else true
     @display_selected_value = @options.display_selected_value || false
@@ -1218,6 +1219,7 @@ class AbstractChosen
     enable_split_word_search: 'boolean'
     inherit_select_classes: 'boolean'
     inherit_option_classes: 'boolean'
+    inherit_optgroup_classes: 'boolean'
     paste_multiple_values: 'boolean'
     create_option: 'boolean'
     persistent_create_option: 'boolean'
