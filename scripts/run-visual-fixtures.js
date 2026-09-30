@@ -139,9 +139,15 @@ async function mount(page, edition, mode, state) {
     select.required = state === 'invalid';
     if (state === 'invalid') select.setAttribute('aria-invalid', 'true');
     if (!multiple) select.add(new Option('Choose a fruit', '', false, state === 'invalid'));
+    const group = document.createElement('optgroup');
+    group.label = 'Citrus';
     for (const [value, label] of [['apple', 'Apple'], ['banana', 'Banana'], ['orange', 'Orange'], ['lemon', 'Lemon']]) {
-      select.add(new Option(label, value, false, state !== 'invalid' && (multiple ? ['apple', 'banana'].includes(value) : value === 'apple')));
+      const option = new Option(label, value, false, state !== 'invalid' && (multiple
+        ? ['apple', 'banana'].includes(value) : value === 'apple'));
+      if (edition === 'native' && ['orange', 'lemon'].includes(value)) group.appendChild(option);
+      else select.add(option);
     }
+    if (edition === 'native') select.appendChild(group);
     document.getElementById('mount').appendChild(select);
     window.visualInstance = edition === 'native'
       ? new window.ChosenNative.Chosen(select) : edition === 'jquery'
