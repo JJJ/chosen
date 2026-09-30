@@ -362,7 +362,8 @@
       949
     ],
     "status": "in-progress",
-    "note": "Reproduced: secondary-button presses activate closed jQuery, Prototype, Vanilla, and React controls. A four-edition guard and regressions are in progress."
+    "note": "Reproduced: secondary-button presses activate closed jQuery, Prototype, Vanilla, and React controls. A four-edition guard and browser regressions are in PR #201.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/201"
   },
   {
     "number": 1487,
