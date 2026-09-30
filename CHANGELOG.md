@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Fixed
+- Close legacy jQuery and Prototype dropdowns promptly after search focus leaves, while preserving label-press behavior (harvesthq/chosen#2990).
 - Ignore secondary mouse buttons when activating a closed Chosen control in jQuery, Prototype, Vanilla, and React. Primary clicks and touch activation continue to open it. This follows [Harvest PR #1583](https://github.com/harvesthq/chosen/pull/1583).
 
 ### Changed

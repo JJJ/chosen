@@ -289,7 +289,7 @@ class AbstractChosen
   input_blur: (evt) ->
     if not @mouse_on_container and not @mouse_on_label
       @active_field = false
-      setTimeout (=> this.blur_test()), 100
+      setTimeout (=> this.blur_test()), 0
 
   label_mousedown_handler: (evt) =>
     @mouse_on_label = true

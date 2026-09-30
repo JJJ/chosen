@@ -1002,7 +1002,7 @@ var ChosenCore = (function() {
           this.active_field = false;
           return setTimeout((() => {
             return this.blur_test();
-          }), 100);
+          }), 0);
         }
       }
 
