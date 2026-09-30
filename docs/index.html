@@ -1210,7 +1210,7 @@
 
       <h2><a name="selected-and-disabled-support" class="anchor" href="#selected-and-disabled-support">Selected, Disabled and Hidden Support</a></h2>
       <div class="side-by-side clearfix">
-        <p>Chosen automatically highlights selected options and removes disabled and / or hidden options.</p>
+        <p>Chosen automatically highlights selected options and removes disabled and / or hidden options. Try Kodiak Bear, which has a <code>label</code> attribute but no option text.</p>
         <div>
           <label class="comparison-label" for="selected-single">Single Select</label>
           <select id="selected-single" data-placeholder="Your Favorite Type of Bear" class="chosen-select" tabindex="7">
@@ -1222,6 +1222,7 @@
             <option selected="">Sloth Bear</option>
             <option disabled="">Sun Bear</option>
             <option>Polar Bear</option>
+            <option value="kodiak" label="Kodiak Bear"></option>
             <option disabled="">Spectacled Bear</option>
           </select>
         </div>
@@ -1236,6 +1237,7 @@
             <option selected="">Sloth Bear</option>
             <option disabled="">Sun Bear</option>
             <option selected="">Polar Bear</option>
+            <option value="kodiak" label="Kodiak Bear"></option>
             <option disabled="">Spectacled Bear</option>
           </select>
         </div>

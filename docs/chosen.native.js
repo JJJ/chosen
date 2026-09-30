@@ -398,7 +398,7 @@ var ChosenNative = (() => {
           className: child.className,
           options: Array.from(child.children, (option) => ({
             value: option.value,
-            label: option.text,
+            label: option.text || option.getAttribute("label") || "",
             selected: option.selected,
             disabled: option.disabled,
             hidden: option.hidden,
@@ -412,7 +412,7 @@ var ChosenNative = (() => {
       } else if (child.tagName === "OPTION") {
         entries.push({
           value: child.value,
-          label: child.text,
+          label: child.text || child.getAttribute("label") || "",
           selected: child.selected,
           disabled: child.disabled,
           hidden: child.hidden,

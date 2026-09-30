@@ -9,8 +9,8 @@ window.ChosenAdapterCases = [
     { label: 'Cars', className: 'group-cars', options: ['Coupe', 'Convertible'] },
     { label: 'Bikes', className: 'group-bikes', options: ['Road bike', 'Mountain bike'] }
   ], native: { inherit_optgroup_classes: true }, react: { inheritOptgroupClasses: true } },
-  { id: 'selected-and-disabled-support', title: 'Selected, Disabled and Hidden Support', help: 'Brown Bear starts selected. Giant Panda is disabled; Sun Bear is hidden.', multiple: true, defaultValue: ['Brown Bear'], options: [
-    'American Black Bear', 'Brown Bear', { label: 'Giant Panda', disabled: true }, { label: 'Sun Bear', hidden: true }, 'Polar Bear'
+  { id: 'selected-and-disabled-support', title: 'Selected, Disabled and Hidden Support', help: 'Brown Bear starts selected. Giant Panda is disabled; Sun Bear is hidden. Kodiak Bear uses a label-only native option or a React label field.', multiple: true, defaultValue: ['Brown Bear'], options: [
+    'American Black Bear', 'Brown Bear', { label: 'Giant Panda', disabled: true }, { label: 'Sun Bear', hidden: true }, 'Polar Bear', { value: 'kodiak', label: 'Kodiak Bear', labelOnly: true }
   ] },
   { id: 'hide-search-on-single-select', title: 'Hide Search on Single Select', help: 'Open the list and type a prefix; its search field stays hidden.', options: ['Spring', 'Summer', 'Autumn', 'Winter'], native: { disable_search_threshold: 4 }, react: { disableSearchThreshold: 4 } },
   { id: 'default-text-support', title: 'Default Text Support', help: 'The placeholder appears until an item is chosen.', placeholder: 'Choose a project...', options: ['Atlas', 'Beacon', 'Comet'] },

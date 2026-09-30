@@ -54,6 +54,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
 ### Fixed
+- Show and search an option's `label` attribute when it has no text in the jQuery, Prototype, and Vanilla editions. React already accepts the equivalent option `label` field (harvesthq/chosen#3112).
 - Match the classic single-select keyboard shortcuts in Vanilla and React: Enter opens a closed list, Up at the first result closes it when a choice is selected, and Backspace or Delete clears an eligible closed selection (harvesthq/chosen#994).
 - Clear a previous controlled React selection from the native select's reset defaults when switching to an uncontrolled control.
 - Keep demo action-button spacing off selected-choice remove buttons, and align the Vanilla and React chip borders and remove icons with classic Chosen.

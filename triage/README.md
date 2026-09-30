@@ -1,5 +1,14 @@
 # Upstream issue queue
 
+The 49 pull requests open in `harvesthq/chosen` on September 30, 2026 are
+listed separately in [`upstream-pulls.json`](upstream-pulls.json). An upstream
+PR may have no matching open issue: `issue_refs` lists only issue numbers
+explicitly referenced in its title or description. `unreviewed` means its
+patch has not yet been compared with this fork. Other PR statuses use the
+issue definitions below, plus `in-progress` while a focused fork fix is being
+tested. Update the PR tracker and the public [Harvest issue review](https://github.com/JJJ/chosen/wiki/Harvest-Issue-Review)
+when investigating or resolving one of these PRs.
+
 Run `npm run triage:upstream` to combine the live open issues in
 `harvesthq/chosen` with the reviewed entries in `upstream-issues.json`.
 Use `npm run triage:upstream -- --limit=10` to show more unreviewed issues, or

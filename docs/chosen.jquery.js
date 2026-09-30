@@ -494,8 +494,10 @@ var ChosenCore = (function() {
     }
 
     add_option(option, group_position, group_disabled) {
+      var option_text;
       if (option.nodeName.toUpperCase() === "OPTION") {
-        if (option.text !== "" || option.value !== "") {
+        option_text = option.text !== "" ? option.text : option.getAttribute('label') || "";
+        if (option_text !== "" || option.value !== "") {
           if (group_position != null) {
             this.parsed[group_position].children += 1;
           }
@@ -503,10 +505,10 @@ var ChosenCore = (function() {
             options_index: this.options_index,
             option_element: option,
             value: option.value,
-            text: option.text,
+            text: option_text,
             search_text: option.getAttribute('data-search-text') || '',
             always_visible: option.hasAttribute('data-chosen-always-visible'),
-            html: this.escape_html(option.text).replace(/^\s+|\s+$/g, ''),
+            html: this.escape_html(option_text).replace(/^\s+|\s+$/g, ''),
             title: option.title ? option.title : void 0,
             selected: option.selected,
             disabled: group_disabled === true ? group_disabled : option.disabled,

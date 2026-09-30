@@ -57,7 +57,8 @@ const suite = document.getElementById('native-suite-form');
 const suiteEvent = document.getElementById('native-suite-event');
 const makeOption = item => {
   const data = typeof item === 'string' ? { label: item } : item;
-  const option = new Option(data.label, data.value || data.label);
+  const option = new Option(data.labelOnly ? '' : data.label, data.value || data.label);
+  if (data.labelOnly) option.label = data.label;
   option.disabled = !!data.disabled;
   option.hidden = !!data.hidden;
   if (data.searchText) option.dataset.searchText = data.searchText;

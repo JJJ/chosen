@@ -1,4 +1,17 @@
 describe "Basic setup", ->
+  it "shows and searches label-only options without changing their values", ->
+    div = $("<div><select name='fruit'><option value=''></option><option value='a' label='Apple &amp; Pear'></option><optgroup label='Citrus'><option value='o' label='Orange'></option></optgroup></select></div>").appendTo("body")
+    select = div.find("select")
+    chosen = select.chosen().data("chosen")
+    chosen.results_show()
+    expect(div.find(".active-result").first().text()).toBe("Apple & Pear")
+    chosen.search_field.val("Orange").trigger("input")
+    expect(div.find(".active-result").text()).toBe("Orange")
+    div.find(".active-result").trigger($.Event("mouseup", which: 1, button: 0))
+    expect(select.val()).toBe("o")
+    expect(div.find(".chosen-single > span").text()).toBe("Orange")
+    div.remove()
+
   it "keeps linked label text selected instead of activating Chosen", ->
     div = $("<div><label for='drag-label'>Choose a country by name</label><select id='drag-label'><option>One</option></select></div>").appendTo("body")
     chosen = div.find("select").chosen().data("chosen")

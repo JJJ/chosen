@@ -1,4 +1,19 @@
 describe "Basic setup", ->
+  it "shows and searches label-only options without changing their values", ->
+    div = new Element('div').update("<select name='fruit'><option value=''></option><option value='a' label='Apple &amp; Pear'></option><optgroup label='Citrus'><option value='o' label='Orange'></option></optgroup></select>")
+    document.body.appendChild(div)
+    select = div.down('select')
+    chosen = new Chosen(select)
+    chosen.results_show()
+    expect(div.select('.active-result')[0].textContent).toBe('Apple & Pear')
+    chosen.search_field.value = 'Orange'
+    simulant.fire(chosen.search_field, 'input')
+    expect(div.select('.active-result').pluck('textContent')).toEqual(['Orange'])
+    simulant.fire(div.down('.active-result'), 'mouseup')
+    expect(select.value).toBe('o')
+    expect(div.down('.chosen-single > span').textContent).toBe('Orange')
+    div.remove()
+
   it "keeps linked label text selected instead of activating Chosen", ->
     div = new Element('div').update("<label for='drag-label'>Choose a country by name</label><select id='drag-label'><option>One</option></select>")
     document.body.appendChild(div)
