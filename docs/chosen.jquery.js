@@ -55,6 +55,9 @@ var ChosenCore = (function() {
     preferredPrefixIndex: function() {
       return preferredPrefixIndex;
     },
+    rangeOptions: function() {
+      return rangeOptions;
+    },
     resolvePastedChoices: function() {
       return resolvePastedChoices;
     },
@@ -418,6 +421,19 @@ var ChosenCore = (function() {
     }
     return -1;
   }
+  function rangeOptions(items, anchorIndex, targetIndex) {
+    var anchor = -1;
+    var target = -1;
+    for (var index = 0; index < items.length; index += 1) {
+      if (items[index].kind !== "option") continue;
+      if (items[index].index === anchorIndex) anchor = index;
+      if (items[index].index === targetIndex) target = index;
+    }
+    if (anchor < 0 || target < 0) return [];
+    return items.slice(Math.min(anchor, target), Math.max(anchor, target) + 1).filter(function(item) {
+      return item.kind === "option";
+    });
+  }
   return __toCommonJS(index_exports);
 })();
 
@@ -721,6 +737,8 @@ var ChosenCore = (function() {
         this.allow_select_all = this.options.allow_select_all || false;
         this.allow_deselect_all = this.options.allow_deselect_all || false;
         this.deselect_selected_results = this.options.deselect_selected_results || false;
+        this.shift_select_range = this.options.shift_select_range || false;
+        this.range_anchor_index = null;
         this.select_all_text = this.options.select_all_text || AbstractChosen.default_select_all_text;
         this.deselect_all_text = this.options.deselect_all_text || AbstractChosen.default_deselect_all_text;
         this.open_on_label_click = this.options.open_on_label_click != null ? this.options.open_on_label_click : this.is_multiple;
@@ -1071,6 +1089,65 @@ var ChosenCore = (function() {
           this.trigger_max_selected();
         }
         return changed;
+      }
+
+      select_range_results(target_index) {
+        var anchor, changed, item, j, len, limit_reached, list, option, range, ref, row, selected_count, visible;
+        anchor = this.results_data[this.range_anchor_index];
+        if (!(this.is_multiple && this.shift_select_range && (anchor != null ? anchor.selected : void 0))) {
+          return false;
+        }
+        list = this.search_results[0] || this.search_results;
+        visible = (function() {
+          var j, len, ref, results1;
+          ref = list.querySelectorAll('li[role="option"][data-option-array-index]');
+          results1 = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            row = ref[j];
+            results1.push({
+              kind: 'option',
+              index: Number(row.getAttribute('data-option-array-index'))
+            });
+          }
+          return results1;
+        })();
+        range = ChosenCore.rangeOptions(visible, this.range_anchor_index, target_index);
+        if (!range.length) {
+          return false;
+        }
+        changed = false;
+        limit_reached = false;
+        selected_count = this.choices_count();
+        for (j = 0, len = range.length; j < len; j++) {
+          row = range[j];
+          item = this.results_data[row.index];
+          if (!((item != null) && !item.selected && !item.disabled && !item.pinned_only)) {
+            continue;
+          }
+          option = this.current_option_for(item);
+          if (!((option != null) && !option.disabled)) {
+            continue;
+          }
+          if (ChosenCore.selectionLimitReached(selected_count, this.max_selected_options)) {
+            limit_reached = true;
+            break;
+          }
+          item.selected = true;
+          option.selected = true;
+          selected_count++;
+          changed = true;
+        }
+        this.selected_option_count = null;
+        if ((ref = this.results_data[target_index]) != null ? ref.selected : void 0) {
+          this.range_anchor_index = target_index;
+        }
+        if (changed) {
+          this.finish_bulk_action();
+        }
+        if (limit_reached) {
+          this.trigger_max_selected();
+        }
+        return true;
       }
 
       deselect_all_results() {
@@ -2521,6 +2598,7 @@ var ChosenCore = (function() {
       allow_select_all: 'boolean',
       allow_deselect_all: 'boolean',
       deselect_selected_results: 'boolean',
+      shift_select_range: 'boolean',
       disable_search: 'boolean',
       enable_split_word_search: 'boolean',
       inherit_select_classes: 'boolean',
@@ -3393,7 +3471,7 @@ var ChosenCore = (function() {
     }
 
     result_select(evt) {
-      var action, change, high, item, option, previous_option, ref;
+      var action, array_index, change, high, item, option, previous_option, ref;
       action = ((ref = this.result_highlight) != null ? ref.attr('data-chosen-action') : void 0) || $(evt.target).attr('data-chosen-action');
       if (action) {
         evt.preventDefault();
@@ -3436,6 +3514,11 @@ var ChosenCore = (function() {
           this.results_update_field();
           return false;
         }
+        array_index = Number(high[0].getAttribute("data-option-array-index"));
+        if (evt.shiftKey && this.select_range_results(array_index)) {
+          evt.preventDefault();
+          return;
+        }
         if (this.is_multiple && this.deselect_selected_results && item.selected) {
           if (this.result_deselect(high[0].getAttribute("data-option-array-index"))) {
             this.results_update_field();
@@ -3461,6 +3544,9 @@ var ChosenCore = (function() {
         high.attr('aria-selected', 'true');
         item.selected = true;
         option.selected = true;
+        if (this.is_multiple) {
+          this.range_anchor_index = array_index;
+        }
         this.selected_option_count = null;
         if (this.is_multiple) {
           this.choice_build(item);
@@ -3527,6 +3613,9 @@ var ChosenCore = (function() {
       }
       if (!option.disabled) {
         result_data.selected = false;
+        if (this.range_anchor_index === Number(pos)) {
+          this.range_anchor_index = null;
+        }
         option.selected = false;
         this.selected_option_count = null;
         this.result_clear_highlight();

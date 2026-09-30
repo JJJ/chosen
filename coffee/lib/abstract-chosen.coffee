@@ -111,6 +111,8 @@ class AbstractChosen
     @allow_select_all = @options.allow_select_all || false
     @allow_deselect_all = @options.allow_deselect_all || false
     @deselect_selected_results = @options.deselect_selected_results || false
+    @shift_select_range = @options.shift_select_range || false
+    @range_anchor_index = null
     @select_all_text = @options.select_all_text || AbstractChosen.default_select_all_text
     @deselect_all_text = @options.deselect_all_text || AbstractChosen.default_deselect_all_text
     @open_on_label_click = if @options.open_on_label_click? then @options.open_on_label_click else @is_multiple
@@ -343,6 +345,37 @@ class AbstractChosen
     this.finish_bulk_action() if changed
     this.trigger_max_selected() if limit_reached
     changed
+
+  select_range_results: (target_index) ->
+    anchor = @results_data[@range_anchor_index]
+    return false unless @is_multiple and @shift_select_range and anchor?.selected
+
+    list = @search_results[0] or @search_results
+    visible = ({kind: 'option', index: Number(row.getAttribute('data-option-array-index'))} for row in list.querySelectorAll('li[role="option"][data-option-array-index]'))
+    range = ChosenCore.rangeOptions(visible, @range_anchor_index, target_index)
+    return false unless range.length
+
+    changed = false
+    limit_reached = false
+    selected_count = this.choices_count()
+    for row in range
+      item = @results_data[row.index]
+      continue unless item? and not item.selected and not item.disabled and not item.pinned_only
+      option = this.current_option_for(item)
+      continue unless option? and not option.disabled
+      if ChosenCore.selectionLimitReached(selected_count, @max_selected_options)
+        limit_reached = true
+        break
+      item.selected = true
+      option.selected = true
+      selected_count++
+      changed = true
+
+    @selected_option_count = null
+    @range_anchor_index = target_index if @results_data[target_index]?.selected
+    this.finish_bulk_action() if changed
+    this.trigger_max_selected() if limit_reached
+    true
 
   deselect_all_results: ->
     changed = false
@@ -1215,6 +1248,7 @@ class AbstractChosen
     allow_select_all: 'boolean'
     allow_deselect_all: 'boolean'
     deselect_selected_results: 'boolean'
+    shift_select_range: 'boolean'
     disable_search: 'boolean'
     enable_split_word_search: 'boolean'
     inherit_select_classes: 'boolean'

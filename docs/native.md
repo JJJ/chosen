@@ -59,6 +59,7 @@ With the control focused, Enter opens a closed list and chooses its highlighted 
 | `group_search` | `true` | Include optgroup labels in search. |
 | `display_selected_options` | `true` | Show selected options in multiple-select results. |
 | `deselect_selected_results` | `false` | Let selected multiple results be removed from the dropdown. |
+| `shift_select_range` | `false` | Add a visible range with Shift-click after selecting an anchor. Disabled options are skipped and the selection limit applies. |
 | `hide_results_on_select` | `true` | Close the dropdown after a multiple choice; set `false` to keep it open. Ctrl or Command selection keeps it open. |
 | `display_selected_value` | `false` | Show the option value in the closed control or selected chips, while keeping its label in results. |
 | `include_group_label_in_selected` | `false` | Prefix selected text with its optgroup name when present. |

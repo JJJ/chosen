@@ -128,3 +128,4 @@ export function resolvePastedChoices(text: string, entries: readonly NormalizedE
 export function createMatcher(query: string, settings?: SearchSettings): Matcher;
 export function filterOptions(entries: readonly (ChosenOption | ChosenGroup)[] | readonly NormalizedEntry[], query: string, settings?: SearchSettings): FilterResult;
 export function preferredPrefixIndex(items: readonly NormalizedEntry[], query: string, settings?: SearchSettings): number;
+export function rangeOptions(items: readonly NormalizedEntry[], anchorIndex: number, targetIndex: number): NormalizedOption[];

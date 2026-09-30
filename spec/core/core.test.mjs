@@ -34,6 +34,17 @@ test('legacy falsy display settings still hide matching options', () => {
   assert.equal(core.includeOptionInResults({ selected: true }, { multiple: true }), true);
 });
 
+test('range selection follows visible option order and skips group headings', () => {
+  const entries = core.normalizeOptions([
+    { value: 'a', label: 'Alpha' },
+    { label: 'Group', options: [{ value: 'b', label: 'Beta' }, { value: 'c', label: 'Charlie' }] }
+  ]);
+  assert.deepEqual(core.rangeOptions(entries, 0, 3).map(item => item.value), ['a', 'b', 'c']);
+  assert.deepEqual(core.rangeOptions(entries, 3, 0).map(item => item.value), ['a', 'b', 'c']);
+  assert.deepEqual(core.rangeOptions([entries[0], entries[3]], 0, 3).map(item => item.value), ['a', 'c']);
+  assert.deepEqual(core.rangeOptions(entries.slice(2), 0, 3), []);
+});
+
 for (const fixture of cases.filterCases) {
   test(`shared filter fixture: ${fixture.name}`, () => {
     const entries = core.normalizeOptions(fixture.options);

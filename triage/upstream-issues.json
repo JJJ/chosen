@@ -1344,8 +1344,9 @@
   },
   {
     "number": 135,
-    "status": "candidate",
-    "note": "Consider Shift range selection for multiple selects with clear keyboard semantics."
+    "status": "fixed-in-fork",
+    "note": "Opt-in Shift-click adds the visible multiple-select range across all four editions, skipping disabled options and respecting the selection limit.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/195"
   },
   {
     "number": 92,

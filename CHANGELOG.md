@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `shift_select_range` to select a visible range in multiple selects with Shift-click across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#135). React uses `shiftSelectRange`. Disabled options and selection limits still apply.
 - Add opt-in `placeholder_text_multiple_selected` to show an “Add another...” style search hint after the first multiple-selection choice across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#171). React uses `placeholderTextMultipleSelected`.
 - Add opt-in `inherit_optgroup_classes` to copy parent optgroup classes onto selected multiple-choice chips across jQuery, Prototype, Vanilla, and React, so applications can style selections by group (harvesthq/chosen#572). React uses `inheritOptgroupClasses`.
 - Add opt-in `no_results_template` with a `{search}` marker so localized no-results messages can place the search term naturally across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#943). React uses `noResultsTemplate`.

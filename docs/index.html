@@ -1721,6 +1721,18 @@
         </div>
       </div>
 
+      <h2><a name="shift-range-selection" class="anchor" href="#shift-range-selection">Select a Range</a></h2>
+      <div class="side-by-side clearfix">
+        <p>Select Atlas, reopen the list if needed, then Shift-click Delta. Chosen adds the visible options between them, skips the disabled Comet option, and leaves any existing choices selected.</p>
+        <pre><code class="language-javascript">$("#recipe-shift-range").chosen({ shift_select_range: true });</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-shift-range">Shift-click to add a range</label>
+          <select id="recipe-shift-range" class="chosen-select-shift-range" multiple="">
+            <option>Atlas</option><option>Beacon</option><option disabled>Comet</option><option>Delta</option><option>Echo</option>
+          </select>
+        </div>
+      </div>
+
       <h2><a name="group-and-readonly" class="anchor" href="#group-and-readonly">Group Selection and Readonly</a></h2>
       <div class="side-by-side clearfix">
         <p>On a multiple select, <code class="language-html">select-by-group</code> makes each optgroup label select its available options. The separate <code class="language-html">readonly</code> control keeps its value enabled for form submission while preventing changes.</p>
