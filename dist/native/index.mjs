@@ -324,7 +324,7 @@ var nextId = 0;
 var instances = /* @__PURE__ */ new WeakMap();
 var booleanDataOptions = new Set("allow_single_deselect allow_select_all allow_deselect_all deselect_selected_results disable_search enable_split_word_search inherit_select_classes inherit_option_classes inherit_optgroup_classes paste_multiple_values create_option persistent_create_option skip_no_results search_contains highlight_prefix_matches split_search_terms search_in_values group_search backspace_deletes_choices single_backstroke_delete multiselect_allow_tab_to_select open_on_label_click recalculate_width_on_update display_disabled_options display_selected_options display_selected_value include_group_label_in_selected case_sensitive_search hide_results_on_select rtl".split(" "));
 var integerDataOptions = new Set("disable_search_threshold max_selected_options max_items_shown min_search_length max_search_length search_delay max_shown_results".split(" "));
-var stringDataOptions = new Set("select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple".split(" "));
+var stringDataOptions = new Set("select_all_text deselect_all_text show_fewer_items_text no_results_text no_results_template create_option_text placeholder_text placeholder_text_single placeholder_text_multiple placeholder_text_multiple_selected".split(" "));
 function selectDataOptions(select) {
   const parsed = {};
   for (const attribute of select.attributes) {
@@ -773,7 +773,7 @@ var Chosen = class {
     this.value.classList.toggle("chosen-native__value--placeholder", this.searchDisabled && !selected.length);
     this.value.hidden = this.multiple || !selected.length && !this.searchDisabled || !this.searchDisabled && (this.opened || !!this.input.value);
     this.clearButton.hidden = this.multiple || !this.options.allow_single_deselect || !selected.length || !(this.select.options[0]?.value === "" && this.select.options[0]?.text === "") || this.select.disabled || this.select.hasAttribute("readonly");
-    this.input.placeholder = this.opened ? this.options.search_placeholder || "Search options" : selected.length ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ?? this.options.placeholder_text;
+    this.input.placeholder = this.multiple && selected.length && this.options.placeholder_text_multiple_selected != null ? this.options.placeholder_text_multiple_selected : this.opened ? this.options.search_placeholder || "Search options" : selected.length ? "" : this.select.getAttribute("data-placeholder") ?? this.select.getAttribute("placeholder") ?? (this.multiple ? this.options.placeholder_text_multiple : this.options.placeholder_text_single) ?? this.options.placeholder_text;
     this.status.textContent = selected.length ? `Selected: ${selected.map((entry) => entry.label).join(", ")}.` : "No selection.";
   }
   renderResults() {

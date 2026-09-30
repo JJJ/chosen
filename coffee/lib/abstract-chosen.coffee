@@ -1257,6 +1257,7 @@ class AbstractChosen
     placeholder_text: 'string'
     placeholder_text_single: 'string'
     placeholder_text_multiple: 'string'
+    placeholder_text_multiple_selected: 'string'
     width: 'width'
     dropdown_width: 'css-width'
     search_input_type: 'search-input-type'

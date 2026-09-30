@@ -30,7 +30,7 @@ export const Chosen = forwardRef(function Chosen({
   onReady, onShowingDropdown, onHidingDropdown,
   onSearch, onSearchUpdated, onNoResults, onNoResultsClear, onMaxSelected,
   name, form, required = false, disabled = false, readOnly = false,
-  placeholder, placeholderTextSingle, placeholderTextMultiple,
+  placeholder, placeholderTextSingle, placeholderTextMultiple, placeholderTextMultipleSelected,
   searchPlaceholder = 'Search options', allowSingleDeselect = false,
   noResultsText = 'No results for:', noResultsTemplate, maxSelectedOptions,
   createOption = false, createOptionText = 'Add Option:',
@@ -570,7 +570,8 @@ export const Chosen = forwardRef(function Chosen({
   const showSingleValue = !multiple && !!selectedOptions[0]?.label && (searchDisabled || (!isOpen && !query));
   const closedPlaceholder = (multiple ? placeholderTextMultiple : placeholderTextSingle) ??
     placeholder ?? (multiple ? 'Select Some Options' : 'Select an Option');
-  const visiblePlaceholder = isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
+  const visiblePlaceholder = multiple && selectedOptions.length && placeholderTextMultipleSelected != null
+    ? placeholderTextMultipleSelected : isOpen ? searchPlaceholder : (selectedOptions.length ? '' : closedPlaceholder);
   const status = limitNotice ? `Maximum of ${maxSelectedOptions} selections reached.` :
     isOpen ? String(resultsCountText(available.filter(item => item.kind === 'option' || item.kind === 'create').length)) :
       (selectedOptions.length ? `Selected: ${selectedOptions.map(item => item.label).join(', ')}.` : 'No selection.');

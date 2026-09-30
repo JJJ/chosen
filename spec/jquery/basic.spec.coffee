@@ -35,6 +35,16 @@ describe "Basic setup", ->
     expect(multiple.search_field.attr("placeholder")).toBe("")
     div.remove()
 
+  it "shows an opt-in hint after a multiple selection", ->
+    div = $("<div>").html("<select multiple data-placeholder='Choose items' data-placeholder-text-multiple-selected='Add another...'><option selected>One</option><option>Two</option></select>")
+    select = div.find("select").chosen()
+    chosen = select.data("chosen")
+    expect(chosen.search_field.attr("placeholder")).toBe("Add another...")
+    select.find("option").first().prop("selected", false)
+    select.trigger("chosen:updated")
+    expect(chosen.search_field.attr("placeholder")).toBe("Choose items")
+    div.remove()
+
   it "starts searching when typing on a focused single select", ->
     div = $("<div><select><option></option><option>Apple</option><option>Banana</option></select></div>").appendTo("body")
     chosen = div.find("select").chosen().data("chosen")

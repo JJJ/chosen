@@ -2563,6 +2563,7 @@ var ChosenCore = (function() {
       placeholder_text: 'string',
       placeholder_text_single: 'string',
       placeholder_text_multiple: 'string',
+      placeholder_text_multiple_selected: 'string',
       width: 'width',
       dropdown_width: 'css-width',
       search_input_type: 'search-input-type',
@@ -3262,6 +3263,8 @@ var ChosenCore = (function() {
     set_search_field_placeholder() {
       if (this.is_multiple && this.choices_count() < 1) {
         return this.search_field.attr('placeholder', this.default_text);
+      } else if (this.is_multiple && (this.options.placeholder_text_multiple_selected != null)) {
+        return this.search_field.attr('placeholder', this.options.placeholder_text_multiple_selected);
       } else {
         return this.search_field.attr('placeholder', '');
       }

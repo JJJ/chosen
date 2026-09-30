@@ -4,6 +4,7 @@ export interface ChosenOptions {
   placeholder_text?: string;
   placeholder_text_single?: string;
   placeholder_text_multiple?: string;
+  placeholder_text_multiple_selected?: string;
   search_placeholder?: string;
   no_results_text?: string;
   no_results_template?: string;

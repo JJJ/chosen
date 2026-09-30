@@ -1,7 +1,7 @@
 // Shared examples keep the vanilla and React demo pages comparable.
 window.ChosenAdapterCases = [
   { id: 'standard-select', title: 'Standard Select', help: 'Choose a country from a single select.', options: ['United States', 'United Kingdom', 'France', 'Germany'] },
-  { id: 'multiple-select', title: 'Multiple Select', help: 'Choose several countries, then remove a chip.', multiple: true, options: ['United States', 'United Kingdom', 'France', 'Germany'] },
+  { id: 'multiple-select', title: 'Multiple Select', help: 'Choose several countries, see the “Add another...” hint, then remove a chip.', multiple: true, options: ['United States', 'United Kingdom', 'France', 'Germany'], native: { placeholder_text_multiple_selected: 'Add another...' }, react: { placeholderTextMultipleSelected: 'Add another...' } },
   { id: 'optgroup-support', title: '<optgroup> Support', help: 'Search and choose an item under a group heading.', options: [
     { label: 'Football', options: ['Bears', 'Lions', 'Packers'] }, { label: 'Baseball', options: ['Cubs', 'White Sox'] }
   ] },

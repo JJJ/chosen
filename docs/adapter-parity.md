@@ -33,6 +33,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `skip_no_results` | Yes | Yes | Hide no-results copy during creation; React prop: `skipNoResults`. |
 | `results_count_text` | Yes | Yes | React prop: `resultsCountText`; both accept `(count) => text` for the live result count. |
 | `placeholder_text_multiple` | Yes | Yes | React prop: `placeholderTextMultiple`. |
+| `placeholder_text_multiple_selected` | Yes | Yes | Optional hint after a multiple select has at least one choice. React prop: `placeholderTextMultipleSelected`. |
 | `placeholder_text` | Yes | Yes | React prop: `placeholder`; type-specific props take precedence. |
 | `placeholder_text_single` | Yes | Yes | React prop: `placeholderTextSingle`. |
 | `search_contains` | Yes | Yes | React now defaults to `false`, matching classic. |

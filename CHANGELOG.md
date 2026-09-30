@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
+- Add opt-in `placeholder_text_multiple_selected` to show an “Add another...” style search hint after the first multiple-selection choice across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#171). React uses `placeholderTextMultipleSelected`.
 - Add opt-in `inherit_optgroup_classes` to copy parent optgroup classes onto selected multiple-choice chips across jQuery, Prototype, Vanilla, and React, so applications can style selections by group (harvesthq/chosen#572). React uses `inheritOptgroupClasses`.
 - Add opt-in `no_results_template` with a `{search}` marker so localized no-results messages can place the search term naturally across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#943). React uses `noResultsTemplate`.
 - Expose the rendered no-results row and search term in classic `chosen:no_results`, and emit `chosen:no_results_clear` before removing it. Vanilla emits equivalent native events, while React provides `onNoResultsClear(query)` (harvesthq/chosen#1011).
@@ -116,6 +117,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+- With opt-in `placeholder_text_multiple_selected`, the generated multiple-search input's `placeholder` attribute changes after the first selection. The source select and submitted values are unchanged; the default generated attribute remains unchanged.
 - Enabling `inherit_optgroup_classes` adds the source optgroup's classes to generated selected-choice chips. Default classes and markup remain unchanged; selectors targeting those classes may now also match chips when the option is enabled.
 - With opt-in `no_results_template`, the classic no-results row moves its search-term `<span>` to the `{search}` marker, or omits it when the marker is absent. Vanilla and React likewise add a `<span>` at the marker. The default generated markup is unchanged.
 - Selected vanilla results now gain `.chosen-native__option--selected`; the mark is CSS generated, and selected multiple results can be toggled off without changing the row's `role="option"` markup.

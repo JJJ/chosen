@@ -53,6 +53,7 @@ export interface ChosenProps {
   placeholder?: string;
   placeholderTextSingle?: string;
   placeholderTextMultiple?: string;
+  placeholderTextMultipleSelected?: string;
   allowSingleDeselect?: boolean;
   searchPlaceholder?: string;
   noResultsText?: string;
