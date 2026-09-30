@@ -74,6 +74,7 @@ export const Chosen = forwardRef(function Chosen({
   const controlRef = useRef(null);
   const popupRef = useRef(null);
   const selectRef = useRef(null);
+  const validationStyles = useRef(null);
   const rangeAnchorIndex = useRef(null);
   const labelPointerDown = useRef(false);
   const labelForwardedClick = useRef(false);
@@ -97,6 +98,13 @@ export const Chosen = forwardRef(function Chosen({
   const selectedValues = value === undefined ? internalValues : valuesOf(value, multiple);
   const isOpen = controlledOpen === undefined ? internalOpen : controlledOpen;
   const selectedKey = selectedValues.join('\u0000');
+  useEffect(() => {
+    const select = selectRef.current;
+    if (select?.validity?.valid && validationStyles.current) {
+      Object.assign(select.style, validationStyles.current);
+      validationStyles.current = null;
+    }
+  }, [selectedKey]);
   const selectedSet = useMemo(() => new Set(selectedValues), [selectedKey]);
   const entries = useMemo(() => {
     const supplied = normalizeOptions(options);
@@ -401,6 +409,10 @@ export const Chosen = forwardRef(function Chosen({
     const parentForm = control?.form;
     if (!parentForm || value !== undefined) return;
     const reset = () => {
+      if (validationStyles.current) {
+        Object.assign(control.style, validationStyles.current);
+        validationStyles.current = null;
+      }
       setInternalValues(valuesOf(defaultValue, multiple));
       setQuery('');
       setAppliedQuery('');
@@ -691,7 +703,24 @@ export const Chosen = forwardRef(function Chosen({
     <select ref={attachNativeSelect} className="chosen-react__native" tabIndex={-1} aria-hidden="true"
       name={name} form={form} required={required} disabled={disabled} multiple={multiple}
       value={multiple ? selectedValues : selectedValues[0] ?? ''} onChange={() => {}}
-      onInvalid={() => inputRef.current?.focus()}>
+      onInvalid={event => {
+        const select = event.currentTarget;
+        const rect = controlRef.current?.getBoundingClientRect();
+        if (rect) {
+          const style = select.style;
+          const properties = ['display', 'position', 'left', 'top', 'width', 'height', 'boxSizing', 'pointerEvents', 'opacity', 'clipPath'];
+          if (!validationStyles.current) validationStyles.current = Object.fromEntries(properties.map(property => [property, style[property]]));
+          Object.assign(style, {
+            display: 'block', position: 'absolute', left: '0px', top: '0px',
+            width: `${rect.width}px`, height: `${rect.height}px`, boxSizing: 'border-box',
+            pointerEvents: 'none', opacity: '0', clipPath: 'none'
+          });
+          const sourceRect = select.getBoundingClientRect();
+          style.left = `${rect.left - sourceRect.left}px`;
+          style.top = `${rect.top - sourceRect.top}px`;
+        }
+        inputRef.current?.focus();
+      }}>
       {!multiple && <option value="" />}
       {entries.filter(item => item.kind === 'option').map(item =>
         <option key={item.index} value={item.value} disabled={item.disabled}>{item.label}</option>)}

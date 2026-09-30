@@ -524,16 +524,25 @@ describe "Basic setup", ->
     div.remove()
 
   it "keeps required selects focusable for native validation", ->
-    form = $("<form><select required><option value=''></option><option value='one'>One</option></select></form>").appendTo("body")
+    form = $("<form><select required style='left: 7px'><option value=''></option><option value='one'>One</option></select></form>").appendTo("body")
     select = form.find("select").chosen()
 
-    expect(select[0].checkValidity()).toBe(false)
     expect(select[0].style.display).not.toBe("none")
     expect(select[0].style.position).toBe("absolute")
     expect(select[0].style.opacity).toBe("0")
     expect(select[0].tabIndex).toBe(-1)
+    expect(select[0].checkValidity()).toBe(false)
     expect(form[0].reportValidity()).toBe(false)
+    source_rect = select[0].getBoundingClientRect()
+    control_rect = select.next(".chosen-container")[0].getBoundingClientRect()
+    expect(Math.abs(source_rect.left - control_rect.left)).toBeLessThan(1)
+    expect(Math.abs(source_rect.top - control_rect.top)).toBeLessThan(1)
+    expect(Math.abs(source_rect.width - control_rect.width)).toBeLessThan(1)
+    expect(Math.abs(source_rect.height - control_rect.height)).toBeLessThan(1)
     expect(document.activeElement).toBe(select[0])
+    select.val("one").trigger("change")
+    expect(select[0].style.position).toBe("absolute")
+    expect(select[0].style.left).toBe("7px")
 
     select.chosen("destroy")
     expect(select[0].hasAttribute("tabindex")).toBe(false)

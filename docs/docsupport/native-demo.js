@@ -185,9 +185,10 @@ for (const example of window.ChosenAdapterCases) {
     button.type = 'button';
     button.textContent = 'Check validity';
     button.addEventListener('click', () => {
-      select.setAttribute('aria-invalid', String(!select.checkValidity()));
+      const valid = select.reportValidity();
+      select.setAttribute('aria-invalid', String(!valid));
       chosen.update();
-      suiteEvent.textContent = `${example.title}: ${select.checkValidity() ? 'valid' : 'selection required'}`;
+      suiteEvent.textContent = `${example.title}: ${valid ? 'valid' : 'selection required'}`;
     });
     controlWrap.append(button);
   }

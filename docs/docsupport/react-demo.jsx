@@ -201,7 +201,7 @@ function SuiteExample({ example, report }) {
     </button>}
     {example.required && <button type="button" onClick={() => {
       const control = document.querySelector(`select[name="suite-${example.id}"]`);
-      const valid = control?.checkValidity() ?? false;
+      const valid = control?.reportValidity() ?? false;
       setInvalid(!valid);
       report(`${example.title}: ${valid ? 'valid' : 'selection required'}`);
     }}>Check validity</button>}

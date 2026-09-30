@@ -56,3 +56,10 @@ $('#recipe-other').on('change', function() {
   $('#other-detail').prop('hidden', !isOther);
   if (!isOther) $('#other-country').val('');
 });
+
+// Show the browser's native required-field message beside the visible control.
+$('[data-check-validation]').on('click', function() {
+  var select = document.getElementById(this.getAttribute('data-check-validation'));
+  if (select.reportValidity) select.reportValidity();
+  else select.checkValidity();
+});

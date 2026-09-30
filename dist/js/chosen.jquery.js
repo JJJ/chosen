@@ -694,6 +694,46 @@ var ChosenCore = (function() {
         }
       }
 
+      position_validation_select() {
+        var container, j, len, property, rect, ref, source_rect, style;
+        container = this.container[0] || this.container;
+        rect = container.getBoundingClientRect();
+        style = this.form_field.style;
+        if (this.validation_styles == null) {
+          this.validation_styles = {};
+          ref = ['display', 'position', 'left', 'top', 'width', 'height', 'boxSizing', 'pointerEvents', 'clipPath'];
+          for (j = 0, len = ref.length; j < len; j++) {
+            property = ref[j];
+            this.validation_styles[property] = style[property];
+          }
+        }
+        style.display = 'block';
+        style.position = 'absolute';
+        style.left = '0px';
+        style.top = '0px';
+        style.width = `${rect.width}px`;
+        style.height = `${rect.height}px`;
+        style.boxSizing = 'border-box';
+        style.pointerEvents = 'none';
+        style.clipPath = 'none';
+        source_rect = this.form_field.getBoundingClientRect();
+        style.left = `${rect.left - source_rect.left}px`;
+        return style.top = `${rect.top - source_rect.top}px`;
+      }
+
+      restore_validation_select() {
+        var property, ref, value;
+        if (this.validation_styles == null) {
+          return;
+        }
+        ref = this.validation_styles;
+        for (property in ref) {
+          value = ref[property];
+          this.form_field.style[property] = value;
+        }
+        return this.validation_styles = null;
+      }
+
       transfer_focus() {
         if (this.is_multiple) {
           return this.activate_field();
@@ -910,6 +950,7 @@ var ChosenCore = (function() {
         }
         return this.form_reset_timeout = setTimeout((() => {
           this.form_reset_timeout = null;
+          this.restore_validation_select();
           return this.results_update_field();
         }), 0);
       }
@@ -2964,6 +3005,16 @@ var ChosenCore = (function() {
       this.form_field_jq.on("chosen:activate.chosen", this.form_field_observers.activate);
       this.form_field_jq.on("chosen:open.chosen", this.form_field_observers.open);
       this.form_field_jq.on("chosen:close.chosen", this.form_field_observers.close);
+      this.invalid_handler = () => {
+        return this.position_validation_select();
+      };
+      this.validation_change_handler = () => {
+        if ((this.form_field.validity == null) || this.form_field.validity.valid) {
+          return this.restore_validation_select();
+        }
+      };
+      this.form_field.addEventListener('invalid', this.invalid_handler);
+      this.form_field_jq.on('change.chosen', this.validation_change_handler);
       this.search_field.on('blur.chosen', (evt) => {
         this.input_blur(evt);
       });
@@ -3025,6 +3076,9 @@ var ChosenCore = (function() {
       this.form_field_jq.off("chosen:activate.chosen", this.form_field_observers.activate);
       this.form_field_jq.off("chosen:open.chosen", this.form_field_observers.open);
       this.form_field_jq.off("chosen:close.chosen", this.form_field_observers.close);
+      this.form_field.removeEventListener('invalid', this.invalid_handler);
+      this.form_field_jq.off('change.chosen', this.validation_change_handler);
+      this.restore_validation_select();
       // Clean up scroll handler and pending timeout if dropdown is open
       if (this.results_showing) {
         this.unbind_dropdown_position_listeners();

@@ -525,7 +525,11 @@ var Chosen = class {
       this.input.focus();
       if (this.options.open_on_label_click) this.open();
     };
-    this.onNativeChange = () => this.update();
+    this.validationStyles = null;
+    this.onNativeChange = () => {
+      if (this.select.validity?.valid) this.restoreValidationSelect();
+      this.update();
+    };
     this.onUpdate = () => this.update();
     this.onActivate = () => this.focus();
     this.onOpen = () => {
@@ -535,11 +539,16 @@ var Chosen = class {
     this.onClose = () => this.close();
     this.onReset = () => setTimeout(() => {
       if (!this.destroyed) {
+        this.restoreValidationSelect();
         this.close();
         this.update();
       }
     }, 0);
-    this.onInvalid = () => this.input.focus();
+    this.onInvalid = () => {
+      this.positionValidationSelect();
+      this.input.focus();
+    };
+    this.onNativeFocus = () => this.input.focus();
     this.onOutsidePointer = (event) => {
       if (this.host.contains(event.target)) return;
       if (Array.from(this.select.labels || []).some((label) => label.contains(event.target))) return;
@@ -641,7 +650,7 @@ var Chosen = class {
     select.addEventListener("chosen:open", this.onOpen);
     select.addEventListener("chosen:close", this.onClose);
     select.addEventListener("invalid", this.onInvalid);
-    select.addEventListener("focus", this.onInvalid);
+    select.addEventListener("focus", this.onNativeFocus);
     this.form?.addEventListener("reset", this.onReset);
     document.addEventListener("pointerdown", this.onOutsidePointer, true);
     instances.set(select, this);
@@ -1379,6 +1388,32 @@ var Chosen = class {
   blur() {
     this.input.blur();
   }
+  positionValidationSelect() {
+    const rect = this.control.getBoundingClientRect();
+    const style = this.select.style;
+    const properties = ["display", "position", "left", "top", "width", "height", "boxSizing", "pointerEvents", "opacity", "clipPath"];
+    if (!this.validationStyles) this.validationStyles = Object.fromEntries(properties.map((property) => [property, style[property]]));
+    Object.assign(style, {
+      display: "block",
+      position: "absolute",
+      left: "0px",
+      top: "0px",
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      opacity: "0",
+      clipPath: "none"
+    });
+    const sourceRect = this.select.getBoundingClientRect();
+    style.left = `${rect.left - sourceRect.left}px`;
+    style.top = `${rect.top - sourceRect.top}px`;
+  }
+  restoreValidationSelect() {
+    if (!this.validationStyles) return;
+    Object.assign(this.select.style, this.validationStyles);
+    this.validationStyles = null;
+  }
   destroy() {
     if (this.destroyed) return;
     this.close();
@@ -1399,7 +1434,8 @@ var Chosen = class {
     this.select.removeEventListener("chosen:open", this.onOpen);
     this.select.removeEventListener("chosen:close", this.onClose);
     this.select.removeEventListener("invalid", this.onInvalid);
-    this.select.removeEventListener("focus", this.onInvalid);
+    this.select.removeEventListener("focus", this.onNativeFocus);
+    this.restoreValidationSelect();
     this.form?.removeEventListener("reset", this.onReset);
     document.removeEventListener("pointerdown", this.onOutsidePointer, true);
     this.host.remove();

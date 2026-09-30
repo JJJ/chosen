@@ -64,3 +64,12 @@ document.observe('dom:loaded', function(evt) {
     if (!isOther) $('other-country').value = '';
   });
 });
+
+// Show the browser's native required-field message beside the visible control.
+$$('[data-check-validation]').each(function(button) {
+  button.observe('click', function() {
+    var select = $(button.readAttribute('data-check-validation'));
+    if (select.reportValidity) select.reportValidity();
+    else select.checkValidity();
+  });
+});

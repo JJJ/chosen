@@ -72,6 +72,33 @@ class AbstractChosen
       has_options = true
     if has_options then parsed_options else null
 
+  position_validation_select: ->
+    container = @container[0] or @container
+    rect = container.getBoundingClientRect()
+    style = @form_field.style
+    unless @validation_styles?
+      @validation_styles = {}
+      for property in ['display', 'position', 'left', 'top', 'width', 'height', 'boxSizing', 'pointerEvents', 'clipPath']
+        @validation_styles[property] = style[property]
+    style.display = 'block'
+    style.position = 'absolute'
+    style.left = '0px'
+    style.top = '0px'
+    style.width = "#{rect.width}px"
+    style.height = "#{rect.height}px"
+    style.boxSizing = 'border-box'
+    style.pointerEvents = 'none'
+    style.clipPath = 'none'
+    source_rect = @form_field.getBoundingClientRect()
+    style.left = "#{rect.left - source_rect.left}px"
+    style.top = "#{rect.top - source_rect.top}px"
+
+  restore_validation_select: ->
+    return unless @validation_styles?
+    for property, value of @validation_styles
+      @form_field.style[property] = value
+    @validation_styles = null
+
   transfer_focus: ->
     if @is_multiple
       this.activate_field()
@@ -231,6 +258,7 @@ class AbstractChosen
     clearTimeout(@form_reset_timeout) if @form_reset_timeout?
     @form_reset_timeout = setTimeout((=>
       @form_reset_timeout = null
+      this.restore_validation_select()
       this.results_update_field()
     ), 0)
 

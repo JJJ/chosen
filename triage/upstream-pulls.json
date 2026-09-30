@@ -394,8 +394,8 @@
     "issue_refs": [
       515
     ],
-    "status": "candidate",
-    "note": "Required-select validation tooltip placement merits a current browser reproduction. The patch repositions the hidden native select on invalid, which may conflict with current focus and layout behavior."
+    "status": "fixed-in-fork",
+    "note": "Reproduced displaced native validation anchors in Chromium across all four editions. Position the source select over the visible control only while invalid, then restore its styles on a valid change or destruction."
   },
   {
     "number": 166,

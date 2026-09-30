@@ -19,6 +19,32 @@ const options = [
   { label: 'Other', options: [{ value: 'b', label: 'Banana' }, { value: 'c', label: 'Cherry', disabled: true }] }
 ];
 
+test('positions the invalid native select over the visible React control', () => {
+  render(h('form', null, h(Chosen, { options, name: 'fruit', required: true, 'aria-label': 'Fruit' })));
+  const select = document.querySelector('.chosen-react__native');
+  document.querySelector('.chosen-react__control').getBoundingClientRect = () => ({ left: 20, top: 30, width: 240, height: 40 });
+  fireEvent.invalid(select);
+  assert.equal(select.style.position, 'absolute');
+  assert.equal(select.style.left, '20px');
+  assert.equal(select.style.width, '240px');
+  fireEvent.click(screen.getByRole('combobox'));
+  fireEvent.click(screen.getByRole('option', { name: 'Apple' }));
+  assert.equal(select.style.position, '');
+  fireEvent.invalid(select);
+  fireEvent.reset(document.querySelector('form'));
+  assert.equal(select.style.position, '');
+});
+
+test("form reset restores an invalid React select's original positioning", () => {
+  render(h('form', null, h(Chosen, { options, name: 'fruit', required: true, defaultValue: 'a', 'aria-label': 'Fruit' })));
+  const select = document.querySelector('.chosen-react__native');
+  document.querySelector('.chosen-react__control').getBoundingClientRect = () => ({ left: 20, top: 30, width: 240, height: 40 });
+  fireEvent.invalid(select);
+  assert.equal(select.style.position, 'absolute');
+  fireEvent.reset(document.querySelector('form'));
+  assert.equal(select.style.position, '');
+});
+
 test('secondary mouse buttons do not open the control', () => {
   for (const multiple of [false, true]) {
     render(h(Chosen, { options, multiple, 'aria-label': 'Fruit' }));

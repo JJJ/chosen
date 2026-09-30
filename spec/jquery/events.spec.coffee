@@ -76,6 +76,21 @@ describe "Events", ->
       done()
     ), 10
 
+  it "restores a required select's original positioning after form reset", (done) ->
+    form = $("<form><select required style='left: 7px'><option value=''></option><option value='one' selected>One</option></select></form>").appendTo('body')
+    select = form.find('select').chosen()
+    select.val('')
+    expect(form[0].reportValidity()).toBe(false)
+    expect(select[0].style.left).not.toBe('7px')
+    form[0].reset()
+    setTimeout (->
+      expect(select.val()).toBe('one')
+      expect(select[0].style.left).toBe('7px')
+      expect(select[0].style.position).toBe('absolute')
+      form.remove()
+      done()
+    ), 10
+
   it "opens an already activated single or multiple select programmatically", ->
     for multiple in [false, true]
       attribute = if multiple then " multiple" else ""

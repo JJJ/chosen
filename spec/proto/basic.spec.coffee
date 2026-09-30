@@ -583,18 +583,28 @@ describe "Basic setup", ->
     div.remove()
 
   it "keeps required selects focusable for native validation", ->
-    form = new Element('form').update("<select required><option value=''></option><option value='one'>One</option></select>")
+    form = new Element('form').update("<select required style='left: 7px'><option value=''></option><option value='one'>One</option></select>")
     document.body.appendChild(form)
     select = form.down('select')
     chosen = new Chosen(select)
 
-    expect(select.checkValidity()).toBe(false)
     expect(select.style.display).not.toBe('none')
     expect(select.style.position).toBe('absolute')
     expect(select.style.opacity).toBe('0')
     expect(select.tabIndex).toBe(-1)
+    expect(select.checkValidity()).toBe(false)
     expect(form.reportValidity()).toBe(false)
+    source_rect = select.getBoundingClientRect()
+    control_rect = select.next('.chosen-container').getBoundingClientRect()
+    expect(Math.abs(source_rect.left - control_rect.left)).toBeLessThan(1)
+    expect(Math.abs(source_rect.top - control_rect.top)).toBeLessThan(1)
+    expect(Math.abs(source_rect.width - control_rect.width)).toBeLessThan(1)
+    expect(Math.abs(source_rect.height - control_rect.height)).toBeLessThan(1)
     expect(document.activeElement).toBe(select)
+    select.value = 'one'
+    select.dispatchEvent(new Event('change'))
+    expect(select.style.position).toBe('absolute')
+    expect(select.style.left).toBe('7px')
 
     chosen.destroy()
     expect(select.readAttribute('tabindex')).toBeNull()
