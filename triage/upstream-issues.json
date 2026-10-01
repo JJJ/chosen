@@ -925,8 +925,9 @@
   },
   {
     "number": 2783,
-    "status": "blocked",
-    "note": "Cyrillic appears as replacement characters, but source encoding and page charset are not supplied."
+    "status": "support-question",
+    "note": "Current Chromium and WebKit fixtures render and search Cyrillic options correctly in jQuery and Prototype when the page and option text are UTF-8. Replacement characters indicate the browser already decoded the source text incorrectly; inspect native option text and the page or response charset. The upstream report includes no source markup or encoding to identify a Chosen defect.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/213"
   },
   {
     "number": 2782,
