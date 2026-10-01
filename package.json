@@ -73,7 +73,7 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "node scripts/build-demo-pages.js --check && grunt test && npm run test:native && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:react-demo && npm run test:visual",
+    "test": "node scripts/build-demo-pages.js --check && grunt test && npm run test:native && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && npm run test:react && npm run test:react-demo && node scripts/run-remote-demo-specs.js && npm run test:visual",
     "test:native": "node scripts/build-native.js && node --test spec/native/*.test.mjs && tsc -p spec/native/tsconfig.json && node scripts/run-native-browser-specs.js",
     "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
