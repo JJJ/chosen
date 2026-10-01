@@ -1368,7 +1368,8 @@
   {
     "number": 79,
     "status": "candidate",
-    "note": "A four-edition select-backed async integration recipe and live demos show bounded remote results, stale-response handling, and selected-option retention. This covers an application integration path, but a built-in remote-source API and virtualization remain open design questions; free-text creation is a separate opt-in feature."
+    "note": "A four-edition select-backed async integration recipe and live demos show bounded remote results, stale-response handling, and selected-option retention. This covers an application integration path, but a built-in remote-source API and virtualization remain open design questions; free-text creation is a separate opt-in feature.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/209"
   },
   {
     "number": 5,
