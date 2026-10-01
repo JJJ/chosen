@@ -846,6 +846,8 @@ $('.my_select_box').on('chosen:no_results_clear', function(event, data) {
         </tr>
       </tbody></table>
 
+      <p>When opening Chosen from a keyboard shortcut in another editable element, cancel that shortcut's default action before triggering <code>chosen:open</code>. Opening the dropdown focuses its search input; otherwise the browser may insert the shortcut character there. For example, a <code>keydown</code> handler for <code>@</code> can call <code>event.preventDefault()</code> before <code>$(select).trigger("chosen:open")</code>.</p>
+
       <ul class="credits">
         <li>Concept and development by <a href="https://patrickfiller.com">Patrick Filler</a> for <a href="https://getharvest.com">Harvest</a>.</li>
         <li>Design and CSS by <a href="https://matthewlettini.com">Matthew Lettini</a>.</li>
