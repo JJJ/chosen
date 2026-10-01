@@ -738,6 +738,21 @@ describe "Searching", ->
     expect(result_html).toContain("<em>")
     expect(result_html).toContain("Testé")
 
+  it "highlights normalized text after a multi-character word boundary", ->
+    removeAccents = (str) ->
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+
+    div = $("<div><select><option></option><option>Team--Café</option></select></div>").appendTo("body")
+    chosen = div.find("select").chosen(
+      normalize_search_text: removeAccents
+      search_word_boundary: "^|--"
+    ).data("chosen")
+    chosen.results_show()
+    chosen.search_field.val("Caf").trigger("input")
+
+    expect(div.find(".active-result em").text()).toBe("Café")
+    div.remove()
+
   it "should work with normalize_search_text and search_contains", ->
     # Simple normalize function that removes accents
     removeAccents = (str) ->
