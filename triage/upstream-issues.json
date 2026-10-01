@@ -219,8 +219,8 @@
   },
   {
     "number": 3149,
-    "status": "blocked",
-    "note": "The report does not include option markup, an expected value, or a reproduction that distinguishes an HTML entity from option text."
+    "status": "support-question",
+    "note": "Current Chromium fixtures in jQuery and Prototype treat &nbsp; and &ensp; option text identically and preserve the native select value. Whitespace text is not a null placeholder; use an option with empty text and value for that behavior. The original backend markup is missing, so no Chosen-specific difference was reproduced."
   },
   {
     "number": 3106,

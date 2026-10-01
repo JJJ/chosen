@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Documentation
+- Clarify that nonbreaking and en spaces are native option text, not null placeholders; use an option with empty text and value for a blank first choice (harvesthq/chosen#3149).
 - Add a select-backed remote search recipe and working async demos for jQuery, Prototype, Vanilla, and React (harvesthq/chosen#79). Selected options remain in the native select; this does not add a built-in remote source or virtualize a populated select.
 
 ### Fixed
