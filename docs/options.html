@@ -817,6 +817,7 @@ $('.my_select_box').on('chosen:no_results_clear', function(event, data) {
 
       <h2><a name="triggerable-events" class="anchor" href="#triggerable-events">Triggerable Events</a></h2>
       <p>You can trigger several events on the original select field to invoke a behavior in Chosen.</p>
+      <p>After an AJAX response, update the original select's options and selected value before triggering <code>chosen:updated</code> on that same select. For jQuery, use <code>$(select).trigger("chosen:updated")</code>; for Prototype, use <code>select.fire("chosen:updated")</code>. If the response replaces the select element itself, initialize Chosen on the new element.</p>
 
       <h3>Example:</h3>
 

@@ -7,6 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Documentation
+- Clarify the native select update order after AJAX changes and the need to initialize a replacement select element (harvesthq/chosen#2981).
 - Explain why a keypress shortcut that opens Chosen may insert its character into search, and how to cancel that key's default action (harvesthq/chosen#3065).
 - Explain how to diagnose Cyrillic replacement characters by checking native option text and response encoding; UTF-8 Cyrillic search works in the current classic adapters (harvesthq/chosen#2783).
 - Clarify that nonbreaking and en spaces are native option text, not null placeholders; use an option with empty text and value for a blank first choice (harvesthq/chosen#3149).
