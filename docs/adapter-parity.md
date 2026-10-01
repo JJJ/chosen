@@ -4,6 +4,12 @@ Chosen's jQuery and Prototype adapters define the current behavior in [Options a
 
 The goal is equivalent behavior and defaults in all editions, expressed through each platform's natural API. React props can use camelCase and callbacks; vanilla can use native DOM events. An adapter-specific mechanism is acceptable only when users can achieve the same result. Avoid changing an existing default silently; document a migration or release boundary when aligning one.
 
+Remote search is an integration recipe, not a built-in source option. The classic
+editions and Vanilla report queries through `chosen:search_updated`; React uses
+`onSearchUpdated`. Each can receive a bounded async result page while retaining
+selected native values. See [Remote search with Chosen](remote-search.md) and
+the working example on all four demo pages.
+
 `Yes` means the option has equivalent configurable behavior. `Partial` means some behavior exists but the setting, default, or an important edge case differs. `No` means the public adapter does not implement it. The jQuery and Prototype columns are omitted because the classic reference is the baseline, not because their individual tests can be skipped.
 
 | Classic option | Vanilla | React | Gap or equivalent API |

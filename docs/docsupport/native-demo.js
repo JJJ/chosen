@@ -108,6 +108,12 @@ for (const example of window.ChosenAdapterCases) {
   }
   const help = document.createElement('p');
   help.textContent = example.help;
+  if (example.remote) {
+    const guide = document.createElement('a');
+    guide.href = 'https://github.com/JJJ/chosen/wiki/Remote-Search-Integration';
+    guide.textContent = ' See the integration recipe.';
+    help.append(guide);
+  }
   const controlWrap = document.createElement('div');
   controlWrap.className = `adapter-suite-control${example.className === 'adapter-case-clipped' ? ' adapter-suite-clip' : ''}`;
   comparison.append(help);
@@ -133,6 +139,15 @@ for (const example of window.ChosenAdapterCases) {
   select.addEventListener('change', () => {
     suiteEvent.textContent = `${example.title}: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
   });
+  if (example.remote) {
+    const status = document.createElement('output');
+    status.setAttribute('role', 'status');
+    status.textContent = 'Type at least two characters to search.';
+    controlWrap.append(status);
+    ChosenRemoteDemo.connect(select, search => {
+      select.addEventListener('chosen:search_updated', event => search(event.detail.search_term));
+    }, () => chosen.update(), status);
+  }
   if (example.id === 'no-results-text-support') {
     const status = document.createElement('output');
     status.setAttribute('role', 'status');

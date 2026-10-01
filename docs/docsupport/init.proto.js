@@ -5,6 +5,7 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-bulk'      : { allow_select_all: true, allow_deselect_all: true, hide_results_on_select: false, width: '100%' },
     '.chosen-select-summary'   : { max_items_shown: 2, width: '100%' },
     '.chosen-select-paste'     : { paste_multiple_values: true, width: '100%' },
+    '.chosen-select-remote'    : { search_contains: true, min_search_length: 2, search_delay: 150, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
     '.chosen-select-word-boundary': { search_word_boundary: '^|[^A-Za-zÆØÅæøå]', width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
@@ -45,6 +46,10 @@ document.observe('dom:loaded', function(evt) {
       $('no-results-lifecycle').textContent = 'No-results message cleared: ' + event.memo.search_term;
     });
   });
+  var remoteSelect = $('remote-select');
+  ChosenRemoteDemo.connect(remoteSelect, function(search) {
+    remoteSelect.observe('chosen:search_updated', function(event) { search(event.memo.search_term); });
+  }, function() { remoteSelect.fire('chosen:updated'); }, $('remote-status'));
   var previousChosenDefaults = Chosen.defaults;
   Chosen.defaults = { placeholder_text_single: 'Shared prompt' };
   new Chosen($('defaults-shared'));
