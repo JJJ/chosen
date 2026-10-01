@@ -32,6 +32,7 @@ window.ChosenAdapterCases = [
   { id: 'search-recipes', title: 'Search Aliases and Phrases', help: 'Search “maps” or “project here”.', options: [
     { label: 'Atlas mapping', searchText: 'maps cartography' }, 'The project is here', 'Here is my project'
   ], native: { search_contains: true, split_search_terms: true }, react: { searchContains: true, splitSearchTerms: true } },
+  { id: 'custom-word-boundaries', title: 'Custom Word Boundaries', help: 'Search “ller” (no match), then “Møl” (one match).', options: ['Frank Møller', 'Team Atlas'], native: { search_word_boundary: '^|[^A-Za-zÆØÅæøå]' }, react: { searchWordBoundary: '^|[^A-Za-zÆØÅæøå]' } },
   { id: 'prefix-highlight', title: 'Prefer Prefix Matches', help: 'Search “here” and compare the highlighted result with the list order.', options: ['The project is here', 'Here is my project', 'The Café is here'], native: { search_contains: true, highlight_prefix_matches: true }, react: { searchContains: true, highlightPrefixMatches: true } },
   { id: 'create-options', title: 'Create an Option from Search', help: 'Type a new value and press Enter.', multiple: true, options: ['Atlas', 'Beacon'], native: { create_option: true }, react: { createOption: true } },
   { id: 'selected-result-actions', title: 'Review Selected Results', help: 'Choose an item, reopen the list, and remove it from its result row.', multiple: true, options: ['Atlas', 'Beacon', 'Comet'], native: { deselect_selected_results: true, hide_results_on_select: false }, react: { deselectSelectedResults: true, hideResultsOnSelect: false } },

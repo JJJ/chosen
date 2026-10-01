@@ -6,6 +6,7 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-summary'   : { max_items_shown: 2, width: '100%' },
     '.chosen-select-paste'     : { paste_multiple_values: true, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
+    '.chosen-select-word-boundary': { search_word_boundary: '^|[^A-Za-zÆØÅæøå]', width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
     '.chosen-select-contains-demo': { search_contains: true, width: '100%' },
     '.chosen-select-prefix-highlight': { search_contains: true, highlight_prefix_matches: true, width: '100%' },

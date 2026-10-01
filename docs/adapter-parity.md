@@ -38,6 +38,7 @@ The goal is equivalent behavior and defaults in all editions, expressed through 
 | `placeholder_text` | Yes | Yes | React prop: `placeholder`; type-specific props take precedence. |
 | `placeholder_text_single` | Yes | Yes | React prop: `placeholderTextSingle`. |
 | `search_contains` | Yes | Yes | React now defaults to `false`, matching classic. |
+| `search_word_boundary` | Yes | Yes | Opt-in regular-expression source for word starts; React prop: `searchWordBoundary`. |
 | `highlight_prefix_matches` | Yes | Yes | React prop: `highlightPrefixMatches`; result order is unchanged. |
 | `search_matcher` | Yes | Yes | React prop: `searchMatcher`; both receive normalized items. |
 | `search_input_type` | Yes | Yes | Both default to `search` and accept `text`; React prop: `searchInputType`. |

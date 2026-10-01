@@ -294,7 +294,8 @@ var ChosenCore = (function() {
     var terms = config.splitSearchTerms ? normalizedQuery.split(/\s+/) : [];
     var flags = config.caseSensitiveSearch ? "" : "i";
     function expression(value) {
-      var pattern = config.searchContains ? value : "(^|\\s|\\b)" + value + "[^\\s]*";
+      var boundary = typeof config.searchWordBoundary === "string" ? config.searchWordBoundary : "^|\\s|\\b";
+      var pattern = config.searchContains ? value : "(" + boundary + ")" + value + "[^\\s]*";
       if (config.enableSplitWordSearch === false) pattern = "^" + pattern;
       return new RegExp(pattern, flags);
     }
@@ -309,7 +310,7 @@ var ChosenCore = (function() {
       if (config.searchStringMatch) return config.searchStringMatch(text, searchRegex);
       var match2 = searchRegex.exec(text);
       if (!config.caseSensitiveSearch && !match2) match2 = searchRegex.exec(fold(text));
-      if (!config.searchContains && match2 && match2[1]) match2.index += 1;
+      if (!config.searchContains && match2 && match2[1]) match2.index += match2[1].length;
       return match2;
     }
     function matchField(text, shouldNormalize) {
@@ -852,6 +853,7 @@ var ChosenCore = (function() {
         this.group_search = this.options.group_search != null ? this.options.group_search : true;
         this.search_in_values = this.options.search_in_values || false;
         this.search_contains = this.options.search_contains || false;
+        this.search_word_boundary = typeof this.options.search_word_boundary === "string" ? this.options.search_word_boundary : "^|\\s|\\b";
         this.highlight_prefix_matches = this.options.highlight_prefix_matches === true;
         this.search_matcher = typeof this.options.search_matcher === "function" ? this.options.search_matcher : null;
         this.search_input_type = this.options.search_input_type === "text" ? "text" : "search";
@@ -1763,7 +1765,7 @@ var ChosenCore = (function() {
 
       get_search_regex(escaped_search_string) {
         var regex_flag, regex_string;
-        regex_string = this.search_contains ? escaped_search_string : `(^|\\s|\\b)${escaped_search_string}[^\\s]*`;
+        regex_string = this.search_contains ? escaped_search_string : `(${this.search_word_boundary})${escaped_search_string}[^\\s]*`;
         if (!this.enable_split_word_search) {
           regex_string = `^${regex_string}`;
         }
@@ -2078,7 +2080,7 @@ var ChosenCore = (function() {
           match = regex.exec(this.escape_special_char(search_string));
         }
         if (!this.search_contains && (match != null ? match[1] : void 0)) {
-          match.index += 1;
+          match.index += match[1].length;
         }
         return match;
       }
@@ -2739,6 +2741,7 @@ var ChosenCore = (function() {
       persistent_create_option: 'boolean',
       skip_no_results: 'boolean',
       search_contains: 'boolean',
+      search_word_boundary: 'string',
       highlight_prefix_matches: 'boolean',
       split_search_terms: 'boolean',
       search_in_values: 'boolean',

@@ -218,6 +218,11 @@ $(".special_select").chosen({ placeholder_text_single: "Choose a project" });
           <td>By default, Chosen’s search matches starting at the beginning of a word. Setting this option to <code class="language-javascript">true</code> allows matches starting from anywhere within a word. When <code class="language-javascript">enable_split_word_search</code> is false, the match still must start at the beginning of the option text, including punctuation.</td>
         </tr>
         <tr>
+          <td>search_word_boundary</td>
+          <td><code class="language-javascript">"^|\\s|\\b"</code></td>
+          <td>Optional regular-expression source for the boundary before a search term when <code class="language-javascript">search_contains</code> is false. The default uses JavaScript word boundaries, which can split a word after accented letters. For names with Danish letters, use <code class="language-javascript">"^|[^A-Za-zÆØÅæøå]"</code> to keep those letters within a word. Include <code>^</code> if a match at the start should remain possible. This pattern is trusted JavaScript configuration, not user search text. React uses <code class="language-javascript">searchWordBoundary</code>. See the <a href="index.html#search-recipes">live search examples</a>.</td>
+        </tr>
+        <tr>
           <td>highlight_prefix_matches</td>
           <td>false</td>
           <td>With <code class="language-javascript">search_contains: true</code>, prefer the first rendered, selectable option whose label begins with the search text for keyboard highlighting and Enter selection. The result list and native option order stay unchanged. If no visible prefix match exists, Chosen uses its usual highlight. This setting does not override a custom <code class="language-javascript">search_matcher</code>.</td>

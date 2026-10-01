@@ -175,6 +175,7 @@ class AbstractChosen
     @group_search = if @options.group_search? then @options.group_search else true
     @search_in_values = @options.search_in_values || false
     @search_contains = @options.search_contains || false
+    @search_word_boundary = if typeof @options.search_word_boundary is "string" then @options.search_word_boundary else "^|\\s|\\b"
     @highlight_prefix_matches = @options.highlight_prefix_matches is true
     @search_matcher = if typeof @options.search_matcher is "function" then @options.search_matcher else null
     @search_input_type = if @options.search_input_type is "text" then "text" else "search"
@@ -785,7 +786,7 @@ class AbstractChosen
     status.textContent = ""
 
   get_search_regex: (escaped_search_string) ->
-    regex_string = if @search_contains then escaped_search_string else "(^|\\s|\\b)#{escaped_search_string}[^\\s]*"
+    regex_string = if @search_contains then escaped_search_string else "(#{@search_word_boundary})#{escaped_search_string}[^\\s]*"
     regex_string = "^#{regex_string}" unless @enable_split_word_search
     regex_flag = if @case_sensitive_search then "" else "i"
     new RegExp(regex_string, regex_flag)
@@ -898,7 +899,7 @@ class AbstractChosen
   search_string_match: (search_string, regex) ->
     match = regex.exec(search_string)
     match = regex.exec(this.escape_special_char(search_string)) if not @case_sensitive_search && not match?
-    match.index += 1 if not @search_contains && match?[1] # make up for lack of lookbehind operator in regex
+    match.index += match[1].length if not @search_contains && match?[1] # make up for lack of lookbehind operator in regex
     match
 
   choices_count: ->
@@ -1338,6 +1339,7 @@ class AbstractChosen
     persistent_create_option: 'boolean'
     skip_no_results: 'boolean'
     search_contains: 'boolean'
+    search_word_boundary: 'string'
     highlight_prefix_matches: 'boolean'
     split_search_terms: 'boolean'
     search_in_values: 'boolean'

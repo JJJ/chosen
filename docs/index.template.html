@@ -1784,6 +1784,23 @@ chosen.destroy();</code></pre>
             <option value="beacon">Beacon Studio</option>
           </select>
         </div>
+        <p>JavaScript's default word boundary can treat an accented letter as punctuation. This opt-in boundary keeps Danish letters within a word. Search “ller” (no match), then “Møl” (one match). Supply a boundary pattern for the languages your options use.</p>
+<!-- chosen-demo:jquery -->
+        <pre><code class="language-javascript">$("#recipe-word-boundary").chosen({
+<!-- chosen-demo:end -->
+<!-- chosen-demo:prototype -->
+        <pre><code class="language-javascript">new Chosen($("recipe-word-boundary"), {
+<!-- chosen-demo:end -->
+  search_word_boundary: "^|[^A-Za-zÆØÅæøå]"
+});</code></pre>
+        <div>
+          <label class="comparison-label" for="recipe-word-boundary">Try a Danish word boundary</label>
+          <select id="recipe-word-boundary" class="chosen-select-word-boundary" data-placeholder="Search names">
+            <option value=""></option>
+            <option value="moller">Frank Møller</option>
+            <option value="atlas">Team Atlas</option>
+          </select>
+        </div>
         <p>To match only from the start, including punctuation, combine <code class="language-javascript">enable_split_word_search: false</code> with <code class="language-javascript">search_contains: true</code>. Try searching for <code>&lt;01M</code>; the option with a preceding word stays hidden.</p>
         <div>
           <label class="comparison-label" for="recipe-prefix">Search from the start of an option</label>

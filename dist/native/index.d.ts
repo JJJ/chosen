@@ -9,6 +9,7 @@ export interface ChosenOptions {
   no_results_text?: string;
   no_results_template?: string;
   search_contains?: boolean;
+  search_word_boundary?: string;
   highlight_prefix_matches?: boolean;
   enable_split_word_search?: boolean;
   case_sensitive_search?: boolean;

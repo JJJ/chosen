@@ -525,6 +525,21 @@ test('source ARIA and native lifecycle events reach the generated input', () => 
   dom.window.close();
 });
 
+test('custom word boundaries filter accented names without changing the source select', () => {
+  const { dom, select } = fixture('<select><option value=""></option><option value="moller">Frank Møller</option></select>');
+  const chosen = new Chosen(select, { search_word_boundary: '^|[^A-Za-zÆØÅæøå]' });
+  chosen.open();
+  chosen.input.value = 'ller';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), []);
+  chosen.input.value = 'Møl';
+  chosen.renderResults();
+  assert.deepEqual(chosen.available.map(item => item.label), ['Frank Møller']);
+  assert.equal(select.value, '');
+  chosen.destroy();
+  dom.window.close();
+});
+
 test('classic search settings reach the shared matcher without changing select values', () => {
   const { dom, select } = fixture('<select><option value=""></option><option value="zebra">The Zebra</option><option value="special">Café</option><option value="whale">The Whale</option></select>');
   const chosen = new Chosen(select, { search_contains: true, enable_split_word_search: false,

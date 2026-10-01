@@ -68,6 +68,7 @@ export interface SearchSettings extends ResultSettings {
   minSearchLength?: number;
   normalizeSearchText?: (text: string) => string;
   searchContains?: boolean;
+  searchWordBoundary?: string;
   searchInValues?: boolean;
   searchMatcher?: (query: string, item: NormalizedEntry) => boolean;
   searchStringMatch?: (text: string, regex: RegExp) => RegExpExecArray | null;
