@@ -134,8 +134,10 @@
     "issue_refs": [
       2862
     ],
-    "status": "candidate",
-    "note": "Configurable Unicode-aware word boundaries may help languages where JavaScript regex word boundaries split accented words. The old regex-string patch needs a four-edition design and regression tests."
+    "status": "fixed-in-fork",
+    "note": "The opt-in search_word_boundary pattern keeps locale-specific letters within a word without changing default matching. jQuery, Prototype, Vanilla, and React have regression coverage and working examples.",
+    "upstream_pr": "https://github.com/harvesthq/chosen/pull/2898",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/207"
   },
   {
     "number": 2846,
