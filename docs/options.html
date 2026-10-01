@@ -509,6 +509,7 @@ $(".my-select").myChosen();</code></pre>
       <p>A select with <code>id="my-select"</code> receives a Chosen container with <code>id="my_select_chosen"</code>. Chosen replaces punctuation in source IDs with underscores before adding the <code>_chosen</code> suffix. The <code>inherit_select_classes</code> option can also copy application classes from the original select to its Chosen container.</p>
 
       <p>On touch devices, Chosen keeps its search inputs at least 16px so iPhone Safari does not zoom the page when they receive focus. Larger theme font sizes still apply, and users can still zoom the page normally.</p>
+      <p>For sites using Content Security Policy without inline scripts or styles, load Chosen's JavaScript and stylesheet from allowed sources and initialize it in an allowed external script. See the <a href="csp.md">CSP integration guide</a>.</p>
 
       <h3>Theme variables</h3>
       <p>Chosen accepts CSS custom properties on each <code>.chosen-container</code> or an ancestor. Override them on all Chosen controls, or use a wrapper or inherited class to scope a theme. The standalone stylesheet supplies fallback values, so no CSS framework is required.</p>

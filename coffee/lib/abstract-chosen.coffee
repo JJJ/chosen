@@ -1274,7 +1274,6 @@ class AbstractChosen
             autocomplete="off"
             class="chosen-search-input"
             role="combobox"
-            style="width:25px;"
             type="#{@search_input_type}"
           />
         </li>
