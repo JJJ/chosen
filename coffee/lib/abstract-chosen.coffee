@@ -720,11 +720,11 @@ class AbstractChosen
               # performance impact is minimal and negligible compared to DOM operations.
               if normalized_text != text
                 # When using normalization, highlight the full matched portion
-                # Get the actual matched length, accounting for boundary character in capture group
-                # search_match[1] contains the boundary character (space) if it was matched
+                # Get the actual matched length, accounting for the boundary in the capture group.
+                # A custom boundary can consume more than one character.
                 # search_match[0] contains the full match including the boundary
                 matched_length_in_normalized = search_match[0].length
-                matched_length_in_normalized -= 1 if search_match[1] # subtract boundary char if present
+                matched_length_in_normalized -= search_match[1].length if search_match[1]
 
                 # Find where the match starts in the original text by comparing
                 # normalized prefixes of the original text
