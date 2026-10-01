@@ -597,7 +597,8 @@
   {
     "number": 3065,
     "status": "support-question",
-    "note": "The report's attached handler opens Chosen during an @ keypress in a contenteditable element. Current Chromium and WebKit then insert @ into Chosen's newly focused search input. Calling preventDefault() in the shortcut handler before chosen:open prevents that insertion in both engines; this is application keyboard-event handling."
+    "note": "The report's attached handler opens Chosen during an @ keypress in a contenteditable element. Current Chromium and WebKit then insert @ into Chosen's newly focused search input. Calling preventDefault() in the shortcut handler before chosen:open prevents that insertion in both engines; this is application keyboard-event handling.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/214"
   },
   {
     "number": 3061,
