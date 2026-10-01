@@ -14,6 +14,20 @@ describe "Searching", ->
     expect(select.value).toBe('Angular')
     div.remove()
 
+  it "uses a custom word boundary without treating accented letters as a new word", ->
+    div = new Element('div').update("<select><option></option><option>Frank Møller</option></select>")
+    document.body.insert(div)
+    chosen = new Chosen(div.down('select'), search_word_boundary: '^|[^A-Za-zÆØÅæøå]')
+    chosen.results_show()
+    chosen.search_field.value = 'ller'
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(0)
+    chosen.search_field.value = 'Møl'
+    chosen.search_if_value_changed()
+    expect(div.select('.active-result').length).toBe(1)
+    expect(div.down('.active-result em').textContent).toBe('Møl')
+    div.remove()
+
   it "keeps first-result highlighting by default", ->
     div = new Element('div').update("<select><option></option><option>React</option><option>Angular</option></select>")
     document.body.insert(div)

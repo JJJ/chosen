@@ -17,6 +17,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Give Vanilla selects marked `aria-invalid="true"` the same customizable invalid border as classic and React Chosen. The generated host now gains `chosen-native--invalid`; this class is a new styling hook for integrations.
 
 ### Added
+- Add opt-in `search_word_boundary` to define word starts for locale-specific searches across jQuery, Prototype, Vanilla, and React. React uses `searchWordBoundary`. The default regex remains unchanged. This follows [Harvest PR #2898](https://github.com/harvesthq/chosen/pull/2898) by @Mikk3lRo.
 - Add opt-in `mobile_fullscreen` for a full-screen picker on narrow touch devices across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#2438). React uses `mobileFullscreen`; desktop and default mobile dropdowns are unchanged.
 - Add opt-in `shift_select_range` to select a visible range in multiple selects with Shift-click across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#135). React uses `shiftSelectRange`. Disabled options and selection limits still apply.
 - Add opt-in `placeholder_text_multiple_selected` to show an “Add another...” style search hint after the first multiple-selection choice across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#171). React uses `placeholderTextMultipleSelected`.

@@ -12,6 +12,17 @@ describe "Searching", ->
     expect(select.val()).toBe('Angular')
     div.remove()
 
+  it "uses a custom word boundary without treating accented letters as a new word", ->
+    div = $("<div><select><option></option><option>Frank Møller</option></select></div>").appendTo('body')
+    chosen = div.find('select').chosen(search_word_boundary: '^|[^A-Za-zÆØÅæøå]').data('chosen')
+    chosen.results_show()
+    chosen.search_field.val('ller').trigger('input')
+    expect(div.find('.active-result').length).toBe(0)
+    chosen.search_field.val('Møl').trigger('input')
+    expect(div.find('.active-result').length).toBe(1)
+    expect(div.find('.active-result em').text()).toBe('Møl')
+    div.remove()
+
   it "keeps first-result highlighting by default", ->
     div = $("<div><select><option></option><option>React</option><option>Angular</option></select></div>").appendTo('body')
     chosen = div.find('select').chosen(search_contains: true).data('chosen')

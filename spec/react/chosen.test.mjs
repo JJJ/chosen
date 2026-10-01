@@ -458,6 +458,18 @@ test('classic search settings filter React results and keep native form values',
   assert.equal(new FormData(document.querySelector('form')).get('animal'), 'special');
 });
 
+test('custom word boundaries filter accented names without changing form values', () => {
+  render(h('form', null, h(Chosen, { options: [{ value: 'moller', label: 'Frank Møller' }],
+    searchWordBoundary: '^|[^A-Za-zÆØÅæøå]', name: 'person', 'aria-label': 'Person' })));
+  const input = screen.getByRole('combobox');
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'ller' } });
+  assert.equal(screen.queryByRole('option'), null);
+  fireEvent.change(input, { target: { value: 'Møl' } });
+  assert.equal(screen.getByRole('option', { name: 'Frank Møller' }).textContent, 'Frank Møller');
+  assert.equal(new FormData(document.querySelector('form')).get('person'), '');
+});
+
 test('contains search can highlight a later prefix result without reordering options', () => {
   render(h(Chosen, { options: [{ value: 'react', label: 'React' }, { value: 'angular', label: 'Angular' }],
     searchContains: true, highlightPrefixMatches: true, 'aria-label': 'Framework' }));

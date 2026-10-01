@@ -43,7 +43,7 @@ export const Chosen = forwardRef(function Chosen({
   singleBackstrokeDelete = true,
   searchInputType = 'search',
   disableSearch = false, disableSearchThreshold = 0,
-  searchContains = false, splitSearchTerms = false, groupSearch = true,
+  searchContains = false, searchWordBoundary, splitSearchTerms = false, groupSearch = true,
   highlightPrefixMatches = false,
   enableSplitWordSearch = true, caseSensitiveSearch = false, searchInValues = false,
   maxSearchLength = 1000, minSearchLength = 0, maxShownResults,
@@ -117,12 +117,12 @@ export const Chosen = forwardRef(function Chosen({
     ? { ...item, selected: selectedSet.has(item.value) }
     : item), [entries, selectedSet]);
   const getResults = text => filterOptions(searchable, text, {
-    multiple, searchContains, splitSearchTerms, groupSearch,
+    multiple, searchContains, searchWordBoundary, splitSearchTerms, groupSearch,
     enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions
   });
-  const results = useMemo(() => getResults(appliedQuery), [searchable, appliedQuery, multiple, searchContains, splitSearchTerms, groupSearch,
+  const results = useMemo(() => getResults(appliedQuery), [searchable, appliedQuery, multiple, searchContains, searchWordBoundary, splitSearchTerms, groupSearch,
     enableSplitWordSearch, caseSensitiveSearch, searchInValues, maxSearchLength,
     minSearchLength, maxShownResults, normalizeSearchText, searchMatcher,
     displaySelectedOptions, displayDisabledOptions]);

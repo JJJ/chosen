@@ -201,7 +201,8 @@ export function createMatcher(query, settings) {
   var flags = config.caseSensitiveSearch ? '' : 'i';
 
   function expression(value) {
-    var pattern = config.searchContains ? value : '(^|\\s|\\b)' + value + '[^\\s]*';
+    var boundary = typeof config.searchWordBoundary === 'string' ? config.searchWordBoundary : '^|\\s|\\b';
+    var pattern = config.searchContains ? value : '(' + boundary + ')' + value + '[^\\s]*';
     if (config.enableSplitWordSearch === false) pattern = '^' + pattern;
     return new RegExp(pattern, flags);
   }
@@ -218,7 +219,7 @@ export function createMatcher(query, settings) {
     if (config.searchStringMatch) return config.searchStringMatch(text, searchRegex);
     var match = searchRegex.exec(text);
     if (!config.caseSensitiveSearch && !match) match = searchRegex.exec(fold(text));
-    if (!config.searchContains && match && match[1]) match.index += 1;
+    if (!config.searchContains && match && match[1]) match.index += match[1].length;
     return match;
   }
 

@@ -285,7 +285,8 @@ var ChosenCore = (function() {
     var terms = config.splitSearchTerms ? normalizedQuery.split(/\s+/) : [];
     var flags = config.caseSensitiveSearch ? "" : "i";
     function expression(value) {
-      var pattern = config.searchContains ? value : "(^|\\s|\\b)" + value + "[^\\s]*";
+      var boundary = typeof config.searchWordBoundary === "string" ? config.searchWordBoundary : "^|\\s|\\b";
+      var pattern = config.searchContains ? value : "(" + boundary + ")" + value + "[^\\s]*";
       if (config.enableSplitWordSearch === false) pattern = "^" + pattern;
       return new RegExp(pattern, flags);
     }
@@ -300,7 +301,7 @@ var ChosenCore = (function() {
       if (config.searchStringMatch) return config.searchStringMatch(text, searchRegex);
       var match2 = searchRegex.exec(text);
       if (!config.caseSensitiveSearch && !match2) match2 = searchRegex.exec(fold(text));
-      if (!config.searchContains && match2 && match2[1]) match2.index += 1;
+      if (!config.searchContains && match2 && match2[1]) match2.index += match2[1].length;
       return match2;
     }
     function matchField(text, shouldNormalize) {

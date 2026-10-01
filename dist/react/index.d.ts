@@ -85,6 +85,7 @@ export interface ChosenProps {
   disableSearch?: boolean;
   disableSearchThreshold?: number;
   searchContains?: boolean;
+  searchWordBoundary?: string;
   highlightPrefixMatches?: boolean;
   enableSplitWordSearch?: boolean;
   caseSensitiveSearch?: boolean;

@@ -68,6 +68,16 @@ test('matcher reports primary, alternate, exact, and split-term results', () => 
   assert.equal(core.createMatcher('Cat')({ label: 'Cat', exactText: 'Cat' }).exact, true);
 });
 
+test('custom word boundaries avoid accented suffixes and preserve match positions', () => {
+  const option = { label: 'Frank Møller' };
+  const boundary = '^|[^A-Za-zÆØÅæøå]';
+  assert.equal(core.createMatcher('ller')(option).matched, true);
+  assert.equal(core.createMatcher('ller', { searchWordBoundary: boundary })(option).matched, false);
+  assert.equal(core.createMatcher('Møl', { searchWordBoundary: boundary })(option).primaryMatch.index, 6);
+  assert.equal(core.createMatcher('Møl', { searchWordBoundary: '^|--' })({ label: 'Team--Møller' }).primaryMatch.index, 6);
+  assert.equal(core.createMatcher('ller', { searchContains: true, searchWordBoundary: boundary })(option).matched, true);
+});
+
 test('contains search still starts at the option beginning when split word search is disabled', () => {
   const prefix = core.createMatcher('<01M', { enableSplitWordSearch: false, searchContains: true });
   assert.equal(prefix({ label: '<01M Fund' }).matched, true);
