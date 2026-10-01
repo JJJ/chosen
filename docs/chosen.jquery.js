@@ -2662,7 +2662,6 @@ var ChosenCore = (function() {
       autocomplete="off"
       class="chosen-search-input"
       role="combobox"
-      style="width:25px;"
       type="${this.search_input_type}"
     />
   </li>

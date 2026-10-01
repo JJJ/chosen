@@ -108,8 +108,8 @@
   },
   {
     "number": 3146,
-    "status": "blocked",
-    "note": "The report shows an inline-script CSP error; need an isolated demo to attribute it to Chosen."
+    "status": "covered-in-fork",
+    "note": "An isolated strict-CSP fixture in Chromium and WebKit exposed a Chosen-generated inline width on the classic multi-select search input. Removed that duplicate attribute while retaining the existing CSS and runtime sizing. Both classic adapters now initialize and select without CSP violations when initialization runs from an allowed external script; the reported blocked inline application script needs an external file or permitted nonce."
   },
   {
     "number": 2757,

@@ -4,6 +4,11 @@ Chosen's jQuery and Prototype adapters define the current behavior in [Options a
 
 The goal is equivalent behavior and defaults in all editions, expressed through each platform's natural API. React props can use camelCase and callbacks; vanilla can use native DOM events. An adapter-specific mechanism is acceptable only when users can achieve the same result. Avoid changing an existing default silently; document a migration or release boundary when aligning one.
 
+All four editions can initialize from allowed external scripts under a strict
+Content Security Policy. The classic multiple-select search input no longer
+emits an inline width attribute; its default width comes from `chosen.css`.
+See the [CSP integration guide](csp.md).
+
 Remote search is an integration recipe, not a built-in source option. The classic
 editions and Vanilla report queries through `chosen:search_updated`; React uses
 `onSearchUpdated`. Each can receive a bounded async result page while retaining
