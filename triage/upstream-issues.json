@@ -687,8 +687,9 @@
   },
   {
     "number": 2981,
-    "status": "blocked",
-    "note": "The report omits the AJAX replacement sequence. Repeated native option updates work in both current adapters; a failing fixture is needed."
+    "status": "support-question",
+    "note": "The report omits its AJAX replacement sequence. Replacing native options, setting the new value, and triggering chosen:updated twice works in jQuery and Prototype under current Chromium and WebKit. Update the original select before firing chosen:updated; if the application replaces the select element, destroy its old Chosen instance first and initialize the replacement.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/215"
   },
   {
     "number": 2979,
