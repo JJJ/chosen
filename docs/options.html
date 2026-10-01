@@ -398,6 +398,7 @@ $(".my-select").myChosen();</code></pre>
       <h2><a name="attributes" class="anchor" href="#attributes">Attributes</a></h2>
       <p>Certain attributes placed on the select tag or its options can be used to configure Chosen.</p>
       <p>Option labels come from native <code>&lt;option&gt;</code> text. When an option has no text, Chosen uses its <code>label</code> attribute instead. An empty value with a whitespace-only label remains a placeholder. Labels are displayed as text; HTML nested in an option is not copied into Chosen's results or selected choices.</p>
+      <p>Chosen preserves Unicode option text, including Cyrillic. If replacement characters appear, inspect the native option text before initializing Chosen and check the page or response character encoding. Once the browser has decoded source text as replacement characters, Chosen cannot recover the original letters.</p>
 
       <h3>Example:</h3>
 
