@@ -28,6 +28,7 @@ The compiled JavaScript and CSS files are located in the `/dist` directory. This
 - `chosen.css` / `chosen.min.css` - Styles
 - `chosen.css.map` - CSS source map
 - `native/chosen.native.js` / `native/chosen.css` - experimental vanilla edition
+- `remote/chosen.remote.js` - opt-in bounded remote source helper for browser integrations
 
 The `/docs` directory also contains copies of these files for GitHub Pages.
 GitHub Pages publishes it automatically when changes reach `master`.
@@ -49,6 +50,7 @@ the Prototype adapter, shared CSS, Sass, and the experimental framework-neutral
 ESM/CommonJS core are described in the
 [package boundaries](docs/package-boundaries.md). The experimental vanilla adapter is described in the [vanilla guide](docs/native.md),
 and the native React component in the [React guide](docs/react.md). Their remaining gaps are tracked in the [adapter parity inventory](docs/adapter-parity.md).
+For large server-backed lists, see the opt-in [remote source guide](docs/remote-search.md).
 
 To install with Composer:
 

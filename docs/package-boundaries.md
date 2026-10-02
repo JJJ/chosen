@@ -13,6 +13,7 @@ available. Explicit entries make new integrations easier to identify:
 | `chosen-jjj/native/styles.css` | Standalone vanilla adapter styles using shared `--chosen-*` tokens. |
 | `chosen-jjj/react` | Native React component; ESM build and TypeScript declarations with React as a peer dependency. |
 | `chosen-jjj/react/styles.css` | Standalone React theme using the shared `--chosen-*` tokens. |
+| `chosen-jjj/remote` | Opt-in bounded remote source controller and native select connector; ESM and CommonJS builds with TypeScript declarations. |
 | `chosen-jjj/styles.css` | Standalone default CSS and shared theme variables. |
 | `chosen-jjj/scss` | Customizable Sass source. |
 | `chosen-jjj/sass/icons/*.svg` | Editable sources for the four control icons embedded in the default CSS. |
@@ -67,3 +68,5 @@ React does not instantiate a jQuery or Prototype control. Its ESM entry bundles
 the core rules but leaves React external, and its stylesheet is opt-in.
 
 The vanilla DOM edition is an explicit entry and does not replace the jQuery default. It keeps the original select authoritative and uses native DOM events. Both vanilla and React are still experimental and have known gaps against the classic feature set. See the [adapter parity inventory](adapter-parity.md) before treating either as a replacement for a classic adapter.
+
+The [remote source helper](remote-search.md) accepts a loader returning a bounded page of records. Classic and Vanilla editions connect it to their native select; React exports `useRemoteOptions` from `chosen-jjj/react`. This helper does not change default search behavior or virtualize a pre-populated select.

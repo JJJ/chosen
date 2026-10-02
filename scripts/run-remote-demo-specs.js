@@ -42,36 +42,43 @@ async function check(engine, name) {
       assert.deepEqual(errors, [], `${name} ${file}: page error`);
       await page.close();
     }
-    const page = await browser.newPage();
-    const errors = [];
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto(pathToFileURL(path.join(docs, 'react.html')).href);
-    await page.evaluate(() => {
-      window.remoteSearchRequests = {};
-      window.ChosenRemoteDemo.search = (query, done) => {
-        window.remoteSearchRequests[query] = done;
-      };
-    });
-    const input = page.locator('#remote-source-integration input').first();
-    await input.click();
-    await input.fill('be');
-    await page.waitForFunction(() => !!window.remoteSearchRequests.be);
-    await input.fill('co');
-    await page.waitForFunction(() => !!window.remoteSearchRequests.co);
-    await page.evaluate(() => {
-      window.remoteSearchRequests.co(null, [{ value: 'cobalt', label: 'Cobalt' }]);
-    });
-    await page.locator('#remote-source-integration output').getByText('1 projects returned.', { exact: false }).waitFor();
-    await page.evaluate(() => {
-      window.remoteSearchRequests.be(null, [{ value: 'beacon', label: 'Beacon' }]);
-    });
-    await page.waitForTimeout(100);
-    const results = await page.locator('select[name="suite-remote-source-integration"] option').evaluateAll(options =>
-      options.map(option => option.value));
-    assert.deepEqual(results, ['atlas', 'cobalt'], `${name}: stale React search replaced newer results`);
-    assert.deepEqual(errors, [], `${name}: React stale-response page error`);
-    await page.close();
-    console.log(`${name}: four-edition remote search, native value retention, and React stale-response handling passed`);
+    for (const file of ['index.html', 'index.proto.html', 'native.html', 'react.html']) {
+      const page = await browser.newPage();
+      const errors = [];
+      page.on('pageerror', error => errors.push(error.message));
+      await page.goto(pathToFileURL(path.join(docs, file)).href);
+      await page.evaluate(() => {
+        window.remoteSearchRequests = {};
+        window.ChosenRemoteDemo.search = (query, done) => {
+          window.remoteSearchRequests[query] = done;
+        };
+      });
+      const classic = file.startsWith('index');
+      const section = classic ? page.locator('#remote_select_chosen') : page.locator('#remote-source-integration');
+      const input = section.locator('input').first();
+      const status = page.locator(classic ? '#remote-status' : '#remote-source-integration output').first();
+      await input.click();
+      await input.fill('be');
+      await page.waitForFunction(() => !!window.remoteSearchRequests.be);
+      await input.fill('co');
+      await page.waitForFunction(() => !!window.remoteSearchRequests.co);
+      await page.evaluate(() => {
+        window.remoteSearchRequests.co(null, [{ value: 'cobalt', label: 'Cobalt' }]);
+      });
+      await status.getByText('1 projects returned.', { exact: false }).waitFor();
+      await page.evaluate(() => {
+        window.remoteSearchRequests.be(null, [{ value: 'beacon', label: 'Beacon' }]);
+      });
+      await page.waitForTimeout(100);
+      const select = classic ? '#remote-select' : file === 'native.html'
+        ? '#native-suite-remote-source-integration' : 'select[name="suite-remote-source-integration"]';
+      const results = await page.locator(`${select} option`).evaluateAll(options =>
+        options.map(option => option.value));
+      assert.deepEqual(results, ['atlas', 'cobalt'], `${name} ${file}: stale search replaced newer results`);
+      assert.deepEqual(errors, [], `${name} ${file}: stale-response page error`);
+      await page.close();
+    }
+    console.log(`${name}: four-edition remote search, native value retention, and stale-response handling passed`);
   } finally {
     await browser.close();
   }

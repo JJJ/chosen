@@ -1,5 +1,24 @@
 import type { CSSProperties, FocusEvent, ForwardRefExoticComponent, RefAttributes, SyntheticEvent } from 'react';
 import type { NormalizedEntry } from 'chosen-jjj/core';
+import type { RemoteLoader, RemoteStatus } from 'chosen-jjj/remote';
+
+export interface RemoteOptionsConfig {
+  load: RemoteLoader;
+  value?: string | number | Array<string | number>;
+  selectedOptions?: ChosenOption[];
+  minLength?: number;
+  limit?: number;
+  onStatus?: (status: RemoteStatus, query: string, error?: unknown, count?: number) => void;
+}
+
+export function useRemoteOptions(config: RemoteOptionsConfig): {
+  options: ChosenOption[];
+  status: RemoteStatus;
+  error: unknown;
+  count: number;
+  search(query: string): void;
+  refresh(): void;
+};
 
 export interface ChosenOption {
   value: string | number;

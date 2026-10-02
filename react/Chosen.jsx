@@ -2,6 +2,7 @@ import React, {
   forwardRef, useCallback, useEffect, useId, useImperativeHandle, useMemo, useRef, useState
 } from 'react';
 import { filterOptions, normalizeOptions, preferredPrefixIndex, rangeOptions, resolvePastedChoices, updateSelection } from '../core/index.mjs';
+export { useRemoteOptions } from './useRemoteOptions.js';
 
 function valuesOf(value, multiple) {
   if (value == null || value === '') return [];

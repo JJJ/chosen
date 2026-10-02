@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Chosen } from '../../dist/react/index.mjs';
+import { Chosen, useRemoteOptions } from '../../dist/react/index.mjs';
 
 const options = [
   { value: 'apple', label: 'Apple', dataAttributes: { 'data-family': 'pome' } },
@@ -154,46 +154,31 @@ function nativeOptions(items) {
 }
 
 function RemoteSourceExample({ example, report }) {
-  const [items, setItems] = useState(example.options);
   const [selected, setSelected] = useState(example.defaultValue);
-  const [status, setStatus] = useState('Type at least two characters to search.');
-  const selectedRef = useRef(selected);
-  const lastQuery = useRef();
-  const request = useRef(0);
+  const remote = useRemoteOptions({
+    load: query => window.ChosenRemoteDemo.load(query),
+    value: selected,
+    selectedOptions: example.options,
+    minLength: 2,
+    limit: 6
+  });
+  const status = remote.status === 'loading' ? 'Loading projects…'
+    : remote.status === 'error' ? 'Could not load projects. Try another search.'
+    : remote.status === 'ready' ? `${remote.count} projects returned. Selected values stay in the form.`
+    : 'Type at least two characters to search.';
   const id = `react-suite-${example.id}`;
-  const onSearchUpdated = query => {
-    if (query === lastQuery.current) return;
-    lastQuery.current = query;
-    const current = ++request.current;
-    if (query.length < 2) {
-      setItems(previous => previous.filter(item => selectedRef.current.includes(item.value)));
-      setStatus('Type at least two characters to search.');
-      return;
-    }
-    setStatus('Loading projects…');
-    window.ChosenRemoteDemo.search(query, (error, results) => {
-      if (current !== request.current) return;
-      if (error) { setStatus('Could not load projects. Try another search.'); return; }
-      setItems(previous => {
-        const kept = previous.filter(item => selectedRef.current.includes(item.value));
-        return kept.concat(results.filter(item => !selectedRef.current.includes(item.value)));
-      });
-      setStatus(`${results.length} projects returned. Selected values stay in the form.`);
-    });
-  };
   return <section id={example.id} className="adapter-suite-example">
     <h2><a className="anchor" href={`#${example.id}`}>{example.title}</a></h2>
     <div className="side-by-side clearfix">
       <p>{example.help} <a href="https://github.com/JJJ/chosen/wiki/Remote-Search-Integration">See the integration recipe.</a></p>
       <div className="adapter-suite-control">
         <label className="comparison-label" htmlFor={id}>Search projects from an async source</label>
-        <Chosen id={id} name={`suite-${example.id}`} multiple options={items} value={selected}
-          placeholder="Type two letters to search" onSearchUpdated={onSearchUpdated}
+        <Chosen id={id} name={`suite-${example.id}`} multiple options={remote.options} value={selected}
+          placeholder="Type two letters to search" onSearchUpdated={remote.search}
           onChange={values => {
-            selectedRef.current = values;
             setSelected(values);
             report(`${example.title}: ${values.join(', ') || '(none)'}`);
-          }} {...example.react} />
+          }} searchMatcher={() => true} {...example.react} />
         <output role="status">{status}</output>
       </div>
     </div>

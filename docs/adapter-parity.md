@@ -9,11 +9,12 @@ Content Security Policy. The classic multiple-select search input no longer
 emits an inline width attribute; its default width comes from `chosen.css`.
 See the [CSP integration guide](csp.md).
 
-Remote search is an integration recipe, not a built-in source option. The classic
-editions and Vanilla report queries through `chosen:search_updated`; React uses
-`onSearchUpdated`. Each can receive a bounded async result page while retaining
-selected native values. See [Remote search with Chosen](remote-search.md) and
-the working example on all four demo pages.
+The opt-in `chosen-jjj/remote` source controller manages bounded async pages,
+stale responses, and selected-value retention for the classic and Vanilla
+editions. React exports a matching `useRemoteOptions` hook. Each edition still
+reports queries through its existing search event or callback. This is not DOM
+virtualization for a pre-populated select. See [Remote search with Chosen](remote-search.md)
+and the working example on all four demo pages.
 
 `Yes` means the option has equivalent configurable behavior. `Partial` means some behavior exists but the setting, default, or an important edge case differs. `No` means the public adapter does not implement it. The jQuery and Prototype columns are omitted because the classic reference is the baseline, not because their individual tests can be skipped.
 

@@ -1443,10 +1443,18 @@
 
       <h2><a name="remote-source-integration" class="anchor" href="#remote-source-integration">Remote Search Integration</a></h2>
       <div class="side-by-side clearfix">
-        <p>Type at least two letters, then select a returned project and search again. This demo simulates a bounded asynchronous response. Selected values remain real options in the native select while result options change. A production integration can replace the demo provider with a server request; it should ignore stale responses and keep selected options when refreshing. See the <a href="https://github.com/JJJ/chosen/wiki/Remote-Search-Integration">complete integration recipe</a>.</p>
-        <pre><code class="language-javascript">$("#remote-select").on("chosen:search_updated", function(event, data) {
-  // Fetch a bounded result page for data.search_term, then replace
-  // unselected options and trigger "chosen:updated".
+        <p>Type at least two letters, then select a returned project and search again. The opt-in <code>chosen-jjj/remote</code> API loads a bounded page, ignores stale responses, and keeps selected values in the native select. Replace the demo provider with your server request. See the <a href="https://github.com/JJJ/chosen/wiki/Remote-Search-Integration">remote search guide</a>.</p>
+        <pre><code class="language-javascript">ChosenRemote.connectRemoteSelect(document.querySelector("#remote-select"), {
+  load: loadProjects,
+  subscribe: function(search) {
+    var field = $("#remote-select");
+    var handler = function(event, data) {
+      search(data.search_term);
+    };
+    field.on("chosen:search_updated", handler);
+    return function() { field.off("chosen:search_updated", handler); };
+  },
+  update: function() { $("#remote-select").trigger("chosen:updated"); }
 });</code></pre>
         <div>
           <label class="comparison-label" for="remote-select">Search projects from an async source</label>
@@ -1877,6 +1885,7 @@
   <script src="chosen.jquery.js?ver=3.0.4-data-options" type="text/javascript"></script>
   <script src="docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
   <script src="docsupport/remote-demo.js" type="text/javascript"></script>
+  <script src="chosen.remote.js" type="text/javascript"></script>
   <script src="docsupport/init.js" type="text/javascript" charset="utf-8"></script>
   </form>
 </body></html>

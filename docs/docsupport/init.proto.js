@@ -5,7 +5,7 @@ document.observe('dom:loaded', function(evt) {
     '.chosen-select-bulk'      : { allow_select_all: true, allow_deselect_all: true, hide_results_on_select: false, width: '100%' },
     '.chosen-select-summary'   : { max_items_shown: 2, width: '100%' },
     '.chosen-select-paste'     : { paste_multiple_values: true, width: '100%' },
-    '.chosen-select-remote'    : { search_contains: true, min_search_length: 2, search_delay: 150, width: '100%' },
+    '.chosen-select-remote'    : { search_matcher: function() { return true; }, min_search_length: 2, search_delay: 150, width: '100%' },
     '.chosen-select-search-recipe': { split_search_terms: true, min_search_length: 2, normalize_search_text: function(text) { return text.normalize ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : text.replace(/[éèêë]/g, 'e'); }, width: '100%' },
     '.chosen-select-word-boundary': { search_word_boundary: '^|[^A-Za-zÆØÅæøå]', width: '100%' },
     '.chosen-select-prefix-recipe': { enable_split_word_search: false, search_contains: true, width: '100%' },
@@ -47,9 +47,21 @@ document.observe('dom:loaded', function(evt) {
     });
   });
   var remoteSelect = $('remote-select');
-  ChosenRemoteDemo.connect(remoteSelect, function(search) {
-    remoteSelect.observe('chosen:search_updated', function(event) { search(event.memo.search_term); });
-  }, function() { remoteSelect.fire('chosen:updated'); }, $('remote-status'));
+  ChosenRemote.connectRemoteSelect(remoteSelect, {
+    load: ChosenRemoteDemo.load,
+    subscribe: function(search) {
+      var handler = function(event) { search(event.memo.search_term); };
+      remoteSelect.observe('chosen:search_updated', handler);
+      return function() { remoteSelect.stopObserving('chosen:search_updated', handler); };
+    },
+    update: function() { remoteSelect.fire('chosen:updated'); },
+    onStatus: function(state, query, error, count) {
+      $('remote-status').textContent = state === 'loading' ? 'Loading projects…'
+        : state === 'error' ? 'Could not load projects. Try another search.'
+        : state === 'ready' ? count + ' projects returned. Selected values stay in the form.'
+        : 'Type at least two characters to search.';
+    }
+  });
   var previousChosenDefaults = Chosen.defaults;
   Chosen.defaults = { placeholder_text_single: 'Shared prompt' };
   new Chosen($('defaults-shared'));

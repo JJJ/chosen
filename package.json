@@ -7,6 +7,7 @@
   "style": "dist/css/chosen.css",
   "sideEffects": [
     "./dist/js/**",
+    "./dist/remote/chosen.remote.js",
     "./dist/core/index.iife.js",
     "./dist/css/**",
     "./dist/native/**",
@@ -24,6 +25,11 @@
       "types": "./dist/core/index.d.ts",
       "import": "./dist/core/index.mjs",
       "require": "./dist/core/index.cjs"
+    },
+    "./remote": {
+      "types": "./dist/remote/index.d.ts",
+      "import": "./dist/remote/index.mjs",
+      "require": "./dist/remote/index.cjs"
     },
     "./native": {
       "types": "./dist/native/index.d.ts",
@@ -73,9 +79,10 @@
     "node": ">=20.20.0"
   },
   "scripts": {
-    "test": "node scripts/build-demo-pages.js --check && grunt test && npm run test:native && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && node scripts/run-csp-specs.js && npm run test:react && npm run test:react-demo && node scripts/run-remote-demo-specs.js && npm run test:visual",
+    "test": "node scripts/build-demo-pages.js --check && grunt test && npm run test:native && npm run test:remote && node --test spec/core/*.test.mjs spec/module/*.test.mjs && tsc -p spec/core/tsconfig.json && node scripts/run-browser-specs.js && node scripts/run-csp-specs.js && npm run test:react && npm run test:react-demo && npm run test:visual",
     "test:native": "node scripts/build-native.js && node --test spec/native/*.test.mjs && tsc -p spec/native/tsconfig.json && node scripts/run-native-browser-specs.js",
     "test:core": "grunt core && node --test spec/core/*.test.mjs && tsc -p spec/core/tsconfig.json",
+    "test:remote": "node scripts/build-remote.js && node --test spec/remote/*.test.mjs && tsc -p spec/remote/tsconfig.json && node scripts/run-remote-demo-specs.js",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
     "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
@@ -85,7 +92,7 @@
     "visual:fixtures": "node scripts/run-visual-fixtures.js --capture",
     "size:react": "node scripts/report-react-size.js",
     "triage:upstream": "node scripts/upstream-issues.js",
-    "build": "grunt build && node scripts/build-native.js && node scripts/build-react.js && node scripts/build-react-demo.js",
+    "build": "grunt build && node scripts/build-remote.js && node scripts/build-native.js && node scripts/build-react.js && node scripts/build-react-demo.js",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
