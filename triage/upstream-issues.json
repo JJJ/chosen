@@ -1374,7 +1374,7 @@
     "number": 79,
     "status": "fixed-in-fork",
     "note": "Four-edition remote integration landed in #209. An opt-in package remote source API now bounds result pages, discards stale responses, and retains selected native options. Pre-populated select virtualization and free-text creation are separate features.",
-    "fork_pr": "https://github.com/JJJ/chosen/pull/209"
+    "fork_pr": "https://github.com/JJJ/chosen/pull/216"
   },
   {
     "number": 5,
