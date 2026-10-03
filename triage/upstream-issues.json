@@ -617,8 +617,8 @@
   },
   {
     "number": 3055,
-    "status": "blocked",
-    "note": "Old icon screenshot URL and no current asset path or runnable case; cannot identify a fork defect."
+    "status": "covered-in-fork",
+    "note": "Current choice-close icons are embedded SVGs with an explicit 15px size. They remained visible in current Chrome at standard and retina pixel ratios; the historical Chrome 74/Windows 10 screenshot was not reproduced."
   },
   {
     "number": 3052,
@@ -760,8 +760,8 @@
   },
   {
     "number": 2932,
-    "status": "blocked",
-    "note": "Chrome device emulation reload changes the mobile fallback, but no actual device, missing-asset URL, or current-version reproduction is supplied."
+    "status": "covered-in-fork",
+    "note": "The fork no longer requests chosen-sprite.png; its dropdown icon is embedded SVG. The icon remained visible before and after reload in current Chrome mobile emulation."
   },
   {
     "number": 2931,
@@ -938,8 +938,8 @@
   },
   {
     "number": 2778,
-    "status": "blocked",
-    "note": "External examples do not specify the requested behavior or working reproduction."
+    "status": "covered-in-fork",
+    "note": "The linked example asks for alternate keywords without changing the visible option label. The fork supports this through data-search-text on options and searchText in React; adapter tests cover matching while preserving the label."
   },
   {
     "number": 2777,
@@ -1247,7 +1247,7 @@
   {
     "number": 1386,
     "status": "blocked",
-    "note": "Wacom pen/modifier gesture requires that hardware or a reproducible synthetic pointer sequence."
+    "note": "Classic adapters select results on mouseup, so the reported gesture is plausible, but the Wacom event sequence is unverified. It needs that hardware or a reproducible synthetic pointer sequence before changing selection behavior."
   },
   {
     "number": 1380,
@@ -1318,7 +1318,7 @@
   {
     "number": 625,
     "status": "blocked",
-    "note": "The 2012 Firefox-only double-Tab report needs a current Firefox reproduction. Playwright Firefox downloaded but exited before loading its profile in this local environment; Chrome results cannot settle it."
+    "note": "The 2012 Firefox-only double-Tab report needs a current Firefox reproduction. Playwright Firefox failed to create a profile with both temporary and persistent contexts in this local environment; Chrome results cannot settle it."
   },
   {
     "number": 572,
