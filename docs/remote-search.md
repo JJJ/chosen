@@ -1,93 +1,111 @@
 # Remote search with Chosen
 
-Chosen enhances a native `<select>`. For a large remote collection, keep the
-collection on your server and put only a bounded page of matches into the
-select. Keep every selected option in the select when replacing search results.
-That preserves submitted values, native `change` events, and Chosen's existing
-selection behavior. The [jQuery](https://jjj.github.io/chosen/#remote-source-integration),
+`chosen-jjj/remote` is an opt-in source controller for large remote collections.
+Keep the collection on the server and return a bounded page of `{ value,
+label }` records. The controller keeps selected options in the native
+`<select>` when the visible result page changes. Submitted values and native
+`change` events keep their normal Chosen behavior.
+
+The [jQuery](https://jjj.github.io/chosen/#remote-source-integration),
 [Prototype](https://jjj.github.io/chosen/index.proto.html#remote-source-integration),
 [Vanilla](https://jjj.github.io/chosen/native.html#remote-source-integration), and
-[React](https://jjj.github.io/chosen/react.html#remote-source-integration) demos show this with a small
-simulated asynchronous provider.
+[React](https://jjj.github.io/chosen/react.html#remote-source-integration) demos
+use this package API with a simulated asynchronous provider.
 
-## Server contract
+## Loader contract
 
-Return a small page of records with stable, unique string values and display
-labels, for example:
-
-```json
-[{"value":"beacon","label":"Beacon"},{"value":"ember","label":"Ember"}]
-```
-
-Search and cap results on the server. Do not send the whole collection to the
-browser. The demos cap each response at six records. They use
-`min_search_length: 2` and `search_delay: 150` to avoid a request for every
-single keystroke. Use `search_contains: true` when the server matches within
-labels, as the demos do. A prefix-only server should use the default matching
-setting so Chosen does not hide valid returned results.
-
-Replace the demo provider in [remote-demo.js](docsupport/remote-demo.js) with a
-request to your own endpoint. Its callback receives an error or the result
-records:
+The loader receives a query and `{ signal, limit }`, and returns an array or a
+Promise for an array. Values must be stable and unique; labels are inserted as
+text. The controller aborts older requests where the loader supports
+`AbortSignal`, ignores late responses, removes duplicate values, and caps the
+visible page at `limit` records (50 by default). Search and cap results on the
+server too. The demo uses a six-record limit.
 
 ```js
-function loadProjects(query, done) {
-  fetch('/api/projects?q=' + encodeURIComponent(query), {
-    credentials: 'same-origin'
-  }).then(function (response) {
-    if (!response.ok) throw new Error('Project search failed');
-    return response.json();
-  }).then(function (records) {
-    done(null, records);
-  }, done);
+async function loadProjects(query, { signal, limit }) {
+  const url = `/api/projects?q=${encodeURIComponent(query)}&limit=${limit}`;
+  const response = await fetch(url, { signal, credentials: 'same-origin' });
+  if (!response.ok) throw new Error('Project search failed');
+  return response.json(); // [{ value: 'beacon', label: 'Beacon' }, ...]
 }
 ```
 
-The demo helper's `connect(select, subscribe, update, status, loadProjects)`
-accepts this function as its last argument. It discards stale responses,
-retains selected `<option>` elements, renders result labels as text, handles
-request errors, and prevents the `chosen:updated` refresh from repeating the
-same request. Copy or adapt the helper for your application; it is demo code,
-not a new package API. Validate the returned records and cap them server-side.
-For browsers without `fetch`, supply an equivalent request function.
+## Classic and Vanilla editions
 
-## Connecting an edition
-
-Each edition supplies the search query and refreshes from its native select:
-
-| Edition | Search notification | Refresh after changing `<option>` elements |
-| --- | --- | --- |
-| jQuery | `chosen:search_updated`, `data.search_term` | `$(select).trigger('chosen:updated')` |
-| Prototype | `chosen:search_updated`, `event.memo.search_term` | `select.fire('chosen:updated')` |
-| Vanilla | `chosen:search_updated`, `event.detail.search_term` | `chosen.update()` |
-| React | `onSearchUpdated(query)` | Update the `options` prop; keep selected values in a controlled `value` prop |
-
-After copying the demo helper into your application, the jQuery wiring is:
+Initialize Chosen first, then connect its search notification and refresh
+method. The loader's records are authoritative, so `search_matcher` can return
+`true` for the bounded page. `min_search_length` and `search_delay` control
+when Chosen emits a query; `minLength` controls when the remote loader runs.
 
 ```js
-var select = document.querySelector('#projects');
-var field = $(select).chosen({
-  search_contains: true,
+import { connectRemoteSelect } from 'chosen-jjj/remote';
+
+const select = document.querySelector('#projects');
+const field = $(select).chosen({
+  search_matcher: () => true,
   min_search_length: 2,
   search_delay: 150
 });
+const remote = connectRemoteSelect(select, {
+  load: loadProjects,
+  minLength: 2,
+  limit: 50,
+  subscribe(search) {
+    const handler = (event, data) => search(data.search_term);
+    field.on('chosen:search_updated', handler);
+    return () => field.off('chosen:search_updated', handler);
+  },
+  update() { field.trigger('chosen:updated'); },
+  onStatus(state, query, error, count) {
+    // Show loading, result count, or an error in your own status element.
+  }
+});
 
-ChosenRemoteDemo.connect(select, function (search) {
-  field.on('chosen:search_updated', function (event, data) {
-    search(data.search_term);
-  });
-}, function () {
-  field.trigger('chosen:updated');
-}, document.querySelector('#project-search-status'), loadProjects);
+// Before removing this control:
+remote.dispose();
+field.chosen('destroy');
 ```
 
-See [init.proto.js](docsupport/init.proto.js),
-[native-demo.js](docsupport/native-demo.js), and
-[react-demo.jsx](docsupport/react-demo.jsx) for the other working examples.
-React keeps its selected values and their option records in component state;
-it does not mutate the hidden native select directly.
+For Prototype, `subscribe` uses `select.observe('chosen:search_updated',
+handler)` and `update` uses `select.fire('chosen:updated')`. For Vanilla, use
+`select.addEventListener('chosen:search_updated', handler)` and
+`chosen.update()`. Each subscriber should return a function that removes its
+listener. The four demos show the complete wiring.
 
-Free-text creation is a separate opt-in feature (`create_option` in the classic
-and Vanilla editions, `createOption` in React). Decide whether users may create
-new values independently of the remote search. This recipe does not virtualize
-an already populated select and does not add a built-in remote-source option.
+The controller retains the original selected options and a blank single-select
+placeholder. Any initial unselected options are removed when it connects, so
+the native select holds only selected values and the current bounded page.
+Call `remote.refresh()` to request the current query again. `remote.dispose()`
+aborts work and removes the subscribed listener.
+
+## React edition
+
+`useRemoteOptions` keeps the current page and selected records available to
+the React component. Pass the selected value and any initially selected option
+records to the hook, then use its `options` and `search` values with `Chosen`.
+
+```jsx
+import { Chosen, useRemoteOptions } from 'chosen-jjj/react';
+
+function ProjectPicker({ values, setValues, selectedOptions }) {
+  const remote = useRemoteOptions({
+    load: loadProjects, value: values, selectedOptions, minLength: 2, limit: 50
+  });
+  return <>
+    <Chosen multiple name="projects" value={values} onChange={setValues}
+      options={remote.options} onSearchUpdated={remote.search}
+      searchMatcher={() => true} minSearchLength={2} searchDelay={150} />
+    <output role="status">{remote.status === 'loading' ? 'Loading…' :
+      remote.status === 'error' ? 'Search failed' :
+      remote.status === 'ready' ? `${remote.count} results` : ''}</output>
+  </>;
+}
+```
+
+Chosen still submits through its native select. Keep `values` controlled and
+provide records for values selected before the first remote search. The hook
+remembers selected records returned by later searches.
+
+This design keeps only a bounded page plus selected options in the browser.
+It does not virtualize a large, already populated native select. Free-text
+creation remains a separate opt-in feature.

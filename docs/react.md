@@ -11,6 +11,8 @@ Try the [interactive React demo](https://jjj.github.io/chosen/react.html) for
 single and multiple selection, native form submission, right-to-left layout,
 and light/dark token themes.
 
+For server-backed option pages, use the opt-in [`useRemoteOptions` hook](remote-search.md). It keeps selected records available while queries replace the bounded result page.
+
 ```jsx
 import { useState } from 'react';
 import { Chosen } from 'chosen-jjj/react';

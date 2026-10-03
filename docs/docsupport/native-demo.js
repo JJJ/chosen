@@ -134,7 +134,8 @@ for (const example of window.ChosenAdapterCases) {
   comparison.append(controlWrap);
   section.append(title, comparison);
   suite.append(section);
-  const chosenOptions = { width: false, ...(example.native || {}) };
+  const chosenOptions = { width: false, ...(example.native || {}),
+    ...(example.remote ? { search_matcher: () => true } : {}) };
   let chosen = new ChosenNative.Chosen(select, chosenOptions);
   select.addEventListener('change', () => {
     suiteEvent.textContent = `${example.title}: ${Array.from(select.selectedOptions, option => option.value).join(', ') || '(none)'}`;
@@ -144,9 +145,21 @@ for (const example of window.ChosenAdapterCases) {
     status.setAttribute('role', 'status');
     status.textContent = 'Type at least two characters to search.';
     controlWrap.append(status);
-    ChosenRemoteDemo.connect(select, search => {
-      select.addEventListener('chosen:search_updated', event => search(event.detail.search_term));
-    }, () => chosen.update(), status);
+    ChosenRemote.connectRemoteSelect(select, {
+      load: ChosenRemoteDemo.load,
+      subscribe: search => {
+        const handler = event => search(event.detail.search_term);
+        select.addEventListener('chosen:search_updated', handler);
+        return () => select.removeEventListener('chosen:search_updated', handler);
+      },
+      update: () => chosen.update(),
+      onStatus: (state, query, error, count) => {
+        status.textContent = state === 'loading' ? 'Loading projects…'
+          : state === 'error' ? 'Could not load projects. Try another search.'
+          : state === 'ready' ? `${count} projects returned. Selected values stay in the form.`
+          : 'Type at least two characters to search.';
+      }
+    });
   }
   if (example.id === 'no-results-text-support') {
     const status = document.createElement('output');

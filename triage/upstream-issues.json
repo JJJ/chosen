@@ -1372,9 +1372,9 @@
   },
   {
     "number": 79,
-    "status": "candidate",
-    "note": "A four-edition select-backed async integration recipe and live demos show bounded remote results, stale-response handling, and selected-option retention. This covers an application integration path, but a built-in remote-source API and virtualization remain open design questions; free-text creation is a separate opt-in feature.",
-    "fork_pr": "https://github.com/JJJ/chosen/pull/209"
+    "status": "fixed-in-fork",
+    "note": "Four-edition remote integration landed in #209. An opt-in package remote source API now bounds result pages, discards stale responses, and retains selected native options. Pre-populated select virtualization and free-text creation are separate features.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/216"
   },
   {
     "number": 5,

@@ -19,6 +19,8 @@ Supported scalar options can be set as `data-*` attributes on the select, such a
 
 The original select remains in the form. Chosen changes its option selection and dispatches bubbling native `input` and `change` events after user changes. Call `chosen.update()` after editing its options or state; a native `select.dispatchEvent(new Event('chosen:updated'))` works too. The adapter listens for native events. jQuery's `.trigger('chosen:updated')` does not dispatch a native DOM event.
 
+For server-backed options, use the opt-in [`chosen-jjj/remote` connector](remote-search.md) with this edition's `chosen:search_updated` event and `chosen.update()` method.
+
 Selected results remain visible by default. Set `deselect_selected_results: true` to remove a selected multiple result by click or Enter; its × mark indicates this action. Otherwise selected rows have a check mark and are not actionable. Grouped options are indented under their headings. Set `display_selected_options: false` to hide selected results instead.
 
 Call `chosen.open()`, `chosen.close()`, `chosen.focus()`, `chosen.blur()`, or `chosen.clear()` as needed. `chosen.destroy()` removes the generated control and listeners and restores the select's original `tabindex` and `aria-hidden` attributes. A second instance on the same select is rejected until the first is destroyed.
