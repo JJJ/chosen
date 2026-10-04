@@ -271,7 +271,7 @@
   {
     "number": 2874,
     "status": "blocked",
-    "note": "JAWS 18 item navigation works in the reporter's Chrome 60 but fails in IE11. Neither IE11 nor JAWS 18 is available in the fork test matrix; current ARIA coverage cannot settle this pairing."
+    "note": "JAWS 18 item navigation failed only in the reporter’s IE11 pairing. Modern Chromium and Firefox expose a named combobox, listbox, options, active descendant, and result count, and PR #221 fixes a separate contrast defect. Neither axe nor an accessibility-tree inspection replaces a screen reader test; the original JAWS/IE11 behavior remains unverified."
   },
   {
     "number": 3108,
@@ -475,7 +475,7 @@
   {
     "number": 3135,
     "status": "blocked",
-    "note": "The Chrome 105 native/Chosen desynchronization report has no fixture or steps. Current adapter tests cover value synchronization, but cannot identify the application-specific failing path."
+    "note": "The Chrome 105 native/Chosen desynchronization report has no fixture or steps. Current adapter tests cover value synchronization, but cannot identify the application-specific failing path. Parked until a reproducible case is supplied."
   },
   {
     "number": 3131,
@@ -642,8 +642,8 @@
   },
   {
     "number": 3041,
-    "status": "blocked",
-    "note": "IE11-only border leak when disabling the last of several selects. A commenter suggests hiding the closed .chosen-drop, as in #3019; the linked live example is inaccessible here and the fork has no IE11 test environment."
+    "status": "declined",
+    "note": "IE11-only border leak when disabling the last select. A commenter suggests hiding the closed .chosen-drop, but the linked example is inaccessible and no IE11 runtime is available. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 3040,
@@ -657,8 +657,8 @@
   },
   {
     "number": 3019,
-    "status": "blocked",
-    "note": "IE9/IE11 closed dropdown reportedly retains a clickable scrollbar area. Comments propose hiding the closed dropdown, with a tab-order caveat. Current CSS clips it, but the legacy IE behavior needs an IE reproduction before changing the shared stylesheet."
+    "status": "declined",
+    "note": "IE9/IE11 closed dropdown reportedly retains a clickable scrollbar area. A display:none workaround has a tab-order caveat; current CSS clips the dropdown. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 3016,
@@ -667,8 +667,8 @@
   },
   {
     "number": 3009,
-    "status": "blocked",
-    "note": "Detailed IE11 scroll-and-select mismatch includes a recording, but no IE11 test environment is available. Current browser tests do not establish the historical selection path."
+    "status": "declined",
+    "note": "The IE11 scroll-and-select mismatch includes a recording, but no IE11 runtime is available. No IE-only selection change is planned without a modern-browser reproduction."
   },
   {
     "number": 3008,
@@ -704,7 +704,7 @@
   {
     "number": 2976,
     "status": "blocked",
-    "note": "The external demo requires authorization and the linked screenshot does not load; no code or reproduction is included in the report."
+    "note": "The external demo requires authorization and the linked screenshot does not load; no code or reproduction is included. Parked until an accessible failing case is supplied."
   },
   {
     "number": 2969,
@@ -834,8 +834,8 @@
   },
   {
     "number": 2836,
-    "status": "blocked",
-    "note": "The reporter says dynamically generated Chosen markup is broken in IE11 and that a later upstream version still failed. Screenshots alone do not isolate the cause; no IE11 test environment is available."
+    "status": "declined",
+    "note": "The reporter shows dynamically generated Chosen markup broken in IE11. Screenshots do not isolate the cause, and no IE11 runtime is available. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 2832,
@@ -996,8 +996,8 @@
   },
   {
     "number": 2740,
-    "status": "blocked",
-    "note": "The GIF shows an incorrect result chosen after scrolling a long list in Internet Explorer. Its exact event sequence and IE runtime are unavailable; #3009 is similar but not proven identical."
+    "status": "declined",
+    "note": "The GIF shows an incorrect result after scrolling in Internet Explorer; #3009 is similar but not proven identical. No IE-only selection change is planned without a modern-browser reproduction."
   },
   {
     "number": 2731,
@@ -1317,8 +1317,8 @@
   },
   {
     "number": 625,
-    "status": "blocked",
-    "note": "The report and later comments describe Firefox double-Tab/focus behavior with a scrolled dropdown; later fiddles differ from the original case. Local Playwright Firefox fails before profile creation and no installed Firefox is available, so current Chrome results cannot settle it."
+    "status": "candidate",
+    "note": "Firefox 155 in Docker reproduced the scrolled single-select Tab trap in both classic adapters. PR #220 fixes the Tab and Shift+Tab sequence with browser and mobile coverage; classify as fixed-in-fork after merge."
   },
   {
     "number": 572,
