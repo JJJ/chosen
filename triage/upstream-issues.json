@@ -500,7 +500,7 @@
   {
     "number": 3121,
     "status": "duplicate",
-    "note": "Same closed-dropdown hit-area behavior as #3019; investigate under that report."
+    "note": "Same IE-only closed-dropdown hit-area behavior as #3019; declined with that report because no modern-browser reproduction or supported IE runtime is available."
   },
   {
     "number": 3118,
