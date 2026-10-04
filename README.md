@@ -18,8 +18,11 @@ Use the edition that fits your application:
 
 The classic and Vanilla editions enhance an existing `<select>`, which remains
 the source of form values. React supplies its own component and form integration.
-The [adapter parity inventory](docs/adapter-parity.md) tracks remaining gaps in
-the experimental editions.
+Both newer editions cover the listed classic options. Here, *experimental*
+means their API and generated markup are still settling, and they are not yet
+drop-in replacements for the classic adapters. For example, Tab on an open
+single select differs. See the [adapter parity inventory](docs/adapter-parity.md)
+for the current behavior.
 
 - jQuery support: 1.7+ (tested with 1.7, 1.12, 3.5, and 4.0)
 - Prototype support: 1.7+ (tested with 1.7)
