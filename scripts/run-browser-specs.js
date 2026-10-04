@@ -4,6 +4,7 @@ const fs = require('node:fs/promises');
 const postcss = require('postcss');
 const tailwindcss = require('@tailwindcss/postcss');
 const { chromium } = require('playwright-core');
+const { runTabNavigationFixture } = require('./tab-navigation-fixture');
 
 const root = path.resolve(__dirname, '..');
 const fixture = (name) => path.join(root, name);
@@ -17,38 +18,6 @@ async function buildTailwindFixture() {
 
 async function loadCoreFixtures() {
   return JSON.parse(await fs.readFile(fixture('spec/fixtures/core-cases.json'), 'utf8'));
-}
-
-async function runTabNavigationFixture(page, kind) {
-  await page.evaluate((adapter) => {
-    const wrapper = document.createElement('div');
-    wrapper.id = 'tab-navigation-fixture';
-    wrapper.innerHTML = '<input id="tab-before"><select id="tab-select"></select><input id="tab-after">';
-    document.body.appendChild(wrapper);
-    const select = wrapper.querySelector('select');
-    select.add(new Option('Choose', ''));
-    for (let index = 1; index <= 80; index += 1) select.add(new Option(`Option ${index}`, String(index)));
-    if (adapter === 'jquery') window.jQuery(select).chosen();
-    else new window.Chosen(select);
-  }, kind);
-  const control = page.locator('#tab-select + .chosen-container .chosen-single');
-  await control.click();
-  await page.evaluate(() => {
-    document.querySelector('#tab-select + .chosen-container .chosen-results').scrollTop = 500;
-  });
-  await page.keyboard.press('ArrowDown');
-  await page.keyboard.press('Tab');
-  await page.waitForFunction(() => document.querySelector('#tab-select + .chosen-container .chosen-single').getAttribute('aria-expanded') === 'false');
-  const state = await page.evaluate(() => ({
-    value: document.querySelector('#tab-select').value,
-    focus: document.activeElement.id,
-    expanded: document.querySelector('#tab-select + .chosen-container .chosen-single').getAttribute('aria-expanded'),
-  }));
-  await page.keyboard.press('Shift+Tab');
-  const reverseFocus = await page.evaluate(() => document.activeElement.className);
-  await page.locator('#tab-navigation-fixture').evaluate((wrapper) => wrapper.remove());
-  return state.value && state.focus === 'tab-after' && state.expanded === 'false' && reverseFocus.includes('chosen-single')
-    ? [] : [`Keyboard: Tab selection did not move to the next input and Shift+Tab did not return to Chosen (${JSON.stringify({ state, reverseFocus })})`];
 }
 
 async function runCoreFilterFixtures(page, kind, cases) {

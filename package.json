@@ -85,6 +85,7 @@
     "test:remote": "node scripts/build-remote.js && node --test spec/remote/*.test.mjs && tsc -p spec/remote/tsconfig.json && node scripts/run-remote-demo-specs.js",
     "test:jquery": "grunt test && node scripts/run-browser-specs.js jquery",
     "test:proto": "grunt test && node scripts/run-browser-specs.js proto",
+    "test:firefox-tab": "node scripts/run-firefox-tab-specs.js",
     "test:mobile": "grunt test && node scripts/run-mobile-webkit.js",
     "test:react": "node scripts/build-react.js && node --test spec/react/*.test.mjs && tsc -p spec/react/tsconfig.json && node scripts/run-react-browser-specs.js",
     "test:react-demo": "node scripts/build-react.js && node scripts/build-react-demo.js && node scripts/run-react-demo-specs.js",

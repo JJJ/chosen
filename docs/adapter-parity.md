@@ -88,6 +88,8 @@ The vanilla edition reads strict scalar `data-*` initialization options, `data-p
 
 The vanilla adapter has native `chosen:*` lifecycle and search events on the source select, bubbling native `input`/`change`, and native `chosen:activate`, `chosen:open`, `chosen:close`, and `chosen:updated` commands. Its no-results events expose the rendered element and previous query when clearing. React has `onChange`, `onOpenChange`, `onReady`, popup callbacks, search callbacks, `onNoResults`, `onNoResultsClear`, and `onMaxSelected`. Both editions follow the classic single-select keyboard paths: Enter opens a closed list, Up at the first result closes when a choice is selected, and Backspace or Delete clears an eligible closed single selection. Neither API pretends jQuery `.trigger()` is a native event. Compare event payloads, cancelation, form reset, keyboard navigation, pointer and touch behavior, dynamic updates, label focus, search highlighting, and accessibility in tests before calling parity complete.
 
+Single-select Tab is a current keyboard gap: classic jQuery and Prototype choose the highlighted result when the dropdown is open, then move focus onward. Vanilla and React close the dropdown and move focus without choosing. Their existing default is preserved until the selection contract and migration impact are reviewed across all editions.
+
 ## Completion gate
 
 1. Implement the missing behavior in shared `core/` when it is independent of the renderer; keep platform-specific DOM and state code in each adapter.
