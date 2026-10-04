@@ -83,6 +83,10 @@ aborts work and removes the subscribed listener.
 `useRemoteOptions` keeps the current page and selected records available to
 the React component. Pass the selected value and any initially selected option
 records to the hook, then use its `options` and `search` values with `Chosen`.
+For a remote **single** select, set `disableSearchThreshold={-1}` on `Chosen`.
+Its usual threshold of zero makes an empty option page read-only; the negative
+threshold keeps search editable before the first request, while loading, and
+after a zero-result response. Ordinary local selects keep their defaults.
 
 ```jsx
 import { Chosen, useRemoteOptions } from 'chosen-jjj/react';
@@ -104,7 +108,10 @@ function ProjectPicker({ values, setValues, selectedOptions }) {
 
 Chosen still submits through its native select. Keep `values` controlled and
 provide records for values selected before the first remote search. The hook
-remembers selected records returned by later searches.
+remembers selected records returned by later searches. A newer remote label
+replaces an initial label while the selected record's disabled, hidden, class,
+and data attributes remain intact. Updating a selected record through props
+refreshes those attributes without replacing the newer remote label.
 
 This design keeps only a bounded page plus selected options in the browser.
 It does not virtualize a large, already populated native select. Free-text

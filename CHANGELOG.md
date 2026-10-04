@@ -7,7 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
-- Add an opt-in, bounded remote source package API for jQuery, Prototype, and Vanilla, plus a React hook. It discards stale responses and retains selected values in native selects (harvesthq/chosen#79).
+- Add an opt-in, bounded remote source package API for jQuery, Prototype, and Vanilla, plus a React hook. It discards stale responses and retains selected values in native selects. React remote search remains usable in Strict Mode, and remote single-select integrations can use `disableSearchThreshold={-1}` to keep search editable when a page is empty (harvesthq/chosen#79).
 
 ### Documentation
 - Clarify the native select update order after AJAX changes and the need to destroy Chosen before replacing a select element (harvesthq/chosen#2981).

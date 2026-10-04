@@ -9,15 +9,110 @@ for (const key of ['window', 'document', 'HTMLElement', 'HTMLInputElement', 'HTM
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const React = await import('react');
-const { render, fireEvent, screen, cleanup, act } = await import('@testing-library/react');
+const { render, renderHook, fireEvent, screen, cleanup, act, waitFor } = await import('@testing-library/react');
 const { renderToString } = await import('react-dom/server');
 const { hydrateRoot } = await import('react-dom/client');
-const { Chosen } = await import('../../dist/react/index.mjs');
+const { Chosen, useRemoteOptions } = await import('../../dist/react/index.mjs');
+const { normalizeOptions } = await import('../../core/index.mjs');
 const h = React.createElement;
 const options = [
   { value: 'a', label: 'Apple' },
   { label: 'Other', options: [{ value: 'b', label: 'Banana' }, { value: 'c', label: 'Cherry', disabled: true }] }
 ];
+
+test('remote hook survives Strict Mode effect replay and refreshes the live source', async () => {
+  const queries = [];
+  const view = renderHook(({ limit }) => useRemoteOptions({
+    load: query => {
+      queries.push(query);
+      return [{ value: 'a', label: ['Alpha', 'Updated Alpha', 'Resized Alpha'][queries.length - 1] }];
+    }, limit
+  }), { wrapper: React.StrictMode, initialProps: { limit: 50 } });
+  await act(async () => { view.result.current.search('alpha'); });
+  await waitFor(() => assert.equal(view.result.current.status, 'ready'));
+  assert.deepEqual(queries, ['alpha']);
+  await act(async () => { view.result.current.refresh(); });
+  await waitFor(() => assert.equal(view.result.current.options[0].label, 'Updated Alpha'));
+  assert.equal(queries.length, 2);
+  view.rerender({ limit: 25 });
+  await waitFor(() => assert.equal(view.result.current.options[0].label, 'Resized Alpha'));
+  assert.equal(queries.length, 3);
+});
+
+test('remote hook retains selected attributes and the latest remote label', async () => {
+  const initial = { value: 'a', label: 'Old label', disabled: true,
+    hidden: true, className: 'retained', dataAttributes: { 'data-code': 'a' } };
+  const view = renderHook(({ selectedOptions }) => useRemoteOptions({
+    value: ['a'], selectedOptions,
+    load: query => query === 'first' ? [{ value: 'a', label: 'New label' }] : []
+  }), { initialProps: { selectedOptions: [initial] } });
+  await act(async () => { view.result.current.search('first'); });
+  await waitFor(() => assert.equal(view.result.current.status, 'ready'));
+  await act(async () => { view.result.current.search('other'); });
+  await waitFor(() => {
+    assert.equal(view.result.current.status, 'ready');
+    assert.equal(view.result.current.count, 0);
+  });
+  assert.deepEqual(view.result.current.options[0], { ...initial, label: 'New label' });
+  assert.deepEqual(normalizeOptions(view.result.current.options)[0].dataAttributes, { 'data-code': 'a' });
+
+  const updated = { ...initial, label: 'Parent label', disabled: false, className: 'updated' };
+  view.rerender({ selectedOptions: [updated] });
+  assert.deepEqual(view.result.current.options[0], { ...updated, label: 'New label' });
+});
+
+test('an abandoned render does not clear a selected remote record', async () => {
+  let remote;
+  let suspend = false;
+  const pending = new Promise(() => {});
+  function Harness({ value }) {
+    remote = useRemoteOptions({
+      value,
+      load: query => query === 'first' ? [{ value: 'a', label: 'Alpha' }] : []
+    });
+    if (suspend && !value.length) throw pending;
+    return null;
+  }
+  const content = value => h(React.Suspense, { fallback: null }, h(Harness, { value }));
+  const view = render(content(['a']));
+  await act(async () => { remote.search('first'); });
+  await waitFor(() => assert.equal(remote.status, 'ready'));
+  await act(async () => { remote.search('other'); });
+  await waitFor(() => {
+    assert.equal(remote.status, 'ready');
+    assert.equal(remote.count, 0);
+  });
+  assert.equal(remote.options[0].label, 'Alpha');
+
+  suspend = true;
+  act(() => React.startTransition(() => view.rerender(content([]))));
+  suspend = false;
+  view.rerender(content(['a']));
+  assert.equal(remote.options[0].label, 'Alpha');
+});
+
+test('remote single select can search again after an empty page', async () => {
+  const queries = [];
+  function RemoteSingle() {
+    const remote = useRemoteOptions({ load: query => { queries.push(query); return []; } });
+    return h(React.Fragment, null,
+      h(Chosen, { options: remote.options, onSearchUpdated: remote.search,
+        disableSearchThreshold: -1, searchMatcher: () => true,
+        'aria-label': 'Remote project' }),
+      h('output', { 'data-testid': 'remote-status' }, remote.status));
+  }
+  render(h(RemoteSingle));
+  const input = screen.getByRole('combobox', { name: 'Remote project' });
+  assert.equal(input.readOnly, false);
+  fireEvent.click(input);
+  fireEvent.change(input, { target: { value: 'alpha' } });
+  await waitFor(() => assert.equal(screen.getByTestId('remote-status').textContent, 'ready'));
+  assert.deepEqual(queries, ['alpha']);
+  assert.equal(input.readOnly, false);
+  fireEvent.change(input, { target: { value: 'bravo' } });
+  await waitFor(() => assert.deepEqual(queries, ['alpha', 'bravo']));
+  assert.equal(input.readOnly, false);
+});
 
 test('positions the invalid native select over the visible React control', () => {
   render(h('form', null, h(Chosen, { options, name: 'fruit', required: true, 'aria-label': 'Fruit' })));
