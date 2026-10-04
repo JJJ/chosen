@@ -1,6 +1,6 @@
 {
   "name": "jjj/chosen",
-  "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
+  "description": "Chosen enhances native select boxes with jQuery and Prototype adapters, plus experimental Vanilla and React editions.",
   "authors": [
     {
       "name": "John James Jacoby",

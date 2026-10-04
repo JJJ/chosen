@@ -16,6 +16,7 @@ For **documentation**, usage, and examples, see the
 [React demo](https://jjj.github.io/chosen/react.html), plus the
 [options reference](https://jjj.github.io/chosen/options.html). The
 [wiki](https://github.com/JJJ/chosen/wiki) covers setup and common workflows.
+Applications updating from 3.x should read the [4.0 migration guide](docs/migration-4.md).
 
 For **downloads**, see the [GitHub releases](https://github.com/JJJ/chosen/releases/).
 

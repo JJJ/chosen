@@ -1,8 +1,8 @@
 {
   "author": "jjj",
   "name": "chosen-jjj",
-  "version": "3.0.4",
-  "description": "Chosen is a JavaScript plugin that makes select boxes user-friendly. It is currently available in both jQuery and Prototype flavors.",
+  "version": "4.0.0",
+  "description": "Chosen enhances native select boxes with jQuery and Prototype adapters, plus experimental Vanilla and React editions.",
   "main": "dist/js/chosen.jquery.js",
   "style": "dist/css/chosen.css",
   "sideEffects": [
