@@ -101,7 +101,9 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:ready", {chosen: this})
 
   register_observers: ->
-    @document_mouseup_handler = () => @result_mouse_press_started = false
+    @document_mouseup_handler = () =>
+      @result_mouse_press_started = false
+      return
     $(document).on 'mouseup.chosen', @document_mouseup_handler
     $(window).on 'pageshow.chosen', @pageshow_handler
     $(window).on 'blur.chosen', @window_blur_handler
@@ -242,7 +244,7 @@ class Chosen extends AbstractChosen
   container_mousedown: (evt) ->
     return if @is_disabled
     return if evt?.type is 'mousedown' and (evt.which? or evt.button?) and this.mousedown_checker(evt) isnt 'left'
-    @result_mouse_press_started = evt?.type is 'mousedown' and this.mousedown_checker(evt) is 'left'
+    @result_mouse_press_started = this.mousedown_checker(evt) is 'left' if evt?.type is 'mousedown'
     is_choice_close = evt? and $(evt.target).closest('.search-choice-close').length > 0
 
     if evt and this.mousedown_checker(evt) == 'left'

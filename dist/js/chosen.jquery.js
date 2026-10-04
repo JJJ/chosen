@@ -2942,7 +2942,7 @@ var ChosenCore = (function() {
 
     register_observers() {
       this.document_mouseup_handler = () => {
-        return this.result_mouse_press_started = false;
+        this.result_mouse_press_started = false;
       };
       $(document).on('mouseup.chosen', this.document_mouseup_handler);
       $(window).on('pageshow.chosen', this.pageshow_handler);
@@ -3189,7 +3189,9 @@ var ChosenCore = (function() {
       if ((evt != null ? evt.type : void 0) === 'mousedown' && ((evt.which != null) || (evt.button != null)) && this.mousedown_checker(evt) !== 'left') {
         return;
       }
-      this.result_mouse_press_started = (evt != null ? evt.type : void 0) === 'mousedown' && this.mousedown_checker(evt) === 'left';
+      if ((evt != null ? evt.type : void 0) === 'mousedown') {
+        this.result_mouse_press_started = this.mousedown_checker(evt) === 'left';
+      }
       is_choice_close = (evt != null) && $(evt.target).closest('.search-choice-close').length > 0;
       if (evt && this.mousedown_checker(evt) === 'left') {
         if (evt && evt.type === "mousedown" && !this.results_showing) {

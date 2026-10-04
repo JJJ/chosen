@@ -144,29 +144,42 @@ async function runCoreSelectionFixtures(page, kind, cases) {
 
 async function runResultPointerFixture(page, kind) {
   const errors = [];
-  for (const scenario of ['bare release', 'click', 'press and drag']) {
-    await page.evaluate((adapter) => {
+  for (const scenario of ['unrelated release', 'bare release', 'click', 'press and drag', 'multiple press and drag']) {
+    await page.evaluate(({ adapter, multiple }) => {
       const wrapper = document.createElement('div');
       wrapper.id = 'result-pointer-fixture';
-      wrapper.innerHTML = '<select><option value="">Choose</option><option value="apple">Apple</option></select>';
+      wrapper.innerHTML = multiple
+        ? '<select multiple><option value="apple">Apple</option><option value="banana">Banana</option></select>'
+        : '<select><option value="">Choose</option><option value="apple">Apple</option></select>';
+      wrapper.insertAdjacentHTML('beforeend', '<button type="button">Unrelated control</button>');
       document.body.appendChild(wrapper);
       const select = wrapper.querySelector('select');
       window.resultPointerInstance = adapter === 'jquery'
         ? (window.jQuery(select).chosen(), window.jQuery(select).data('chosen'))
         : new window.Chosen(select);
-    }, kind);
+      window.resultPointerWindowMouseups = 0;
+      window.resultPointerWindowHandler = () => { window.resultPointerWindowMouseups += 1; };
+      window.addEventListener('mouseup', window.resultPointerWindowHandler);
+    }, { adapter: kind, multiple: scenario === 'multiple press and drag' });
     try {
-      const control = page.locator('#result-pointer-fixture .chosen-single');
+      const control = page.locator(`#result-pointer-fixture ${scenario === 'multiple press and drag' ? '.chosen-choices' : '.chosen-single'}`);
       const result = page.locator('#result-pointer-fixture .chosen-results .active-result').filter({ hasText: 'Apple' });
-      if (scenario === 'press and drag') {
+      if (scenario === 'unrelated release') {
+        const box = await page.locator('#result-pointer-fixture button').boundingBox();
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.up();
+      } else if (scenario.includes('press and drag')) {
         const box = await control.boundingBox();
         await page.mouse.move(box.x + 20, box.y + box.height / 2);
+        await page.evaluate(() => { window.resultPointerWindowMouseups = 0; });
         await page.mouse.down();
+        if (scenario === 'multiple press and drag') await page.waitForTimeout(80);
         const resultBox = await result.boundingBox();
         await page.mouse.move(resultBox.x + resultBox.width / 2, resultBox.y + resultBox.height / 2);
         await page.mouse.up();
       } else {
         await control.click();
+        await page.evaluate(() => { window.resultPointerWindowMouseups = 0; });
         if (scenario === 'click') {
           await result.click();
         } else {
@@ -176,12 +189,17 @@ async function runResultPointerFixture(page, kind) {
         }
       }
       const actual = await page.locator('#result-pointer-fixture select').inputValue();
-      const expected = scenario === 'bare release' ? '' : 'apple';
+      const expected = scenario === 'bare release' || scenario === 'unrelated release' ? '' : 'apple';
       if (actual !== expected) errors.push(`Pointer: ${scenario} selected ${JSON.stringify(actual)} instead of ${JSON.stringify(expected)}`);
+      const windowMouseups = await page.evaluate(() => window.resultPointerWindowMouseups);
+      if (windowMouseups === 0) errors.push(`Pointer: ${scenario} stopped mouseup propagation before a window listener`);
     } finally {
       await page.evaluate(() => {
         window.resultPointerInstance.destroy();
         delete window.resultPointerInstance;
+        window.removeEventListener('mouseup', window.resultPointerWindowHandler);
+        delete window.resultPointerWindowHandler;
+        delete window.resultPointerWindowMouseups;
         document.querySelector('#result-pointer-fixture').remove();
       });
     }
