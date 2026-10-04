@@ -991,7 +991,20 @@ class AbstractChosen
         @backstroke_length = this.get_search_field_value().length
         break
       when 9 # tab
-        this.result_select(evt) if @results_showing and (not @is_multiple or @multiselect_allow_tab_to_select)
+        if @results_showing and (not @is_multiple or @multiselect_allow_tab_to_select)
+          @tabbing_away = not @is_multiple
+          unless @is_multiple
+            selected_item = @selected_item[0] or @selected_item
+            search_field = @search_field[0] or @search_field
+            selected_item.tabIndex = -1
+            search_field.tabIndex = @selected_item_tab_index
+          this.result_select(evt)
+          @tabbing_away = false
+          unless @is_multiple
+            setTimeout (=>
+              search_field.tabIndex = -1
+              selected_item.tabIndex = @selected_item_tab_index unless @is_disabled or @results_showing
+            ), 0
         @mouse_on_container = false
         break
       when 13 # enter
@@ -1257,6 +1270,7 @@ class AbstractChosen
           aria-busy="true"
           class="chosen-results"
           role="listbox"
+          tabindex="-1"
         >
         </ul>
       </div>
@@ -1283,6 +1297,7 @@ class AbstractChosen
           aria-busy="true"
           class="chosen-results"
           role="listbox"
+          tabindex="-1"
         >
         </ul>
       </div>

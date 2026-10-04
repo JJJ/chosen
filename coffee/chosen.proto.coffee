@@ -669,16 +669,23 @@ class @Chosen extends AbstractChosen
           @search_field.value = ""
           this.winnow_results()
       else
-        this.results_hide()
-        this.show_search_field_default()
-        unless @is_multiple
-          @search_field.blur()
-          @selected_item.focus()
+        if @tabbing_away
+          setTimeout (=>
+            if @container.parentNode?
+              this.results_hide()
+              this.show_search_field_default()
+          ), 0
+        else
+          this.results_hide()
+          this.show_search_field_default()
+          unless @is_multiple
+            @search_field.blur()
+            @selected_item.focus()
 
       this.trigger_form_field_change() if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
       @current_selectedIndex = @form_field.selectedIndex
 
-      evt.preventDefault()
+      evt.preventDefault() unless @tabbing_away
 
       this.search_field_scale()
 

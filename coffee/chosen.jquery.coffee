@@ -661,11 +661,18 @@ class Chosen extends AbstractChosen
           @search_field.val("")
           this.winnow_results()
       else
-        this.results_hide()
-        this.show_search_field_default()
-        unless @is_multiple
-          @search_field.trigger "blur"
-          @selected_item.trigger "focus"
+        if @tabbing_away
+          setTimeout (=>
+            if @container[0].parentNode?
+              this.results_hide()
+              this.show_search_field_default()
+          ), 0
+        else
+          this.results_hide()
+          this.show_search_field_default()
+          unless @is_multiple
+            @search_field.trigger "blur"
+            @selected_item.trigger "focus"
 
       if @is_multiple || @form_field.selectedIndex != @current_selectedIndex
         change = selected: option.value
@@ -674,7 +681,7 @@ class Chosen extends AbstractChosen
         this.trigger_form_field_change change
       @current_selectedIndex = @form_field.selectedIndex
 
-      evt.preventDefault()
+      evt.preventDefault() unless @tabbing_away
 
       this.search_field_scale()
 

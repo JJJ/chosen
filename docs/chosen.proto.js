@@ -2172,7 +2172,7 @@ var ChosenCore = (function() {
       }
 
       keydown_checker(evt) {
-        var ref, stroke;
+        var ref, search_field, selected_item, stroke;
         stroke = (ref = evt.which) != null ? ref : evt.keyCode;
         if (this.composing || evt.isComposing || stroke === 229) {
           return;
@@ -2205,7 +2205,23 @@ var ChosenCore = (function() {
             break;
           case 9: // tab
             if (this.results_showing && (!this.is_multiple || this.multiselect_allow_tab_to_select)) {
+              this.tabbing_away = !this.is_multiple;
+              if (!this.is_multiple) {
+                selected_item = this.selected_item[0] || this.selected_item;
+                search_field = this.search_field[0] || this.search_field;
+                selected_item.tabIndex = -1;
+                search_field.tabIndex = this.selected_item_tab_index;
+              }
               this.result_select(evt);
+              this.tabbing_away = false;
+              if (!this.is_multiple) {
+                setTimeout((() => {
+                  search_field.tabIndex = -1;
+                  if (!(this.is_disabled || this.results_showing)) {
+                    return selected_item.tabIndex = this.selected_item_tab_index;
+                  }
+                }), 0);
+              }
             }
             this.mouse_on_container = false;
             break;
@@ -2636,6 +2652,7 @@ var ChosenCore = (function() {
     aria-busy="true"
     class="chosen-results"
     role="listbox"
+    tabindex="-1"
   >
   </ul>
 </div>
@@ -2661,6 +2678,7 @@ var ChosenCore = (function() {
     aria-busy="true"
     class="chosen-results"
     role="listbox"
+    tabindex="-1"
   >
   </ul>
 </div>
@@ -3734,18 +3752,29 @@ var ChosenCore = (function() {
               this.winnow_results();
             }
           } else {
-            this.results_hide();
-            this.show_search_field_default();
-            if (!this.is_multiple) {
-              this.search_field.blur();
-              this.selected_item.focus();
+            if (this.tabbing_away) {
+              setTimeout((() => {
+                if (this.container.parentNode != null) {
+                  this.results_hide();
+                  return this.show_search_field_default();
+                }
+              }), 0);
+            } else {
+              this.results_hide();
+              this.show_search_field_default();
+              if (!this.is_multiple) {
+                this.search_field.blur();
+                this.selected_item.focus();
+              }
             }
           }
           if (this.is_multiple || this.form_field.selectedIndex !== this.current_selectedIndex) {
             this.trigger_form_field_change();
           }
           this.current_selectedIndex = this.form_field.selectedIndex;
-          evt.preventDefault();
+          if (!this.tabbing_away) {
+            evt.preventDefault();
+          }
           return this.search_field_scale();
         }
       }
