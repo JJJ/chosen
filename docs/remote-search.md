@@ -110,7 +110,8 @@ Chosen still submits through its native select. Keep `values` controlled and
 provide records for values selected before the first remote search. The hook
 remembers selected records returned by later searches. A newer remote label
 replaces an initial label while the selected record's disabled, hidden, class,
-and data attributes remain intact.
+and data attributes remain intact. Updating a selected record through props
+refreshes those attributes without replacing the newer remote label.
 
 This design keeps only a bounded page plus selected options in the browser.
 It does not virtualize a large, already populated native select. Free-text

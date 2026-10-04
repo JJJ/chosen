@@ -9,6 +9,8 @@ export function useRemoteOptions({ load, value = [], selectedOptions = [], minLe
   const loader = useRef(load);
   const statusHandler = useRef(onStatus);
   const selectedCache = useRef(new Map());
+  const selectedInputs = useRef(new Map());
+  const remoteLabels = useRef(new Map());
   const controllerRef = useRef(null);
   const lastQuery = useRef(null);
   loader.current = load;
@@ -34,13 +36,22 @@ export function useRemoteOptions({ load, value = [], selectedOptions = [], minLe
 
   const values = (Array.isArray(value) ? value : [value]).filter(item => item != null && item !== '').map(String);
   const selected = new Set(values);
-  for (const key of selectedCache.current.keys()) if (!selected.has(key)) selectedCache.current.delete(key);
+  for (const key of selectedCache.current.keys()) if (!selected.has(key)) {
+    selectedCache.current.delete(key);
+    selectedInputs.current.delete(key);
+    remoteLabels.current.delete(key);
+  }
   for (const record of selectedOptions) {
     const key = String(record.value);
-    if (!selectedCache.current.has(key)) selectedCache.current.set(key, record);
+    if (selectedInputs.current.get(key) !== record) {
+      const remoteLabel = remoteLabels.current.get(key);
+      selectedCache.current.set(key, remoteLabel == null ? record : { ...record, label: remoteLabel });
+      selectedInputs.current.set(key, record);
+    }
   }
   for (const record of page) if (selected.has(record.value)) {
     selectedCache.current.set(record.value, { ...selectedCache.current.get(record.value), ...record });
+    remoteLabels.current.set(record.value, record.label);
   }
   const options = [
     ...values.map(item => selectedCache.current.get(item)).filter(Boolean),
