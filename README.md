@@ -6,7 +6,7 @@ Chosen is a library for making long, unwieldy select boxes more user friendly.
 - Prototype support: 1.7+ (tested with 1.7)
 - Experimental vanilla JavaScript adapter: no framework runtime dependency
 
-The full classic adapter browser suite runs in Chrome, and a focused Firefox test covers scrolled single-select Tab navigation in both adapters. The native, React, and touch suites also run in WebKit. Chosen's original compatibility target included Safari and Internet Explorer 9; those browsers are not currently covered by this fork's automated desktop tests. Please include your browser
+Chosen's original compatibility target included Chrome, Firefox, Safari, and Internet Explorer 9. The full classic adapter browser suite runs in Chrome, and a focused Firefox test covers scrolled single-select Tab navigation in both adapters. The native, React, and touch suites also run in WebKit. Safari and Internet Explorer 9 are not currently covered by this fork's automated desktop tests. Please include your browser
 and library versions when reporting a compatibility issue.
 
 For **documentation**, usage, and examples, see the
