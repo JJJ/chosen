@@ -180,6 +180,9 @@ async function verify(page, edition, theme, mode, state, { container, control })
       : edition === 'native' ? '.chosen-native__popup' : '.chosen-drop');
     const style = getComputedStyle(control);
     const box = control.getBoundingClientRect();
+    const activeResult = element.querySelector(edition === 'react' ? '.chosen-react__option--active'
+      : edition === 'native' ? '.chosen-native__option--active' : '.chosen-results li.highlighted');
+    const activeStyle = activeResult && getComputedStyle(activeResult);
     return {
       width: box.width, height: box.height, border: style.borderTopColor,
       radius: style.borderTopLeftRadius,
@@ -190,11 +193,7 @@ async function verify(page, edition, theme, mode, state, { container, control })
         : element.previousElementSibling?.getAttribute('aria-invalid') === 'true',
       open: edition === 'react' ? !!popup : edition === 'native'
         ? element.classList.contains('chosen-native--open') : element.classList.contains('chosen-with-drop'),
-      activeColors: ['native', 'react'].includes(edition) && element.querySelector(edition === 'native'
-        ? '.chosen-native__option--active' : '.chosen-react__option--active')
-        ? (() => { const style = getComputedStyle(element.querySelector(edition === 'native'
-          ? '.chosen-native__option--active' : '.chosen-react__option--active'));
-          return [style.color, style.backgroundColor]; })() : null,
+      activeColors: activeStyle ? [activeStyle.color, activeStyle.backgroundColor] : null,
       dropUp: element.classList.contains('chosen-dropup'),
       popupAbove: popup ? popup.getBoundingClientRect().bottom <= box.top + 3 : false,
     };
@@ -209,6 +208,9 @@ async function verify(page, edition, theme, mode, state, { container, control })
     throw new Error(`${edition}/${mode}: invalid state missing ${JSON.stringify(result)}`);
   }
   if (state === 'open' && !result.open) throw new Error(`${edition}/${mode}: popup did not open`);
+  if (state === 'open' && theme === 'default' && !result.activeColors) {
+    throw new Error(`${edition}/${mode}: no highlighted result to check contrast`);
+  }
   if (state === 'open' && result.activeColors && contrastRatio(...result.activeColors) < 4.5) {
     throw new Error(`${edition}/${theme}/${mode}: active result text has insufficient contrast ${result.activeColors}`);
   }
