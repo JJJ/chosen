@@ -139,8 +139,8 @@
   },
   {
     "number": 3159,
-    "status": "blocked",
-    "note": "Mobile failure report has no reproduction steps or browser details."
+    "status": "covered-in-fork",
+    "note": "The screenshot shows Chosen 1.8.7 leaving both demo selects native in Chrome device emulation. Current jQuery and Prototype demos initialized and selected on iPhone 13 emulation in Chrome and WebKit before and after reload; the original device/browser is unspecified."
   },
   {
     "number": 3035,
@@ -271,7 +271,7 @@
   {
     "number": 2874,
     "status": "blocked",
-    "note": "The report is specific to IE 11 and JAWS 18; neither environment is in the maintained browser matrix."
+    "note": "JAWS 18 item navigation works in the reporter's Chrome 60 but fails in IE11. Neither IE11 nor JAWS 18 is available in the fork test matrix; current ARIA coverage cannot settle this pairing."
   },
   {
     "number": 3108,
@@ -454,8 +454,8 @@
   },
   {
     "number": 3151,
-    "status": "blocked",
-    "note": "The report says H5 and reload but omits the device/browser and a failing select fixture. Needs a reproducible environment."
+    "status": "covered-in-fork",
+    "note": "The screenshot shows native selects after an H5 reload. Current jQuery and Prototype multiple-select demos initialized and selected before and after reload in iPhone 13 Chrome and WebKit emulation; the exact H5 webview remains unspecified."
   },
   {
     "number": 3150,
@@ -475,7 +475,7 @@
   {
     "number": 3135,
     "status": "blocked",
-    "note": "The Chrome 105 report omits code or steps for the claimed native/Chosen desync; current adapter tests cover value synchronization."
+    "note": "The Chrome 105 native/Chosen desynchronization report has no fixture or steps. Current adapter tests cover value synchronization, but cannot identify the application-specific failing path."
   },
   {
     "number": 3131,
@@ -534,8 +534,8 @@
   },
   {
     "number": 3099,
-    "status": "blocked",
-    "note": "Third-party intranet screenshot only; no runnable case, version, or accessible reproduction."
+    "status": "support-question",
+    "note": "The attached Word document shows a WordPress Connections directory page with a very narrow control and widespread layout styling problems. No Chosen version, isolated markup, or reproducible library defect is supplied; this needs integration/CSS diagnosis."
   },
   {
     "number": 3095,
@@ -643,7 +643,7 @@
   {
     "number": 3041,
     "status": "blocked",
-    "note": "IE11-only visual report; no supported IE11 test environment."
+    "note": "IE11-only border leak when disabling the last of several selects. A commenter suggests hiding the closed .chosen-drop, as in #3019; the linked live example is inaccessible here and the fork has no IE11 test environment."
   },
   {
     "number": 3040,
@@ -658,7 +658,7 @@
   {
     "number": 3019,
     "status": "blocked",
-    "note": "IE9/IE11 closed-dropdown hit-area defect; a supported browser reproduction or IE test environment is needed."
+    "note": "IE9/IE11 closed dropdown reportedly retains a clickable scrollbar area. Comments propose hiding the closed dropdown, with a tab-order caveat. Current CSS clips it, but the legacy IE behavior needs an IE reproduction before changing the shared stylesheet."
   },
   {
     "number": 3016,
@@ -668,7 +668,7 @@
   {
     "number": 3009,
     "status": "blocked",
-    "note": "IE11-only incorrect-selection report; no supported IE11 test environment."
+    "note": "Detailed IE11 scroll-and-select mismatch includes a recording, but no IE11 test environment is available. Current browser tests do not establish the historical selection path."
   },
   {
     "number": 3008,
@@ -704,7 +704,7 @@
   {
     "number": 2976,
     "status": "blocked",
-    "note": "External page and screenshot are unavailable; no code or reproduction supplied."
+    "note": "The external demo requires authorization and the linked screenshot does not load; no code or reproduction is included in the report."
   },
   {
     "number": 2969,
@@ -835,7 +835,7 @@
   {
     "number": 2836,
     "status": "blocked",
-    "note": "Old Internet Explorer screenshot without a current supported-browser reproduction."
+    "note": "The reporter says dynamically generated Chosen markup is broken in IE11 and that a later upstream version still failed. Screenshots alone do not isolate the cause; no IE11 test environment is available."
   },
   {
     "number": 2832,
@@ -997,7 +997,7 @@
   {
     "number": 2740,
     "status": "blocked",
-    "note": "Internet Explorer-only selection report; no supported IE test environment."
+    "note": "The GIF shows an incorrect result chosen after scrolling a long list in Internet Explorer. Its exact event sequence and IE runtime are unavailable; #3009 is similar but not proven identical."
   },
   {
     "number": 2731,
@@ -1246,8 +1246,8 @@
   },
   {
     "number": 1386,
-    "status": "blocked",
-    "note": "Classic adapters select results on mouseup, so the reported gesture is plausible, but the Wacom event sequence is unverified. It needs that hardware or a reproducible synthetic pointer sequence before changing selection behavior."
+    "status": "candidate",
+    "note": "A bare left-button mouseup on an active result, without a preceding mousedown, selected an option in both current classic adapters. Upstream WIP PR #1431 describes this Wacom sequence but notes touch regressions; add a guarded pointer sequence and mobile regression coverage before fixing."
   },
   {
     "number": 1380,
@@ -1318,7 +1318,7 @@
   {
     "number": 625,
     "status": "blocked",
-    "note": "The 2012 Firefox-only double-Tab report needs a current Firefox reproduction. Playwright Firefox failed to create a profile with both temporary and persistent contexts in this local environment; Chrome results cannot settle it."
+    "note": "The report and later comments describe Firefox double-Tab/focus behavior with a scrolled dropdown; later fiddles differ from the original case. Local Playwright Firefox fails before profile creation and no installed Firefox is available, so current Chrome results cannot settle it."
   },
   {
     "number": 572,
