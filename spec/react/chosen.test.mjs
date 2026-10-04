@@ -34,7 +34,7 @@ test('remote hook survives Strict Mode effect replay and refreshes the live sour
 
 test('remote hook retains selected attributes and the latest remote label', async () => {
   const initial = { value: 'a', label: 'Old label', disabled: true,
-    hidden: true, className: 'retained', dataAttributes: { code: 'a' } };
+    hidden: true, className: 'retained', dataAttributes: { 'data-code': 'a' } };
   const view = renderHook(() => useRemoteOptions({
     value: ['a'], selectedOptions: [initial],
     load: query => query === 'first' ? [{ value: 'a', label: 'New label' }] : []
