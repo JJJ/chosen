@@ -2818,6 +2818,7 @@ var ChosenCore = (function() {
           return this.results_update_field();
         };
         return this.window_blur_handler = () => {
+          this.result_mouse_press_started = false;
           if (this.results_showing) {
             return this.close_field();
           }
@@ -2917,6 +2918,10 @@ var ChosenCore = (function() {
       }
 
       register_observers() {
+        this.document_mouseup_handler = () => {
+          this.result_mouse_press_started = false;
+        };
+        document.observe('mouseup', this.document_mouseup_handler);
         Event.observe(window, 'pageshow', this.pageshow_handler);
         Event.observe(window, 'blur', this.window_blur_handler);
         if (this.form_field.form != null) {
@@ -3046,6 +3051,7 @@ var ChosenCore = (function() {
       }
 
       destroy() {
+        document.stopObserving('mouseup', this.document_mouseup_handler);
         this.hide_mobile_fullscreen();
         this.cancel_pending_search();
         if (this.form_reset_timeout != null) {
@@ -3176,6 +3182,9 @@ var ChosenCore = (function() {
         if ((evt != null ? evt.type : void 0) === 'mousedown' && ((evt.which != null) || (evt.button != null)) && this.mousedown_checker(evt) !== 'left') {
           return;
         }
+        if ((evt != null ? evt.type : void 0) === 'mousedown') {
+          this.result_mouse_press_started = this.mousedown_checker(evt) === 'left';
+        }
         is_choice_close = (evt != null) && (evt.target.hasClassName('search-choice-close') || (evt.target.up('.search-choice-close') != null));
         if (evt && evt.type === 'touchstart' && !this.results_showing && !is_choice_close) {
           evt.stop();
@@ -3203,6 +3212,9 @@ var ChosenCore = (function() {
       }
 
       container_mouseup(evt) {
+        if ((evt != null ? evt.type : void 0) === 'mouseup') {
+          this.result_mouse_press_started = false;
+        }
         if (evt.target.nodeName === "ABBR" && !this.is_disabled) {
           return this.results_reset(evt);
         }
@@ -3525,6 +3537,11 @@ var ChosenCore = (function() {
 
       search_results_mouseup(evt) {
         var target;
+        // A pen can release over a result while scrolling without pressing Chosen first.
+        // Keep synthetic mouseup events available to existing integrations.
+        if (evt.type === 'mouseup' && evt.isTrusted && !this.result_mouse_press_started) {
+          return;
+        }
         if (evt.type === 'touchend' || this.mousedown_checker(evt) === 'left') {
           target = evt.target.hasClassName("active-result") || evt.target.hasClassName("group-result") ? evt.target : evt.target.up(".active-result");
           if (target) {

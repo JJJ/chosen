@@ -17,6 +17,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add a select-backed remote search recipe and working async demos for jQuery, Prototype, Vanilla, and React (harvesthq/chosen#79). Selected options remain in the native select; this does not add a built-in remote source or virtualize a populated select.
 
 ### Fixed
+- Ignore a bare mouse release over a result when the press began outside Chosen, preventing unintended selections while scrolling with a pen. Press-and-drag selection from the control, ordinary clicks, touch selection, and synthetic integration events continue to work in jQuery and Prototype (harvesthq/chosen#1386).
 - Darken the default classic highlight blue slightly so white result text meets the 4.5:1 contrast threshold in Chromium and Firefox. Custom `--chosen-highlight-color` and Sass overrides remain available.
 - Let Tab or Shift+Tab select the highlighted single-select result and move to the next or previous field, including when the results list is scrolled in Firefox (harvesthq/chosen#625). Developer note: generated jQuery and Prototype result lists now have `tabindex="-1"` so the scrollable listbox does not become a separate Tab stop.
 - Remove the duplicate inline width attribute from jQuery and Prototype multiple-select search inputs so strict style policies do not block it (harvesthq/chosen#3146). Developer note: generated input markup no longer has a `style` attribute; the existing CSS rule and runtime sizing still provide the width.

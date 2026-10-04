@@ -1247,7 +1247,8 @@
   {
     "number": 1386,
     "status": "candidate",
-    "note": "A bare left-button mouseup on an active result, without a preceding mousedown, selected an option in both current classic adapters. Upstream WIP PR #1431 describes this Wacom sequence but notes touch regressions; add a guarded pointer sequence and mobile regression coverage before fixing."
+    "note": "A bare left-button mouseup on an active result selected an option in both classic adapters. The pending guard requires a preceding press inside Chosen for real pointer releases; browser regressions preserve ordinary click and press-and-drag selection, and iPad/iPhone WebKit touch checks pass. Upstream WIP PR #1431 broke drag selection.",
+    "fork_pr": "https://github.com/JJJ/chosen/pull/223"
   },
   {
     "number": 1380,

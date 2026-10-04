@@ -16,7 +16,9 @@ class @Chosen extends AbstractChosen
         @update_dropup_position()
       , 16) # ~60fps
     @pageshow_handler = () => this.results_update_field()
-    @window_blur_handler = () => this.close_field() if @results_showing
+    @window_blur_handler = () =>
+      @result_mouse_press_started = false
+      this.close_field() if @results_showing
 
   results_search: (evt) ->
     if @results_showing
@@ -86,6 +88,10 @@ class @Chosen extends AbstractChosen
     @form_field.fire("chosen:ready", { chosen: this })
 
   register_observers: ->
+    @document_mouseup_handler = () =>
+      @result_mouse_press_started = false
+      return
+    document.observe 'mouseup', @document_mouseup_handler
     Event.observe window, 'pageshow', @pageshow_handler
     Event.observe window, 'blur', @window_blur_handler
     if @form_field.form?
@@ -147,6 +153,7 @@ class @Chosen extends AbstractChosen
       @selected_item.observe "keydown", (evt) => this.selected_item_keydown(evt)
 
   destroy: ->
+    document.stopObserving 'mouseup', @document_mouseup_handler
     this.hide_mobile_fullscreen()
     this.cancel_pending_search()
     clearTimeout(@form_reset_timeout) if @form_reset_timeout?
@@ -243,6 +250,7 @@ class @Chosen extends AbstractChosen
   container_mousedown: (evt) ->
     return if @is_disabled
     return if evt?.type is 'mousedown' and (evt.which? or evt.button?) and this.mousedown_checker(evt) isnt 'left'
+    @result_mouse_press_started = this.mousedown_checker(evt) is 'left' if evt?.type is 'mousedown'
     is_choice_close = evt? and (evt.target.hasClassName('search-choice-close') or evt.target.up('.search-choice-close')?)
 
     if evt and evt.type is 'touchstart' and not @results_showing and not is_choice_close
@@ -266,6 +274,7 @@ class @Chosen extends AbstractChosen
       this.activate_field()
 
   container_mouseup: (evt) ->
+    @result_mouse_press_started = false if evt?.type is 'mouseup'
     this.results_reset(evt) if evt.target.nodeName is "ABBR" and not @is_disabled
 
   search_results_mousewheel: (evt) ->
@@ -516,6 +525,9 @@ class @Chosen extends AbstractChosen
       @search_field.removeClassName "default"
 
   search_results_mouseup: (evt) ->
+    # A pen can release over a result while scrolling without pressing Chosen first.
+    # Keep synthetic mouseup events available to existing integrations.
+    return if evt.type is 'mouseup' and evt.isTrusted and not @result_mouse_press_started
     if evt.type is 'touchend' or this.mousedown_checker(evt) == 'left'
       target = if evt.target.hasClassName("active-result") or evt.target.hasClassName("group-result") then evt.target else evt.target.up(".active-result")
       if target
