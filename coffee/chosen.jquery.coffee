@@ -38,7 +38,9 @@ class Chosen extends AbstractChosen
         @update_dropup_position()
       , 16) # ~60fps
     @pageshow_handler = () => this.results_update_field()
-    @window_blur_handler = () => this.close_field() if @results_showing
+    @window_blur_handler = () =>
+      @result_mouse_press_started = false
+      this.close_field() if @results_showing
 
   set_up_html: ->
     container_classes = ["chosen-container"]
@@ -99,6 +101,8 @@ class Chosen extends AbstractChosen
     @form_field_jq.trigger("chosen:ready", {chosen: this})
 
   register_observers: ->
+    @document_mouseup_handler = () => @result_mouse_press_started = false
+    $(document).on 'mouseup.chosen', @document_mouseup_handler
     $(window).on 'pageshow.chosen', @pageshow_handler
     $(window).on 'blur.chosen', @window_blur_handler
     if @form_field.form?
@@ -163,6 +167,7 @@ class Chosen extends AbstractChosen
       @selected_item.on 'keydown.chosen', (evt) => this.selected_item_keydown(evt); return
 
   destroy: ->
+    $(document).off 'mouseup.chosen', @document_mouseup_handler
     this.hide_mobile_fullscreen()
     this.cancel_pending_search()
     clearTimeout(@form_reset_timeout) if @form_reset_timeout?
@@ -237,6 +242,7 @@ class Chosen extends AbstractChosen
   container_mousedown: (evt) ->
     return if @is_disabled
     return if evt?.type is 'mousedown' and (evt.which? or evt.button?) and this.mousedown_checker(evt) isnt 'left'
+    @result_mouse_press_started = evt?.type is 'mousedown' and this.mousedown_checker(evt) is 'left'
     is_choice_close = evt? and $(evt.target).closest('.search-choice-close').length > 0
 
     if evt and this.mousedown_checker(evt) == 'left'
@@ -260,6 +266,7 @@ class Chosen extends AbstractChosen
       this.activate_field()
 
   container_mouseup: (evt) ->
+    @result_mouse_press_started = false if evt?.type is 'mouseup'
     if not @is_disabled and @allow_single_deselect and $(evt.target).hasClass('search-choice-close')
       this.results_reset(evt)
 
@@ -509,6 +516,9 @@ class Chosen extends AbstractChosen
       @search_field.removeClass "default"
 
   search_results_mouseup: (evt) ->
+    # A pen can release over a result while scrolling without pressing Chosen first.
+    # Keep synthetic mouseup events available to existing integrations.
+    return if evt.type is 'mouseup' and evt.originalEvent?.isTrusted and not @result_mouse_press_started
     if evt.type is 'touchend' or this.mousedown_checker(evt) == 'left'
       target = if $(evt.target).is ".active-result,.group-result" then $(evt.target) else $(evt.target).parents(".active-result").first()
       if target.length

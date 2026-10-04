@@ -2862,6 +2862,7 @@ var ChosenCore = (function() {
         return this.results_update_field();
       };
       return this.window_blur_handler = () => {
+        this.result_mouse_press_started = false;
         if (this.results_showing) {
           return this.close_field();
         }
@@ -2940,6 +2941,10 @@ var ChosenCore = (function() {
     }
 
     register_observers() {
+      this.document_mouseup_handler = () => {
+        return this.result_mouse_press_started = false;
+      };
+      $(document).on('mouseup.chosen', this.document_mouseup_handler);
       $(window).on('pageshow.chosen', this.pageshow_handler);
       $(window).on('blur.chosen', this.window_blur_handler);
       if (this.form_field.form != null) {
@@ -3076,6 +3081,7 @@ var ChosenCore = (function() {
     }
 
     destroy() {
+      $(document).off('mouseup.chosen', this.document_mouseup_handler);
       this.hide_mobile_fullscreen();
       this.cancel_pending_search();
       if (this.form_reset_timeout != null) {
@@ -3183,6 +3189,7 @@ var ChosenCore = (function() {
       if ((evt != null ? evt.type : void 0) === 'mousedown' && ((evt.which != null) || (evt.button != null)) && this.mousedown_checker(evt) !== 'left') {
         return;
       }
+      this.result_mouse_press_started = (evt != null ? evt.type : void 0) === 'mousedown' && this.mousedown_checker(evt) === 'left';
       is_choice_close = (evt != null) && $(evt.target).closest('.search-choice-close').length > 0;
       if (evt && this.mousedown_checker(evt) === 'left') {
         if (evt && evt.type === "mousedown" && !this.results_showing) {
@@ -3210,6 +3217,9 @@ var ChosenCore = (function() {
     }
 
     container_mouseup(evt) {
+      if ((evt != null ? evt.type : void 0) === 'mouseup') {
+        this.result_mouse_press_started = false;
+      }
       if (!this.is_disabled && this.allow_single_deselect && $(evt.target).hasClass('search-choice-close')) {
         return this.results_reset(evt);
       }
@@ -3528,7 +3538,12 @@ var ChosenCore = (function() {
     }
 
     search_results_mouseup(evt) {
-      var target;
+      var ref, target;
+      // A pen can release over a result while scrolling without pressing Chosen first.
+      // Keep synthetic mouseup events available to existing integrations.
+      if (evt.type === 'mouseup' && ((ref = evt.originalEvent) != null ? ref.isTrusted : void 0) && !this.result_mouse_press_started) {
+        return;
+      }
       if (evt.type === 'touchend' || this.mousedown_checker(evt) === 'left') {
         target = $(evt.target).is(".active-result,.group-result") ? $(evt.target) : $(evt.target).parents(".active-result").first();
         if (target.length) {

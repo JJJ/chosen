@@ -141,6 +141,54 @@ async function runCoreSelectionFixtures(page, kind, cases) {
     return errors;
   }, { kind, cases });
 }
+
+async function runResultPointerFixture(page, kind) {
+  const errors = [];
+  for (const scenario of ['bare release', 'click', 'press and drag']) {
+    await page.evaluate((adapter) => {
+      const wrapper = document.createElement('div');
+      wrapper.id = 'result-pointer-fixture';
+      wrapper.innerHTML = '<select><option value="">Choose</option><option value="apple">Apple</option></select>';
+      document.body.appendChild(wrapper);
+      const select = wrapper.querySelector('select');
+      window.resultPointerInstance = adapter === 'jquery'
+        ? (window.jQuery(select).chosen(), window.jQuery(select).data('chosen'))
+        : new window.Chosen(select);
+    }, kind);
+    try {
+      const control = page.locator('#result-pointer-fixture .chosen-single');
+      const result = page.locator('#result-pointer-fixture .chosen-results .active-result').filter({ hasText: 'Apple' });
+      if (scenario === 'press and drag') {
+        const box = await control.boundingBox();
+        await page.mouse.move(box.x + 20, box.y + box.height / 2);
+        await page.mouse.down();
+        const resultBox = await result.boundingBox();
+        await page.mouse.move(resultBox.x + resultBox.width / 2, resultBox.y + resultBox.height / 2);
+        await page.mouse.up();
+      } else {
+        await control.click();
+        if (scenario === 'click') {
+          await result.click();
+        } else {
+          const box = await result.boundingBox();
+          await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+          await page.mouse.up();
+        }
+      }
+      const actual = await page.locator('#result-pointer-fixture select').inputValue();
+      const expected = scenario === 'bare release' ? '' : 'apple';
+      if (actual !== expected) errors.push(`Pointer: ${scenario} selected ${JSON.stringify(actual)} instead of ${JSON.stringify(expected)}`);
+    } finally {
+      await page.evaluate(() => {
+        window.resultPointerInstance.destroy();
+        delete window.resultPointerInstance;
+        document.querySelector('#result-pointer-fixture').remove();
+      });
+    }
+  }
+  return errors;
+}
+
 const suites = [
   {
     name: 'jQuery 4.0.0',
@@ -225,6 +273,7 @@ async function main() {
         const errors = [...result.failures, ...pageErrors];
         errors.push(...await runCoreFilterFixtures(page, suite.family, coreFixtures.filterCases));
         errors.push(...await runCoreSelectionFixtures(page, suite.family, coreFixtures.selectionCases));
+        errors.push(...await runResultPointerFixture(page, suite.family));
         await page.evaluate((kind) => {
           const fixture = document.createElement('div');
           fixture.id = 'accessibility-fixture';
