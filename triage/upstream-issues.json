@@ -271,7 +271,7 @@
   {
     "number": 2874,
     "status": "blocked",
-    "note": "JAWS 18 item navigation failed only in the reporter’s IE11 pairing. Modern Chromium and Firefox expose a named combobox, listbox, options, active descendant, and result count, and PR #221 fixes a separate contrast defect. Neither axe nor an accessibility-tree inspection replaces a screen reader test; the original JAWS/IE11 behavior remains unverified."
+    "note": "Reported with JAWS 18 on IE11. Modern Chromium and Firefox expose a named combobox, listbox, options, active descendant, and result count; a separate contrast defect was fixed in JJJ/chosen#221. Neither axe nor an accessibility-tree inspection replaces a screen reader test; the original JAWS/IE11 behavior remains unverified."
   },
   {
     "number": 3108,
@@ -1318,7 +1318,7 @@
   {
     "number": 625,
     "status": "candidate",
-    "note": "Firefox 155 in Docker reproduced the scrolled single-select Tab trap in both classic adapters. PR #220 fixes the Tab and Shift+Tab sequence with browser and mobile coverage; classify as fixed-in-fork after merge."
+    "note": "Firefox 155 in Docker reproduced the scrolled single-select Tab trap in both classic adapters. JJJ/chosen#220 fixes the Tab and Shift+Tab sequence with Chrome and Firefox browser regression coverage; classify as fixed-in-fork after merge."
   },
   {
     "number": 572,
