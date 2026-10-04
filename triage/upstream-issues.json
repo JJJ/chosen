@@ -139,8 +139,8 @@
   },
   {
     "number": 3159,
-    "status": "blocked",
-    "note": "Mobile failure report has no reproduction steps or browser details."
+    "status": "covered-in-fork",
+    "note": "The screenshot shows Chosen 1.8.7 leaving both demo selects native in Chrome device emulation. Current jQuery and Prototype demos initialized and selected on iPhone 13 emulation in Chrome and WebKit before and after reload; the original device/browser is unspecified."
   },
   {
     "number": 3035,
@@ -271,7 +271,7 @@
   {
     "number": 2874,
     "status": "blocked",
-    "note": "The report is specific to IE 11 and JAWS 18; neither environment is in the maintained browser matrix."
+    "note": "Reported with JAWS 18 on IE11. Modern Chromium and Firefox expose a named combobox, listbox, options, active descendant, and result count; a separate contrast defect was fixed in JJJ/chosen#221. Neither axe nor an accessibility-tree inspection replaces a screen reader test; the original JAWS/IE11 behavior remains unverified."
   },
   {
     "number": 3108,
@@ -454,8 +454,8 @@
   },
   {
     "number": 3151,
-    "status": "blocked",
-    "note": "The report says H5 and reload but omits the device/browser and a failing select fixture. Needs a reproducible environment."
+    "status": "covered-in-fork",
+    "note": "The screenshot shows native selects after an H5 reload. Current jQuery and Prototype multiple-select demos initialized and selected before and after reload in iPhone 13 Chrome and WebKit emulation; the exact H5 webview remains unspecified."
   },
   {
     "number": 3150,
@@ -475,7 +475,7 @@
   {
     "number": 3135,
     "status": "blocked",
-    "note": "The Chrome 105 report omits code or steps for the claimed native/Chosen desync; current adapter tests cover value synchronization."
+    "note": "The Chrome 105 native/Chosen desynchronization report has no fixture or steps. Current adapter tests cover value synchronization, but cannot identify the application-specific failing path. Parked until a reproducible case is supplied."
   },
   {
     "number": 3131,
@@ -500,7 +500,7 @@
   {
     "number": 3121,
     "status": "duplicate",
-    "note": "Same closed-dropdown hit-area behavior as #3019; investigate under that report."
+    "note": "Same IE-only closed-dropdown hit-area behavior as #3019; declined with that report because no modern-browser reproduction or supported IE runtime is available."
   },
   {
     "number": 3118,
@@ -534,8 +534,8 @@
   },
   {
     "number": 3099,
-    "status": "blocked",
-    "note": "Third-party intranet screenshot only; no runnable case, version, or accessible reproduction."
+    "status": "support-question",
+    "note": "The attached Word document shows a WordPress Connections directory page with a very narrow control and widespread layout styling problems. No Chosen version, isolated markup, or reproducible library defect is supplied; this needs integration/CSS diagnosis."
   },
   {
     "number": 3095,
@@ -642,8 +642,8 @@
   },
   {
     "number": 3041,
-    "status": "blocked",
-    "note": "IE11-only visual report; no supported IE11 test environment."
+    "status": "declined",
+    "note": "IE11-only border leak when disabling the last select. A commenter suggests hiding the closed .chosen-drop, but the linked example is inaccessible and no IE11 runtime is available. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 3040,
@@ -657,8 +657,8 @@
   },
   {
     "number": 3019,
-    "status": "blocked",
-    "note": "IE9/IE11 closed-dropdown hit-area defect; a supported browser reproduction or IE test environment is needed."
+    "status": "declined",
+    "note": "IE9/IE11 closed dropdown reportedly retains a clickable scrollbar area. A display:none workaround has a tab-order caveat; current CSS clips the dropdown. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 3016,
@@ -667,8 +667,8 @@
   },
   {
     "number": 3009,
-    "status": "blocked",
-    "note": "IE11-only incorrect-selection report; no supported IE11 test environment."
+    "status": "declined",
+    "note": "The IE11 scroll-and-select mismatch includes a recording, but no IE11 runtime is available. No IE-only selection change is planned without a modern-browser reproduction."
   },
   {
     "number": 3008,
@@ -704,7 +704,7 @@
   {
     "number": 2976,
     "status": "blocked",
-    "note": "External page and screenshot are unavailable; no code or reproduction supplied."
+    "note": "The external demo requires authorization and the linked screenshot does not load; no code or reproduction is included. Parked until an accessible failing case is supplied."
   },
   {
     "number": 2969,
@@ -834,8 +834,8 @@
   },
   {
     "number": 2836,
-    "status": "blocked",
-    "note": "Old Internet Explorer screenshot without a current supported-browser reproduction."
+    "status": "declined",
+    "note": "The reporter shows dynamically generated Chosen markup broken in IE11. Screenshots do not isolate the cause, and no IE11 runtime is available. No IE-only change is planned without a modern-browser reproduction."
   },
   {
     "number": 2832,
@@ -996,8 +996,8 @@
   },
   {
     "number": 2740,
-    "status": "blocked",
-    "note": "Internet Explorer-only selection report; no supported IE test environment."
+    "status": "declined",
+    "note": "The GIF shows an incorrect result after scrolling in Internet Explorer; #3009 is similar but not proven identical. No IE-only selection change is planned without a modern-browser reproduction."
   },
   {
     "number": 2731,
@@ -1246,8 +1246,8 @@
   },
   {
     "number": 1386,
-    "status": "blocked",
-    "note": "Classic adapters select results on mouseup, so the reported gesture is plausible, but the Wacom event sequence is unverified. It needs that hardware or a reproducible synthetic pointer sequence before changing selection behavior."
+    "status": "candidate",
+    "note": "A bare left-button mouseup on an active result, without a preceding mousedown, selected an option in both current classic adapters. Upstream WIP PR #1431 describes this Wacom sequence but notes touch regressions; add a guarded pointer sequence and mobile regression coverage before fixing."
   },
   {
     "number": 1380,
@@ -1317,8 +1317,8 @@
   },
   {
     "number": 625,
-    "status": "blocked",
-    "note": "The 2012 Firefox-only double-Tab report needs a current Firefox reproduction. Playwright Firefox failed to create a profile with both temporary and persistent contexts in this local environment; Chrome results cannot settle it."
+    "status": "fixed-in-fork",
+    "note": "Firefox 155 in Docker reproduced the scrolled single-select Tab trap in both classic adapters. JJJ/chosen#220 fixes the Tab and Shift+Tab sequence with Chrome and Firefox browser regression coverage."
   },
   {
     "number": 572,
