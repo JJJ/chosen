@@ -1247,7 +1247,7 @@
   {
     "number": 1386,
     "status": "fixed-in-fork",
-    "note": "A bare left-button mouseup on an active result without a preceding press inside Chosen no longer selects an option in either classic adapter. Browser regressions preserve ordinary click and press-and-drag selection, and iPad/iPhone WebKit touch checks pass. The original Wacom hardware gesture remains untested.",
+    "note": "A real, trusted bare left-button mouseup on an active result without a preceding press inside Chosen no longer selects an option in either classic adapter. Synthetic mouseup events still select for integration compatibility. Browser regressions preserve ordinary click and press-and-drag selection, and iPad/iPhone WebKit touch checks pass. The original Wacom hardware gesture remains untested.",
     "fork_pr": "https://github.com/JJJ/chosen/pull/223"
   },
   {
