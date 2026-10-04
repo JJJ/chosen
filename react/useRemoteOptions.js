@@ -36,25 +36,33 @@ export function useRemoteOptions({ load, value = [], selectedOptions = [], minLe
 
   const values = (Array.isArray(value) ? value : [value]).filter(item => item != null && item !== '').map(String);
   const selected = new Set(values);
-  for (const key of selectedCache.current.keys()) if (!selected.has(key)) {
-    selectedCache.current.delete(key);
-    selectedInputs.current.delete(key);
-    remoteLabels.current.delete(key);
+  const nextSelectedCache = new Map(selectedCache.current);
+  const nextSelectedInputs = new Map(selectedInputs.current);
+  const nextRemoteLabels = new Map(remoteLabels.current);
+  for (const key of nextSelectedCache.keys()) if (!selected.has(key)) {
+    nextSelectedCache.delete(key);
+    nextSelectedInputs.delete(key);
+    nextRemoteLabels.delete(key);
   }
   for (const record of selectedOptions) {
     const key = String(record.value);
-    if (selectedInputs.current.get(key) !== record) {
-      const remoteLabel = remoteLabels.current.get(key);
-      selectedCache.current.set(key, remoteLabel == null ? record : { ...record, label: remoteLabel });
-      selectedInputs.current.set(key, record);
+    if (nextSelectedInputs.get(key) !== record) {
+      const remoteLabel = nextRemoteLabels.get(key);
+      nextSelectedCache.set(key, remoteLabel == null ? record : { ...record, label: remoteLabel });
+      nextSelectedInputs.set(key, record);
     }
   }
   for (const record of page) if (selected.has(record.value)) {
-    selectedCache.current.set(record.value, { ...selectedCache.current.get(record.value), ...record });
-    remoteLabels.current.set(record.value, record.label);
+    nextSelectedCache.set(record.value, { ...nextSelectedCache.get(record.value), ...record });
+    nextRemoteLabels.set(record.value, record.label);
   }
+  useEffect(() => {
+    selectedCache.current = nextSelectedCache;
+    selectedInputs.current = nextSelectedInputs;
+    remoteLabels.current = nextRemoteLabels;
+  });
   const options = [
-    ...values.map(item => selectedCache.current.get(item)).filter(Boolean),
+    ...values.map(item => nextSelectedCache.get(item)).filter(Boolean),
     ...page.filter(item => !selected.has(item.value))
   ];
 

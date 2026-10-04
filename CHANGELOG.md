@@ -7,7 +7,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 ## Unreleased
 
 ### Added
-- Add an opt-in, bounded remote source package API for jQuery, Prototype, and Vanilla, plus a React hook. It discards stale responses and retains selected values in native selects (harvesthq/chosen#79).
+- Add an opt-in, bounded remote source package API for jQuery, Prototype, and Vanilla, plus a React hook. It discards stale responses and retains selected values in native selects. React remote search remains usable in Strict Mode, and remote single-select integrations can use `disableSearchThreshold={-1}` to keep search editable when a page is empty (harvesthq/chosen#79).
 
 ### Documentation
 - Clarify the native select update order after AJAX changes and the need to destroy Chosen before replacing a select element (harvesthq/chosen#2981).
@@ -17,7 +17,6 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Add a select-backed remote search recipe and working async demos for jQuery, Prototype, Vanilla, and React (harvesthq/chosen#79). Selected options remain in the native select; this does not add a built-in remote source or virtualize a populated select.
 
 ### Fixed
-- Keep React remote search usable in Strict Mode and when a single-select page is empty, and retain selected option attributes alongside updated remote labels. Remote single-select integrations should use `disableSearchThreshold={-1}`; ordinary defaults are unchanged.
 - Remove the duplicate inline width attribute from jQuery and Prototype multiple-select search inputs so strict style policies do not block it (harvesthq/chosen#3146). Developer note: generated input markup no longer has a `style` attribute; the existing CSS rule and runtime sizing still provide the width.
 - Keep jQuery and Prototype search highlights visible when custom multi-character word boundaries are combined with normalized option text.
 - Anchor native required-select validation tooltips to the visible Chosen control in jQuery, Prototype, Vanilla, and React (harvesthq/chosen#515, harvesthq/chosen#900).

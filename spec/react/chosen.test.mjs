@@ -22,18 +22,21 @@ const options = [
 
 test('remote hook survives Strict Mode effect replay and refreshes the live source', async () => {
   const queries = [];
-  const view = renderHook(() => useRemoteOptions({
+  const view = renderHook(({ limit }) => useRemoteOptions({
     load: query => {
       queries.push(query);
-      return [{ value: 'a', label: queries.length === 1 ? 'Alpha' : 'Updated Alpha' }];
-    }
-  }), { wrapper: React.StrictMode });
+      return [{ value: 'a', label: ['Alpha', 'Updated Alpha', 'Resized Alpha'][queries.length - 1] }];
+    }, limit
+  }), { wrapper: React.StrictMode, initialProps: { limit: 50 } });
   await act(async () => { view.result.current.search('alpha'); });
   await waitFor(() => assert.equal(view.result.current.status, 'ready'));
   assert.deepEqual(queries, ['alpha']);
   await act(async () => { view.result.current.refresh(); });
   await waitFor(() => assert.equal(view.result.current.options[0].label, 'Updated Alpha'));
   assert.equal(queries.length, 2);
+  view.rerender({ limit: 25 });
+  await waitFor(() => assert.equal(view.result.current.options[0].label, 'Resized Alpha'));
+  assert.equal(queries.length, 3);
 });
 
 test('remote hook retains selected attributes and the latest remote label', async () => {
@@ -56,6 +59,36 @@ test('remote hook retains selected attributes and the latest remote label', asyn
   const updated = { ...initial, label: 'Parent label', disabled: false, className: 'updated' };
   view.rerender({ selectedOptions: [updated] });
   assert.deepEqual(view.result.current.options[0], { ...updated, label: 'New label' });
+});
+
+test('an abandoned render does not clear a selected remote record', async () => {
+  let remote;
+  let suspend = false;
+  const pending = new Promise(() => {});
+  function Harness({ value }) {
+    remote = useRemoteOptions({
+      value,
+      load: query => query === 'first' ? [{ value: 'a', label: 'Alpha' }] : []
+    });
+    if (suspend && !value.length) throw pending;
+    return null;
+  }
+  const content = value => h(React.Suspense, { fallback: null }, h(Harness, { value }));
+  const view = render(content(['a']));
+  await act(async () => { remote.search('first'); });
+  await waitFor(() => assert.equal(remote.status, 'ready'));
+  await act(async () => { remote.search('other'); });
+  await waitFor(() => {
+    assert.equal(remote.status, 'ready');
+    assert.equal(remote.count, 0);
+  });
+  assert.equal(remote.options[0].label, 'Alpha');
+
+  suspend = true;
+  act(() => React.startTransition(() => view.rerender(content([]))));
+  suspend = false;
+  view.rerender(content(['a']));
+  assert.equal(remote.options[0].label, 'Alpha');
 });
 
 test('remote single select can search again after an empty page', async () => {
