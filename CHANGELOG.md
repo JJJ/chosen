@@ -6,32 +6,11 @@ This project is a continuation and modernization of the original [harvesthq/chos
 
 ## Unreleased
 
+## [4.0.0] - 2026-10-04
+
 ### Added
+
 - Add an opt-in, bounded remote source package API for jQuery, Prototype, and Vanilla, plus a React hook. It discards stale responses and retains selected values in native selects. React remote search remains usable in Strict Mode, and remote single-select integrations can use `disableSearchThreshold={-1}` to keep search editable when a page is empty (harvesthq/chosen#79).
-
-### Documentation
-- Clarify the native select update order after AJAX changes and the need to destroy Chosen before replacing a select element (harvesthq/chosen#2981).
-- Explain why a keypress shortcut that opens Chosen may insert its character into search, and how to cancel that key's default action (harvesthq/chosen#3065).
-- Explain how to diagnose Cyrillic replacement characters by checking native option text and response encoding; UTF-8 Cyrillic search works in the current classic adapters (harvesthq/chosen#2783).
-- Clarify that nonbreaking and en spaces are native option text, not null placeholders; use an option with empty text and value for a blank first choice (harvesthq/chosen#3149).
-- Add a select-backed remote search recipe and working async demos for jQuery, Prototype, Vanilla, and React (harvesthq/chosen#79). Selected options remain in the native select; this does not add a built-in remote source or virtualize a populated select.
-
-### Fixed
-- Ignore a bare mouse release over a result when the press began outside Chosen, preventing unintended selections while scrolling with a pen. Press-and-drag selection from the control, ordinary clicks, touch selection, and synthetic integration events continue to work in jQuery and Prototype (harvesthq/chosen#1386).
-- Darken the default classic highlight blue slightly so white result text meets the 4.5:1 contrast threshold in Chromium and Firefox. Custom `--chosen-highlight-color` and Sass overrides remain available.
-- Let Tab or Shift+Tab select the highlighted single-select result and move to the next or previous field, including when the results list is scrolled in Firefox (harvesthq/chosen#625). Developer note: generated jQuery and Prototype result lists now have `tabindex="-1"` so the scrollable listbox does not become a separate Tab stop.
-- Remove the duplicate inline width attribute from jQuery and Prototype multiple-select search inputs so strict style policies do not block it (harvesthq/chosen#3146). Developer note: generated input markup no longer has a `style` attribute; the existing CSS rule and runtime sizing still provide the width.
-- Keep jQuery and Prototype search highlights visible when custom multi-character word boundaries are combined with normalized option text.
-- Anchor native required-select validation tooltips to the visible Chosen control in jQuery, Prototype, Vanilla, and React (harvesthq/chosen#515, harvesthq/chosen#900).
-- Close legacy jQuery and Prototype dropdowns promptly after search focus leaves, while preserving label-press behavior (harvesthq/chosen#2990).
-- Ignore secondary mouse buttons when activating a closed Chosen control in jQuery, Prototype, Vanilla, and React. Primary clicks and touch activation continue to open it. This follows [Harvest PR #1583](https://github.com/harvesthq/chosen/pull/1583).
-
-### Changed
-- Let the Vanilla demo's standard controls use the same CSS width as the React demo; examples that demonstrate an explicit width keep their own setting. Keep code examples scrollable within both demo pages on narrow screens.
-- Align Vanilla and React chips, summary buttons, result spacing, and selectable group headings, and connect the default React dropdown border and rounded result rows with the control. Both editions now fit narrow layouts without a fixed 12rem minimum. Vanilla active results now use `--chosen-highlight-text-color`, matching React, so theme highlight backgrounds cannot hide the result text. Vanilla's default highlight blue is slightly darker for readable white text.
-- Give Vanilla selects marked `aria-invalid="true"` the same customizable invalid border as classic and React Chosen. The generated host now gains `chosen-native--invalid`; this class is a new styling hook for integrations.
-
-### Added
 - Add opt-in `search_word_boundary` to define word starts for locale-specific searches across jQuery, Prototype, Vanilla, and React. React uses `searchWordBoundary`. The default regex remains unchanged. This follows [Harvest PR #2898](https://github.com/harvesthq/chosen/pull/2898) by @Mikk3lRo.
 - Add opt-in `mobile_fullscreen` for a full-screen picker on narrow touch devices across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#2438). React uses `mobileFullscreen`; desktop and default mobile dropdowns are unchanged.
 - Add opt-in `shift_select_range` to select a visible range in multiple selects with Shift-click across jQuery, Prototype, Vanilla, and React (harvesthq/chosen#135). React uses `shiftSelectRange`. Disabled options and selection limits still apply.
@@ -74,7 +53,22 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Support non-editable Chosen controls through the `readonly` select attribute while keeping their values enabled for form submission.
 - Add `open_on_label_click` to let associated labels consistently focus or open both single and multiple controls while preserving the existing defaults when omitted.
 
+### Changed
+
+- Let the Vanilla demo's standard controls use the same CSS width as the React demo; examples that demonstrate an explicit width keep their own setting. Keep code examples scrollable within both demo pages on narrow screens.
+- Align Vanilla and React chips, summary buttons, result spacing, and selectable group headings, and connect the default React dropdown border and rounded result rows with the control. Both editions now fit narrow layouts without a fixed 12rem minimum. Vanilla active results now use `--chosen-highlight-text-color`, matching React, so theme highlight backgrounds cannot hide the result text. Vanilla's default highlight blue is slightly darker for readable white text.
+- Give Vanilla selects marked `aria-invalid="true"` the same customizable invalid border as classic and React Chosen. The generated host now gains `chosen-native--invalid`; this class is a new styling hook for integrations.
+
 ### Fixed
+
+- Ignore a real, trusted bare mouse release over a result when the press began outside Chosen, preventing unintended selections while scrolling with a pen. Press-and-drag selection from the control, ordinary clicks, touch selection, and synthetic integration events continue to work in jQuery and Prototype (harvesthq/chosen#1386).
+- Darken the default classic highlight blue slightly so white result text meets the 4.5:1 contrast threshold in Chromium and Firefox. Custom `--chosen-highlight-color` and Sass overrides remain available.
+- Let Tab or Shift+Tab select the highlighted single-select result and move to the next or previous field, including when the results list is scrolled in Firefox (harvesthq/chosen#625). Developer note: generated jQuery and Prototype result lists now have `tabindex="-1"` so the scrollable listbox does not become a separate Tab stop.
+- Remove the duplicate inline width attribute from jQuery and Prototype multiple-select search inputs so strict style policies do not block it (harvesthq/chosen#3146). Developer note: generated input markup no longer has a `style` attribute; the existing CSS rule and runtime sizing still provide the width.
+- Keep jQuery and Prototype search highlights visible when custom multi-character word boundaries are combined with normalized option text.
+- Anchor native required-select validation tooltips to the visible Chosen control in jQuery, Prototype, Vanilla, and React (harvesthq/chosen#515, harvesthq/chosen#900).
+- Close legacy jQuery and Prototype dropdowns promptly after search focus leaves, while preserving label-press behavior (harvesthq/chosen#2990).
+- Ignore secondary mouse buttons when activating a closed Chosen control in jQuery, Prototype, Vanilla, and React. Primary clicks and touch activation continue to open it. This follows [Harvest PR #1583](https://github.com/harvesthq/chosen/pull/1583).
 - Keep an empty native option with a whitespace-only `label` as a placeholder while supporting label-only options with real text.
 - Show and search an option's `label` attribute when it has no text in the jQuery, Prototype, and Vanilla editions. React already accepts the equivalent option `label` field (harvesthq/chosen#3112).
 - Match the classic single-select keyboard shortcuts in Vanilla and React: Enter opens a closed list, Up at the first result closes it when a choice is selected, and Backspace or Delete clears an eligible closed selection (harvesthq/chosen#994).
@@ -137,7 +131,16 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Keep required selects focusable so browsers can show native constraint-validation messages.
 - Reopen an active multiple select when it is clicked again after choosing an option.
 
+### Documentation
+
+- Clarify the native select update order after AJAX changes and the need to destroy Chosen before replacing a select element (harvesthq/chosen#2981).
+- Explain why a keypress shortcut that opens Chosen may insert its character into search, and how to cancel that key's default action (harvesthq/chosen#3065).
+- Explain how to diagnose Cyrillic replacement characters by checking native option text and response encoding; UTF-8 Cyrillic search works in the current classic adapters (harvesthq/chosen#2783).
+- Clarify that nonbreaking and en spaces are native option text, not null placeholders; use an option with empty text and value for a blank first choice (harvesthq/chosen#3149).
+- Add a select-backed remote search recipe and working async demos for jQuery, Prototype, Vanilla, and React (harvesthq/chosen#79). Selected options remain in the native select; this does not add a built-in remote source or virtualize a populated select.
+
 ### Maintenance
+
 - Verify that generated `dist/` and `docs/` files are committed before CI and tagged npm releases pass; GitHub Pages already publishes `master/docs` automatically (harvesthq/chosen#2657).
 - Add an interactive React demo with native form submission, validation, multiple selection, selected/disabled result visibility switches, right-to-left layout, and light/dark token themes.
 - Cover bulk actions, selected-choice summaries and removal, single clearing, long labels, and RTL layouts in the visual fixtures. Audit representative dark controls and dropdowns for color contrast.
@@ -147,6 +150,7 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Document Chosen's main CSS selectors and container states, and correct the generated ID in the arrow and height example.
 
 ### Developer notes
+
 - Opting into `mobile_fullscreen` adds a Close button to each generated container and applies `chosen-mobile-fullscreen`, `chosen-native--mobile-fullscreen`, or `chosen-react--mobile-fullscreen` while open on a qualifying touch screen. Integrations that inspect generated children or style open containers should allow this opt-in markup and class.
 - With opt-in `placeholder_text_multiple_selected`, the generated multiple-search input's `placeholder` attribute changes after the first selection. The source select and submitted values are unchanged; the default generated attribute remains unchanged.
 - Enabling `inherit_optgroup_classes` adds the source optgroup's classes to generated selected-choice chips. Default classes and markup remain unchanged; selectors targeting those classes may now also match chips when the option is enabled.
@@ -154,7 +158,6 @@ This project is a continuation and modernization of the original [harvesthq/chos
 - Selected vanilla results now gain `.chosen-native__option--selected`; the mark is CSS generated, and selected multiple results can be toggled off without changing the row's `role="option"` markup.
 - The new opt-in vanilla edition renders `chosen-native__*` elements and uses native `CustomEvent` details and native `input`/`change` events; its generated selectors, roles, and attributes are separate from the classic adapters and remain experimental.
 - With `width: false`, Chosen omits the generated container's inline `width` style; CSS selectors can size it. Default and explicit widths still set inline width as before.
-
 - Setting `dropdown_width` adds `chosen-floating-dropdown` to the generated container so custom-width dropdowns can use complete corners, a gap, and independent elevation. Integrations that assert generated container classes should allow this opt-in state.
 - Generated result and selected-choice labels now use the native option's text. Integrations that placed HTML nodes inside an `<option>` will see their text rather than copied markup; native option values and selection events are unchanged.
 - Opting into `dropdown_position: "fixed"` adds `chosen-fixed-dropdown` to the generated container and positions its existing `.chosen-drop` relative to the viewport. The dropdown stays inside the container in the DOM; integrations that inspect container classes should allow this opt-in state.
