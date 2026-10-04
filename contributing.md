@@ -206,12 +206,13 @@ If you're interested, you can find the task in [Gruntfile.coffee](https://github
 
 This documentation is for Chosen maintainers.  You must have write permissions for this repository to cut a release.
 
-1. Update the version in `package.json` and `package-lock.json`, then build,
-   test, and commit the generated `dist/` and `docs/` files. CI checks that a
-   fresh build leaves both directories unchanged.
-2. Run `grunt prep-release` and review the generated ZIP archives and docs
-   version. Run `npm pack --dry-run` to review the npm package contents. Commit
-   any docs changes.
+1. Update the version in `package.json`, `package-lock.json`, and the version
+   labels and cache keys in the demo HTML sources. Then build, test, and commit
+   the generated `dist/` and `docs/` files. `npm test` checks the demo versions,
+   and CI checks that a fresh build leaves both directories unchanged.
+2. Run `grunt prep-release`, which validates the demo versions before creating
+   ZIP archives. Review the archives and run `npm pack --dry-run` to inspect the
+   npm package contents. Commit any docs changes.
 3. Merge the release commit into `master`, then tag that commit with its version
    (for example, `3.0.2`) and push the tag. GitHub Pages automatically publishes
    the committed `docs/` directory when `master` changes; pushing a tag alone

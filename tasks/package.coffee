@@ -3,6 +3,9 @@ This file contains tasks only necessary for packaging and publishing Chosen
 ###
 module.exports = (grunt) ->
 
+  grunt.registerTask 'check-demo-version', ->
+    require('../scripts/check-demo-version')()
+
   grunt.config 'zip',
     chosen:
       cwd: 'docs/'
@@ -13,4 +16,4 @@ module.exports = (grunt) ->
       src: ['dist/**/*']
       dest: 'chosen_<%= version_tag %>_dist.zip'
 
-  grunt.registerTask 'prep-release', ['build', 'zip:chosen', 'zip:build']
+  grunt.registerTask 'prep-release', ['build', 'check-demo-version', 'zip:chosen', 'zip:build']
