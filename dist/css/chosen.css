@@ -351,7 +351,7 @@ select[aria-invalid=true] + .chosen-container:not(.chosen-disabled) .chosen-drop
   cursor: pointer;
 }
 .chosen-container .chosen-results li.chosen-bulk-action {
-  color: var(--chosen-bulk-action-color, var(--chosen-highlight-color, #3875d7));
+  color: var(--chosen-bulk-action-color, var(--chosen-highlight-color, #3672d2));
   font-weight: normal;
 }
 .chosen-container .chosen-results li.chosen-bulk-action-last {
@@ -373,7 +373,7 @@ select[aria-invalid=true] + .chosen-container:not(.chosen-disabled) .chosen-drop
   cursor: default;
 }
 .chosen-container .chosen-results li.highlighted {
-  background-color: var(--chosen-highlight-color, #3875d7);
+  background-color: var(--chosen-highlight-color, #3672d2);
   color: var(--chosen-highlight-text-color, #fff);
 }
 .chosen-container .chosen-results li.no-results {
