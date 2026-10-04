@@ -28,8 +28,22 @@ async function runTabNavigationFixture(page, kind) {
     }));
     await page.keyboard.press('Shift+Tab');
     const reverseFocus = await page.evaluate(() => document.activeElement.className);
-    return state.value === '80' && state.focus === 'tab-after' && state.expanded === 'false' && reverseFocus.includes('chosen-single')
-      ? [] : [`Keyboard: scrolled Tab selection did not move to the next input and Shift+Tab did not return to Chosen (${JSON.stringify({ scrollTop, state, reverseFocus })})`];
+    await control.click();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowDown');
+    const homeValue = await page.evaluate(() => document.querySelector('#tab-select + .chosen-container .chosen-results .highlighted')?.getAttribute('data-value'));
+    if (homeValue !== '1') throw new Error(`Home highlighted ${homeValue} instead of Option 1`);
+    await page.keyboard.press('Shift+Tab');
+    await page.waitForFunction(() => document.querySelector('#tab-select + .chosen-container .chosen-single').getAttribute('aria-expanded') === 'false');
+    const reverseState = await page.evaluate(() => ({
+      value: document.querySelector('#tab-select').value,
+      focus: document.activeElement.id,
+      expanded: document.querySelector('#tab-select + .chosen-container .chosen-single').getAttribute('aria-expanded'),
+    }));
+    return state.value === '80' && state.focus === 'tab-after' && state.expanded === 'false' &&
+      reverseFocus.includes('chosen-single') && reverseState.value === '1' &&
+      reverseState.focus === 'tab-before' && reverseState.expanded === 'false'
+      ? [] : [`Keyboard: Tab or Shift+Tab did not select and move between fields (${JSON.stringify({ scrollTop, state, reverseFocus, reverseState })})`];
   } finally {
     await page.locator('#tab-navigation-fixture').evaluate((wrapper) => wrapper.remove());
   }
