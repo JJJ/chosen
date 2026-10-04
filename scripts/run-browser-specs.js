@@ -4,6 +4,7 @@ const fs = require('node:fs/promises');
 const postcss = require('postcss');
 const tailwindcss = require('@tailwindcss/postcss');
 const { chromium } = require('playwright-core');
+const { runTabNavigationFixture } = require('./tab-navigation-fixture');
 
 const root = path.resolve(__dirname, '..');
 const fixture = (name) => path.join(root, name);
@@ -413,6 +414,7 @@ async function main() {
             errors.push('Secondary-button click opened a closed Chosen control');
           }
         }
+        errors.push(...await runTabNavigationFixture(page, suite.family));
         console.log(`${suite.name}: ${result.total - result.failures.length}/${result.total} specs passed`);
         for (const error of errors) console.error(`  ${error}`);
         if (errors.length || result.total === 0) failed = true;
